@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -62,7 +63,7 @@ public class FileCollect {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*GEO_FILES.forEach((geoos, v) -> {
+        GEO_FILES.forEach((geoos, v) -> {
             v.forEach(file -> {
                 AppConstant.ACTI_OS.forEach(os -> {
                     if (geoos.endsWith(os)) {
@@ -80,8 +81,6 @@ public class FileCollect {
                             Files.lines(file.toPath()).forEach(id -> {
                                 try {
                                     writer.write("" + id + AppConstant.NEWL);
-                                    counter.set(1);
-                                    
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -93,6 +92,10 @@ public class FileCollect {
                 });
 
             });
-        });*/
+        });
+    }
+
+    public static void main(String[] args) {
+        initFilePath();
     }
 }

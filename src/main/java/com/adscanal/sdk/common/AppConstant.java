@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class AppConstant {
-    public static final Set<String> ACTI_GEOS = Sets.newHashSet( "IND");
-    public static final List<String> ACTI_OS = Lists.newArrayList( "ios");
+    public static final Set<String> ACTI_GEOS = Sets.newHashSet("AUS");
+    public static final List<String> ACTI_OS = Lists.newArrayList("ios");
     public static final String NEWL = "\r\n";
     public static final String IOS = "ios";
     public static final String ANDROID = "android";
@@ -26,14 +26,14 @@ public class AppConstant {
         try {
             Files.lines(uapath).forEach(ua -> {
                 String[] uary = ua.split("\\|");
-                ACTI_GEOS.forEach(geo -> {
-                    if (ua.startsWith(geo)) {
-                        if (!GEO_UA.containsKey(uary[0])) {
-                            GEO_UA.put(uary[0], Lists.newArrayList());
-                        }
-                        GEO_UA.get(uary[0]).add(uary[1]);
-                    }
-                });
+
+                if (!GEO_UA.containsKey(uary[0])) {
+                        GEO_UA.put(uary[0], Lists.newArrayList());
+                }else{
+
+                    GEO_UA.get(uary[0]).add(uary[1]);
+                }
+
 
             });
         } catch (IOException e) {

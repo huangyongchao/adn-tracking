@@ -1,5 +1,6 @@
 package com.adscanal.sdk.common;
 
+import com.adscanal.sdk.dto.LiveOffer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -55,6 +56,21 @@ public class AdTestUtils {
         int le = uas.size();
         int i = new Random().nextInt(le);
         return uas.get(i);
+    }
+
+
+    /**
+     *
+     * @param offers
+     * @return
+     */
+    public static LiveOffer randomOffers(List<LiveOffer> offers) {
+        if(offers ==null ){
+            return null;
+        }
+        int le = offers.size();
+        int i = new Random().nextInt(le);
+        return offers.get(i);
     }
 
 

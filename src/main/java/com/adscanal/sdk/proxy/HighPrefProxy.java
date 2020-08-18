@@ -2,7 +2,10 @@ package com.adscanal.sdk.proxy;
 
 import com.adscanal.sdk.common.AdTestUtils;
 import com.adscanal.sdk.common.AppConstant;
+import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.datafile.FileCollect;
+import com.adscanal.sdk.dto.LiveOffer;
+import com.google.common.collect.Lists;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -27,6 +30,7 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -178,8 +182,18 @@ public class HighPrefProxy implements Runnable {
             String host = address.getHostAddress();
             ExecutorService executor =
                     Executors.newFixedThreadPool(n_parallel_exit_nodes);
-            for (int i = 0; i < n_parallel_exit_nodes; i++)
-                executor.execute(new HighPrefProxy("in", host, i, n_parallel_exit_nodes));
+            List<String> paths = Lists.newArrayList();
+            paths.add("/Users/huangyongchao/Downloads/inios.log");
+
+            LiveOffer offer4 = new LiveOffer();
+            offer4.setOfferId("1931298");
+            offer4.setTrackUrl("https://3point14.g2afse.com/click?pid=1125&offer_id=1931298&ref_id={click_id}&sub2={pub_subid}&sub3={device_id}&sub1={click_id}");
+            List<LiveOffer> offers = Lists.newArrayList();
+            offers.add(offer4);
+
+            for (int i = 0; i < n_parallel_exit_nodes; i++) {
+                executor.execute(new HighPrefProxy("in", host, i, n_parallel_exit_nodes, offers, paths, "1"));
+            }
             executor.shutdown();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -187,17 +201,28 @@ public class HighPrefProxy implements Runnable {
     }
 
     private String geo = null;
+    private String geochar3 = null;
     private HighPrefClient client = null;
     private int seed = 0;
     private int totalslice = 5;
     private int line = 0;
     private int cursorline = 2500;
+    private List<LiveOffer> offers = null;
+    private List<String> deviceidfiles = null;
+    private String os = null;
 
-    public HighPrefProxy(String geo, String proxyhost, int seed, int nodes) {
+
+    public HighPrefProxy(String geo, String proxyhost, int seed, int nodes, List<LiveOffer> offers, List<String> deviceidfiles, String os) {
         this.geo = geo;
         client = new HighPrefClient(geo, proxyhost);
         this.seed = seed;
         this.totalslice = nodes;
+        this.offers = offers;
+        this.deviceidfiles = deviceidfiles;
+        this.os = os;
+        this.geochar3 = GeoMap.word2Map.get(geo.toUpperCase());
+
+
     }
 
     @Override
@@ -207,44 +232,47 @@ public class HighPrefProxy implements Runnable {
             if (client == null || geo == null) {
                 System.out.println("Please set geo");
             }
-            try {
-
-                Files.lines(Paths.get("/Volumes/FrankSSD/distdevid/inios.log")).forEach(deviceid -> {
-                    if (++line % totalslice != seed || line < cursorline) {
-                        return;
-                    }
-                    if (at_req.getAndAdd(1) < n_total_req) {
-                        if (!client.have_good_super_proxy())
-                            client.switch_session_id();
-                        if (client.n_req_for_exit_node == switch_ip_every_n_req)
-                            client.switch_session_id();
-                        CloseableHttpResponse response = null;
-                        try {
-                            String url = AdTestUtils.trackurl("https://3point14.g2afse.com/click?pid=1125&offer_id=1931298&ref_id={click_id}&sub2={pub_subid}&sub3={device_id}&sub1={click_id}", ("AC" + seed + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
-                            response = client.request(url, AdTestUtils.randomUA("IND", "1"));
-                            int code = response.getStatusLine().getStatusCode();
-                            if (code == HttpStatus.SC_OK) {
-                                String msg = "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();
-                                System.out.println(msg);
-                                logger.error(msg);
-                            }
-                        } catch (Exception e) {
-                            error_req_account.incrementAndGet();
-                            errorlog.error(e.getMessage());
-                            System.out.println(e.getMessage());
-                        } finally {
+            deviceidfiles.parallelStream().forEach(path -> {
+                try {
+                    Files.lines(Paths.get(path)).forEach(deviceid -> {
+                        if (++line % totalslice != seed || line < cursorline) {
+                            return;
+                        }
+                        if (at_req.getAndAdd(1) < n_total_req) {
+                            if (!client.have_good_super_proxy())
+                                client.switch_session_id();
+                            if (client.n_req_for_exit_node == switch_ip_every_n_req)
+                                client.switch_session_id();
+                            CloseableHttpResponse response = null;
                             try {
-                                if (response != null)
-                                    response.close();
+                                LiveOffer offer = AdTestUtils.randomOffers(offers);
+                                String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" + seed + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                                String ua = AdTestUtils.randomUA(geochar3, os);
+                                response = client.request(url, ua);
+                                int code = response.getStatusLine().getStatusCode();
+                                if (code == HttpStatus.SC_OK || code == 307) {
+                                    String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();
+                                    System.out.println(msg);
+                                    logger.warn(msg);
+                                }
                             } catch (Exception e) {
+                                error_req_account.incrementAndGet();
+                                errorlog.error(e.getMessage());
+                                System.out.println(e.getMessage());
+                            } finally {
+                                try {
+                                    if (response != null)
+                                        response.close();
+                                } catch (Exception e) {
+                                }
                             }
                         }
-                    }
 
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
 
             client.close();
