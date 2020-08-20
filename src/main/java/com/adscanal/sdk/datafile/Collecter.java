@@ -1,38 +1,72 @@
 package com.adscanal.sdk.datafile;
 
-import com.adscanal.sdk.common.AppConstant;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * @author huangyongchao
  */
-public class FileCollect {
+public class Collecter {
     public static final String rootPath = "/Volumes/FrankSSD/deviceid/devid";
     public static final String deviceidlog = "/Volumes/FrankSSD/";
     private static BufferedWriter writer = null;
 
-
     public static final Map<String, Collection<File>> GEO_FILES = Maps.newHashMap();
 
+    public static final Set<String> ACTI_GEOS = Sets.newHashSet("VNM");
+    public static final List<String> ACTI_OS = Lists.newArrayList("ios");
+    public static final String NEWL = "\r\n";
+    public static final String IOS = "ios";
+    public static final String ANDROID = "android";
+    public static Path uapath = Paths.get("/Users/huangyongchao/newprj/src/main/java/com/adscanal/sdk/datafile/ua");
+    public static Map<String, List<String>> GEO_UA = Maps.newHashMap();
     static {
-        AppConstant.ACTI_GEOS.forEach(geo -> {
-            GEO_FILES.put(geo + AppConstant.IOS, new ConcurrentSkipListSet<>());
-            GEO_FILES.put(geo + AppConstant.ANDROID, new ConcurrentSkipListSet<>());
+        ACTI_GEOS.forEach(geo -> {
+            GEO_FILES.put(geo + IOS, new ConcurrentSkipListSet<>());
+            GEO_FILES.put(geo + ANDROID, new ConcurrentSkipListSet<>());
 
         });
     }
+
+    public static void initGua() {
+        try {
+            Files.lines(uapath).forEach(ua -> {
+                String[] uary = ua.split("\\|");
+
+                if (!GEO_UA.containsKey(uary[0])) {
+                    GEO_UA.put(uary[0], Lists.newArrayList());
+                }else{
+                    if(ua.indexOf("1|")>0){
+                        if(ua.indexOf("Phone")>0){
+                            GEO_UA.get(uary[0]).add(uary[1]);
+                        }
+                    }else{
+                        GEO_UA.get(uary[0]).add(uary[1]);
+
+                    }
+                }
+
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public static void initFilePath() {
 
@@ -40,10 +74,10 @@ public class FileCollect {
             java.nio.file.Files.walkFileTree(new File(rootPath).toPath(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    AppConstant.ACTI_GEOS.forEach(geo -> {
+                    ACTI_GEOS.forEach(geo -> {
                         String path = file.toString();
                         if (path.indexOf(geo.toLowerCase()) > 0) {
-                            AppConstant.ACTI_OS.forEach(os -> {
+                            ACTI_OS.forEach(os -> {
                                 if (path.indexOf(os.toLowerCase()) >= 0) {
                                     GEO_FILES.get(geo + os).add(file.toFile());
                                 }
@@ -65,7 +99,7 @@ public class FileCollect {
         }
         GEO_FILES.forEach((geoos, v) -> {
             v.forEach(file -> {
-                AppConstant.ACTI_OS.forEach(os -> {
+                ACTI_OS.forEach(os -> {
                     if (geoos.endsWith(os)) {
                         try {
 
@@ -80,7 +114,7 @@ public class FileCollect {
 
                             Files.lines(file.toPath()).forEach(id -> {
                                 try {
-                                    writer.write("" + id + AppConstant.NEWL);
+                                    writer.write("" + id + NEWL);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

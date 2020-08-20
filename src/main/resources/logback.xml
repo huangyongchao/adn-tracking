@@ -58,6 +58,23 @@
     </logger>
 
 
+    <appender name="DROPTRACK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder charset="${log.charset}">
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>./log/dtrack%d{yyyyMMdd}.log</FileNamePattern>
+            <MaxHistory>15</MaxHistory>ls
+        </rollingPolicy>
+
+
+    </appender>
+    <logger name="dtrack" additivity="false" level="INFO">
+        <appender-ref ref="DROPTRACK"/>
+    </logger>
+
+
     <logger name="org.apache" level="ERROR"/>
     <logger name="org.apache.kafka" level="INFO"/>
     <logger name="org.springframework" level="ERROR"/>

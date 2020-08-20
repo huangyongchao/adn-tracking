@@ -1,5 +1,6 @@
 package com.adscanal.sdk.common;
 
+import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -52,7 +53,7 @@ public class AdTestUtils {
      */
     public static String randomUA(String geo, String os) {
 
-        List<String> uas = AppConstant.GEO_UA.get(geo + os);
+        List<String> uas = Collecter.GEO_UA.get(geo + os);
         int le = uas.size();
         int i = new Random().nextInt(le);
         return uas.get(i);

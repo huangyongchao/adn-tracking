@@ -1,10 +1,12 @@
 package com.adscanal.sdk.proxy;
 
 import com.adscanal.sdk.common.AdTestUtils;
-import com.adscanal.sdk.common.AppConstant;
 import com.adscanal.sdk.common.GeoMap;
-import com.adscanal.sdk.datafile.FileCollect;
+import com.adscanal.sdk.common.HttpClientUtil;
+import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
@@ -38,11 +40,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class HighPrefClient {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleProxy.class);
+    private static final Logger logger = LoggerFactory.getLogger(HighPrefClient.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger tracklogger = LoggerFactory.getLogger("track");
-    public static final String username = "lum-customer-hl_97bee780-zone-static_res";
-    public static final String password = "gwh05xf366u6";
+    private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
+
+/*    public static final String username = "lum-customer-hl_97bee780-zone-static_res";
+    public static final String password = "gwh05xf366u6";*/
+
+    public static final String username = "lum-customer-hl_97bee780-zone-static-route_err-pass_dyn";
+    public static final String password = "q5srrwcvkx9x";
+
     public static final int port = 22225;
     public static final String user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B72c";
     public static final int max_failures = 3;
@@ -106,26 +114,49 @@ class HighPrefClient {
                 .build();
     }
 
-    public CloseableHttpResponse request(String url, String ua) throws IOException {
+    public boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
+        if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+            String location = response.getHeaders("Location")[0].toString().substring(10).trim();
+            if (location.startsWith("http")) {
+                return true;
+            } else {
+                dtracklogger.info(offer.getOfferId() + ":" + location);
+            }
+        }
+        return false;
+    }
+
+    public CloseableHttpResponse request(String url, String ua, LiveOffer offer) throws IOException {
         try {
-            tracklogger.warn(url);
-            url = AdTestUtils.urlEncode(url);
-            HttpGet request = new HttpGet(url);
-            request.setProtocolVersion(HttpVersion.HTTP_1_0);
-            request.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
-            request.addHeader(HTTP.CONTENT_ENCODING, "gzip,deflate");
-            request.setHeader("User-Agent", ua);
-            CloseableHttpResponse response = client.execute(request);
-            if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
-                String location = response.getHeaders("Location")[0].toString().substring(10).trim();
-                response = request(location, ua);
+            CloseableHttpResponse response = null;
+            for (int i = 0; i < 5; i++) {
+                System.out.println(url);
+                url = AdTestUtils.urlEncode(url);
+                HttpGet request = new HttpGet(url);
+                request.setProtocolVersion(HttpVersion.HTTP_1_0);
+                request.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
+                request.addHeader(HTTP.CONTENT_ENCODING, "gzip,deflate");
+                request.setHeader("User-Agent", ua);
+                response = client.execute(request);
+                if (!isRedirect(offer, response)) {
+                    break;
+                } else {
+                    if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+                        url = response.getHeaders("Location")[0].toString().substring(10).trim();
+                    } else {
+                        break;
+
+                    }
+                }
             }
             handle_response(response);
             return response;
+
         } catch (IOException e) {
             handle_response(null);
             throw e;
         }
+
     }
 
     public void handle_response(HttpResponse response) {
@@ -159,11 +190,12 @@ class HighPrefClient {
 }
 
 public class HighPrefProxy implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(SimpleProxy.class);
+    private static final Logger logger = LoggerFactory.getLogger(HighPrefProxy.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger tracklogger = LoggerFactory.getLogger("track");
+    private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
 
-    public static final int n_parallel_exit_nodes = 20;
+    public static final int n_parallel_exit_nodes = 100;
     public static final int n_total_req = 10000000;
     public static final int switch_ip_every_n_req = 40;
     public static AtomicInteger at_req = new AtomicInteger(0);
@@ -171,8 +203,8 @@ public class HighPrefProxy implements Runnable {
     public static AtomicInteger error_req_account = new AtomicInteger(0);
 
     public static void main(String[] args) {
-        AppConstant.initGua();
-        FileCollect.initFilePath();
+
+        Collecter.initFilePath();
         System.out.println("To enable your free eval account and get "
                 + "CUSTOMER, YOURZONE and YOURPASS, please contact "
                 + "sales@luminati.io");
@@ -180,19 +212,30 @@ public class HighPrefProxy implements Runnable {
             int proxy_session_id = new Random().nextInt(Integer.MAX_VALUE);
             InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
             String host = address.getHostAddress();
+            List<LiveOffer> offers = Lists.newArrayList();
+            String cgeo = "VN";
+
+            try {
+                String respj = HttpClientUtil.get("http://44.235.122.213:8080/liveoffers?auth=18&type=3&location=" + cgeo);
+
+                JSONArray respja = JSONArray.parseArray(respj);
+                if (respja != null && respja.size() > 0) {
+                    respja.forEach(n -> {
+                        JSONObject o = (JSONObject) n;
+                        LiveOffer offer = o.toJavaObject(LiveOffer.class);
+                        offers.add(offer);
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ExecutorService executor =
                     Executors.newFixedThreadPool(n_parallel_exit_nodes);
             List<String> paths = Lists.newArrayList();
-            paths.add("/Users/huangyongchao/Downloads/inios.log");
-
-            LiveOffer offer4 = new LiveOffer();
-            offer4.setOfferId("1931298");
-            offer4.setTrackUrl("https://3point14.g2afse.com/click?pid=1125&offer_id=1931298&ref_id={click_id}&sub2={pub_subid}&sub3={device_id}&sub1={click_id}");
-            List<LiveOffer> offers = Lists.newArrayList();
-            offers.add(offer4);
+            paths.add("/Users/huangyongchao/did/VNMios.log");
 
             for (int i = 0; i < n_parallel_exit_nodes; i++) {
-                executor.execute(new HighPrefProxy("in", host, i, n_parallel_exit_nodes, offers, paths, "1"));
+                executor.execute(new HighPrefProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, "1"));
             }
             executor.shutdown();
         } catch (UnknownHostException e) {
@@ -206,7 +249,7 @@ public class HighPrefProxy implements Runnable {
     private int seed = 0;
     private int totalslice = 5;
     private int line = 0;
-    private int cursorline = 2500;
+    private int cursorline = 0;
     private List<LiveOffer> offers = null;
     private List<String> deviceidfiles = null;
     private String os = null;
@@ -248,7 +291,7 @@ public class HighPrefProxy implements Runnable {
                                 LiveOffer offer = AdTestUtils.randomOffers(offers);
                                 String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" + seed + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                                 String ua = AdTestUtils.randomUA(geochar3, os);
-                                response = client.request(url, ua);
+                                response = client.request(url, ua, offer);
                                 int code = response.getStatusLine().getStatusCode();
                                 if (code == HttpStatus.SC_OK || code == 307) {
                                     String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();

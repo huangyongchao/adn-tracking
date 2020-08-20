@@ -1,8 +1,45 @@
 package com.adscanal.sdk.dto;
 
+import org.apache.http.HttpVersion;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.protocol.HTTP;
+
+/**
+ *
+ */
 public class LiveOffer {
+
+    public static void main(String[] args) {
+
+        try {
+            CloseableHttpClient client = HttpClients.custom()
+                    .setConnectionManager(new BasicHttpClientConnectionManager())
+
+                    .build();
+            HttpGet request = new HttpGet("http://44.235.122.213:8080/liveoffers?auth=18&type=3&location=VN");
+            request.setProtocolVersion(HttpVersion.HTTP_1_1);
+            request.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
+            request.addHeader(HTTP.CONTENT_ENCODING, "gzip,deflate");
+            request.addHeader("Accept","text/xml");
+            request.setConfig(RequestConfig.custom().setContentCompressionEnabled(true).setRedirectsEnabled(false).build());
+
+            CloseableHttpResponse response = client.execute(request);
+            System.out.println(response.getHeaders(HTTP.CONTENT_LEN));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private int uid;
     private String offerId;
+    private String pubisherId;
     private String name;
     private int affiliateId;
     private String affiliateName;
@@ -35,6 +72,9 @@ public class LiveOffer {
     private String rankPlatform;
     private String clickId;
     private String trackUrl;
+    private String trackUrl1;
+    private String trackUrl2;
+    private String trackUrl3;
     private String imprurl;
     private String appId;
     private String appName;
@@ -843,5 +883,37 @@ public class LiveOffer {
 
     public void setAffiliatePayevent(String affiliatePayevent) {
         this.affiliatePayevent = affiliatePayevent;
+    }
+
+    public String getTrackUrl1() {
+        return trackUrl1;
+    }
+
+    public void setTrackUrl1(String trackUrl1) {
+        this.trackUrl1 = trackUrl1;
+    }
+
+    public String getTrackUrl2() {
+        return trackUrl2;
+    }
+
+    public void setTrackUrl2(String trackUrl2) {
+        this.trackUrl2 = trackUrl2;
+    }
+
+    public String getTrackUrl3() {
+        return trackUrl3;
+    }
+
+    public void setTrackUrl3(String trackUrl3) {
+        this.trackUrl3 = trackUrl3;
+    }
+
+    public String getPubisherId() {
+        return pubisherId;
+    }
+
+    public void setPubisherId(String pubisherId) {
+        this.pubisherId = pubisherId;
     }
 }
