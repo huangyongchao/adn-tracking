@@ -195,7 +195,7 @@ public class HighPrefProxy implements Runnable {
     private static final Logger tracklogger = LoggerFactory.getLogger("track");
     private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
 
-    public static final int n_parallel_exit_nodes = 100;
+    public static final int n_parallel_exit_nodes = 1;
     public static final int n_total_req = 10000000;
     public static final int switch_ip_every_n_req = 40;
     public static AtomicInteger at_req = new AtomicInteger(0);
@@ -203,12 +203,13 @@ public class HighPrefProxy implements Runnable {
     public static AtomicInteger error_req_account = new AtomicInteger(0);
 
     public static void main(String[] args) {
-
+        Collecter.initGua();
         Collecter.initFilePath();
         System.out.println("To enable your free eval account and get "
                 + "CUSTOMER, YOURZONE and YOURPASS, please contact "
                 + "sales@luminati.io");
         try {
+
             int proxy_session_id = new Random().nextInt(Integer.MAX_VALUE);
             InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
             String host = address.getHostAddress();
