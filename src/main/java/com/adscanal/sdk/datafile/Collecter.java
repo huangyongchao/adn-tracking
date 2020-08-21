@@ -30,7 +30,7 @@ public class Collecter {
     public static final String NEWL = "\r\n";
     public static final String IOS = "ios";
     public static final String ANDROID = "android";
-    public static Path uapath = Paths.get("/Users/huangyongchao/newprj/src/main/java/com/adscanal/sdk/datafile/ua");
+    public static Path uapath = Paths.get("/opt/did/ua");
     public static Map<String, List<String>> GEO_UA = Maps.newHashMap();
     static {
         ACTI_GEOS.forEach(geo -> {
@@ -39,6 +39,11 @@ public class Collecter {
 
         });
     }
+/*
+    System.out.println(Files.lines(Paths.get(path)).count());
+    System.out.println(Files.lines(Paths.get(path)).distinct().count());
+    Files.write(Paths.get(path + ".dist"), Files.lines(Paths.get(path)).distinct().collect(Collectors.toList()));
+*/
 
     public static void initGua() {
         try {

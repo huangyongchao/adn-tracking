@@ -38,6 +38,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 class HighPrefClient {
     private static final Logger logger = LoggerFactory.getLogger(HighPrefClient.class);
@@ -74,7 +75,17 @@ class HighPrefClient {
     public void switch_session_id() {
         session_id = Integer.toString(rng.nextInt(Integer.MAX_VALUE));
         n_req_for_exit_node = 0;
-        super_proxy = new HttpHost(host, port);
+    /*    51.15.11.249:2752
+        51.15.11.249:2753
+        51.15.11.249:2754
+        51.15.11.249:2755
+        51.15.11.249:2756
+        51.15.11.249:2757
+        51.15.11.249:2758
+        51.15.11.249:2759
+        51.15.11.249:2760*/
+
+        super_proxy = new HttpHost("51.15.11.249", 2751);
         update_client();
     }
 
@@ -109,7 +120,9 @@ class HighPrefClient {
                     }
                 })
                 .setProxy(super_proxy)
+/*
                 .setDefaultCredentialsProvider(cred_provider)
+*/
                 .setDefaultRequestConfig(config)
                 .build();
     }
@@ -134,14 +147,15 @@ class HighPrefClient {
                 url = AdTestUtils.urlEncode(url);
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_0);
-                request.addHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
-                request.addHeader(HTTP.CONTENT_ENCODING, "gzip,deflate");
-                request.setHeader("User-Agent", ua);
+                request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
+                request.addHeader(HttpHeaders.CONTENT_ENCODING, "gzip,deflate");
+                request.addHeader(HttpHeaders.USER_AGENT, ua);
                 response = client.execute(request);
                 if (!isRedirect(offer, response)) {
                     break;
                 } else {
                     if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+                        request.addHeader(HttpHeaders.REFERER, url);
                         url = response.getHeaders("Location")[0].toString().substring(10).trim();
                     } else {
                         break;
@@ -217,6 +231,7 @@ public class HighPrefProxy implements Runnable {
             String cgeo = "VN";
 
             try {
+                //http://54.218.163.206:5080/openapi/test
                 String respj = HttpClientUtil.get("http://44.235.122.213:8080/liveoffers?auth=18&type=3&location=" + cgeo);
 
                 JSONArray respja = JSONArray.parseArray(respj);
@@ -230,12 +245,16 @@ public class HighPrefProxy implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if(offers.size() ==0){
+                return;
+            }
+
             ExecutorService executor =
                     Executors.newFixedThreadPool(n_parallel_exit_nodes);
             List<String> paths = Lists.newArrayList();
-            paths.add("/Users/huangyongchao/did/VNMios.log");
+            paths.add("/Users/huangyongchao/did/VNMios.log.dist");
 
-            for (int i = 0; i < n_parallel_exit_nodes; i++) {
+            for (int i = 2751; i <= 2760; i++) {
                 executor.execute(new HighPrefProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, "1"));
             }
             executor.shutdown();
@@ -278,6 +297,7 @@ public class HighPrefProxy implements Runnable {
             }
             deviceidfiles.parallelStream().forEach(path -> {
                 try {
+
                     Files.lines(Paths.get(path)).forEach(deviceid -> {
                         if (++line % totalslice != seed || line < cursorline) {
                             return;
@@ -292,7 +312,7 @@ public class HighPrefProxy implements Runnable {
                                 LiveOffer offer = AdTestUtils.randomOffers(offers);
                                 String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" + seed + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                                 String ua = AdTestUtils.randomUA(geochar3, os);
-                                response = client.request(url, ua, offer);
+                                response = client.request("http://54.218.163.206:5080/openapi/test", ua, offer);
                                 int code = response.getStatusLine().getStatusCode();
                                 if (code == HttpStatus.SC_OK || code == 307) {
                                     String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();

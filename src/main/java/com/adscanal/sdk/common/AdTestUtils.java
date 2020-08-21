@@ -12,7 +12,6 @@ import java.util.Random;
  */
 public class AdTestUtils {
     public static String urlEncode(String url) {
-
         if (url.indexOf("{") > -1) {
             url = StringUtils.replaceAll(url, "\\{", "%7B");
         }
@@ -23,6 +22,7 @@ public class AdTestUtils {
     }
 
     public static String trackurl(String track, String pubsub, String deviceid, String clickid, String appname) {
+        track = track + "&sub4={idfa}";
         if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(pubsub)) {
             track = StringUtils.replaceAll(track, "\\{pub_subid}", pubsub);
         }
