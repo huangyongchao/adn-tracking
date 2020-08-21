@@ -20,7 +20,9 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author huangyongchao
  */
+@Service
 public class ShifterProxy {
     private static final Logger logger = LoggerFactory.getLogger(ShifterProxy.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
@@ -137,7 +140,8 @@ public class ShifterProxy {
         fail_count++;
     }
 
-    public static void launch() {
+    @PostConstruct
+    public  void launch() {
         Collecter.initGua();
         Collecter.initFilePath();
 
