@@ -88,7 +88,7 @@ public class ShifterProxy {
             if (location.startsWith("http")) {
                 return true;
             } else {
-                dtracklogger.info(offer.getOfferId() + ":" + location);
+                //dtracklogger.info(offer.getOfferId() + ":" + location);
             }
         }
         return false;
@@ -193,7 +193,7 @@ public class ShifterProxy {
                         if (code == HttpStatus.SC_OK) {
                             String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();
                             System.out.println(msg);
-                            logger.warn(msg);
+                            //logger.warn(msg);
                         }
                     } catch (Exception e) {
                         error_req_account.incrementAndGet();
@@ -217,4 +217,7 @@ public class ShifterProxy {
 
     }
 
+    public static void main(String[] args) {
+        launch();
+    }
 }
