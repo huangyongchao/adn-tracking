@@ -140,8 +140,7 @@ public class ShifterProxy {
         fail_count++;
     }
 
-    @PostConstruct
-    public  void launch() {
+    public  static void launch() {
         Collecter.initGua();
         Collecter.initFilePath();
 
