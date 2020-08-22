@@ -17,5 +17,5 @@ echo $datetime
 
 mvn clean install -Dmaven.test.skip=true
 `mv ./target/$name*.jar  ./target/$name.jar`
-java -server   -jar "target/$name.jar"  &
+java   -jar "target/$name.jar"  &
 echo "$name service is up..."
