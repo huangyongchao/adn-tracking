@@ -77,6 +77,7 @@ public class ShifterProxy {
                     }
                 })
                 .setProxy(super_proxy)
+                .setConnectionManagerShared(true)
                 .setDefaultRequestConfig(config)
                 .build();
     }
