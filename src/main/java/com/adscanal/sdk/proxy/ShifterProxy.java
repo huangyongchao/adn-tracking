@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -100,10 +99,10 @@ public class ShifterProxy {
             for (int i = 0; i < 5; i++) {
                 url = AdTestUtils.urlEncode(url);
                 HttpGet request = new HttpGet(url);
-                request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
                 request.addHeader(HttpHeaders.USER_AGENT, ua);
                 response = client.execute(request);
+                request.releaseConnection();
                 if (!isRedirect(offer, response)) {
                     break;
                 } else {
@@ -125,12 +124,12 @@ public class ShifterProxy {
 
     }
 
-    public static boolean status_code_requires_exit_node_switch(int code) {
+    public static boolean statusError(int code) {
         return code == 403 || code == 429 || code == 502 || code == 503;
     }
 
     public static void handle_response(HttpResponse response) {
-        if (response != null && !status_code_requires_exit_node_switch(
+        if (response != null && !statusError(
                 response.getStatusLine().getStatusCode())) {
             // success or other client/website error like 404...
             n_req_for_exit_node++;
@@ -141,13 +140,13 @@ public class ShifterProxy {
     }
 
     public  static void launch() {
-        Collecter.initGua();
-        Collecter.initFilePath();
+
 
         List<LiveOffer> offers = Lists.newArrayList();
         String cgeo = "VN";
         String cgeo3 = "VNM";
         String os = "1";
+        logger.warn("proxy: start "+new Date());
 
         try {
             //http://54.218.163.206:5080/openapi/test
@@ -176,12 +175,12 @@ public class ShifterProxy {
 
 
         try {
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "200");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
 
-            AtomicInteger i = new AtomicInteger(0);
             Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
-                int seed = i.getAndIncrement() % 10;
-                if (at_req.getAndAdd(1) < n_total_req) {
+                int i = at_req.getAndAdd(1);
+                int seed = i % 10;
+                if (i < n_total_req) {
                     CloseableHttpClient client = clients.get(seed);
                     CloseableHttpResponse response = null;
                     try {
@@ -192,8 +191,10 @@ public class ShifterProxy {
                         int code = response.getStatusLine().getStatusCode();
                         if (code == HttpStatus.SC_OK) {
                             String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();
-                            System.out.println(msg);
-                            //logger.warn(msg);
+                            if(i%100==0){
+                                logger.warn(msg);
+                                System.out.println(msg);
+                            }
                         }
                     } catch (Exception e) {
                         error_req_account.incrementAndGet();
@@ -213,11 +214,7 @@ public class ShifterProxy {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        logger.warn("proxy: end "+new Date());
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
 }

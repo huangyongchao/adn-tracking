@@ -150,6 +150,8 @@ class HighPrefClient {
                 request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
                 request.addHeader(HttpHeaders.CONTENT_ENCODING, "gzip,deflate");
                 request.addHeader(HttpHeaders.USER_AGENT, ua);
+                request.addHeader(HttpHeaders.RANGE, "0-100");
+                request.addHeader(HttpHeaders.CONTENT_RANGE, "0-100");
                 response = client.execute(request);
                 if (!isRedirect(offer, response)) {
                     break;
@@ -252,7 +254,7 @@ public class HighPrefProxy implements Runnable {
             ExecutorService executor =
                     Executors.newFixedThreadPool(n_parallel_exit_nodes);
             List<String> paths = Lists.newArrayList();
-            paths.add("/Users/huangyongchao/did/VNMios.log.dist");
+            paths.add("/opt/did/VNMios.log.dist");
 
             for (int i = 2751; i <= 2760; i++) {
                 executor.execute(new HighPrefProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, "1"));
