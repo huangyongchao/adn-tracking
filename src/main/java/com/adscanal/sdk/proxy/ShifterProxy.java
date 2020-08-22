@@ -84,7 +84,7 @@ public class ShifterProxy {
         cm.setDefaultMaxPerRoute(Integer.MAX_VALUE);
 
         return HttpClients.custom()
-                .setConnectionManager(cm)
+                .setConnectionManager(conn_mgr)
                 .setRedirectStrategy(new RedirectStrategy() {
                     @Override
                     public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
