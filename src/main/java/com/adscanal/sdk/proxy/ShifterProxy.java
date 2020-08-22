@@ -99,6 +99,7 @@ public class ShifterProxy {
             for (int i = 0; i < 5; i++) {
                 url = AdTestUtils.urlEncode(url);
                 HttpGet request = new HttpGet(url);
+                request.setProtocolVersion(HttpVersion.HTTP_1_0);
                 request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
                 request.addHeader(HttpHeaders.USER_AGENT, ua);
                 response = client.execute(request);
@@ -175,7 +176,7 @@ public class ShifterProxy {
 
 
         try {
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "120");
 
             Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
