@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
@@ -22,6 +23,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
@@ -69,19 +71,15 @@ public class ShifterProxy {
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
 
 
-        ConnectionSocketFactory plainsf = PlainConnectionSocketFactory
-                .getSocketFactory();
-        LayeredConnectionSocketFactory sslsf = SSLConnectionSocketFactory
-                .getSocketFactory();
-        Registry<ConnectionSocketFactory> registry = RegistryBuilder
-                .<ConnectionSocketFactory> create().register("http", plainsf)
-                .register("https", sslsf).build();
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
-                registry);
-        // 将最大连接数增加
-        cm.setMaxTotal(Integer.MAX_VALUE);
-        // 将每个路由基础的连接增加
-        cm.setDefaultMaxPerRoute(Integer.MAX_VALUE);
+        ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
+            @Override
+            public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+                HeaderElementIterator it = new BasicHeaderElementIterator
+                        (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                return 60 * 1000;
+            }
+        };
+
 
         return HttpClients.custom()
                 .setConnectionManager(conn_mgr)
@@ -99,6 +97,7 @@ public class ShifterProxy {
                 .setProxy(super_proxy)
                 .setConnectionManagerShared(true)
                 .setDefaultRequestConfig(config)
+                .setKeepAliveStrategy(myStrategy)
                 .build();
     }
 
@@ -114,6 +113,9 @@ public class ShifterProxy {
         return false;
     }
 
+
+
+
     public static CloseableHttpResponse request(CloseableHttpClient client, String url, String ua, LiveOffer offer) throws IOException {
         try {
             CloseableHttpResponse response = null;
@@ -123,6 +125,7 @@ public class ShifterProxy {
                 request.setProtocolVersion(HttpVersion.HTTP_1_0);
                 request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
                 request.addHeader(HttpHeaders.USER_AGENT, ua);
+
                 response = client.execute(request);
                 request.releaseConnection();
                 if (!isRedirect(offer, response)) {
@@ -201,7 +204,7 @@ public class ShifterProxy {
 
             Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
-                if(i<1000000){
+                if(i<5000000){
                     return;
                 }
                 if (i < n_total_req) {
