@@ -2,7 +2,6 @@ package com.adscanal.sdk.proxy;
 
 import com.adscanal.sdk.common.AdTestUtils;
 import com.adscanal.sdk.common.HttpClientUtil;
-import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -13,6 +12,13 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -42,7 +48,7 @@ public class ShifterProxy {
     public static int fail_count;
     public static int n_req_for_exit_node;
     public static final int max_failures = 3;
-    public static final int req_timeout = 60 * 1000;
+    public static final int req_timeout = 10 * 1000;
 
     public static AtomicInteger at_req = new AtomicInteger(0);
     public static AtomicInteger success_req_account = new AtomicInteger(0);
@@ -63,8 +69,22 @@ public class ShifterProxy {
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
 
 
+        ConnectionSocketFactory plainsf = PlainConnectionSocketFactory
+                .getSocketFactory();
+        LayeredConnectionSocketFactory sslsf = SSLConnectionSocketFactory
+                .getSocketFactory();
+        Registry<ConnectionSocketFactory> registry = RegistryBuilder
+                .<ConnectionSocketFactory> create().register("http", plainsf)
+                .register("https", sslsf).build();
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
+                registry);
+        // 将最大连接数增加
+        cm.setMaxTotal(Integer.MAX_VALUE);
+        // 将每个路由基础的连接增加
+        cm.setDefaultMaxPerRoute(Integer.MAX_VALUE);
+
         return HttpClients.custom()
-                .setConnectionManager(conn_mgr)
+                .setConnectionManager(cm)
                 .setRedirectStrategy(new RedirectStrategy() {
                     @Override
                     public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
@@ -177,12 +197,15 @@ public class ShifterProxy {
 
 
         try {
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "2000");
 
             Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
-                int seed = i % 10;
+                if(i<1000000){
+                    return;
+                }
                 if (i < n_total_req) {
+                    int seed = i % 10;
                     CloseableHttpClient client = clients.get(seed);
                     CloseableHttpResponse response = null;
                     try {
