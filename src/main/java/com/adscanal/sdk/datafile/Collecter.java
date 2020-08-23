@@ -137,14 +137,14 @@ public class Collecter {
 
     public static void main(String[] args) {
         // initFilePath();
-        try {
+/*        try {
             String path =  "/Volumes/FrankSSD/VNMios.log";
             System.out.println(Files.lines(Paths.get(path)).count());
             System.out.println(Files.lines(Paths.get(path)).distinct().count());
             Files.write(Paths.get(path + ".dist"), Files.lines(Paths.get(path)).distinct().collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 }
