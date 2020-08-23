@@ -12,13 +12,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -26,13 +20,21 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -60,45 +62,65 @@ public class ShifterProxy {
 
     public static CloseableHttpClient createClient(String ip, int port) {
 
-        HttpHost super_proxy = new HttpHost(ip, port);
-        RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(req_timeout)
-                .setConnectionRequestTimeout(req_timeout)
-                .build();
-        PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager();
-        conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
-        conn_mgr.setMaxTotal(Integer.MAX_VALUE);
+
+        try {
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
 
 
-        ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
-            @Override
-            public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-                HeaderElementIterator it = new BasicHeaderElementIterator
-                        (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-                return 60 * 1000;
-            }
-        };
+            HttpHost super_proxy = new HttpHost(ip, port);
+            RequestConfig config = RequestConfig.custom()
+                    .setConnectTimeout(req_timeout)
+                    .setConnectionRequestTimeout(req_timeout)
+                    .build();
+            PoolingHttpClientConnectionManager conn_mgr =
+                    new PoolingHttpClientConnectionManager();
+            conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
+            conn_mgr.setMaxTotal(Integer.MAX_VALUE);
 
 
-        return HttpClients.custom()
-                .setConnectionManager(conn_mgr)
-                .setRedirectStrategy(new RedirectStrategy() {
-                    @Override
-                    public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                        return false;
-                    }
+            ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
+                @Override
+                public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+                    HeaderElementIterator it = new BasicHeaderElementIterator
+                            (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                    return 60 * 1000;
+                }
+            };
 
-                    @Override
-                    public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                        return null;
-                    }
-                })
-                .setProxy(super_proxy)
-                .setConnectionManagerShared(true)
-                .setDefaultRequestConfig(config)
-                .setKeepAliveStrategy(myStrategy)
-                .build();
+
+            return HttpClients.custom()
+                    .setConnectionManager(conn_mgr)
+                    .setRedirectStrategy(new RedirectStrategy() {
+                        @Override
+                        public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                            return false;
+                        }
+
+                        @Override
+                        public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                            return null;
+                        }
+                    })
+                    .setProxy(super_proxy)
+                    .setConnectionManagerShared(true)
+                    .setDefaultRequestConfig(config)
+                    .setKeepAliveStrategy(myStrategy)
+                    .setSSLSocketFactory(sslsf)
+                    .build();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     public static boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
@@ -122,9 +144,13 @@ public class ShifterProxy {
             for (int i = 0; i < 5; i++) {
                 url = AdTestUtils.urlEncode(url);
                 HttpGet request = new HttpGet(url);
-                request.setProtocolVersion(HttpVersion.HTTP_1_0);
-                request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
+                request.setProtocolVersion(HttpVersion.HTTP_1_1);
+                request.addHeader(HttpHeaders.CONNECTION, "false");
+                request.addHeader(HttpHeaders.AUTHORIZATION, "");
                 request.addHeader(HttpHeaders.USER_AGENT, ua);
+                request.addHeader(HttpHeaders.ACCEPT_ENCODING, "*/*");
+                request.addHeader(HttpHeaders.CONTENT_TYPE, "text/html;charset=UTF-8");
+                request.addHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
 
                 response = client.execute(request);
                 request.releaseConnection();
@@ -132,7 +158,6 @@ public class ShifterProxy {
                     break;
                 } else {
                     if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
-                        request.addHeader(HttpHeaders.REFERER, url);
                         url = response.getHeaders("Location")[0].toString().substring(10).trim();
                     } else {
                         break;

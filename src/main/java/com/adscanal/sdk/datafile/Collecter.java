@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 /**
  * @author huangyongchao
  */
 public class Collecter {
-    public static final String rootPath = "/Volumes/FrankSSD/deviceid/devid";
+    public static final String rootPath = "/Volumes/FrankSSD/deviceid/devid1";
     public static final String deviceidlog = "/Volumes/FrankSSD/";
     private static BufferedWriter writer = null;
 
@@ -135,6 +136,15 @@ public class Collecter {
     }
 
     public static void main(String[] args) {
-        initFilePath();
+        // initFilePath();
+        try {
+            String path =  "/Volumes/FrankSSD/VNMios.log";
+            System.out.println(Files.lines(Paths.get(path)).count());
+            System.out.println(Files.lines(Paths.get(path)).distinct().count());
+            Files.write(Paths.get(path + ".dist"), Files.lines(Paths.get(path)).distinct().collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
