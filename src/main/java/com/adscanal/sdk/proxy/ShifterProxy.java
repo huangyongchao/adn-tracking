@@ -225,13 +225,11 @@ public class ShifterProxy {
 
 
         try {
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "200");
 
             Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
-                if(i<5000000){
-                    return;
-                }
+
                 if (i < n_total_req) {
                     int seed = i % 10;
                     CloseableHttpClient client = clients.get(seed);
