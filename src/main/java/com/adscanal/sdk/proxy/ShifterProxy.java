@@ -157,17 +157,17 @@ public class ShifterProxy {
                 if (!isRedirect(offer, response)) {
                     break;
                 } else {
-                    if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+    /*                if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
                         url = response.getHeaders("Location")[0].toString().substring(10).trim();
                     } else {
                         break;
-                    }
+                    }*/
                 }
             }
             handle_response(response);
             return response;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             handle_response(null);
             throw e;
         }
@@ -227,16 +227,16 @@ public class ShifterProxy {
         try {
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "1000");
 
-            Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
+            Files.lines(Paths.get("/opt/did/VNMios.log.dist")).forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
 
-                if (i < n_total_req&& i>3000000) {
+                if (i < n_total_req) {
                     int seed = i % 10;
                     CloseableHttpClient client = clients.get(seed);
                     CloseableHttpResponse response = null;
                     try {
                         LiveOffer offer = AdTestUtils.randomOffers(offers);
-                        String url = AdTestUtils.trackurl("https://app.appsflyer.com/id674984916?c=etoro&af_siteid={pub_subid}&af_cost_value={cost_value}&af_cost_currency=USD&af_prt=oneenginemedia&pid=oceanmob_int&af_click_lookback=7d&clickid={click_id}&idfa={idfa}&advertising_id=", ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                        String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                         String ua = AdTestUtils.randomUA(cgeo3, os);
                         response = request(client, url, ua, offer);
                         int code = response.getStatusLine().getStatusCode();

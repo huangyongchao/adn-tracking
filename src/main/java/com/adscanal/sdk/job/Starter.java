@@ -1,6 +1,6 @@
 package com.adscanal.sdk.job;
 
-import com.adscanal.sdk.proxy.ShifterProxy;
+import com.adscanal.sdk.proxy.LuminatiProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +15,9 @@ public class Starter {
     @Scheduled(fixedDelay = 600)
     public void proxy() {
         logger.warn("Start Proxy at " + new Date());
-        ShifterProxy.launch();
+        //ShifterProxy.launch();
+        LuminatiProxy.launch()
+        ;
 
 
     }

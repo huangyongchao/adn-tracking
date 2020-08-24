@@ -3,7 +3,6 @@ package com.adscanal.sdk.proxy;
 import com.adscanal.sdk.common.AdTestUtils;
 import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.common.HttpClientUtil;
-import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -17,20 +16,29 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +46,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 class HighPrefClient {
     private static final Logger logger = LoggerFactory.getLogger(HighPrefClient.class);
@@ -55,7 +62,7 @@ class HighPrefClient {
     public static final int port = 22225;
     public static final String user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B72c";
     public static final int max_failures = 3;
-    public static final int req_timeout = 60 * 1000;
+    public static final int req_timeout = 10 * 1000;
     public String session_id;
     public HttpHost super_proxy;
     public CloseableHttpClient client;
@@ -104,6 +111,21 @@ class HighPrefClient {
                 new PoolingHttpClientConnectionManager();
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
+        SSLConnectionSocketFactory sslsf = null;
+        try {
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    return true;
+                }
+            }).build();
+            sslsf = new SSLConnectionSocketFactory(sslContext);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
 
 
         client = HttpClients.custom()
@@ -120,11 +142,11 @@ class HighPrefClient {
                     }
                 })
                 .setProxy(super_proxy)
-/*
                 .setDefaultCredentialsProvider(cred_provider)
-*/
+                .setSSLSocketFactory(sslsf)
                 .setDefaultRequestConfig(config)
                 .build();
+
     }
 
     public boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
@@ -205,8 +227,8 @@ class HighPrefClient {
     }
 }
 
-public class HighPrefProxy implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(HighPrefProxy.class);
+public class LuminatiProxy implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(LuminatiProxy.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger tracklogger = LoggerFactory.getLogger("track");
     private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
@@ -218,12 +240,8 @@ public class HighPrefProxy implements Runnable {
     public static AtomicInteger success_req_account = new AtomicInteger(0);
     public static AtomicInteger error_req_account = new AtomicInteger(0);
 
-    public static void main(String[] args) {
-        Collecter.initGua();
-        Collecter.initFilePath();
-        System.out.println("To enable your free eval account and get "
-                + "CUSTOMER, YOURZONE and YOURPASS, please contact "
-                + "sales@luminati.io");
+    public static void launch() {
+
         try {
 
             int proxy_session_id = new Random().nextInt(Integer.MAX_VALUE);
@@ -256,8 +274,8 @@ public class HighPrefProxy implements Runnable {
             List<String> paths = Lists.newArrayList();
             paths.add("/opt/did/VNMios.log.dist");
 
-            for (int i = 2751; i <= 2760; i++) {
-                executor.execute(new HighPrefProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, "1"));
+            for (int i = 0; i <= n_parallel_exit_nodes; i++) {
+                executor.execute(new LuminatiProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, "1"));
             }
             executor.shutdown();
         } catch (UnknownHostException e) {
@@ -277,7 +295,7 @@ public class HighPrefProxy implements Runnable {
     private String os = null;
 
 
-    public HighPrefProxy(String geo, String proxyhost, int seed, int nodes, List<LiveOffer> offers, List<String> deviceidfiles, String os) {
+    public LuminatiProxy(String geo, String proxyhost, int seed, int nodes, List<LiveOffer> offers, List<String> deviceidfiles, String os) {
         this.geo = geo;
         client = new HighPrefClient(geo, proxyhost);
         this.seed = seed;
@@ -312,11 +330,11 @@ public class HighPrefProxy implements Runnable {
                             CloseableHttpResponse response = null;
                             try {
                                 LiveOffer offer = AdTestUtils.randomOffers(offers);
-                                String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" + seed + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                                String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                                 String ua = AdTestUtils.randomUA(geochar3, os);
-                                response = client.request("http://54.218.163.206:5080/openapi/test", ua, offer);
+                                response = client.request(url, ua, offer);
                                 int code = response.getStatusLine().getStatusCode();
-                                if (code == HttpStatus.SC_OK || code == 307) {
+                                if (code == HttpStatus.SC_OK ) {
                                     String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();
                                     System.out.println(msg);
                                     logger.warn(msg);
