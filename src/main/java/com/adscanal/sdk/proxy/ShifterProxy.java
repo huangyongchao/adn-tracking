@@ -230,7 +230,7 @@ public class ShifterProxy {
             Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
 
-                if (i < n_total_req) {
+                if (i < n_total_req&& i>3000000) {
                     int seed = i % 10;
                     CloseableHttpClient client = clients.get(seed);
                     CloseableHttpResponse response = null;
