@@ -227,7 +227,7 @@ public class ShifterProxy {
         try {
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "200");
 
-            Files.lines(Paths.get("/opt/did/VNMios.log.dist")).forEach(deviceid -> {
+            Files.lines(Paths.get("/opt/did/VNMios.log.dist")).parallel().forEach(deviceid -> {
                 int i = at_req.getAndAdd(1);
 
                 if (i < n_total_req) {
