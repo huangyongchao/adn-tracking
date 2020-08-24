@@ -236,7 +236,7 @@ public class ShifterProxy {
                     CloseableHttpResponse response = null;
                     try {
                         LiveOffer offer = AdTestUtils.randomOffers(offers);
-                        String url = AdTestUtils.trackurl("https://app.appsflyer.com/id674984916?c=etoro&af_siteid={pub_subid}&af_cost_value={cost_value}&af_cost_currency=USD&af_prt=oneenginemedia&pid=oceanmob_int&af_click_lookback=7d&clickid={click_id}&idfa={idfa}&advertising_id=", ("AC" + seed + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                        String url = AdTestUtils.trackurl("https://app.appsflyer.com/id674984916?c=etoro&af_siteid={pub_subid}&af_cost_value={cost_value}&af_cost_currency=USD&af_prt=oneenginemedia&pid=oceanmob_int&af_click_lookback=7d&clickid={click_id}&idfa={idfa}&advertising_id=", ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                         String ua = AdTestUtils.randomUA(cgeo3, os);
                         response = request(client, url, ua, offer);
                         int code = response.getStatusLine().getStatusCode();
