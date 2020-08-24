@@ -2,6 +2,7 @@ package com.adscanal.sdk.common;
 
 import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.adscanal.sdk.dto.OsE;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class AdTestUtils {
         return url;
     }
 
-    public static String trackurl(String track, String pubsub, String deviceid, String clickid, String appname) {
+    public static String trackurl(String os, String track, String pubsub, String deviceid, String clickid, String appname) {
         if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(pubsub)) {
             track = StringUtils.replaceAll(track, "\\{pub_subid}", pubsub);
         }
@@ -37,7 +38,12 @@ public class AdTestUtils {
         if (track.indexOf("{store_appid}") > -1 && StringUtils.isNotBlank(appname)) {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);
         }
-
+        if (OsE.IOS.v.equalsIgnoreCase(os) && track.indexOf("{idfa}") == -1) {
+            track = track + "&idfa=" + deviceid;
+        }
+        if (OsE.AOS.v.equalsIgnoreCase(os) && track.indexOf("{gaid}") == -1) {
+            track = track + "&gaid=" + deviceid;
+        }
         return track;
 
     }

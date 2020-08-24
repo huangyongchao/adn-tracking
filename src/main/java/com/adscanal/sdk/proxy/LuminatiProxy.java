@@ -4,9 +4,11 @@ import com.adscanal.sdk.common.AdTestUtils;
 import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.adscanal.sdk.dto.OsE;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -47,6 +49,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.google.common.net.HttpHeaders.COOKIE;
+
 class HighPrefClient {
     private static final Logger logger = LoggerFactory.getLogger(HighPrefClient.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
@@ -82,17 +86,7 @@ class HighPrefClient {
     public void switch_session_id() {
         session_id = Integer.toString(rng.nextInt(Integer.MAX_VALUE));
         n_req_for_exit_node = 0;
-    /*    51.15.11.249:2752
-        51.15.11.249:2753
-        51.15.11.249:2754
-        51.15.11.249:2755
-        51.15.11.249:2756
-        51.15.11.249:2757
-        51.15.11.249:2758
-        51.15.11.249:2759
-        51.15.11.249:2760*/
-
-        super_proxy = new HttpHost("51.15.11.249", 2751);
+        super_proxy = new HttpHost(host, port);
         update_client();
     }
 
@@ -180,6 +174,11 @@ class HighPrefClient {
                 } else {
                     if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
                         request.addHeader(HttpHeaders.REFERER, url);
+                        if(response.getHeaders("Set-Cookie")!=null && response.getHeaders("Set-Cookie").length>0){
+                            for (Header cookie :response.getHeaders("Set-Cookie")){
+                                request.addHeader(COOKIE, cookie.getValue());
+                            }
+                        }
                         url = response.getHeaders("Location")[0].toString().substring(10).trim();
                     } else {
                         break;
@@ -275,7 +274,7 @@ public class LuminatiProxy implements Runnable {
             paths.add("/opt/did/VNMios.log.dist");
 
             for (int i = 0; i <= n_parallel_exit_nodes; i++) {
-                executor.execute(new LuminatiProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, "1"));
+                executor.execute(new LuminatiProxy(cgeo.toLowerCase(), host, i, n_parallel_exit_nodes, offers, paths, OsE.IOS.v));
             }
             executor.shutdown();
         } catch (UnknownHostException e) {
@@ -330,7 +329,7 @@ public class LuminatiProxy implements Runnable {
                             CloseableHttpResponse response = null;
                             try {
                                 LiveOffer offer = AdTestUtils.randomOffers(offers);
-                                String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                                String url = AdTestUtils.trackurl(os,offer.getTrackUrl(), ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                                 String ua = AdTestUtils.randomUA(geochar3, os);
                                 response = client.request(url, ua, offer);
                                 int code = response.getStatusLine().getStatusCode();
