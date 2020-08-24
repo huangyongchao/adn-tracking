@@ -3,6 +3,7 @@ package com.adscanal.sdk.proxy;
 import com.adscanal.sdk.common.AdTestUtils;
 import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.adscanal.sdk.dto.OsE;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
@@ -236,7 +237,7 @@ public class ShifterProxy {
                     CloseableHttpResponse response = null;
                     try {
                         LiveOffer offer = AdTestUtils.randomOffers(offers);
-                        String url = AdTestUtils.trackurl(offer.getTrackUrl(), ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                        String url = AdTestUtils.trackurl(OsE.IOS.v,offer.getTrackUrl(), ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                         String ua = AdTestUtils.randomUA(cgeo3, os);
                         response = request(client, url, ua, offer);
                         int code = response.getStatusLine().getStatusCode();
