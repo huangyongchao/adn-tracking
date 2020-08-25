@@ -162,12 +162,18 @@ class HighPrefClient {
                 System.out.println(url);
                 url = AdTestUtils.urlEncode(url);
                 HttpGet request = new HttpGet(url);
-                request.setProtocolVersion(HttpVersion.HTTP_1_0);
+                request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
-                request.addHeader(HttpHeaders.CONTENT_ENCODING, "gzip,deflate");
+                request.addHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
+                request.addHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
                 request.addHeader(HttpHeaders.USER_AGENT, ua);
-                request.addHeader(HttpHeaders.RANGE, "0-100");
-                request.addHeader(HttpHeaders.CONTENT_RANGE, "0-100");
+                request.addHeader(HttpHeaders.PRAGMA, "no-cache'");
+                request.addHeader(HttpHeaders.CACHE_CONTROL, "no-cache'");
+                request.addHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
+                request.addHeader(HttpHeaders.UPGRADE, "1");
+                request.addHeader("upgrade-insecure-requests", "1");
+
+
                 response = client.execute(request);
                 if (!isRedirect(offer, response)) {
                     break;
