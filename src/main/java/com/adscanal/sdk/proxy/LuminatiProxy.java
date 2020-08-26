@@ -18,6 +18,10 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -30,9 +34,13 @@ import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -86,42 +94,67 @@ class HighPrefClient {
     public void switch_session_id() {
         session_id = Integer.toString(rng.nextInt(Integer.MAX_VALUE));
         n_req_for_exit_node = 0;
-        super_proxy = new HttpHost(host, port);
+        super_proxy = new HttpHost("44.235.122.213", 24000);
         update_client();
     }
 
+    public  SSLContext createIgnoreVerifySSL(){
+        SSLContext sc = null;
+        // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
+        try {
+            sc = SSLContext.getInstance("SSLv3");
+
+            X509TrustManager trustManager = new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(
+                        X509Certificate[] paramArrayOfX509Certificate,
+                        String paramString) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(
+                        X509Certificate[] paramArrayOfX509Certificate,
+                        String paramString) throws CertificateException {
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+            };
+
+            sc.init(null, new TrustManager[] { trustManager }, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sc;
+    }
+
+
     public void update_client() {
         close();
+
         String login = username + (country != null ? "-country-" + country : "")
                 + "-session-" + session_id;
         CredentialsProvider cred_provider = new BasicCredentialsProvider();
         cred_provider.setCredentials(new AuthScope(super_proxy),
                 new UsernamePasswordCredentials(login, password));
+
+
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.INSTANCE)
+                .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
+                .build();
+
+
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager();
+                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
-        SSLConnectionSocketFactory sslsf = null;
-        try {
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    return true;
-                }
-            }).build();
-            sslsf = new SSLConnectionSocketFactory(sslContext);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        }
-
-
         client = HttpClients.custom()
                 .setConnectionManager(conn_mgr)
                 .setRedirectStrategy(new RedirectStrategy() {
@@ -136,8 +169,7 @@ class HighPrefClient {
                     }
                 })
                 .setProxy(super_proxy)
-                .setDefaultCredentialsProvider(cred_provider)
-                .setSSLSocketFactory(sslsf)
+                //.setDefaultCredentialsProvider(cred_provider)
                 .setDefaultRequestConfig(config)
                 .build();
 
@@ -251,7 +283,8 @@ public class LuminatiProxy implements Runnable {
 
             int proxy_session_id = new Random().nextInt(Integer.MAX_VALUE);
             InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
-            String host = address.getHostAddress();
+            //String host = address.getHostAddress();
+            String host = "44.235.122.213";
             List<LiveOffer> offers = Lists.newArrayList();
             String cgeo = "VN";
 
@@ -335,7 +368,7 @@ public class LuminatiProxy implements Runnable {
                             CloseableHttpResponse response = null;
                             try {
                                 LiveOffer offer = AdTestUtils.randomOffers(offers);
-                                String url = AdTestUtils.trackurl(os,offer.getTrackUrl(), ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                                String url = AdTestUtils.trackurl(os,"https://app.appsflyer.com/id674984916?c=etoro&af_siteid={pub_subid}&af_cost_value={cost_value}&af_cost_currency=USD&af_prt=oneenginemedia&pid=oceanmob_int&af_click_lookback=7d&clickid={click_id}&idfa={idfa}&advertising_id=", ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
                                 String ua = AdTestUtils.randomUA(geochar3, os);
                                 response = client.request(url, ua, offer);
                                 int code = response.getStatusLine().getStatusCode();
