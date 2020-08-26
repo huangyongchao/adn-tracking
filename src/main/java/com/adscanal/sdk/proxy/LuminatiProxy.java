@@ -178,11 +178,7 @@ class HighPrefClient {
     public boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
         if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
             String location = response.getHeaders("Location")[0].toString().substring(10).trim();
-            if (location.startsWith("http")) {
-                return true;
-            } else {
-                dtracklogger.info(offer.getOfferId() + ":" + location);
-            }
+            return true;
         }
         return false;
     }
@@ -211,7 +207,6 @@ class HighPrefClient {
                     break;
                 } else {
                     if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
-                        request.addHeader(HttpHeaders.REFERER, url);
                         if(response.getHeaders("Set-Cookie")!=null && response.getHeaders("Set-Cookie").length>0){
                             for (Header cookie :response.getHeaders("Set-Cookie")){
                                 request.addHeader(COOKIE, cookie.getValue());
