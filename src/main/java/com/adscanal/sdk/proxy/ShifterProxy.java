@@ -238,7 +238,7 @@ public class ShifterProxy {
                     try {
                         LiveOffer offer = AdTestUtils.randomOffers(offers);
                         String url = AdTestUtils.trackurl(OsE.IOS.v,offer.getTrackUrl(), ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
-                        String ua = AdTestUtils.randomUA(cgeo3, os);
+                        String ua = AdTestUtils.randomUA( os);
                         response = request(client, url, ua, offer);
                         int code = response.getStatusLine().getStatusCode();
                         if (code == HttpStatus.SC_OK) {

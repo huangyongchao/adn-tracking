@@ -52,13 +52,12 @@ public class AdTestUtils {
      * geo char3
      * os 1 as ios  2 as android
      *
-     * @param geo
      * @param os
      * @return
      */
-    public static String randomUA(String geo, String os) {
+    public static String randomUA(String os) {
 
-        List<String> uas = Collecter.GEO_UA.get(geo + os);
+        List<String> uas = Collecter.OS_UA.get(os);
         int le = uas.size();
         int i = new Random().nextInt(le);
         return uas.get(i);

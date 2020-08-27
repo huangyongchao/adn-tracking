@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.stream.Collectors;
 
 /**
  * @author huangyongchao
@@ -32,7 +31,7 @@ public class Collecter {
     public static final String IOS = "ios";
     public static final String ANDROID = "android";
     public static Path uapath = Paths.get("/opt/did/ua");
-    public static Map<String, List<String>> GEO_UA = Maps.newHashMap();
+    public static Map<String, List<String>> OS_UA = Maps.newHashMap();
     static {
         ACTI_GEOS.forEach(geo -> {
             GEO_FILES.put(geo + IOS, new ConcurrentSkipListSet<>());
@@ -51,19 +50,18 @@ public class Collecter {
             Files.lines(uapath).forEach(ua -> {
                 String[] uary = ua.split("\\|");
 
-                if (!GEO_UA.containsKey(uary[0])) {
-                    GEO_UA.put(uary[0], Lists.newArrayList());
-                }else{
-                    if(ua.indexOf("1|")>0){
-                        if(ua.indexOf("Phone")>0){
-                            GEO_UA.get(uary[0]).add(uary[1]);
+                if (!OS_UA.containsKey(uary[0])) {
+                    OS_UA.put(uary[0], Lists.newArrayList());
+                } else {
+                    if (ua.indexOf("1|") > 0) {
+                        if (ua.indexOf("Phone") > 0) {
+                            OS_UA.get(uary[0]).add(uary[1]);
                         }
-                    }else{
-                        GEO_UA.get(uary[0]).add(uary[1]);
+                    } else {
+                        OS_UA.get(uary[0]).add(uary[1]);
 
                     }
                 }
-
 
             });
         } catch (IOException e) {
@@ -145,6 +143,15 @@ public class Collecter {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+/*
+
+        try {
+            Files.write(Paths.get("/opt/did/ua1"), Files.lines(Paths.get("/opt/did/ua")).map(n ->  n.substring(3)).collect(Collectors.toList()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+*/
+
 
     }
 }

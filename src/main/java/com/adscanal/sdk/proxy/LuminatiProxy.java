@@ -8,11 +8,11 @@ import com.adscanal.sdk.dto.OsE;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,24 +29,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -146,7 +139,6 @@ class HighPrefClient {
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
                 .build();
 
-
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
@@ -157,6 +149,7 @@ class HighPrefClient {
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         client = HttpClients.custom()
                 .setConnectionManager(conn_mgr)
+                .disableAutomaticRetries()
                 .setRedirectStrategy(new RedirectStrategy() {
                     @Override
                     public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
@@ -182,6 +175,47 @@ class HighPrefClient {
         }
         return false;
     }
+
+    public boolean isStore(String url ){
+       if(url.indexOf("apple.com")>0||url.indexOf("google.com")>0){
+           return true;
+       }
+        return false;
+    }
+
+    public CloseableHttpResponse requestR(int counter, String url, String ua, LiveOffer offer, Header[] headers) throws IOException {
+        CloseableHttpResponse response = null;
+        System.out.println(url);
+
+        url = AdTestUtils.urlEncode(url);
+        HttpGet request = new HttpGet(url);
+        request.setProtocolVersion(HttpVersion.HTTP_1_1);
+        request.setHeader(HttpHeaders.USER_AGENT, ua);
+        request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
+        request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
+        request.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
+        request.setHeader(HttpHeaders.PRAGMA, "no-cache'");
+        request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache'");
+        request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
+        request.setHeader("upgrade-insecure-requests", "1");
+        if (headers != null && headers.length > 0) {
+            for (Header header : headers) {
+                request.addHeader("Cookie", header.getValue());
+            }
+        }
+        response = client.execute(request);
+        if (isRedirect(offer, response)) {
+            url = response.getHeaders("Location")[0].toString().substring(10).trim();
+            if(!isStore(url)){
+                requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"));
+            }
+        }
+        System.out.println("Times:" + offer.getOfferId() + " counter " + counter);
+        handle_response(response);
+        return response;
+
+    }
+
 
     public CloseableHttpResponse request(String url, String ua, LiveOffer offer) throws IOException {
         try {
@@ -348,7 +382,7 @@ public class LuminatiProxy implements Runnable {
             if (client == null || geo == null) {
                 System.out.println("Please set geo");
             }
-            deviceidfiles.parallelStream().forEach(path -> {
+            deviceidfiles.forEach(path -> {
                 try {
 
                     Files.lines(Paths.get(path)).forEach(deviceid -> {
@@ -363,9 +397,9 @@ public class LuminatiProxy implements Runnable {
                             CloseableHttpResponse response = null;
                             try {
                                 LiveOffer offer = AdTestUtils.randomOffers(offers);
-                                String url = AdTestUtils.trackurl(os,"https://app.appsflyer.com/id674984916?c=etoro&af_siteid={pub_subid}&af_cost_value={cost_value}&af_cost_currency=USD&af_prt=oneenginemedia&pid=oceanmob_int&af_click_lookback=7d&clickid={click_id}&idfa={idfa}&advertising_id=", ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
-                                String ua = AdTestUtils.randomUA(geochar3, os);
-                                response = client.request(url, ua, offer);
+                                String url = AdTestUtils.trackurl(os,"https://click.baburnadir.com/click?offer_id=1781468&aff_id=1363&aff_sub={click_id}&aff_sub2={pub_subid}&aff_sub4={store_appid}&ios_ifa={device_id}&aff_sub3={device_id}", ("AC" + new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                                String ua = AdTestUtils.randomUA( os);
+                                response = client.requestR(1, url, ua, offer, null);
                                 int code = response.getStatusLine().getStatusCode();
                                 if (code == HttpStatus.SC_OK ) {
                                     String msg = HttpStatus.SC_OK + "total:" + at_req.get() + " success:" + success_req_account.incrementAndGet() + " error:" + error_req_account.get();
