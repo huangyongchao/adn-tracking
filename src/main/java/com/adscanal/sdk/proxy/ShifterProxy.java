@@ -1,6 +1,6 @@
 package com.adscanal.sdk.proxy;
 
-import com.adscanal.sdk.common.AdTestUtils;
+import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
@@ -143,7 +143,7 @@ public class ShifterProxy {
         try {
             CloseableHttpResponse response = null;
             for (int i = 0; i < 5; i++) {
-                url = AdTestUtils.urlEncode(url);
+                url = AdTool.urlEncode(url);
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.addHeader(HttpHeaders.CONNECTION, "false");
@@ -236,9 +236,9 @@ public class ShifterProxy {
                     CloseableHttpClient client = clients.get(seed);
                     CloseableHttpResponse response = null;
                     try {
-                        LiveOffer offer = AdTestUtils.randomOffers(offers);
-                        String url = AdTestUtils.trackurl(OsE.IOS.v,offer.getTrackUrl(), ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
-                        String ua = AdTestUtils.randomUA( os);
+                        LiveOffer offer = AdTool.randomOffers(offers);
+                        String url = AdTool.trackurl(OsE.IOS.v,offer.getTrackUrl(), ("AC" +  new Date().getHours()), deviceid, UUID.randomUUID().toString().substring(0, 8), null);
+                        String ua = AdTool.randomUA( os);
                         response = request(client, url, ua, offer);
                         int code = response.getStatusLine().getStatusCode();
                         if (code == HttpStatus.SC_OK) {

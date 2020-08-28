@@ -16,7 +16,7 @@ public class Starter {
     public void proxy() {
         logger.warn("Start Proxy at " + new Date());
         //ShifterProxy.launch();
-        LuminatiProxy.launch()
+       // LuminatiProxy.launch()
         ;
 
 

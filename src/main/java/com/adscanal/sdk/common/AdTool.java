@@ -4,14 +4,16 @@ import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 /**
  * @author huangyongchao
  */
-public class AdTestUtils {
+public class AdTool {
     public static String urlEncode(String url) {
         if (url.indexOf("{") > -1) {
             url = StringUtils.replaceAll(url, "\\{", "%7B");
@@ -38,10 +40,10 @@ public class AdTestUtils {
         if (track.indexOf("{store_appid}") > -1 && StringUtils.isNotBlank(appname)) {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);
         }
-        if (OsE.IOS.v.equalsIgnoreCase(os) && track.indexOf("{idfa}") == -1) {
+        if (OsE.IOS.name.equalsIgnoreCase(os) && track.indexOf("{idfa}") == -1) {
             track = track + "&idfa=" + deviceid;
         }
-        if (OsE.AOS.v.equalsIgnoreCase(os) && track.indexOf("{gaid}") == -1) {
+        if (OsE.AOS.name.equalsIgnoreCase(os) && track.indexOf("{gaid}") == -1) {
             track = track + "&gaid=" + deviceid;
         }
         return track;
@@ -57,7 +59,7 @@ public class AdTestUtils {
      */
     public static String randomUA(String os) {
 
-        List<String> uas = Collecter.OS_UA.get(os);
+        List<String> uas = Collecter.OS_UA.get(OsE.IOS.name.equalsIgnoreCase(os) ? OsE.IOS.v : OsE.AOS.v);
         int le = uas.size();
         int i = new Random().nextInt(le);
         return uas.get(i);
@@ -70,7 +72,7 @@ public class AdTestUtils {
      * @return
      */
     public static LiveOffer randomOffers(List<LiveOffer> offers) {
-        if(offers ==null ){
+        if (offers == null) {
             return null;
         }
         int le = offers.size();
@@ -78,5 +80,35 @@ public class AdTestUtils {
         return offers.get(i);
     }
 
+
+    public static String randomSub(LiveOffer offer) {
+        if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
+            return "AC" + new Date().getHours();
+        }
+        String[] pls = offer.getPlacements().split(",");
+        int le = pls.length;
+        int i = new Random().nextInt(le);
+        return pls[i];
+    }
+
+
+    public static String geClickid(LiveOffer offer) {
+        if (offer.getId() == null) {
+            return DateFormatUtils.format(new Date(), "MMddHHmmss") + "A" + offer.getOfferId();
+
+        }
+        return DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getId();
+    }
+
+    public static boolean isStore(String url ){
+        if(url.indexOf("apple.com")>0||url.indexOf("google.com")>0){
+            return true;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DateFormatUtils.format(new Date(), "MMddHHmmss"));
+    }
 
 }
