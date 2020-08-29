@@ -2,6 +2,7 @@ package com.adscanal.sdk.proxy;
 
 import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.GeoMap;
+import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -192,73 +193,32 @@ class HighPrefClient {
         if (isRedirect(offer, response)) {
             url = response.getHeaders("Location")[0].toString().substring(10).trim();
             if (counter > 4) {
-
+                Counter.increaseError1(offer.getId());
                 return response;
             }
             if (!AdTool.isStore(url)) {
-
                 requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"));
             } else {
-
+                Counter.increaseSuccess(offer.getId());
             }
         } else {
-            if (!AdTool.isStore(url)) {
-
-            } else {
-
+            if(status_code_requires_exit_node_switch(
+                    response.getStatusLine().getStatusCode())){
+                Counter.increaseError(offer.getId());
+            }else{
+                if (!AdTool.isStore(url)) {
+                    Counter.increaseSuccess1(offer.getId());
+                } else {
+                    Counter.increaseSuccess(offer.getId());
+                }
             }
+
         }
         handle_response(response);
         return response;
 
     }
 
-
-    public CloseableHttpResponse request(String url, String ua, LiveOffer offer) throws IOException {
-        try {
-            CloseableHttpResponse response = null;
-            for (int i = 0; i < 5; i++) {
-                System.out.println(url);
-                url = AdTool.urlEncode(url);
-                HttpGet request = new HttpGet(url);
-                request.setProtocolVersion(HttpVersion.HTTP_1_1);
-                request.addHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
-                request.addHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
-                request.addHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
-                request.addHeader(HttpHeaders.USER_AGENT, ua);
-                request.addHeader(HttpHeaders.PRAGMA, "no-cache'");
-                request.addHeader(HttpHeaders.CACHE_CONTROL, "no-cache'");
-                request.addHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
-                request.addHeader(HttpHeaders.UPGRADE, "1");
-                request.addHeader("upgrade-insecure-requests", "1");
-
-
-                response = client.execute(request);
-                if (!isRedirect(offer, response)) {
-                    break;
-                } else {
-                    if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
-                        if(response.getHeaders("Set-Cookie")!=null && response.getHeaders("Set-Cookie").length>0){
-                            for (Header cookie :response.getHeaders("Set-Cookie")){
-                                request.addHeader(COOKIE, cookie.getValue());
-                            }
-                        }
-                        url = response.getHeaders("Location")[0].toString().substring(10).trim();
-                    } else {
-                        break;
-
-                    }
-                }
-            }
-            handle_response(response);
-            return response;
-
-        } catch (IOException e) {
-            handle_response(null);
-            throw e;
-        }
-
-    }
 
     public void handle_response(HttpResponse response) {
         if (response != null && !status_code_requires_exit_node_switch(
@@ -273,7 +233,7 @@ class HighPrefClient {
     }
 
     public boolean status_code_requires_exit_node_switch(int code) {
-        return code == 403 || code == 429 || code == 502 || code == 503;
+        return code == 403 || code == 404 ||code == 429 || code == 502 || code == 500 ||  code == 503;
     }
 
     public boolean have_good_super_proxy() {
