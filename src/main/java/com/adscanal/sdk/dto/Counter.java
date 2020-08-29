@@ -12,8 +12,8 @@ public class Counter {
     public static volatile int CURRENT_HOUR = 0;
     public static AtomicBoolean EXCHANGE_LOCK = new AtomicBoolean(false);
 
-    public static Map<Integer, Map<String, OfferCounter>> TODAY_COUNTER = new ConcurrentHashMap<>();
-    public static Map<Integer, Map<String, OfferCounter>> YESDAY_COUNTER = new ConcurrentHashMap<>();
+    public static Map<Integer, Map<String, OfferCounter>> TODAY_COUNTER = null;
+    public static Map<Integer, Map<String, OfferCounter>> YESDAY_COUNTER = null;
 
     public static Map<Integer, Map<String, OfferCounter>> initToday() {
         Map<Integer, Map<String, OfferCounter>> t = new ConcurrentHashMap<>();
@@ -41,12 +41,14 @@ public class Counter {
         t.put(21, new ConcurrentHashMap<String, OfferCounter>());
         t.put(22, new ConcurrentHashMap<String, OfferCounter>());
         t.put(23, new ConcurrentHashMap<String, OfferCounter>());
-        t.put(24, new ConcurrentHashMap<String, OfferCounter>());
 
         return t;
     }
 
     public static Map<String, OfferCounter> counterMap() {
+        if (TODAY_COUNTER == null) {
+            TODAY_COUNTER = initToday();
+        }
         return TODAY_COUNTER.get(CURRENT_HOUR);
     }
 

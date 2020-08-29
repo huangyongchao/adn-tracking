@@ -70,7 +70,7 @@ class HighPrefClient {
     public String host;
 
     public HighPrefClient(String country, String host) {
-        this.country = country;
+        this.country = country.toLowerCase();
         this.host = host;
         rng = new Random();
         switch_session_id();
@@ -87,7 +87,7 @@ class HighPrefClient {
         SSLContext sc = null;
         // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
         try {
-            sc = SSLContext.getInstance("SSLv3");
+            sc = SSLContext.getInstance("TLSv1.2");
 
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
@@ -153,7 +153,7 @@ class HighPrefClient {
                     }
                 })
                 .setProxy(super_proxy)
-                //.setDefaultCredentialsProvider(cred_provider)
+                .setDefaultCredentialsProvider(cred_provider)
                 .setDefaultRequestConfig(config)
                 .build();
 
@@ -272,13 +272,15 @@ public class LuminatiProxy implements Runnable {
             }
             int proxy_session_id = new Random().nextInt(Integer.MAX_VALUE);
             InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
+
             String host = address.getHostAddress();
+
 
             n_parallel_exit_nodes = parallel;
             ExecutorService executor =
                     Executors.newFixedThreadPool(n_parallel_exit_nodes);
             List<String> paths = Lists.newArrayList();
-            paths.add("/opt/did/" + GeoMap.word2Map.get(geo) + os + ".log.dist");
+            paths.add("/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist");
 
             for (int i = 0; i <= n_parallel_exit_nodes; i++) {
                 executor.execute(new LuminatiProxy(geo, host, i, n_parallel_exit_nodes, offers, paths, os));
