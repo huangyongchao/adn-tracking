@@ -1,6 +1,7 @@
 package com.adscanal.sdk.job;
 
 import com.adscanal.sdk.dto.Counter;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,12 @@ public class CounterJob {
     @Scheduled(cron = "0 0,5,15,35,55 21,22,23 */1 * ?")
     public void resetExchangeLock() {
         Counter.EXCHANGE_LOCK.set(false);
+    }
+
+
+    @Scheduled(cron = "0 0,5,15,35,55 * * * ?")
+    public void saveCounter() {
+        System.out.println(JSONObject.toJSONString(Counter.counterMap()));
     }
 
 
