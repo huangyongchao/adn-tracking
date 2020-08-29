@@ -3,11 +3,23 @@ package com.adscanal.sdk.dto;
 import java.util.concurrent.atomic.LongAdder;
 
 public class OfferCounter {
-    public String id ;
+    public String id;
+    /**
+     * 落地商店
+     */
     public LongAdder success = new LongAdder();
+    /**
+     * 404 500
+     */
     public LongAdder error = new LongAdder();
     public LongAdder total = new LongAdder();
+    /**
+     * 非商店落地页
+     */
     public LongAdder success1 = new LongAdder();
+    /**
+     * 非商店 非落地页 其他页面 属于点击不成功
+     */
     public LongAdder error1 = new LongAdder();
 
     public String getId() {
