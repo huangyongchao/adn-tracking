@@ -171,8 +171,6 @@ class HighPrefClient {
 
     public CloseableHttpResponse requestR(int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
         CloseableHttpResponse response = null;
-        System.out.println(url);
-
         url = AdTool.urlEncode(url);
         HttpGet request = new HttpGet(url);
         request.setProtocolVersion(HttpVersion.HTTP_1_1);
@@ -191,16 +189,16 @@ class HighPrefClient {
         }
         response = client.execute(request);
 
-        if(testing){
+        if (counter < 10) {
             trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
         }
 
 
         if (isRedirect(offer, response)) {
             url = response.getHeaders("Location")[0].toString().substring(10).trim();
-            if (counter > 4) {
+            if (counter > 10) {
                 Counter.increaseError1(offer.getId());
-                if(testing){
+                if (counter < 10) {
                     trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
                 }
                 return response;
@@ -208,7 +206,7 @@ class HighPrefClient {
             if (!AdTool.isStore(url)) {
                 requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing);
             } else {
-                if(testing){
+                if (counter < 10) {
                     trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
                 }
                 Counter.increaseSuccess(offer.getId());
@@ -345,7 +343,7 @@ public class LuminatiProxy implements Runnable {
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 List<Tracker> trackers = null;
-                if (testing) {
+                if (l < 100) {
                     trackers = new LinkedList<>();
                 }
                 response = client.requestR(1, url, ua, offer, null, trackers, testing);
