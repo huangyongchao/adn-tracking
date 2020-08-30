@@ -4,6 +4,7 @@ import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.adscanal.sdk.dto.Tracker;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
@@ -39,13 +40,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.google.common.net.HttpHeaders.COOKIE;
+import java.util.concurrent.atomic.AtomicLong;
 
 class HighPrefClient {
     private static final Logger logger = LoggerFactory.getLogger(HighPrefClient.class);
@@ -168,8 +169,7 @@ class HighPrefClient {
     }
 
 
-
-    public CloseableHttpResponse requestR(int counter, String url, String ua, LiveOffer offer, Header[] headers) throws IOException {
+    public CloseableHttpResponse requestR(int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
         CloseableHttpResponse response = null;
         System.out.println(url);
 
@@ -190,15 +190,27 @@ class HighPrefClient {
             }
         }
         response = client.execute(request);
+
+        if(testing){
+            trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+        }
+
+
         if (isRedirect(offer, response)) {
             url = response.getHeaders("Location")[0].toString().substring(10).trim();
             if (counter > 4) {
                 Counter.increaseError1(offer.getId());
+                if(testing){
+                    trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+                }
                 return response;
             }
             if (!AdTool.isStore(url)) {
-                requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"));
+                requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing);
             } else {
+                if(testing){
+                    trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+                }
                 Counter.increaseSuccess(offer.getId());
             }
         } else {
@@ -296,8 +308,8 @@ public class LuminatiProxy implements Runnable {
     private HighPrefClient client = null;
     private int seed = 0;
     private int totalslice = 5;
-    private int line = 0;
-    private int cursorline = 0;
+    private AtomicLong line = new AtomicLong();
+    private long cursorline = 0;
     private List<LiveOffer> offers = null;
     private List<String> deviceidfiles = null;
     private String os = null;
@@ -316,6 +328,42 @@ public class LuminatiProxy implements Runnable {
 
     }
 
+    public void exec(String deviceid, List<LiveOffer> offers, int seed, boolean testing) {
+
+        long l = line.incrementAndGet();
+        if (l % totalslice != seed || l < cursorline) {
+            return;
+        }
+        if (at_req.getAndAdd(1) < n_total_req) {
+            if (!client.have_good_super_proxy())
+                client.switch_session_id();
+            if (client.n_req_for_exit_node == switch_ip_every_n_req)
+                client.switch_session_id();
+            CloseableHttpResponse response = null;
+            try {
+                LiveOffer offer = AdTool.randomOffers(offers);
+                String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+                String ua = AdTool.randomUA(os);
+                List<Tracker> trackers = null;
+                if (testing) {
+                    trackers = new LinkedList<>();
+                }
+                response = client.requestR(1, url, ua, offer, null, trackers, testing);
+
+            } catch (Exception e) {
+                error_req_account.incrementAndGet();
+                errorlog.error(e.getMessage());
+                System.out.println(e.getMessage());
+            } finally {
+                try {
+                    if (response != null)
+                        response.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
+
     @Override
     public void run() {
 
@@ -327,34 +375,8 @@ public class LuminatiProxy implements Runnable {
                 try {
 
                     Files.lines(Paths.get(path)).forEach(deviceid -> {
-                        if (++line % totalslice != seed || line < cursorline) {
-                            return;
-                        }
-                        if (at_req.getAndAdd(1) < n_total_req) {
-                            if (!client.have_good_super_proxy())
-                                client.switch_session_id();
-                            if (client.n_req_for_exit_node == switch_ip_every_n_req)
-                                client.switch_session_id();
-                            CloseableHttpResponse response = null;
-                            try {
-                                LiveOffer offer = AdTool.randomOffers(offers);
-                                String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                                String ua = AdTool.randomUA(os);
-                                response = client.requestR(1, url, ua, offer, null);
 
-                            } catch (Exception e) {
-                                error_req_account.incrementAndGet();
-                                errorlog.error(e.getMessage());
-                                System.out.println(e.getMessage());
-                            } finally {
-                                try {
-                                    if (response != null)
-                                        response.close();
-                                } catch (Exception e) {
-                                }
-                            }
-                        }
-
+                        exec(deviceid, offers, seed, false);
                     });
                 } catch (IOException e) {
                     e.printStackTrace();
