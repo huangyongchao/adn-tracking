@@ -193,9 +193,7 @@ public class LumProxy {
                     CloseableHttpResponse response = null;
                     try {
                         LiveOffer offer = AdTool.randomOffers(offers);
-                        System.out.println(deviceid);
                         String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                        System.out.println(url);
                         String ua = AdTool.randomUA(os);
                         List<Tracker> trackers = null;
                         response = requestR(client, 1, url, ua, offer, null, null, false);
@@ -226,7 +224,6 @@ public class LumProxy {
     public static CloseableHttpResponse requestR(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
         CloseableHttpResponse response = null;
         url = AdTool.urlEncode(url);
-        System.out.println(url);
         HttpGet request = new HttpGet(url);
         request.setProtocolVersion(HttpVersion.HTTP_1_1);
         request.setHeader(HttpHeaders.USER_AGENT, ua);
@@ -313,7 +310,7 @@ public class LumProxy {
             success_req_account.incrementAndGet();
         }
 
-        System.out.println(offer.getId() + "Total:" + at_req.get() + " Success:" + success_req_account.get() + "PERROR:" + fail_count + " Error:" + error_req_account.get());
+        logger.warn(offer.getId() + "Total:" + at_req.get() + " Success:" + success_req_account.get() + "PERROR:" + fail_count + " Error:" + error_req_account.get());
 
 
         if (response != null && !status_code_requires_exit_node_switch(
