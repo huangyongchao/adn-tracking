@@ -2,6 +2,7 @@ package com.adscanal.sdk.proxy;
 
 import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.GeoMap;
+import com.adscanal.sdk.common.Statistics;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.Tracker;
@@ -54,8 +55,8 @@ class HighPrefClient {
     private static final Logger tracklogger = LoggerFactory.getLogger("track");
     private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
 
-    public static final String username = "lum-customer-huangyongchao-zone-static-route_err-block";
-    public static final String password = "q5srrwcvkx9x";
+    public static final String username = "lum-customer-huangyongchao-zone-residential-route_err-block";
+    public static final String password = "hhlgwhurqyv3";
 
     public static final int port = 22225;
     public static final String user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Mobile/14B72c";
@@ -189,16 +190,16 @@ class HighPrefClient {
         }
         response = client.execute(request);
 
-        if (counter < 10) {
+        if (!Statistics.offer_tracker.containsKey(offer.getId())) {
             trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
         }
 
 
         if (isRedirect(offer, response)) {
             url = response.getHeaders("Location")[0].toString().substring(10).trim();
-            if (counter > 10) {
+            if (counter > 5) {
                 Counter.increaseError1(offer.getId());
-                if (counter < 10) {
+                if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                     trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
                 }
                 return response;
@@ -206,7 +207,7 @@ class HighPrefClient {
             if (!AdTool.isStore(url)) {
                 requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing);
             } else {
-                if (counter < 10) {
+                if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                     trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
                 }
                 Counter.increaseSuccess(offer.getId());
@@ -229,6 +230,15 @@ class HighPrefClient {
 
     }
 
+    private Random random = new Random();
+
+    public void handleTracker(CloseableHttpResponse response, LiveOffer offer, List<Tracker> trackers) {
+        int i = random.nextInt(100);
+        if (!Statistics.offer_tracker.containsKey(offer.getId())
+                || (Statistics.offer_tracker.containsKey(offer.getId()) && i == 1)) {
+            Statistics.offer_tracker.put(offer.getId(), trackers);
+        }
+    }
 
     public void handle_response(HttpResponse response) {
         if (response != null && !status_code_requires_exit_node_switch(
