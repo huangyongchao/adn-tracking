@@ -29,11 +29,6 @@ public class CounterJob {
     }
 
 
-    @Scheduled(cron = "0 0,5,15,35,55 * * * ?")
-    public void saveCounter() {
-        System.out.println(JSONObject.toJSONString(Counter.counterMap()));
-        System.out.println(JSONObject.toJSONString(Counter.counterMap()));
-    }
 
 
     @PostConstruct
