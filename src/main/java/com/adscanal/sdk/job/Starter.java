@@ -3,7 +3,7 @@ package com.adscanal.sdk.job;
 import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
-import com.adscanal.sdk.proxy.LuminatiProxy;
+import com.adscanal.sdk.proxy.LumProxy;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
@@ -43,7 +43,7 @@ public class Starter {
         if (offers.size() == 0) {
             return;
         }
-        LuminatiProxy.launch(geo, OsE.IOS.name, offers, 1);
+        LumProxy.launch(geo, OsE.IOS.name, offers, 10);
 
     }
 }

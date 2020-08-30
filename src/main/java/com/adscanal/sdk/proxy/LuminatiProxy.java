@@ -170,6 +170,72 @@ class HighPrefClient {
     }
 
 
+    public CloseableHttpResponse request(int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
+        CloseableHttpResponse response = null;
+
+        for (int i = 0; i < 5; i++) {
+            url = AdTool.urlEncode(url);
+            HttpGet request = new HttpGet(url);
+            request.setProtocolVersion(HttpVersion.HTTP_1_1);
+            request.setHeader(HttpHeaders.USER_AGENT, ua);
+            request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
+            request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
+            request.setHeader(HttpHeaders.ACCEPT, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
+            request.setHeader(HttpHeaders.PRAGMA, "no-cache'");
+            request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache'");
+            request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
+            request.setHeader("upgrade-insecure-requests", "1");
+            if (headers != null && headers.length > 0) {
+                for (Header header : headers) {
+                    request.addHeader("Cookie", header.getValue());
+                }
+            }
+            response = client.execute(request);
+
+            if (!Statistics.offer_tracker.containsKey(offer.getId())) {
+                if (trackers == null) {
+                    trackers = new LinkedList<>();
+                }
+                trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+            }
+
+
+            if (isRedirect(offer, response)) {
+                url = response.getHeaders("Location")[0].toString().substring(10).trim();
+                headers = response.getHeaders("set-cookie");
+
+                if (!AdTool.isStore(url)) {
+                    headers = response.getHeaders("set-cookie");
+                } else {
+                    response.setStatusCode(HttpStatus.SC_MOVED_PERMANENTLY);
+                    if (!Statistics.offer_tracker.containsKey(offer.getId())) {
+                        trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+                    }
+                    Counter.increaseSuccess(offer.getId());
+                }
+            } else {
+                if (status_code_requires_exit_node_switch(
+                        response.getStatusLine().getStatusCode())) {
+                    Counter.increaseError(offer.getId());
+                } else {
+                    if (!AdTool.isStore(url)) {
+                        Counter.increaseSuccess1(offer.getId());
+                    } else {
+                        Counter.increaseSuccess(offer.getId());
+                    }
+                }
+                break;
+
+            }
+
+        }
+        handleTracker(response, offer, trackers);
+        handle_response(response);
+        return response;
+
+    }
+
+
     public CloseableHttpResponse requestR(int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
         CloseableHttpResponse response = null;
         url = AdTool.urlEncode(url);
@@ -191,6 +257,9 @@ class HighPrefClient {
         response = client.execute(request);
 
         if (!Statistics.offer_tracker.containsKey(offer.getId())) {
+            if (trackers == null) {
+                trackers = new LinkedList<>();
+            }
             trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
         }
 
@@ -207,6 +276,7 @@ class HighPrefClient {
             if (!AdTool.isStore(url)) {
                 requestR(++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing);
             } else {
+                response.setStatusCode(HttpStatus.SC_MOVED_PERMANENTLY);
                 if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                     trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
                 }
@@ -225,6 +295,7 @@ class HighPrefClient {
             }
 
         }
+        handleTracker(response, offer, trackers);
         handle_response(response);
         return response;
 
@@ -234,9 +305,11 @@ class HighPrefClient {
 
     public void handleTracker(CloseableHttpResponse response, LiveOffer offer, List<Tracker> trackers) {
         int i = random.nextInt(100);
-        if (!Statistics.offer_tracker.containsKey(offer.getId())
-                || (Statistics.offer_tracker.containsKey(offer.getId()) && i == 1)) {
+        if (!Statistics.offer_tracker.containsKey(offer.getId())) {
             Statistics.offer_tracker.put(offer.getId(), trackers);
+        }
+        if (i == 1) {
+            Statistics.offer_tracker.remove(offer.getId());
         }
     }
 
@@ -336,42 +409,6 @@ public class LuminatiProxy implements Runnable {
 
     }
 
-    public void exec(String deviceid, List<LiveOffer> offers, int seed, boolean testing) {
-
-        long l = line.incrementAndGet();
-        if (l % totalslice != seed || l < cursorline) {
-            return;
-        }
-        if (at_req.getAndAdd(1) < n_total_req) {
-            if (!client.have_good_super_proxy())
-                client.switch_session_id();
-            if (client.n_req_for_exit_node == switch_ip_every_n_req)
-                client.switch_session_id();
-            CloseableHttpResponse response = null;
-            try {
-                LiveOffer offer = AdTool.randomOffers(offers);
-                String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                String ua = AdTool.randomUA(os);
-                List<Tracker> trackers = null;
-                if (l < 100) {
-                    trackers = new LinkedList<>();
-                }
-                response = client.requestR(1, url, ua, offer, null, trackers, testing);
-
-            } catch (Exception e) {
-                error_req_account.incrementAndGet();
-                errorlog.error(e.getMessage());
-                System.out.println(e.getMessage());
-            } finally {
-                try {
-                    if (response != null)
-                        response.close();
-                } catch (Exception e) {
-                }
-            }
-        }
-    }
-
     @Override
     public void run() {
 
@@ -384,7 +421,45 @@ public class LuminatiProxy implements Runnable {
 
                     Files.lines(Paths.get(path)).forEach(deviceid -> {
 
-                        exec(deviceid, offers, seed, false);
+                        long l = line.incrementAndGet();
+                        if (l % totalslice != seed || l < cursorline) {
+                            return;
+                        }
+                        if (at_req.getAndAdd(1) < n_total_req) {
+                            if (!client.have_good_super_proxy())
+                                client.switch_session_id();
+                            if (client.n_req_for_exit_node == switch_ip_every_n_req)
+                                client.switch_session_id();
+                            CloseableHttpResponse response = null;
+                            try {
+                                LiveOffer offer = AdTool.randomOffers(offers);
+                                System.out.println(deviceid);
+                                String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+                                System.out.println(url);
+                                String ua = AdTool.randomUA(os);
+                                List<Tracker> trackers = null;
+                                response = client.requestR(1, url, ua, offer, null, null, false);
+                                int status = response.getStatusLine().getStatusCode();
+                                if (status == HttpStatus.SC_OK || status == HttpStatus.SC_MOVED_PERMANENTLY) {
+                                    success_req_account.incrementAndGet();
+                                }
+                                if (status > 400) {
+                                    error_req_account.incrementAndGet();
+                                }
+                                System.out.println(offer.getId() + "Total:" + at_req.get() + " Success:" + success_req_account.get() + " Error:" + error_req_account.get());
+                            } catch (Exception e) {
+                                error_req_account.incrementAndGet();
+                                errorlog.error(e.getMessage());
+                            } finally {
+
+                                try {
+                                    if (response != null)
+                                        response.close();
+                                } catch (Exception e) {
+                                }
+                            }
+                        }
+
                     });
                 } catch (IOException e) {
                     e.printStackTrace();
