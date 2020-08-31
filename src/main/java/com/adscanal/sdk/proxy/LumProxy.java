@@ -234,11 +234,13 @@ public class LumProxy {
         request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache'");
         request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
         request.setHeader("upgrade-insecure-requests", "1");
+
         if (headers != null && headers.length > 0) {
             for (Header header : headers) {
                 request.addHeader("Cookie", header.getValue());
             }
         }
+        logger.info(url);
         response = client.execute(request);
         request.releaseConnection();
 
