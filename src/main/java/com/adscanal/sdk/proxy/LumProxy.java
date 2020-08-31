@@ -47,7 +47,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LumProxy {
-    private static final Logger logger = LoggerFactory.getLogger(LuminatiProxy.class);
+    private static final Logger logger = LoggerFactory.getLogger(LumProxy.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger tracklogger = LoggerFactory.getLogger("track");
     private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
@@ -86,6 +86,7 @@ public class LumProxy {
         String login = username + (country != null ? "-country-" + country : "")
                 + "-session-" + session_id;
         HttpHost super_proxy = new HttpHost(host, port);
+        //HttpHost super_proxy = new HttpHost("44.235.122.213", 24000);
 
 
         CredentialsProvider cred_provider = new BasicCredentialsProvider();
@@ -177,7 +178,7 @@ public class LumProxy {
             List<CloseableHttpClient> clients = switch_session_id();
 
 
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "50");
 
             Files.lines(Paths.get(path)).parallel().forEach(deviceid -> {
 
@@ -196,7 +197,7 @@ public class LumProxy {
                         String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                         String ua = AdTool.randomUA(os);
                         List<Tracker> trackers = null;
-                        response = requestR(client, 1, url, ua, offer, null, null, false);
+                        response = requestR(client, 1, url, ua, offer, null, null, false, deviceid, os);
 
                     } catch (Exception e) {
                         error_req_account.incrementAndGet();
@@ -221,17 +222,17 @@ public class LumProxy {
     }
 
 
-    public static CloseableHttpResponse requestR(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
+    public static CloseableHttpResponse requestR(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing, String deviceid, String os) throws IOException {
         CloseableHttpResponse response = null;
-        url = AdTool.urlEncode(url);
+        url = AdTool.urlEncode(url, deviceid, os);
         HttpGet request = new HttpGet(url);
         request.setProtocolVersion(HttpVersion.HTTP_1_1);
         request.setHeader(HttpHeaders.USER_AGENT, ua);
         request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
         request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
         request.setHeader(HttpHeaders.ACCEPT, "application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
-        request.setHeader(HttpHeaders.PRAGMA, "no-cache'");
-        request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache'");
+        request.setHeader(HttpHeaders.PRAGMA, "no-cache");
+        request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
         request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
         request.setHeader("upgrade-insecure-requests", "1");
 
@@ -242,7 +243,6 @@ public class LumProxy {
         }
         logger.info(url);
         response = client.execute(request);
-        request.releaseConnection();
 
         if (!Statistics.offer_tracker.containsKey(offer.getId())) {
             if (trackers == null) {
@@ -255,7 +255,7 @@ public class LumProxy {
         if (isRedirect(offer, response)) {
             url = response.getHeaders("Location")[0].toString().substring(10).trim();
             if (!AdTool.isStore(url)) {
-                requestR(client, ++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing);
+                requestR(client, ++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing, deviceid, os);
             } else {
                 if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                     trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
@@ -276,6 +276,7 @@ public class LumProxy {
             }
 
         }
+        request.releaseConnection();
         handleTracker(response, offer, trackers);
         handle_response(offer, response);
         return response;
@@ -340,6 +341,7 @@ public class LumProxy {
             try {
                 String proxy_session_id = new Random().nextInt(Integer.MAX_VALUE) + "";
                 InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
+
                 String host = address.getHostAddress();
                 clients.add(updateClient(client_geo, proxy_session_id, host));
             } catch (UnknownHostException e) {

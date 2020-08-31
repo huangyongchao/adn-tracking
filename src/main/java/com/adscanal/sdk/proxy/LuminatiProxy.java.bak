@@ -170,11 +170,11 @@ class HighPrefClient {
     }
 
 
-    public CloseableHttpResponse request(int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing) throws IOException {
+    public CloseableHttpResponse request(int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing,String deviceid,String os) throws IOException {
         CloseableHttpResponse response = null;
 
         for (int i = 0; i < 5; i++) {
-            url = AdTool.urlEncode(url);
+            url = AdTool.urlEncode(url,os,deviceid);
             HttpGet request = new HttpGet(url);
             request.setProtocolVersion(HttpVersion.HTTP_1_1);
             request.setHeader(HttpHeaders.USER_AGENT, ua);

@@ -14,12 +14,28 @@ import java.util.Random;
  * @author huangyongchao
  */
 public class AdTool {
-    public static String urlEncode(String url) {
+    public static String urlEncode(String url,String deviceid,String os) {
         if (url.indexOf("{") > -1) {
             url = StringUtils.replaceAll(url, "\\{", "%7B");
         }
         if (url.indexOf("}") > -1) {
             url = StringUtils.replaceAll(url, "\\}", "%7D");
+        }
+        if(url.indexOf("appsflyer.com")>0){
+            if (OsE.IOS.name.equalsIgnoreCase(os) && url.indexOf("idfa") == -1) {
+                url = url + "&idfa=" + deviceid;
+            }
+            if (OsE.AOS.name.equalsIgnoreCase(os) && url.indexOf("advertising_id") == -1) {
+                url = url + "&advertising_id=" + deviceid;
+            }
+
+            url = url + "&redirect=false";
+        }
+        if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
+            url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);
+        }
+        if (url.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(deviceid)) {
+            url = StringUtils.replaceAll(url, "\\{gaid}", deviceid);
         }
         return url;
     }
@@ -36,6 +52,9 @@ public class AdTool {
         }
         if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
             track = StringUtils.replaceAll(track, "\\{idfa}", deviceid);
+        }
+        if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(deviceid)) {
+            track = StringUtils.replaceAll(track, "\\{gaid}", deviceid);
         }
         if (track.indexOf("{store_appid}") > -1 && StringUtils.isNotBlank(appname)) {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);

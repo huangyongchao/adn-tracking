@@ -20,7 +20,7 @@ import java.util.List;
 public class Starter {
     private static final Logger logger = LoggerFactory.getLogger(Starter.class);
 
-    @Scheduled(fixedDelay = 600)
+    @Scheduled(initialDelay = 1000, fixedRate = Long.MAX_VALUE)
     public void proxyVN() {
         logger.warn("Start Proxy at " + new Date());
         List<LiveOffer> offers = Lists.newArrayList();
@@ -43,7 +43,7 @@ public class Starter {
         if (offers.size() == 0) {
             return;
         }
-        LumProxy.launch(geo, OsE.IOS.name, offers, 10);
+        LumProxy.launch(geo, OsE.IOS.name, offers, 100);
 
     }
 }
