@@ -187,7 +187,7 @@ public class LumProxy {
                 }
 
                 int i = at_req.getAndAdd(1);
-                if(i<1300000){
+                if(i<1400000){
                     return;
                 }
                 CloseableHttpClient client = clients.get(i % praallelClients);
@@ -244,9 +244,7 @@ public class LumProxy {
                 request.addHeader("Cookie", header.getValue());
             }
         }
-        logger.info(url);
         response = client.execute(request);
-        request.releaseConnection();
 
         if (!Statistics.offer_tracker.containsKey(offer.getId())) {
             if (trackers == null) {
