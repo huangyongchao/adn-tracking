@@ -58,7 +58,7 @@ public class Starter {
 
         getOffers(geo, OsE.IOS.name);
 
-        LumProxy.launch(geo, OsE.IOS.name, 100);
+        LumProxy.launch(geo, OsE.IOS.name, 500);
 
     }
 }

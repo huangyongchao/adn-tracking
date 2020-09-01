@@ -82,12 +82,12 @@ public class LumProxy {
     }
 
 
-    public static CloseableHttpClient updateClient(String country, String session_id, String host) {
+    public static CloseableHttpClient updateClient(String country, String session_id, String host, int port) {
 
         String login = username + (country != null ? "-country-" + country : "")
                 + "-session-" + session_id;
         //HttpHost super_proxy = new HttpHost(host, port);
-        HttpHost super_proxy = new HttpHost("127.0.0.1", 24000);
+        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
 
 
         CredentialsProvider cred_provider = new BasicCredentialsProvider();
@@ -175,13 +175,13 @@ public class LumProxy {
             client_geo = geo;
             String path = "/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist";
 
-            parallel = praallelClients;
+            parallel = 500;
 
             String geoS = geo + os;
             List<CloseableHttpClient> clients = switch_session_id();
 
 
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + parallel);
 
             Files.lines(Paths.get(path)).parallel().forEach(deviceid -> {
 
@@ -419,7 +419,7 @@ public class LumProxy {
                 InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
 
                 String host = address.getHostAddress();
-                clients.add(updateClient(client_geo, proxy_session_id, host));
+                clients.add(updateClient(client_geo, proxy_session_id, host, 24000 + i));
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
