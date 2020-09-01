@@ -135,7 +135,7 @@ public class LumProxy {
         SSLContext sc = null;
         // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
         try {
-            sc = SSLContext.getInstance("TLSv1.2");
+            sc = SSLContext.getInstance("TLSv3");
 
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
