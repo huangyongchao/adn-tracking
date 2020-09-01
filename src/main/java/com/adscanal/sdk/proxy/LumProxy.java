@@ -178,7 +178,7 @@ public class LumProxy {
             List<CloseableHttpClient> clients = switch_session_id();
 
 
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "50");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
 
             Files.lines(Paths.get(path)).parallel().forEach(deviceid -> {
 
