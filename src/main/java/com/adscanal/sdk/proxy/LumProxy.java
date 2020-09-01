@@ -39,8 +39,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -97,36 +95,17 @@ public class LumProxy {
                 new UsernamePasswordCredentials(login, password));
 
 
-       /* Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
-                .build();*/
-
-        SSLContext sc = null;
-        try {
-            sc = SSLContext.getInstance("SSL");
-            TrustManager trust_manager = new X509TrustManager(){
-                public X509Certificate[] getAcceptedIssuers(){ return null; }
-                public void checkClientTrusted(
-                        X509Certificate[] certs, String authType){}
-                public void checkServerTrusted(
-                        X509Certificate[] certs, String authType){}
-            };
-            TrustManager[] trust_all = new TrustManager[]{ trust_manager };
-            sc.init(null, trust_all, new java.security.SecureRandom());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        }
-
+                .build();
 
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager();
+                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         CloseableHttpClient client = HttpClients.custom()
@@ -144,8 +123,7 @@ public class LumProxy {
                     }
                 })
                 .setProxy(super_proxy)
-                .setSSLContext(sc)
-                // .setDefaultCredentialsProvider(cred_provider)
+               // .setDefaultCredentialsProvider(cred_provider)
                 .setDefaultRequestConfig(config)
                 .build();
 
@@ -157,7 +135,7 @@ public class LumProxy {
         SSLContext sc = null;
         // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
         try {
-            sc = SSLContext.getInstance("TLSv3");
+            sc = SSLContext.getInstance("TLSv1.2");
 
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
@@ -215,7 +193,7 @@ public class LumProxy {
 
                 CloseableHttpClient client = clients.get(i % praallelClients);
 
-                if (i< n_total_req&&i>430000) {
+                if (i< n_total_req&&i>440000) {
                     List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
                     if (offers == null || offers.size() == 0) {
                         errorlog.error("10000:GEO " + geo + " No Offers");
