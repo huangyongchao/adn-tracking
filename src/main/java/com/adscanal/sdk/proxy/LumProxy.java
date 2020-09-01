@@ -39,6 +39,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -100,6 +102,25 @@ public class LumProxy {
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
                 .build();*/
 
+        SSLContext sc = null;
+        try {
+            sc = SSLContext.getInstance("SSL");
+            TrustManager trust_manager = new X509TrustManager(){
+                public X509Certificate[] getAcceptedIssuers(){ return null; }
+                public void checkClientTrusted(
+                        X509Certificate[] certs, String authType){}
+                public void checkServerTrusted(
+                        X509Certificate[] certs, String authType){}
+            };
+            TrustManager[] trust_all = new TrustManager[]{ trust_manager };
+            sc.init(null, trust_all, new java.security.SecureRandom());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+
+
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
@@ -123,7 +144,8 @@ public class LumProxy {
                     }
                 })
                 .setProxy(super_proxy)
-               // .setDefaultCredentialsProvider(cred_provider)
+                .setSSLContext(sc)
+                // .setDefaultCredentialsProvider(cred_provider)
                 .setDefaultRequestConfig(config)
                 .build();
 
