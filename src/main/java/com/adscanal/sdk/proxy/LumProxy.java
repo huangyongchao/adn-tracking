@@ -5,6 +5,7 @@ import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.common.Statistics;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.adscanal.sdk.dto.SimpleData;
 import com.adscanal.sdk.dto.Tracker;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
@@ -164,7 +165,7 @@ public class LumProxy {
 
     public static Random clientRnd = new Random();
 
-    public static void launch(String geo, String os, List<LiveOffer> offers, int praallelClients) {
+    public static void launch(String geo, String os, int praallelClients) {
 
         try {
             if (StringUtils.isBlank(geo) || StringUtils.isBlank(GeoMap.word2Map.get(geo))) {
@@ -175,32 +176,41 @@ public class LumProxy {
             String path = "/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist";
 
             parallel = praallelClients;
+
+            String geoS = geo + os;
             List<CloseableHttpClient> clients = switch_session_id();
 
 
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "200");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
 
-            Files.lines(Paths.get(path)).parallel().forEach(deviceid -> {
+            Files.lines(Paths.get(path)).forEach(deviceid -> {
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
                     switch_session_id();
                 }
 
                 int i = at_req.getAndAdd(1);
-                if(i<1400000){
-                    return;
-                }
+
                 CloseableHttpClient client = clients.get(i % praallelClients);
 
                 if (at_req.getAndAdd(1) < n_total_req) {
+                    List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
+                    if (offers == null || offers.size() == 0) {
+                        errorlog.error("10000:GEO " + geo + " No Offers");
+                        return;
+                    }
 
                     CloseableHttpResponse response = null;
                     try {
+
                         LiveOffer offer = AdTool.randomOffers(offers);
+                        if (SimpleData.BLACK_OFFERS.contains(offer.getId())) {
+                            return;
+                        }
                         String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                         String ua = AdTool.randomUA(os);
                         List<Tracker> trackers = null;
-                        response = requestR(client, 1, url, ua, offer, null, null, false, deviceid, os);
+                        response = request(client, 1, url, ua, offer, null, null, false, deviceid, os);
 
                     } catch (Exception e) {
                         error_req_account.incrementAndGet();
@@ -277,6 +287,71 @@ public class LumProxy {
                 }
             }
 
+        }
+        handleTracker(response, offer, trackers);
+        handle_response(offer, response);
+        return response;
+
+    }
+
+
+    public static CloseableHttpResponse request(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing, String deviceid, String os) throws IOException {
+        CloseableHttpResponse response = null;
+        for (int i = 0; i < 5; i++) {
+            url = AdTool.urlEncode(url, deviceid, os);
+            HttpGet request = new HttpGet(url);
+            request.setProtocolVersion(HttpVersion.HTTP_1_1);
+            request.setHeader(HttpHeaders.USER_AGENT, ua);
+            request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
+            request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
+            request.setHeader(HttpHeaders.ACCEPT, "application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
+            request.setHeader(HttpHeaders.PRAGMA, "no-cache");
+            request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+            request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
+            request.setHeader("upgrade-insecure-requests", "1");
+
+            if (headers != null && headers.length > 0) {
+                for (Header header : headers) {
+                    request.addHeader("Cookie", header.getValue());
+                }
+            }
+            response = client.execute(request);
+
+            if (!Statistics.offer_tracker.containsKey(offer.getId())) {
+                if (trackers == null) {
+                    trackers = new LinkedList<>();
+                }
+                trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+            }
+
+
+            if (isRedirect(offer, response)) {
+                url = response.getHeaders("Location")[0].toString().substring(10).trim();
+                if (!AdTool.isStore(url)) {
+                    headers = response.getHeaders("set-cookie");
+                    continue;
+                } else {
+                    if (!Statistics.offer_tracker.containsKey(offer.getId())) {
+                        trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
+                    }
+                    response.setStatusCode(HttpStatus.SC_MOVED_PERMANENTLY);
+                    Counter.increaseSuccess(offer.getId());
+                    break;
+                }
+            } else {
+                if (status_code_requires_exit_node_switch(
+                        response.getStatusLine().getStatusCode())) {
+                    Counter.increaseError(offer.getId());
+                } else {
+                    if (!AdTool.isStore(url)) {
+                        Counter.increaseSuccess1(offer.getId());
+                    } else {
+                        Counter.increaseSuccess(offer.getId());
+                    }
+                }
+                break;
+
+            }
         }
         handleTracker(response, offer, trackers);
         handle_response(offer, response);

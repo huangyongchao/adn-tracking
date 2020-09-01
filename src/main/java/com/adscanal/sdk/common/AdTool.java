@@ -86,11 +86,10 @@ public class AdTool {
 
 
     /**
-     *
-     * @param offers
      * @return
      */
     public static LiveOffer randomOffers(List<LiveOffer> offers) {
+
         if (offers == null) {
             return null;
         }
