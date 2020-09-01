@@ -86,8 +86,8 @@ public class LumProxy {
 
         String login = username + (country != null ? "-country-" + country : "")
                 + "-session-" + session_id;
-        HttpHost super_proxy = new HttpHost(host, port);
-        //HttpHost super_proxy = new HttpHost("44.235.122.213", 24000);
+        //HttpHost super_proxy = new HttpHost(host, port);
+        HttpHost super_proxy = new HttpHost("127.0.0.1", 24000);
 
 
         CredentialsProvider cred_provider = new BasicCredentialsProvider();
@@ -193,7 +193,7 @@ public class LumProxy {
 
                 CloseableHttpClient client = clients.get(i % praallelClients);
 
-                if (i< n_total_req&&i>410000) {
+                if (i< n_total_req&&i>420000) {
                     List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
                     if (offers == null || offers.size() == 0) {
                         errorlog.error("10000:GEO " + geo + " No Offers");
