@@ -187,6 +187,9 @@ public class LumProxy {
                 }
 
                 int i = at_req.getAndAdd(1);
+                if(i<1000000){
+                    return;
+                }
                 CloseableHttpClient client = clients.get(i % praallelClients);
 
                 if (at_req.getAndAdd(1) < n_total_req) {
