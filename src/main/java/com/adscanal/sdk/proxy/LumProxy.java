@@ -105,7 +105,7 @@ public class LumProxy {
                 .setConnectionRequestTimeout(req_timeout)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+                new PoolingHttpClientConnectionManager();
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         CloseableHttpClient client = HttpClients.custom()
