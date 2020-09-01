@@ -95,10 +95,10 @@ public class LumProxy {
                 new UsernamePasswordCredentials(login, password));
 
 
-        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+       /* Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
-                .build();
+                .build();*/
 
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
