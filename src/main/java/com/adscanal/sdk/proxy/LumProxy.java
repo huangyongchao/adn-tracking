@@ -193,7 +193,7 @@ public class LumProxy {
 
                 CloseableHttpClient client = clients.get(i % praallelClients);
 
-                if (i< n_total_req&&i>400000) {
+                if (i< n_total_req&&i>410000) {
                     List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
                     if (offers == null || offers.size() == 0) {
                         errorlog.error("10000:GEO " + geo + " No Offers");
@@ -207,7 +207,7 @@ public class LumProxy {
                         if (SimpleData.BLACK_OFFERS.contains(offer.getId())) {
                             return;
                         }
-                        String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+                        String url = AdTool.trackurl(os, "https://athenmobi.g2afse.com/click?pid=39&offer_id=2573&sub1={clickid}&sub5={idfa}&sub2={pub_subid}&sub6={gaid}", AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                         String ua = AdTool.randomUA(os);
                         List<Tracker> trackers = null;
                         response = request(client, 1, url, ua, offer, null, null, false, deviceid, os);
@@ -316,7 +316,7 @@ public class LumProxy {
                 }
             }
             response = client.execute(request);
-
+            request.releaseConnection();
             if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                 if (trackers == null) {
                     trackers = new LinkedList<>();
