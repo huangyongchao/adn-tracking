@@ -193,7 +193,7 @@ public class LumProxy {
 
                 CloseableHttpClient client = clients.get(i % praallelClients);
 
-                if (i< n_total_req&&i>420000) {
+                if (i< n_total_req&&i>430000) {
                     List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
                     if (offers == null || offers.size() == 0) {
                         errorlog.error("10000:GEO " + geo + " No Offers");
