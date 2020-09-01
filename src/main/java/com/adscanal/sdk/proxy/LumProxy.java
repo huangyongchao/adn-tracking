@@ -187,7 +187,7 @@ public class LumProxy {
                 }
 
                 int i = at_req.getAndAdd(1);
-                if(i<1000000){
+                if(i<1300000){
                     return;
                 }
                 CloseableHttpClient client = clients.get(i % praallelClients);
@@ -246,6 +246,7 @@ public class LumProxy {
         }
         logger.info(url);
         response = client.execute(request);
+        request.releaseConnection();
 
         if (!Statistics.offer_tracker.containsKey(offer.getId())) {
             if (trackers == null) {
@@ -279,7 +280,6 @@ public class LumProxy {
             }
 
         }
-        request.releaseConnection();
         handleTracker(response, offer, trackers);
         handle_response(offer, response);
         return response;
