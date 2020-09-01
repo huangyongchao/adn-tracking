@@ -43,7 +43,7 @@ public class Starter {
         if (offers.size() == 0) {
             return;
         }
-        LumProxy.launch(geo, OsE.IOS.name, offers, 100);
+        LumProxy.launch(geo, OsE.IOS.name, offers, 200);
 
     }
 }
