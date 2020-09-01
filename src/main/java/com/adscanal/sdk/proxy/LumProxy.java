@@ -67,7 +67,7 @@ public class LumProxy {
 
     public static volatile int n_parallel_exit_nodes = 1;
     public static final int n_total_req = 10000000;
-    public static final int switch_ip_every_n_req = 40 * parallel;
+    public static final int switch_ip_every_n_req = 1000 * parallel;
     public static AtomicInteger at_req = new AtomicInteger(0);
     public static AtomicInteger success_req_account = new AtomicInteger(0);
     public static AtomicInteger error_req_account = new AtomicInteger(0);
