@@ -21,7 +21,7 @@ import java.util.List;
 public class Starter {
     private static final Logger logger = LoggerFactory.getLogger(Starter.class);
 
-    @Scheduled(initialDelay = 1000 * 60 * 10, fixedRate = 1000 * 60 * 10)
+    @Scheduled(cron = "0 */20 *  * * ?")
     public void sychOffers() {
         String geo = "VN";
         getOffers(geo, OsE.IOS.name);
