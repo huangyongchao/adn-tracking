@@ -186,7 +186,6 @@ public class LumProxy {
 
 
             Files.lines(Paths.get(path)).skip(1200000).parallel().forEach(deviceid -> {
-                List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
@@ -194,43 +193,42 @@ public class LumProxy {
                 }
 
                 int i = at_req.getAndAdd(1);
-                ExecutorPool.getExecutor().execute(() -> {
+                SimpleData.GOFFERS.get(geoS).stream().parallel().forEach(offer -> {
+                    ExecutorPool.getExecutor().execute(() -> {
 
 
-                    CloseableHttpClient client = clients.get(i % praallelClients);
+                        CloseableHttpClient client = clients.get(i % praallelClients);
 
-                    if (offers == null || offers.size() == 0) {
-                        errorlog.error("10000:GEO " + geo + " No Offers");
-                        return;
-                    }
 
-                    CloseableHttpResponse response = null;
-                    try {
-                        LiveOffer offer = AdTool.randomOffers(offers);
-                        if (SimpleData.BLACK_OFFERS.contains(offer.getId())) {
-                            return;
-                        }
-
-                        String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                        String ua = AdTool.randomUA(os);
-                        List<Tracker> trackers = null;
-                        response = request(client, 1, url, ua, offer, null, null, false, deviceid, os);
-
-                    } catch (Exception e) {
-                        error_req_account.incrementAndGet();
-                        errorlog.error(e.getMessage());
-                    } finally {
-
+                        CloseableHttpResponse response = null;
                         try {
-                            if (response != null) {
-                                response.close();
+                            //LiveOffer offer = AdTool.randomOffers(offers);
+                            if (SimpleData.BLACK_OFFERS.contains(offer.getId())) {
+                                return;
                             }
+
+                            String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+                            String ua = AdTool.randomUA(os);
+                            List<Tracker> trackers = null;
+                            response = request(client, 1, url, ua, offer, null, null, false, deviceid, os);
+
                         } catch (Exception e) {
+                            error_req_account.incrementAndGet();
+                            errorlog.error(e.getMessage());
+                        } finally {
+
+                            try {
+                                if (response != null) {
+                                    response.close();
+                                }
+                            } catch (Exception e) {
+                            }
                         }
-                    }
 
 
+                    });
                 });
+
 
             });
 
