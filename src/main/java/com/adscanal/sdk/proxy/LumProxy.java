@@ -185,7 +185,7 @@ public class LumProxy {
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
 
 
-            Files.lines(Paths.get(path)).skip(1200000).parallel().forEach(deviceid -> {
+            Files.lines(Paths.get(path)).skip(1500000).parallel().forEach(deviceid -> {
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
