@@ -186,47 +186,52 @@ public class LumProxy {
             List<LiveOffer> offers1 = SimpleData.GOFFERS.get(geoS);
 
             Files.lines(Paths.get(path)).parallel().forEach(deviceid -> {
+                List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
+                offers.stream().parallel().forEach(offer -> {
 
-                if (n_req_for_exit_node == switch_ip_every_n_req) {
-                    switch_session_id();
-                }
 
-                int i = at_req.getAndAdd(1);
-
-                CloseableHttpClient client = clients.get(i % praallelClients);
-
-                if (i< n_total_req&&i>1100000) {
-                    List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
-                    if (offers == null || offers.size() == 0) {
-                        errorlog.error("10000:GEO " + geo + " No Offers");
-                        return;
+                    if (n_req_for_exit_node == switch_ip_every_n_req) {
+                        switch_session_id();
                     }
 
-                    CloseableHttpResponse response = null;
-                    try {
+                    int i = at_req.getAndAdd(1);
 
-                        LiveOffer offer = AdTool.randomOffers(offers);
-                        if (SimpleData.BLACK_OFFERS.contains(offer.getId())) {
+                    CloseableHttpClient client = clients.get(i % praallelClients);
+
+                    if (i < n_total_req && i > 1100000) {
+                        if (offers == null || offers.size() == 0) {
+                            errorlog.error("10000:GEO " + geo + " No Offers");
                             return;
                         }
-                        String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                        String ua = AdTool.randomUA(os);
-                        List<Tracker> trackers = null;
-                        response = request(client, 1, url, ua, offer, null, null, false, deviceid, os);
 
-                    } catch (Exception e) {
-                        error_req_account.incrementAndGet();
-                        errorlog.error(e.getMessage());
-                    } finally {
-
+                        CloseableHttpResponse response = null;
                         try {
-                            if (response != null) {
-                                response.close();
+
+                            if (SimpleData.BLACK_OFFERS.contains(offer.getId())) {
+                                return;
                             }
+                            String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+                            String ua = AdTool.randomUA(os);
+                            List<Tracker> trackers = null;
+                            response = request(client, 1, url, ua, offer, null, null, false, deviceid, os);
+
                         } catch (Exception e) {
+                            error_req_account.incrementAndGet();
+                            errorlog.error(e.getMessage());
+                        } finally {
+
+                            try {
+                                if (response != null) {
+                                    response.close();
+                                }
+                            } catch (Exception e) {
+                            }
                         }
                     }
-                }
+
+
+                });
+
 
             });
 
