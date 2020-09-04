@@ -10,9 +10,6 @@ import com.adscanal.sdk.dto.SimpleData;
 import com.adscanal.sdk.dto.Tracker;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.*;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -23,7 +20,6 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -36,8 +32,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.cert.CertificateException;
@@ -83,19 +77,10 @@ public class LumProxy {
     }
 
 
-    public static CloseableHttpClient updateClient(String country, String session_id, String host, int port) {
+    public static CloseableHttpClient updateClient(String country, int port) {
 
-        String login = username + (country != null ? "-country-" + country : "")
-                + "-session-" + session_id;
         //HttpHost super_proxy = new HttpHost(host, port);
         HttpHost super_proxy = new HttpHost("127.0.0.1", port);
-
-
-        CredentialsProvider cred_provider = new BasicCredentialsProvider();
-        cred_provider.setCredentials(new AuthScope(super_proxy),
-                new UsernamePasswordCredentials(login, password));
-
-
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
@@ -420,15 +405,9 @@ public class LumProxy {
             close(client);
         });
         for (int i = 0; i < parallel; i++) {
-            try {
-                String proxy_session_id = new Random().nextInt(Integer.MAX_VALUE) + "";
-                InetAddress address = InetAddress.getByName("session-" + proxy_session_id + ".zproxy.lum-superproxy.io");
 
-                String host = address.getHostAddress();
-                clients.add(updateClient(client_geo, proxy_session_id, host, 24000 + i));
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
+            clients.add(updateClient(client_geo, 24000 + i));
+
         }
         n_req_for_exit_node = 0;
         return clients;
