@@ -170,7 +170,7 @@ public class LumProxy {
             List<CloseableHttpClient> clients = switch_session_id();
 
 
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "1000");
             System.out.println("java.util.concurrent.ForkJoinPool.common.parallelism"+"100");
 
             offers = SimpleData.GOFFERS.get(geoS);
