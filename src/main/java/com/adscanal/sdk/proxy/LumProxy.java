@@ -81,7 +81,7 @@ public class LumProxy {
     public static CloseableHttpClient updateClient(String country, int port) {
 
         //HttpHost super_proxy = new HttpHost(host, port);
-        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
+        HttpHost super_proxy = new HttpHost("192.168.50.64", port);
 /*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
@@ -164,7 +164,7 @@ public class LumProxy {
             client_geo = geo;
             String path = "/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist";
 
-            parallel = 500;
+            parallel = 20;
 
             String geoS = geo + os;
             List<CloseableHttpClient> clients = switch_session_id();
@@ -174,7 +174,7 @@ public class LumProxy {
             System.out.println("java.util.concurrent.ForkJoinPool.common.parallelism"+"100");
 
             offers = SimpleData.GOFFERS.get(geoS);
-            Files.lines(Paths.get(path)).skip(180000).forEach(deviceid -> {
+            Files.lines(Paths.get(path)).skip(200000).parallel().forEach(deviceid -> {
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
@@ -233,6 +233,7 @@ public class LumProxy {
         url = AdTool.urlEncode(url, deviceid, os);
         HttpGet request = new HttpGet(url);
         request.setProtocolVersion(HttpVersion.HTTP_1_1);
+
         request.setHeader(HttpHeaders.USER_AGENT, ua);
         request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
         request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
@@ -240,6 +241,8 @@ public class LumProxy {
         request.setHeader(HttpHeaders.PRAGMA, "no-cache");
         request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
         request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
+        request.setHeader(HttpHeaders.CONTENT_ENCODING,"chunked");
+
         request.setHeader("upgrade-insecure-requests", "1");
 
         if (headers != null && headers.length > 0) {
@@ -302,6 +305,8 @@ public class LumProxy {
             request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
             request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
             request.setHeader("upgrade-insecure-requests", "1");
+            request.setHeader(HttpHeaders.CONTENT_ENCODING,"chunked");
+
 
             if (headers != null && headers.length > 0) {
                 for (Header header : headers) {
@@ -409,7 +414,7 @@ public class LumProxy {
         });
         for (int i = 0; i < parallel; i++) {
 
-            clients.add(updateClient(client_geo, 24000 + i));
+            clients.add(updateClient(client_geo, 24000));
 
         }
         n_req_for_exit_node = 0;
