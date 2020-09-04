@@ -81,17 +81,17 @@ public class LumProxy {
 
         //HttpHost super_proxy = new HttpHost(host, port);
         HttpHost super_proxy = new HttpHost("127.0.0.1", port);
-        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+/*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
-                .build();
+                .build();*/
 
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+                new PoolingHttpClientConnectionManager();
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         CloseableHttpClient client = HttpClients.custom()
