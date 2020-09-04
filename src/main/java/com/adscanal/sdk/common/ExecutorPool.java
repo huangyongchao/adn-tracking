@@ -19,7 +19,7 @@ public class ExecutorPool {
             .setNameFormat("sdk-threadpool-%d").build();
 
     static {
-        executor = new ThreadPoolExecutor(1000, 30000,
+        executor = new ThreadPoolExecutor(1000, 100000,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(), namedThreadFactory);
 
