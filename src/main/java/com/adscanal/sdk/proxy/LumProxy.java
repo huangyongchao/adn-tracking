@@ -413,7 +413,7 @@ public class LumProxy {
         });
         for (int i = 0; i < parallel; i++) {
 
-            clients.add(updateClient(client_geo, 24000));
+            clients.add(updateClient(client_geo, 24000+i));
 
         }
         n_req_for_exit_node = 0;
