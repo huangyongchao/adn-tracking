@@ -164,7 +164,7 @@ public class LumProxy {
             client_geo = geo;
             String path = "/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist";
 
-            parallel = 20;
+            parallel = praallelClients;
 
             String geoS = geo + os;
             List<CloseableHttpClient> clients = switch_session_id();
