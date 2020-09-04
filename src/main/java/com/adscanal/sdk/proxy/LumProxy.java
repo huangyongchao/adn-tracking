@@ -392,8 +392,11 @@ public class LumProxy {
         if (status == HttpStatus.SC_OK) {
             success_req_account.incrementAndGet();
         }
+        int i = at_req.get();
+        if(i%1000==0){
 
-        logger.warn(offer.getId() + "Total:" + at_req.get() + " Success:" + success_req_account.get() + "PERROR:" + fail_count + " Error:" + error_req_account.get());
+            logger.warn(offer.getId() + "Total:" + i + " Success:" + success_req_account.get() + "PERROR:" + fail_count + " Error:" + error_req_account.get());
+        }
 
 
         if (response != null && !status_code_requires_exit_node_switch(
