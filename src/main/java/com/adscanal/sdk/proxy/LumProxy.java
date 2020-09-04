@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LumProxy {
@@ -80,7 +81,7 @@ public class LumProxy {
     public static CloseableHttpClient updateClient(String country, int port) {
 
         //HttpHost super_proxy = new HttpHost(host, port);
-        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
+        HttpHost super_proxy = new HttpHost("44.235.122.213", port);
 /*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
@@ -94,6 +95,8 @@ public class LumProxy {
                 new PoolingHttpClientConnectionManager();
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
+        conn_mgr.closeExpiredConnections();
+        conn_mgr.closeIdleConnections(req_timeout, TimeUnit.MILLISECONDS);
         CloseableHttpClient client = HttpClients.custom()
                 .setConnectionManager(conn_mgr)
                 .disableAutomaticRetries()
@@ -171,7 +174,7 @@ public class LumProxy {
             System.out.println("java.util.concurrent.ForkJoinPool.common.parallelism"+"100");
 
             offers = SimpleData.GOFFERS.get(geoS);
-            Files.lines(Paths.get(path)).skip(150000).forEach(deviceid -> {
+            Files.lines(Paths.get(path)).skip(180000).forEach(deviceid -> {
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
