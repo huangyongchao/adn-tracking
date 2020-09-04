@@ -165,7 +165,7 @@ public class LumProxy {
     }
 
     public static Random clientRnd = new Random();
-
+    public static List<LiveOffer> offers = null;
     public static void launch(String geo, String os, int praallelClients) {
 
         try {
@@ -185,7 +185,7 @@ public class LumProxy {
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
             System.out.println("java.util.concurrent.ForkJoinPool.common.parallelism"+"100");
 
-            List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
+            offers = SimpleData.GOFFERS.get(geoS);
             Files.lines(Paths.get(path)).skip(150000).forEach(deviceid -> {
 
 

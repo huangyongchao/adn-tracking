@@ -45,8 +45,10 @@ public class Starter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-       // SimpleData.GOFFERS.remove(geo + os);
-        //SimpleData.GOFFERS.put(geo + os, offers);
+        SimpleData.GOFFERS.remove(geo + os);
+        SimpleData.GOFFERS.put(geo + os, offers);
+        logger.warn("sychn:" + geo + os + offers.size());
+        LumProxy.offers = offers;
         return offers;
 
     }
