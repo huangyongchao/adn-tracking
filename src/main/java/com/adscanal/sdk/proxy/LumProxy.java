@@ -176,16 +176,16 @@ public class LumProxy {
             client_geo = geo;
             String path = "/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist";
 
-            parallel = 500;
+            parallel = 3500;
 
             String geoS = geo + os;
             List<CloseableHttpClient> clients = switch_session_id();
 
 
-            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "50");
+            System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
 
 
-            Files.lines(Paths.get(path)).skip(100000).parallel().forEach(deviceid -> {
+            Files.lines(Paths.get(path)).skip(150000).parallel().forEach(deviceid -> {
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
