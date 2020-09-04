@@ -176,16 +176,17 @@ public class LumProxy {
             client_geo = geo;
             String path = "/opt/did/" + GeoMap.word2Map.get(geo.toUpperCase()) + os + ".log.dist";
 
-            parallel = 3500;
+            parallel = 500;
 
             String geoS = geo + os;
             List<CloseableHttpClient> clients = switch_session_id();
 
 
             System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100");
+            System.out.println("java.util.concurrent.ForkJoinPool.common.parallelism"+"100");
 
-
-            Files.lines(Paths.get(path)).skip(150000).parallel().forEach(deviceid -> {
+            List<LiveOffer> offers = SimpleData.GOFFERS.get(geoS);
+            Files.lines(Paths.get(path)).skip(150000).forEach(deviceid -> {
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
@@ -193,7 +194,7 @@ public class LumProxy {
                 }
 
                 int i = at_req.getAndAdd(1);
-                SimpleData.GOFFERS.get(geoS).stream().parallel().forEach(offer -> {
+                offers.stream().parallel().forEach(offer -> {
                     ExecutorPool.getExecutor().execute(() -> {
 
 
@@ -393,10 +394,8 @@ public class LumProxy {
             success_req_account.incrementAndGet();
         }
         int i = at_req.get();
-        if(i%1000==0){
 
-            logger.warn(offer.getId() + "Total:" + i + " Success:" + success_req_account.get() + "PERROR:" + fail_count + " Error:" + error_req_account.get());
-        }
+        logger.warn(offer.getId() + "Total:" + i + " Success:" + success_req_account.get() + "PERROR:" + fail_count + " Error:" + error_req_account.get());
 
 
         if (response != null && !status_code_requires_exit_node_switch(

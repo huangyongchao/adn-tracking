@@ -46,7 +46,7 @@ public class Starter {
             e.printStackTrace();
         }
        // SimpleData.GOFFERS.remove(geo + os);
-        SimpleData.GOFFERS.put(geo + os, offers);
+        //SimpleData.GOFFERS.put(geo + os, offers);
         return offers;
 
     }
