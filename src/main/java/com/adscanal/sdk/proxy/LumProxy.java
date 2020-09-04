@@ -305,7 +305,6 @@ public class LumProxy {
             request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
             request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
             request.setHeader("upgrade-insecure-requests", "1");
-            request.setHeader(HttpHeaders.CONTENT_ENCODING,"chunked");
 
 
             if (headers != null && headers.length > 0) {
