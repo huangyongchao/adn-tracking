@@ -249,12 +249,14 @@ public class LumProxy {
             }
             response = client.execute(request);
             request.releaseConnection();
+/*
             if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                 if (trackers == null) {
                     trackers = new LinkedList<>();
                 }
                 trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
             }
+*/
 
 
             if (isRedirect(offer, response)) {
@@ -278,18 +280,20 @@ public class LumProxy {
                 } else {
 
                     if (!AdTool.isStore(url)) {
-                        Counter.increaseSuccess1(offer.getId());
+
+                        Counter.increaseError1(offer.getId());
+                        AdTool.saveLand(offer,url);
+                        logger.warn(offer.getOfferId());
                     } else {
                         Counter.increaseSuccess(offer.getId());
                     }
-                    Counter.increaseError1(offer.getId());
-                    AdTool.saveLand(offer,url);
+
                 }
                 break;
 
             }
         }
-        handleTracker(response, offer, trackers);
+       // handleTracker(response, offer, trackers);
         handle_response(offer, response, issuccess);
         return response;
 
