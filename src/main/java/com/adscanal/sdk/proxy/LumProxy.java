@@ -76,7 +76,8 @@ public class LumProxy {
     public static CloseableHttpClient updateClient(String country, int port) {
 
         //HttpHost super_proxy = new HttpHost(host, port);
-        HttpHost super_proxy = new HttpHost("44.235.122.213", port);
+       // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
+        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
 /*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
