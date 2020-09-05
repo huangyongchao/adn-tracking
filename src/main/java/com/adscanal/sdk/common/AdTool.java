@@ -3,6 +3,7 @@ package com.adscanal.sdk.common;
 import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
+import com.adscanal.sdk.dto.SimpleData;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -29,7 +30,7 @@ public class AdTool {
                 url = url + "&advertising_id=" + deviceid;
             }
 
-            url = url + "&redirect=false";
+            //url = url + "&redirect=false";
         }
         if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
             url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);
@@ -118,12 +119,29 @@ public class AdTool {
         return DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getId();
     }
 
-    public static boolean isStore(String url ){
-        if(url.indexOf("apple.com")>0||url.indexOf("google.com")>0){
+    public static boolean isStore(String url) {
+        if (url.indexOf("apple.com") > 0 || url.indexOf("google.com") > 0) {
             return true;
         }
         return false;
     }
+
+
+    public static void saveLand(LiveOffer offer, String url) {
+
+        if (!SimpleData.OFFER_LAND.containsKey(offer.getId())) {
+            SimpleData.OFFER_LAND.put(offer.getId(), url.substring(0, 25));
+        }
+    }
+
+    public static boolean isLand(LiveOffer offer, String url) {
+        String land = SimpleData.OFFER_LAND.get(offer.getId());
+        if (url.substring(0, 25).equalsIgnoreCase(land)) {
+            return true;
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         System.out.println(DateFormatUtils.format(new Date(), "MMddHHmmss"));

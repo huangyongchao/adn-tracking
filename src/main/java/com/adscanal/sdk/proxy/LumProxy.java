@@ -15,11 +15,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -81,7 +76,7 @@ public class LumProxy {
     public static CloseableHttpClient updateClient(String country, int port) {
 
         //HttpHost super_proxy = new HttpHost(host, port);
-        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
+        HttpHost super_proxy = new HttpHost("44.235.122.213", port);
 /*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
@@ -174,7 +169,7 @@ public class LumProxy {
             System.out.println("java.util.concurrent.ForkJoinPool.common.parallelism"+"100");
 
             offers = SimpleData.GOFFERS.get(geoS);
-            Files.lines(Paths.get(path)).skip(200000).parallel().forEach(deviceid -> {
+            Files.lines(Paths.get(path)).skip(1600000).parallel().forEach(deviceid -> {
 
 
                 if (n_req_for_exit_node == switch_ip_every_n_req) {
@@ -228,68 +223,6 @@ public class LumProxy {
     }
 
 
-    public static CloseableHttpResponse requestR(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing, String deviceid, String os) throws IOException {
-        CloseableHttpResponse response = null;
-        url = AdTool.urlEncode(url, deviceid, os);
-        HttpGet request = new HttpGet(url);
-        request.setProtocolVersion(HttpVersion.HTTP_1_1);
-
-        request.setHeader(HttpHeaders.USER_AGENT, ua);
-        request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
-        request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
-        request.setHeader(HttpHeaders.ACCEPT, "application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
-        request.setHeader(HttpHeaders.PRAGMA, "no-cache");
-        request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
-        request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
-        request.setHeader(HttpHeaders.CONTENT_ENCODING,"chunked");
-
-        request.setHeader("upgrade-insecure-requests", "1");
-
-        if (headers != null && headers.length > 0) {
-            for (Header header : headers) {
-                request.addHeader("Cookie", header.getValue());
-            }
-        }
-        response = client.execute(request);
-
-        if (!Statistics.offer_tracker.containsKey(offer.getId())) {
-            if (trackers == null) {
-                trackers = new LinkedList<>();
-            }
-            trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
-        }
-
-
-        if (isRedirect(offer, response)) {
-            url = response.getHeaders("Location")[0].toString().substring(10).trim();
-            if (!AdTool.isStore(url)) {
-                requestR(client, ++counter, url, ua, offer, response.getHeaders("set-cookie"), trackers, testing, deviceid, os);
-            } else {
-                if (!Statistics.offer_tracker.containsKey(offer.getId())) {
-                    trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
-                }
-                response.setStatusCode(HttpStatus.SC_MOVED_PERMANENTLY);
-                Counter.increaseSuccess(offer.getId());
-            }
-        } else {
-            if (status_code_requires_exit_node_switch(
-                    response.getStatusLine().getStatusCode())) {
-                Counter.increaseError(offer.getId());
-            } else {
-                if (!AdTool.isStore(url)) {
-                    Counter.increaseSuccess1(offer.getId());
-                } else {
-                    Counter.increaseSuccess(offer.getId());
-                }
-            }
-
-        }
-        handleTracker(response, offer, trackers);
-        handle_response(offer, response);
-        return response;
-
-    }
-
 
     public static CloseableHttpResponse request(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing, String deviceid, String os) throws IOException {
         CloseableHttpResponse response = null;
@@ -324,7 +257,7 @@ public class LumProxy {
 
             if (isRedirect(offer, response)) {
                 url = response.getHeaders("Location")[0].toString().substring(10).trim();
-                if (!AdTool.isStore(url)) {
+                if (!AdTool.isLand(offer, url)) {
                     headers = response.getHeaders("set-cookie");
                     continue;
                 } else {
@@ -340,6 +273,10 @@ public class LumProxy {
                         response.getStatusLine().getStatusCode())) {
                     Counter.increaseError(offer.getId());
                 } else {
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        AdTool.saveLand(offer, url);
+
+                    }
                     if (!AdTool.isStore(url)) {
                         Counter.increaseSuccess1(offer.getId());
                     } else {

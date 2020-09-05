@@ -46,6 +46,10 @@ public class OpenApi {
         return SimpleData.GOFFERS;
     }
 
+    @GetMapping("/land")
+    public Object land() {
+        return SimpleData.OFFER_LAND;
+    }
 
     @GetMapping("/tracking")
     public Object getTracker() {
