@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class LumProxy {
     private static final Logger logger = LoggerFactory.getLogger(LumProxy.class);
@@ -205,6 +206,11 @@ public class LumProxy {
                         } catch (Exception e) {
                             error_req_account.incrementAndGet();
                             errorlog.error(e.getMessage());
+                            if(SimpleData.OFFERERROR.containsKey(offer.getId())){
+                                SimpleData.OFFERERROR.get(offer.getId()).incrementAndGet();
+                            }else{
+                                SimpleData.OFFERERROR.put(offer.getId(), new AtomicLong(1));
+                            }
                         } finally {
 
                             try {

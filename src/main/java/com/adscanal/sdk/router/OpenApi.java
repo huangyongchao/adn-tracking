@@ -56,6 +56,12 @@ public class OpenApi {
         return SimpleData.OFFER_LAND;
     }
 
+
+    @GetMapping("/oe")
+    public Object oe() {
+        return SimpleData.OFFERERROR;
+    }
+
     @GetMapping("/tracking")
     public Object getTracker() {
         return JSONObject.toJSONString((Statistics.offer_tracker));
