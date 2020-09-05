@@ -226,6 +226,7 @@ public class LumProxy {
 
     public static CloseableHttpResponse request(CloseableHttpClient client, int counter, String url, String ua, LiveOffer offer, Header[] headers, List<Tracker> trackers, boolean testing, String deviceid, String os) throws IOException {
         CloseableHttpResponse response = null;
+        boolean issuccess = false;
         for (int i = 0; i < 5; i++) {
             url = AdTool.urlEncode(url, deviceid, os);
             HttpGet request = new HttpGet(url);
@@ -264,8 +265,8 @@ public class LumProxy {
                     if (!Statistics.offer_tracker.containsKey(offer.getId())) {
                         trackers.add(new Tracker(response.getStatusLine().getStatusCode(), url));
                     }
-                    response.setStatusCode(HttpStatus.SC_MOVED_PERMANENTLY);
                     Counter.increaseSuccess(offer.getId());
+                    issuccess = true;
                     break;
                 }
             } else {
@@ -288,7 +289,7 @@ public class LumProxy {
             }
         }
         handleTracker(response, offer, trackers);
-        handle_response(offer, response);
+        handle_response(offer, response, issuccess);
         return response;
 
     }
@@ -315,11 +316,11 @@ public class LumProxy {
         }
     }
 
-    public static void handle_response(LiveOffer offer, HttpResponse response) {
+    public static void handle_response(LiveOffer offer, HttpResponse response, boolean issuccess) {
 
 
         int status = response.getStatusLine().getStatusCode();
-        if (status == HttpStatus.SC_OK) {
+        if (issuccess || status == HttpStatus.SC_OK) {
             success_req_account.incrementAndGet();
         }
         int i = at_req.get();
