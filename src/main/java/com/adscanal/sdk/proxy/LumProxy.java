@@ -15,6 +15,11 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -76,19 +81,19 @@ public class LumProxy {
     public static CloseableHttpClient updateClient(String country, int port) {
 
         // HttpHost super_proxy = new HttpHost(host, port);
-        //HttpHost super_proxy = new HttpHost("44.235.122.213", port);
-         HttpHost super_proxy = new HttpHost("127.0.0.1", port);
-/*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+        // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
+        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
-                .build();*/
+                .build();
 
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager();
+                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         conn_mgr.closeExpiredConnections();
