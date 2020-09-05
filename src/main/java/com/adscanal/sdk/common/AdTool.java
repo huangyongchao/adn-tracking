@@ -30,7 +30,7 @@ public class AdTool {
                 url = url + "&advertising_id=" + deviceid;
             }
 
-            //url = url + "&redirect=false";
+            url = url + "&redirect=false";
         }
         if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
             url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);
