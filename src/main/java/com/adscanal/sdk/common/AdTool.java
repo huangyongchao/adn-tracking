@@ -130,18 +130,9 @@ public class AdTool {
     public static void saveLand(LiveOffer offer, String url) {
 
         if (!SimpleData.OFFER_LAND.containsKey(offer.getId())) {
-            SimpleData.OFFER_LAND.put(offer.getId(), url.substring(0, 25));
+            SimpleData.OFFER_LAND.put(offer.getId(), url);
         }
     }
-
-    public static boolean isLand(LiveOffer offer, String url) {
-        String land = SimpleData.OFFER_LAND.get(offer.getId());
-        if (url.substring(0, 25).equalsIgnoreCase(land)) {
-            return true;
-        }
-        return false;
-    }
-
 
     public static void main(String[] args) {
         System.out.println(DateFormatUtils.format(new Date(), "MMddHHmmss"));

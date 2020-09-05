@@ -75,9 +75,9 @@ public class LumProxy {
 
     public static CloseableHttpClient updateClient(String country, int port) {
 
-        //HttpHost super_proxy = new HttpHost(host, port);
-       // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
-        HttpHost super_proxy = new HttpHost("127.0.0.1", port);
+        // HttpHost super_proxy = new HttpHost(host, port);
+        //HttpHost super_proxy = new HttpHost("44.235.122.213", port);
+         HttpHost super_proxy = new HttpHost("127.0.0.1", port);
 /*        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
@@ -259,7 +259,7 @@ public class LumProxy {
 
             if (isRedirect(offer, response)) {
                 url = response.getHeaders("Location")[0].toString().substring(10).trim();
-                if (!AdTool.isLand(offer, url)) {
+                if ( !AdTool.isStore(url))  {
                     headers = response.getHeaders("set-cookie");
                     continue;
                 } else {
@@ -271,19 +271,19 @@ public class LumProxy {
                     break;
                 }
             } else {
+
                 if (status_code_requires_exit_node_switch(
                         response.getStatusLine().getStatusCode())) {
                     Counter.increaseError(offer.getId());
                 } else {
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        AdTool.saveLand(offer, url);
 
-                    }
                     if (!AdTool.isStore(url)) {
                         Counter.increaseSuccess1(offer.getId());
                     } else {
                         Counter.increaseSuccess(offer.getId());
                     }
+                    Counter.increaseError1(offer.getId());
+                    AdTool.saveLand(offer,url);
                 }
                 break;
 

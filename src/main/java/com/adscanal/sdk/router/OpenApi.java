@@ -24,6 +24,11 @@ public class OpenApi {
 
     }
 
+    @GetMapping("/ids")
+    public Object ids() {
+        return Counter.counterMap().keySet();
+
+    }
 
     @GetMapping("/bo")
     public Object bo() {
