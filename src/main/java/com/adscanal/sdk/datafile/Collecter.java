@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.stream.Collectors;
 
 /**
  * @author huangyongchao
@@ -54,12 +53,14 @@ public class Collecter {
                 if (!OS_UA.containsKey(uary[0])) {
                     OS_UA.put(uary[0], Lists.newArrayList());
                 } else {
-                    if (ua.indexOf("1|") > 0) {
-                        if (ua.indexOf("Phone") > 0) {
+                    if (ua.startsWith("1|")) {
+                        if (ua.indexOf("Phone") > 0 && ua.indexOf("13_") > 0) {
                             OS_UA.get(uary[0]).add(uary[1]);
                         }
                     } else {
-                        OS_UA.get(uary[0]).add(uary[1]);
+                        if (ua.indexOf("Android 9") > 0 || ua.indexOf("Android 10") > 0 || ua.indexOf("Android 11") > 0) {
+                            OS_UA.get(uary[0]).add(uary[1]);
+                        }
 
                     }
                 }
@@ -141,6 +142,8 @@ public class Collecter {
     }
 
     public static void main(String[] args) {
+        initGua();
+        System.out.println(1);
         //  initFilePath();
 /*        try {
             String path =  "/Volumes/FrankSSD/VNMios.log";
@@ -154,7 +157,7 @@ public class Collecter {
 
 
 
-*/
+
 
         ACTI_GEOS.forEach(geo -> {
             ACTI_OS.forEach(os -> {
@@ -176,6 +179,6 @@ public class Collecter {
             });
         });
 
-
+*/
     }
 }
