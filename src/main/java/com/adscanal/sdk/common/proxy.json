@@ -1,0 +1,105 @@
+{
+  "_defaults": {
+    "customer": "huangyongchao",
+    "logs": 0,
+    "lpm_token": "w7sYvRei3tAGvCHKZa2S7g56SsKuXHSc|huangyongchao",
+    "password": "q5srrwcvkx9x",
+    "version": "1.197.33",
+    "www_whitelist_ips": [
+      "111.197.244.142"
+    ]
+  },
+  "proxies": [
+    {
+      "country": "cl",
+      "dns": "remote",
+      "internal_name": "cl",
+      "multiply": 100,
+      "port": 26000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "co",
+      "dns": "remote",
+      "internal_name": "co",
+      "multiply": 100,
+      "port": 28000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "kw",
+      "dns": "remote",
+      "internal_name": "kw",
+      "multiply": 100,
+      "port": 30000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "my",
+      "dns": "remote",
+      "error": "Proxy port already exists",
+      "internal_name": "my",
+      "multiply": 100,
+      "port": 30000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "il",
+      "dns": "remote",
+      "internal_name": "il",
+      "multiply": 100,
+      "port": 34000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "ca",
+      "dns": "remote",
+      "internal_name": "ca",
+      "multiply": 100,
+      "port": 36000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "vn",
+      "dns": "remote",
+      "headers": [
+        {
+          "name": "user-agent",
+          "value": "random_desktop"
+        }
+      ],
+      "internal_name": "v",
+      "multiply": 100,
+      "port": 24000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    }
+  ]
+}
