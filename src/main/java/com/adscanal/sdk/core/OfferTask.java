@@ -101,12 +101,12 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
-                System.out.println(url);
+                logger.warn(offer.getOfferId()+":"+i+":"+url);
                 response = client.execute(request);
                 request.releaseConnection();
 
                 if (isRedirect(offer, response)) {
-                    url = response.getHeaders("Location")[0].toString();
+                    url = response.getHeaders("Location")[0].toString().replace("location: ","").trim();
                     if (!AdTool.isStore(url)) {
                         headers = response.getHeaders("set-cookie");
                         continue;
