@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -83,13 +84,13 @@ public class TaskLoader {
         if (rebuild) {
 
             if (offer.getDailyMaxClicks() <= 0) {
-                period = Integer.MIN_VALUE;
+                period = Integer.MAX_VALUE;
             } else {
                 period = BASE / offer.getDailyMaxClicks();
             }
 
             SdkConf.OFFER_SCHED_NEW.put(offer.getId(), Executors.newScheduledThreadPool(coresize));
-            SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 1000, period, TimeUnit.MILLISECONDS);
+            SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), new Random().nextInt(1000), period, TimeUnit.MILLISECONDS);
             SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
             logger.info("LOADOFFER:"+offer.getName()+" "+offer.getDailyMaxClicks());
         } else {
@@ -98,7 +99,7 @@ public class TaskLoader {
                 SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
             }else{
                 SdkConf.OFFER_SCHED_NEW.put(offer.getId(), Executors.newScheduledThreadPool(coresize));
-                SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 1000, period, TimeUnit.MILLISECONDS);
+                SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),  new Random().nextInt(1000), period, TimeUnit.MILLISECONDS);
                 SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
                 logger.info("LOADOFFER:"+offer.getName()+" "+offer.getDailyMaxClicks());
             }
