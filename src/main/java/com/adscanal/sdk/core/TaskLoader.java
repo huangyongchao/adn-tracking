@@ -86,6 +86,7 @@ public class TaskLoader {
             SdkConf.OFFER_SCHED_NEW.put(offer.getId(), Executors.newScheduledThreadPool(coresize));
             SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 1000, period, TimeUnit.MILLISECONDS);
             SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
+            logger.info("LOADOFFER:"+offer.getName()+" "+offer.getDailyMaxClicks());
         } else {
             if (SdkConf.OFFER_SCHED_STABLE.containsKey(offer.getId())) {
                 SdkConf.OFFER_SCHED_NEW.put(offer.getId(), SdkConf.OFFER_SCHED_STABLE.get(offer.getId()));
@@ -94,6 +95,7 @@ public class TaskLoader {
                 SdkConf.OFFER_SCHED_NEW.put(offer.getId(), Executors.newScheduledThreadPool(coresize));
                 SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 1000, period, TimeUnit.MILLISECONDS);
                 SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
+                logger.info("LOADOFFER:"+offer.getName()+" "+offer.getDailyMaxClicks());
             }
         }
     }
