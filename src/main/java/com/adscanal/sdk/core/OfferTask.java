@@ -79,7 +79,6 @@ public class OfferTask implements Runnable {
     public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
-            boolean issuccess = false;
             for (int i = 0; i < 5; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if (i == 4) {
@@ -102,12 +101,12 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
+                System.out.println(url);
                 response = client.execute(request);
                 request.releaseConnection();
 
                 if (isRedirect(offer, response)) {
                     url = response.getHeaders("Location")[0].toString();
-                    System.out.println(url);
                     if (!AdTool.isStore(url)) {
                         headers = response.getHeaders("set-cookie");
                         continue;
