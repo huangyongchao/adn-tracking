@@ -111,10 +111,18 @@ public class ProxyClient {
         return sc;
     }
 
+    public void putClientPool(String host, int port, String geo) {
+        ArrayList<CloseableHttpClient> pool = new ArrayList<>();
+        pool.add(getClient(host, port));
+        GEO_CLIENTS.put(geo, pool);
+    }
+
     @PostConstruct
     public void initClient() {
-        ArrayList<CloseableHttpClient> pool = new ArrayList<>();
-        pool.add(getClient("127.0.0.1", 24000));
-        GEO_CLIENTS.put("VN", pool);
+        putClientPool("127.0.0.1", 24000, "VN");
+        putClientPool("127.0.0.1", 26000, "ID");
+        putClientPool("127.0.0.1", 26001, "TH");
+        putClientPool("127.0.0.1", 26002, "PH");
+        putClientPool("127.0.0.1", 26003, "SG");
     }
 }

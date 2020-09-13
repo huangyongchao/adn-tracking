@@ -15,7 +15,7 @@ public class SdkConf {
     public static Map<String, ScheduledExecutorService> OFFER_SCHED_NEW = new HashMap<>();
 
     public static Map<String, ArrayBlockingQueue> GEO_OS_QUE = Maps.newHashMap();
-    public static List<String> ACTI_GEO = Lists.newArrayList("VN", "CA", "IL", "MY", "KW", "CO", "CL");
+    public static List<String> ACTI_GEO = Lists.newArrayList("ID", "KR", "PH", "SG", "TH", "TW", "VN");
     static {
         ACTI_GEO.forEach(geo -> {
             GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(1000));
