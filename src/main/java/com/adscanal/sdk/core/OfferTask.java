@@ -1,6 +1,7 @@
 package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.AdTool;
+import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
 import org.apache.http.*;
@@ -42,10 +43,12 @@ public class OfferTask implements Runnable {
             if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
                 return;
             }
-            SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
-            String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-            String ua = AdTool.randomUA(os);
-            request(key, ProxyClient.GEO_CLIENTS.get(geo).get(0), url, ua, offer, null, deviceid, os);
+            ExecutorPool.getExecutor().execute(() -> {
+                SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
+                String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+                String ua = AdTool.randomUA(os);
+                request(key, ProxyClient.GEO_CLIENTS.get(geo).get(0), url, ua, offer, null, deviceid, os);
+            });
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
             errorlog.error(e.getMessage(), e);
