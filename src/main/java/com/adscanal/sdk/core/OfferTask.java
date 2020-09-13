@@ -107,6 +107,7 @@ public class OfferTask implements Runnable {
 
                 if (isRedirect(offer, response)) {
                     url = response.getHeaders("Location")[0].toString();
+                    System.out.println(url);
                     if (!AdTool.isStore(url)) {
                         headers = response.getHeaders("set-cookie");
                         continue;
