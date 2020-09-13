@@ -78,6 +78,9 @@ public class OfferTask implements Runnable {
             boolean issuccess = false;
             for (int i = 0; i < 5; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
+                if(i==4){
+                    logger.info("ERRORREDIRECT:" + offer.getOsName() + url);
+                }
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
@@ -115,18 +118,23 @@ public class OfferTask implements Runnable {
                         Counter.increaseError(offer.getId());
                     } else {
 
-                        if (!AdTool.isStore(url)) {
+                        logger.info(offer.getName() + " :" + url);
+                        Counter.increaseSuccess(offer.getId());
+    /*                    if (!AdTool.isStore(url)) {
                             Counter.increaseError1(offer.getId());
                             AdTool.saveLand(offer, url);
                             logger.warn(offer.getOfferId());
                         } else {
                             Counter.increaseSuccess(offer.getId());
-                        }
+                        }*/
 
                     }
                     break;
 
                 }
+
+
+
             }
             handle_response(offer, response, issuccess);
         } catch (IOException e) {
