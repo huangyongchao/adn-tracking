@@ -29,8 +29,8 @@ public class TaskLoader {
     //重新调整timer
 
     public static void loadDevid(String filepath, String key) {
-        ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
         ExecutorPool.getExecutor().execute(() -> {
+            ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
             String path = filepath;
             if (!Files.exists(Paths.get(path))) {
                 logger.error("Not exists:" + path);

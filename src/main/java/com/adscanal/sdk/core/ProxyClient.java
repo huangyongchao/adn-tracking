@@ -16,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -31,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class ProxyClient {
+    @Value("${proxy.server}")
+    String proxyHost;
     public static final int req_timeout = 10 * 1000;
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
@@ -119,12 +122,10 @@ public class ProxyClient {
 
     @PostConstruct
     public void initClient() {
-        //String host = "44.235.122.213";
-        String host = "127.0.0.1";
-        putClientPool(host, 24000, "VN");
-        putClientPool(host, 26000, "ID");
-        putClientPool(host, 26001, "TH");
-        putClientPool(host, 26002, "PH");
-        putClientPool(host, 26003, "SG");
+        putClientPool(proxyHost, 24000, "VN");
+        putClientPool(proxyHost, 26000, "ID");
+        putClientPool(proxyHost, 26001, "TH");
+        putClientPool(proxyHost, 26002, "PH");
+        putClientPool(proxyHost, 26003, "SG");
     }
 }
