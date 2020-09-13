@@ -2,6 +2,7 @@ package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.dto.LiveOffer;
+import com.adscanal.sdk.dto.ProducerCounter;
 import com.adscanal.sdk.dto.SimpleData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class TaskLoader {
     public static void loadDevid(String filepath, String key) {
         ExecutorPool.getExecutor().execute(() -> {
             ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
+            SimpleData.PRODUCERCOUNTER.put(key, new ProducerCounter());
             String path = filepath;
             if (!Files.exists(Paths.get(path))) {
                 logger.error("Not exists:" + path);
@@ -40,6 +42,7 @@ public class TaskLoader {
                 Files.lines(Paths.get(path)).forEach(n -> {
                     try {
                         q.put(n);
+                        SimpleData.PRODUCERCOUNTER.get(key).getCursor().incrementAndGet();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

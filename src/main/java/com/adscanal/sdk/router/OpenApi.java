@@ -51,6 +51,12 @@ public class OpenApi {
         return SimpleData.GOFFERS;
     }
 
+    @GetMapping("/producercnt")
+    public Object producercnt() {
+        return SimpleData.PRODUCERCOUNTER;
+    }
+
+
     @GetMapping("/land")
     public Object land() {
         return SimpleData.OFFER_LAND;
