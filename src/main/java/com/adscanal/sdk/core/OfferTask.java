@@ -1,7 +1,6 @@
 package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.AdTool;
-import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
 import org.apache.http.*;
@@ -46,9 +45,10 @@ public class OfferTask implements Runnable {
             SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
-            request(ProxyClient.GEO_CLIENTS.get(geo).get(0), url, ua, offer, null, deviceid, os);
+            request(key, ProxyClient.GEO_CLIENTS.get(geo).get(0), url, ua, offer, null, deviceid, os);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
+            errorlog.error(e.getMessage(), e);
         }
     }
 
@@ -76,13 +76,13 @@ public class OfferTask implements Runnable {
     }
 
 
-    public void request(CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
             boolean issuccess = false;
             for (int i = 0; i < 5; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
-                if(i==4){
+                if (i == 4) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                 }
                 HttpGet request = new HttpGet(url);
@@ -106,41 +106,21 @@ public class OfferTask implements Runnable {
                 request.releaseConnection();
 
                 if (isRedirect(offer, response)) {
-                    url = response.getHeaders("Location")[0].toString().substring(10).trim();
+                    url = response.getHeaders("Location")[0].toString();
                     if (!AdTool.isStore(url)) {
                         headers = response.getHeaders("set-cookie");
                         continue;
-                    } else {
-                        Counter.increaseSuccess(offer.getId());
-                        issuccess = true;
-                        break;
+                    }else{
+                        //302到商店的话
+                        SimpleData.PRODUCERCOUNTER.get(key).getSuccess().incrementAndGet();
                     }
                 } else {
-
-                    if (status_code_requires_exit_node_switch(
-                            response.getStatusLine().getStatusCode())) {
-                        Counter.increaseError(offer.getId());
-                    } else {
-
-                        logger.info(offer.getName() + " :" + url);
-                        Counter.increaseSuccess(offer.getId());
-    /*                    if (!AdTool.isStore(url)) {
-                            Counter.increaseError1(offer.getId());
-                            AdTool.saveLand(offer, url);
-                            logger.warn(offer.getOfferId());
-                        } else {
-                            Counter.increaseSuccess(offer.getId());
-                        }*/
-
-                    }
                     break;
-
                 }
 
-
-
             }
-            handle_response(offer, response, issuccess);
+            handle_response(key, offer, response);
+            SimpleData.PRODUCERCOUNTER.get(key).getRequest().incrementAndGet();
         } catch (IOException e) {
             errorlog.error(e.getMessage(), e);
             error_req_account.incrementAndGet();
@@ -156,26 +136,20 @@ public class OfferTask implements Runnable {
         return false;
     }
 
-    public void handle_response(LiveOffer offer, HttpResponse response, boolean issuccess) {
+    public void handle_response(String key, LiveOffer offer, HttpResponse response) {
 
 
         int status = response.getStatusLine().getStatusCode();
-        if (issuccess || status == HttpStatus.SC_OK) {
-            success_req_account_200.incrementAndGet();
+        if (status == HttpStatus.SC_OK) {
+            SimpleData.PRODUCERCOUNTER.get(key).getSuccess().incrementAndGet();
         }
-        int i = at_req.get();
-
-        logger.warn(offer.getId() + "Total:" + i + " Success:" + success_req_account_200.get() + " ERROR:" + error_req_account_500.get() + " ERROR:" + error_req_account.get());
-
-
         if (response != null && !status_code_requires_exit_node_switch(
                 response.getStatusLine().getStatusCode())) {
             // success or other client/website error like 404...
-            error_req_account_500.set(0);
             return;
         }
         switch_session_id();
-        error_req_account_500.incrementAndGet();
+        SimpleData.PRODUCERCOUNTER.get(key).getError500().incrementAndGet();
     }
 
     public boolean status_code_requires_exit_node_switch(int code) {
