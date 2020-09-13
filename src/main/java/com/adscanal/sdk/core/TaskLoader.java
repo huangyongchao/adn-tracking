@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -49,15 +50,16 @@ public class TaskLoader {
         });
     }
 
-
+    @PostConstruct
     public static void producers() {
-        loadDevid("/opt/did/IDNios.log.dist", "ID");
-        loadDevid("/opt/did/KORios.log.dist", "KR");
-        loadDevid("/opt/did/PHLios.log.dist", "PH");
-        loadDevid("/opt/did/SGPios.log.dist", "SG");
-        loadDevid("/opt/did/THAios.log.dist", "TH");
-        loadDevid("/opt/did/TWNios.log.dist", "TW");
-        loadDevid("/opt/did/VNMios.log.dist", "VN");
+
+        loadDevid("/opt/did/IDNios.log.dist", "IDios");
+        loadDevid("/opt/did/KORios.log.dist", "KRios");
+        loadDevid("/opt/did/PHLios.log.dist", "PHios");
+        loadDevid("/opt/did/SGPios.log.dist", "SGios");
+        loadDevid("/opt/did/THAios.log.dist", "THios");
+        loadDevid("/opt/did/TWNios.log.dist", "TWios");
+        loadDevid("/opt/did/VNMios.log.dist", "VNios");
 
     }
 

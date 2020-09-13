@@ -119,10 +119,11 @@ public class ProxyClient {
 
     @PostConstruct
     public void initClient() {
-        putClientPool("127.0.0.1", 24000, "VN");
-        putClientPool("127.0.0.1", 26000, "ID");
-        putClientPool("127.0.0.1", 26001, "TH");
-        putClientPool("127.0.0.1", 26002, "PH");
-        putClientPool("127.0.0.1", 26003, "SG");
+        String host = "44.235.122.213";
+        putClientPool(host, 24000, "VN");
+        putClientPool(host, 26000, "ID");
+        putClientPool(host, 26001, "TH");
+        putClientPool(host, 26002, "PH");
+        putClientPool(host, 26003, "SG");
     }
 }
