@@ -83,7 +83,7 @@ public class OfferTask implements Runnable {
             for (int i = 0; i < 5; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if(i==4){
-                    logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + url);
+                    logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                 }
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
