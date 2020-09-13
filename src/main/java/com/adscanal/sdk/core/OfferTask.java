@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class OfferTask implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
-    private static final Logger tracklogger = LoggerFactory.getLogger("track");
-    private static final Logger dtracklogger = LoggerFactory.getLogger("dtrack");
 
 
     public static final int n_total_req = 10000000;
@@ -39,6 +37,9 @@ public class OfferTask implements Runnable {
     public void run() {
         try {
             String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
+            if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
+                return;
+            }
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
             request(ProxyClient.GEO_CLIENTS.get(geo).get(0), url, ua, offer, null, deviceid, os);
@@ -129,7 +130,7 @@ public class OfferTask implements Runnable {
             }
             handle_response(offer, response, issuccess);
         } catch (IOException e) {
-            e.printStackTrace();
+            errorlog.error(e.getMessage(), e);
             error_req_account.incrementAndGet();
         }
 

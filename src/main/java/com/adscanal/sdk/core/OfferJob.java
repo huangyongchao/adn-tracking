@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import java.util.Set;
 
 @Component
 public class OfferJob {
+    private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
+    private static final Logger errorlog = LoggerFactory.getLogger("error");
 
     @Scheduled(cron = "0 0/30 * * * ?")
     public void sychOffers() {
@@ -29,13 +33,19 @@ public class OfferJob {
                 RUNNING_OFFER.add(offer.getId());
                 TaskLoader.rebuildCustomer(offer);
             });
+            errorlog.info(JSONObject.toJSONString(list));
+
         });
 
         SdkConf.OFFER_SCHED_STABLE.forEach((k, v) -> {
             v.shutdown();
         });
+        errorlog.info("Old task shutdown done");
+
         SdkConf.OFFER_SCHED_STABLE = SdkConf.OFFER_SCHED_NEW;
         SdkConf.OFFER_SCHED_NEW = new HashMap<>();
+        errorlog.info("New task start done");
+
     }
 
     public List getOffers(String geo) {
