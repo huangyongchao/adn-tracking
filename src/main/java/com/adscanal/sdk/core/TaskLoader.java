@@ -69,7 +69,7 @@ public class TaskLoader {
 
     public static void rebuildCustomer(LiveOffer offer) {
         int period = 0;
-        int coresize = 200;
+        int coresize = 1000;
 
         boolean rebuild = false;
         if (!SimpleData.OFFER_CLICKS.containsKey(offer.getId())) {
