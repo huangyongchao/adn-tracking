@@ -25,12 +25,10 @@ public class OfferJob {
 
     @Scheduled(cron = "0 0/30 * * * ?")
     public void sychOffers() {
-        Set<String> RUNNING_OFFER = Sets.newHashSet();
 
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
             list.forEach(offer -> {
-                RUNNING_OFFER.add(offer.getId());
                 TaskLoader.rebuildCustomer(offer);
             });
             errorlog.info(JSONObject.toJSONString(list));
