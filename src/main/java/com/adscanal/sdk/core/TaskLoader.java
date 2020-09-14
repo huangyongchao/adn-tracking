@@ -4,6 +4,7 @@ import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.ProducerCounter;
 import com.adscanal.sdk.dto.SimpleData;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 public class TaskLoader {
@@ -88,11 +87,14 @@ public class TaskLoader {
             } else {
                 period = BASE / offer.getDailyMaxClicks();
             }
+            ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                    .setNameFormat("sdk-threadpool-%d").build();
+            ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1000, namedThreadFactory);
 
             SdkConf.OFFER_SCHED_NEW.put(offer.getId(), Executors.newScheduledThreadPool(coresize));
             SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), new Random().nextInt(1000), period, TimeUnit.MILLISECONDS);
             SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
-            logger.info("LOADOFFER:"+offer.getName()+" "+offer.getDailyMaxClicks());
+            logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
         } else {
             if (SdkConf.OFFER_SCHED_STABLE.containsKey(offer.getId())) {
                 SdkConf.OFFER_SCHED_NEW.put(offer.getId(), SdkConf.OFFER_SCHED_STABLE.get(offer.getId()));

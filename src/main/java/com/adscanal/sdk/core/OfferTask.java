@@ -152,7 +152,7 @@ public class OfferTask implements Runnable {
     }
 
     public boolean status_code_requires_exit_node_switch(int code) {
-        return code == 403 || code == 404 || code == 429 || code == 502 || code == 500 || code == 503;
+        return code == 403 || code == 407 || code == 404 || code == 429 || code == 502 || code == 500 || code == 503;
     }
 
     public List<CloseableHttpClient> switch_session_id() {
