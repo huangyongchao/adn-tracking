@@ -73,7 +73,7 @@ public class TaskLoader {
         int coresize = 1000;
 
         int clicks = offer.getDailyMaxClicks();
-        Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getId());
+        Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid()+"");
         if ( oldclicks ==null ||  Math.abs(clicks - oldclicks) > 20000) {
 
             if (offer.getDailyMaxClicks() <= 0) {
@@ -82,13 +82,13 @@ public class TaskLoader {
                 period = BASE / offer.getDailyMaxClicks();
             }
 
-            SdkConf.OFFER_SCHED_NEW.put(offer.getId(), Executors.newScheduledThreadPool(coresize));
-            SdkConf.OFFER_SCHED_NEW.get(offer.getId()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), new Random().nextInt(1000), period, TimeUnit.MILLISECONDS);
-            SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
+            SdkConf.OFFER_SCHED_NEW.put(offer.getUid()+"", Executors.newScheduledThreadPool(coresize));
+            SdkConf.OFFER_SCHED_NEW.get(offer.getUid()+"").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), new Random().nextInt(1000), period, TimeUnit.MILLISECONDS);
+            SimpleData.OFFER_CLICKS.put(offer.getUid()+"", offer.getDailyMaxClicks());
             logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
         } else {
-                SdkConf.OFFER_SCHED_NEW.put(offer.getId(), SdkConf.OFFER_SCHED_STABLE.get(offer.getId()));
-                SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
+                SdkConf.OFFER_SCHED_NEW.put(offer.getUid()+"", SdkConf.OFFER_SCHED_STABLE.get(offer.getUid()+""));
+                SimpleData.OFFER_CLICKS.put(offer.getUid()+"", offer.getDailyMaxClicks());
         }
 
 

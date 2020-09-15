@@ -114,11 +114,8 @@ public class AdTool {
 
 
     public static String geClickid(LiveOffer offer) {
-        if (offer.getId() == null) {
-            return DateFormatUtils.format(new Date(), "MMddHHmmss") + "A" + offer.getOfferId();
 
-        }
-        return DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getId();
+        return DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getUid();
     }
 
     public static boolean isStore(String url) {
@@ -131,8 +128,8 @@ public class AdTool {
 
     public static void saveLand(LiveOffer offer, String url) {
 
-        if (!SimpleData.OFFER_LAND.containsKey(offer.getId())) {
-            SimpleData.OFFER_LAND.put(offer.getId(), url);
+        if (!SimpleData.OFFER_LAND.containsKey(offer.getUid()+"")) {
+            SimpleData.OFFER_LAND.put(offer.getUid()+"", url);
         }
     }
 
