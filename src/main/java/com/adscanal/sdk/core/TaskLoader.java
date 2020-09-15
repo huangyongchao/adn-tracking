@@ -4,6 +4,7 @@ import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.ProducerCounter;
 import com.adscanal.sdk.dto.SimpleData;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -89,6 +90,9 @@ public class TaskLoader {
                 SdkConf.OFFER_SCHED_NEW.put(offer.getId(), SdkConf.OFFER_SCHED_STABLE.get(offer.getId()));
                 SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
         }
+
+        logger.warn(JSONObject.toJSONString(SdkConf.OFFER_SCHED_STABLE));
+
     }
 
 
