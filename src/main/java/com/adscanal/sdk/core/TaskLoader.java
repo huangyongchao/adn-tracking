@@ -70,7 +70,7 @@ public class TaskLoader {
 
     public static void rebuildCustomer(LiveOffer offer) {
         int period = 0;
-        int coresize = 1000;
+        int coresize = 100;
 
         int clicks = offer.getDailyMaxClicks();
         Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid()+"");
