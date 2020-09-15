@@ -91,7 +91,6 @@ public class TaskLoader {
                 SimpleData.OFFER_CLICKS.put(offer.getId(), offer.getDailyMaxClicks());
         }
 
-        logger.warn(JSONObject.toJSONString(SdkConf.OFFER_SCHED_STABLE));
 
     }
 

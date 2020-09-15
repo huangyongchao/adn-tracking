@@ -42,7 +42,7 @@ public class OfferJob {
 
         SdkConf.OFFER_SCHED_STABLE = SdkConf.OFFER_SCHED_NEW;
         SdkConf.OFFER_SCHED_NEW = new HashMap<>();
-        errorlog.info("New task start done");
+        errorlog.info("New task start done"+JSONObject.toJSONString(SdkConf.OFFER_SCHED_STABLE));
 
     }
 
