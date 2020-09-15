@@ -35,10 +35,12 @@ public class OfferJob {
 
         });
 
+
+        errorlog.info("Old task shutdown done");
+
         SdkConf.OFFER_SCHED_STABLE.forEach((k, v) -> {
             v.shutdown();
         });
-        errorlog.info("Old task shutdown done");
 
         SdkConf.OFFER_SCHED_STABLE = SdkConf.OFFER_SCHED_NEW;
         SdkConf.OFFER_SCHED_NEW = new HashMap<>();

@@ -88,6 +88,7 @@ public class TaskLoader {
             logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
         } else {
                 SdkConf.OFFER_SCHED_NEW.put(offer.getUid()+"", SdkConf.OFFER_SCHED_STABLE.get(offer.getUid()+""));
+                SdkConf.OFFER_SCHED_STABLE.remove(offer.getUid()+"");
                 SimpleData.OFFER_CLICKS.put(offer.getUid()+"", offer.getDailyMaxClicks());
         }
 

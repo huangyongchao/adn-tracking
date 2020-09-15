@@ -36,8 +36,6 @@ public class OfferTask implements Runnable {
     @Override
     public void run() {
         try {
-
-
             String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
             if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
                 return;
