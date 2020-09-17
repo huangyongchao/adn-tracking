@@ -1,5 +1,7 @@
 package com.adscanal.sdk.core;
 
+import com.adscanal.sdk.dto.GeoProxy;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -19,7 +21,6 @@ import org.apache.http.protocol.HttpContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -28,16 +29,23 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class ProxyClient {
-    @Value("${proxy.server}")
-    String proxyHost;
+
+
+
     public static final int req_timeout = 10 * 1000;
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
 
+    public static CloseableHttpClient getConn(String geo) {
+
+        int size = GEO_CLIENTS.get(geo).size();
+        return GEO_CLIENTS.get(geo).get(new Random().nextInt(size));
+    }
 
     public static CloseableHttpClient getClient(String host, int port) {
 
@@ -114,18 +122,40 @@ public class ProxyClient {
         return sc;
     }
 
-    public void putClientPool(String host, int port, String geo) {
+    public void putClientPool(String host, int portMin, int offset, String geo) {
+        if (GEO_CLIENTS.containsKey(geo)) {
+            return;
+        }
+        int portMax = portMin + offset;
         ArrayList<CloseableHttpClient> pool = new ArrayList<>();
-        pool.add(getClient(host, port));
+        for (int p = portMin; p < portMax; p++) {
+            pool.add(getClient(host, p));
+        }
         GEO_CLIENTS.put(geo, pool);
     }
 
-    @PostConstruct
+    // @PostConstruct
     public void initClient() {
-        putClientPool(proxyHost, 24000, "VN");
-        putClientPool(proxyHost, 26000, "ID");
-        putClientPool(proxyHost, 26001, "TH");
-        putClientPool(proxyHost, 26002, "PH");
-        putClientPool(proxyHost, 26003, "SG");
+
+
+        putClientPool("", 24200, 100, "CO");
+        putClientPool("", 26400, 100, "BR");
+        putClientPool("", 26200, 100, "CL");
+
     }
+
+    public static void main(String[] args) {
+        GeoProxy geoProxy = new GeoProxy();
+        geoProxy.setAOS(true);
+        geoProxy.setIOS(true);
+        geoProxy.setOffset(100);
+        geoProxy.setRun(true);
+        geoProxy.setGeo("CO");
+        geoProxy.setPort(24200);
+        geoProxy.setIospath("");
+        geoProxy.setAospath("");
+
+        System.out.println(JSONObject.toJSONString(geoProxy));
+    }
+
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 /**
  * @author huangyongchao
@@ -25,20 +26,13 @@ public class Collecter {
 
     public static final Map<String, Collection<File>> GEO_FILES = Maps.newHashMap();
 
-    public static final Set<String> ACTI_GEOS = Sets.newHashSet("THA", "IDN", "CAN", "ARE", "KOR", "SGP");
-    public static final List<String> ACTI_OS = Lists.newArrayList("ios");
+
     public static final String NEWL = "\r\n";
     public static final String IOS = "ios";
     public static final String ANDROID = "android";
     public static Path uapath = Paths.get("/opt/did/ua");
     public static Map<String, List<String>> OS_UA = Maps.newHashMap();
 
-    static {
-        ACTI_GEOS.forEach(geo -> {
-            GEO_FILES.put(geo + IOS, new ConcurrentSkipListSet<>());
-            GEO_FILES.put(geo + ANDROID, new ConcurrentSkipListSet<>());
-        });
-    }
 /*
     System.out.println(Files.lines(Paths.get(path)).count());
     System.out.println(Files.lines(Paths.get(path)).distinct().count());
@@ -141,24 +135,7 @@ public class Collecter {
         });
     }
 
-    public static void main(String[] args) {
-        initGua();
-        System.out.println(1);
-        //  initFilePath();
-/*        try {
-            String path =  "/Volumes/FrankSSD/VNMios.log";
-            System.out.println(Files.lines(Paths.get(path)).count());
-            System.out.println(Files.lines(Paths.get(path)).distinct().count());
-            Files.write(Paths.get(path + ".dist"), Files.lines(Paths.get(path)).distinct().collect(Collectors.toList()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-
+    public static void dist(){
         ACTI_GEOS.forEach(geo -> {
             ACTI_OS.forEach(os -> {
 
@@ -167,7 +144,6 @@ public class Collecter {
                     String file1 = file + ".dist";
 
                     try {
-
                         Files.write(Paths.get(file1), Files.lines(Paths.get(file)).distinct().collect(Collectors.toList()));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -178,7 +154,23 @@ public class Collecter {
 
             });
         });
+    }
+    public static final Set<String> ACTI_GEOS = Sets.newHashSet("IND");
+    public static final List<String> ACTI_OS = Lists.newArrayList("ios");
 
-*/
+    static {
+        ACTI_GEOS.forEach(geo -> {
+            GEO_FILES.put(geo + IOS, new ConcurrentSkipListSet<>());
+            GEO_FILES.put(geo + ANDROID, new ConcurrentSkipListSet<>());
+        });
+    }
+    public static void main(String[] args) {
+
+
+       // initFilePath();
+        dist();
+        System.out.println(1);
+
+
     }
 }

@@ -1,0 +1,35 @@
+[
+  {
+    "aOS": true,
+    "aospath": "",
+    "proxyserver": "127.0.0.1",
+    "geo": "CO",
+    "iOS": true,
+    "iospath": "",
+    "offset": 100,
+    "port": 24200,
+    "run": true
+  },
+  {
+    "aOS": true,
+    "proxyserver": "127.0.0.1",
+    "aospath": "",
+    "geo": "CL",
+    "iOS": true,
+    "iospath": "",
+    "offset": 100,
+    "port": 26200,
+    "run": true
+  },
+  {
+    "aOS": true,
+    "proxyserver": "127.0.0.1",
+    "aospath": "",
+    "geo": "BR",
+    "iOS": true,
+    "iospath": "",
+    "offset": 100,
+    "port": 26400,
+    "run": true
+  }
+]
