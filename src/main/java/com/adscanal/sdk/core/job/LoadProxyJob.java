@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -30,6 +31,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 @Order(0)
 public class LoadProxyJob {
 
+    public static List<GeoProxy> PROXIES = Lists.newArrayList();
     @Autowired
     ProxyClient proxyClient;
 
@@ -75,16 +77,19 @@ public class LoadProxyJob {
 
 
     public static void loadDevid(String filepath, String key, GeoProxy proxy) {
+        if (SdkConf.RUNPRODUCERS.contains(key)) {
+            return;
+        }
         ExecutorPool.getExecutor().execute(() -> {
-            if (SdkConf.GEO_OS_QUE.containsKey(key)) {
-                return;
-            }
+
             ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
             SimpleData.PRODUCERCOUNTER.put(key, new ProducerCounter());
             String path = filepath;
             if (!Files.exists(Paths.get(path))) {
                 return;
             }
+            SdkConf.RUNPRODUCERS.add(key);
+
             try {
                 for (int i = 0; i < 5; i++) {
                     Files.lines(Paths.get(path)).skip(proxy.getSkip()).forEach(n -> {
@@ -102,17 +107,23 @@ public class LoadProxyJob {
         });
     }
 
+    @Scheduled(cron = "0 0/30 * * * ?")
     public void loadProxy() {
         List<GeoProxy> list = getResFile();
         if (list != null) {
+            //初始化设备号队列
+            SdkConf.setGeoOsQue(list);
+
             list.forEach(n -> {
+                //初始化安卓 设备号生产者
                 if (n.isRun() && n.isAOS()) {
                     loadDevid(n.getAospath(), n.getGeo() + "android", n);
                 }
+                //初始化IOS 设备号生产者
                 if (n.isRun() && n.isIOS()) {
                     loadDevid(n.getIospath(), n.getGeo() + "ios", n);
                 }
-
+                //初始化代理客户端
                 if (n.isRun()) {
                     proxyClient.putClientPool(n.getProxyserver(), n.getPort(), n.getOffset(), n.getGeo());
                 }

@@ -1,6 +1,7 @@
 package com.adscanal.sdk.router;
 
 import com.adscanal.sdk.common.Statistics;
+import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
 import com.alibaba.fastjson.JSONObject;
@@ -24,19 +25,24 @@ public class OpenApi {
 
     }
 
-    @GetMapping("/ids")
+    @GetMapping("/geo_run")
+    public Object acgeos() {
+        return JSONObject.toJSONString(SdkConf.ACTI_GEO);
+    }
+
+    @GetMapping("/offer_ids")
     public Object ids() {
         return Counter.counterMap().keySet();
 
     }
 
-    @GetMapping("/bo")
+    @GetMapping("/offer_black")
     public Object bo() {
         return SimpleData.BLACK_OFFERS;
 
     }
 
-    @GetMapping("/setbo")
+    @GetMapping("/offer_setblack")
     public Object blackoffer(@RequestParam(name = "id") String id) {
         if (StringUtils.isNotBlank(id)) {
             SimpleData.BLACK_OFFERS.add(id);
@@ -46,29 +52,29 @@ public class OpenApi {
 
     }
 
-    @GetMapping("/offers")
+    @GetMapping("/offer_all")
     public Object offers() {
         return SimpleData.GOFFERS;
     }
 
-    @GetMapping("/producercnt")
+    @GetMapping("/geo_producers")
     public Object producercnt() {
         return SimpleData.PRODUCERCOUNTER;
     }
 
 
-    @GetMapping("/land")
+    @GetMapping("/offer_land")
     public Object land() {
         return SimpleData.OFFER_LAND;
     }
 
 
-    @GetMapping("/oe")
+    @GetMapping("/offer_error")
     public Object oe() {
         return SimpleData.OFFERERROR;
     }
 
-    @GetMapping("/tracking")
+    @GetMapping("/offer_tracking")
     public Object getTracker() {
         return JSONObject.toJSONString((Statistics.offer_tracker));
     }
