@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Order(1)
-public class OfferJob {
+public class LoadOfferJob {
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static int BASE = 1000 * 60 * 60 * 24;
