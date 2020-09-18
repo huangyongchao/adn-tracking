@@ -7,6 +7,7 @@
     "iOS": true,
     "iospath": "/opt/did/COLios.log.dist",
     "offset": 100,
+    "skip": 100000,
     "port": 24200,
     "run": true
   },
@@ -18,6 +19,7 @@
     "iOS": true,
     "iospath": "/opt/did/CHLios.log.dist",
     "offset": 100,
+    "skip": 100000,
     "port": 26200,
     "run": true
   },
@@ -27,6 +29,7 @@
     "aospath": "/opt/did/BRAandroid.log",
     "geo": "BR",
     "iOS": true,
+    "skip": 100000,
     "iospath": "/opt/did/BRAios.log.dist",
     "offset": 100,
     "port": 26400,
