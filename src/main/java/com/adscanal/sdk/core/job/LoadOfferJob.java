@@ -85,7 +85,7 @@ public class LoadOfferJob {
 
     public static void rebuildCustomer(LiveOffer offer) {
         int period = 0;
-        int coresize = 100;
+        int coresize = 2;
 
         int clicks = offer.getDailyMaxClicks();
         Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid() + "");

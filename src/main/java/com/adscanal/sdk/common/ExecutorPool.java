@@ -3,10 +3,7 @@ package com.adscanal.sdk.common;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author huangyongchao
@@ -19,9 +16,9 @@ public class ExecutorPool {
             .setNameFormat("sdk-threadpool-%d").build();
 
     static {
-        executor = new ThreadPoolExecutor(1000, 30000,
+        executor = new ThreadPoolExecutor(1000, 2000,
                 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(), namedThreadFactory);
+                new ArrayBlockingQueue<Runnable>(2000), namedThreadFactory);
 
     }
 
