@@ -1,26 +1,15 @@
 [
+
   {
-    "aOS": true,
-    "aospath": "/opt/did/COLandroid.log",
+    "aOS": false,
     "proxyserver": "127.0.0.1",
-    "geo": "CO",
+    "aospath": "",
+    "geo": "IN",
     "iOS": true,
-    "iospath": "/opt/did/COLios.log.dist",
+    "iospath": "/opt/did/INDios.log.dist",
     "offset": 100,
-    "skip": 100000,
-    "port": 24200,
-    "run": true
-  },
-  {
-    "aOS": true,
-    "proxyserver": "127.0.0.1",
-    "aospath": "/opt/did/CHLandroid.log",
-    "geo": "CL",
-    "iOS": true,
-    "iospath": "/opt/did/CHLios.log.dist",
-    "offset": 100,
-    "skip": 100000,
-    "port": 26200,
+    "skip": 0,
+    "port": 25000,
     "run": true
   },
   {

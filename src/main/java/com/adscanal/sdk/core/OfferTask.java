@@ -2,6 +2,7 @@ package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.ExecutorPool;
+import com.adscanal.sdk.common.GeoLang;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
 import org.apache.http.*;
@@ -91,13 +92,17 @@ public class OfferTask implements Runnable {
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
                 request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
-                request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
-                request.setHeader(HttpHeaders.ACCEPT, "application/xhtml+xml,application/xml;q=0.9,image/webp, image/apng,*/*;q=0.8");
+                request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate");
+                request.setHeader(HttpHeaders.ACCEPT, "*/*");
                 request.setHeader(HttpHeaders.PRAGMA, "no-cache");
                 request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
-                request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US,en;q=0.8");
-                request.setHeader("upgrade-insecure-requests", "1");
+                String lang = GeoLang.LAN_M.get(geo);
+                if (lang == null) {
+                    lang = "en-" + geo;
+                }
+                request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang);
 
+                request.setHeader("upgrade-insecure-requests", "1");
 
                 if (headers != null && headers.length > 0) {
                     for (Header header : headers) {
