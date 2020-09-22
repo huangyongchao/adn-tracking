@@ -29,8 +29,10 @@ public class LoadOfferJob {
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static int BASE = 1000 * 60 * 60 * 24;
 
-    @Scheduled(cron = "0 0/30 * * * ?")
+    //@Scheduled(cron = "0 0/30 * * * ?")
     public void sychOffers() {
+        errorlog.info("Old task shutdown done");
+
 
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
@@ -41,8 +43,6 @@ public class LoadOfferJob {
 
         });
 
-
-        errorlog.info("Old task shutdown done");
 
         SdkConf.OFFER_SCHED_STABLE.forEach((k, v) -> {
             v.shutdown();
