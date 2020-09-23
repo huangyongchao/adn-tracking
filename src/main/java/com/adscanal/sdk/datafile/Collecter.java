@@ -155,8 +155,8 @@ public class Collecter {
             });
         });
     }
-    public static final Set<String> ACTI_GEOS = Sets.newHashSet("IND");
-    public static final List<String> ACTI_OS = Lists.newArrayList("ios");
+    public static final Set<String> ACTI_GEOS = Sets.newHashSet("HKG");
+    public static final List<String> ACTI_OS = Lists.newArrayList("ios","android");
 
     static {
         ACTI_GEOS.forEach(geo -> {
@@ -167,7 +167,7 @@ public class Collecter {
     public static void main(String[] args) {
 
 
-       // initFilePath();
+        //initFilePath();
         dist();
         System.out.println(1);
 

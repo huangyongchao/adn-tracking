@@ -1,27 +1,27 @@
 [
 
   {
-    "aOS": false,
+    "aOS": true,
     "proxyserver": "127.0.0.1",
-    "aospath": "",
-    "geo": "IN",
+    "aospath": "/opt/did/HKGandroid.log",
+    "geo": "HK",
     "iOS": true,
-    "iospath": "/opt/did/INDios.log.dist",
+    "skip": 100000,
+    "iospath": "/opt/did/HKGios.log",
     "offset": 100,
-    "skip": 0,
-    "port": 25000,
+    "port": 26600,
     "run": true
   },
   {
     "aOS": true,
     "proxyserver": "127.0.0.1",
-    "aospath": "/opt/did/BRAandroid.log",
-    "geo": "BR",
+    "aospath": "/opt/did/TWNandroid.log",
+    "geo": "TW",
     "iOS": true,
     "skip": 100000,
-    "iospath": "/opt/did/BRAios.log.dist",
+    "iospath": "/opt/did/TWNios.log",
     "offset": 100,
-    "port": 26400,
+    "port": 26800,
     "run": true
   }
 ]
