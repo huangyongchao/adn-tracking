@@ -1,13 +1,11 @@
-[
-
-  {
+[{
     "aOS": true,
     "proxyserver": "127.0.0.1",
-    "aospath": "/opt/did/HKGandroid.log",
+    "aospath": "/opt/did/HKGandroid.log.dist",
     "geo": "HK",
     "iOS": true,
-    "skip": 100000,
-    "iospath": "/opt/did/HKGios.log",
+    "skip": 0,
+    "iospath": "/opt/did/HKGios.log.dist",
     "offset": 100,
     "port": 26600,
     "run": true
@@ -15,11 +13,11 @@
   {
     "aOS": true,
     "proxyserver": "127.0.0.1",
-    "aospath": "/opt/did/TWNandroid.log",
+    "aospath": "/opt/did/TWNandroid.log.dist",
     "geo": "TW",
     "iOS": true,
-    "skip": 100000,
-    "iospath": "/opt/did/TWNios.log",
+    "skip": 0,
+    "iospath": "/opt/did/TWNios.log.dist",
     "offset": 100,
     "port": 26800,
     "run": true

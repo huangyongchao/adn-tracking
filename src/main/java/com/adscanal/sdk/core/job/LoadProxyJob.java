@@ -35,7 +35,7 @@ public class LoadProxyJob {
     @Autowired
     ProxyClient proxyClient;
 
-    private static List<GeoProxy> getResFile() {
+    private static List<GeoProxy>  getResFile() {
         try {
             String filename = "proxy.json";
             File file = new File(filename);
