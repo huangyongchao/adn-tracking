@@ -38,7 +38,7 @@ public class GeoLang {
         LAN_M.put("RU", "ru-RU");
         LAN_M.put("BE", "nl-BE");
         LAN_M.put("FI", "fi-FI");
-        LAN_M.put("HK", "en-HK");
+        LAN_M.put("HK", "zh-HK");
         LAN_M.put("TW", "zh-TW");
         LAN_M.put("PT", "pt-PT");
         LAN_M.put("JP", "ja-JP");
