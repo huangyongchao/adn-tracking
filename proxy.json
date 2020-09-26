@@ -16,10 +16,78 @@
     "aospath": "/opt/did/TWNandroid.log.dist",
     "geo": "TW",
     "iOS": true,
-    "skip": 500000,
+    "skip": 1500000,
     "iospath": "/opt/did/TWNios.log.dist",
     "offset": 100,
     "port": 26800,
+    "run": true
+  },{
+  "aOS": true,
+  "aospath": "/opt/did/COLandroid.log",
+  "proxyserver": "127.0.0.1",
+  "geo": "CO",
+  "iOS": true,
+  "iospath": "/opt/did/COLios.log.dist",
+  "offset": 100,
+  "skip": 100000,
+  "port": 24200,
+  "run": true
+},
+  {
+    "aOS": true,
+    "proxyserver": "127.0.0.1",
+    "aospath": "/opt/did/CHLandroid.log",
+    "geo": "CL",
+    "iOS": true,
+    "iospath": "/opt/did/CHLios.log.dist",
+    "offset": 100,
+    "skip": 100000,
+    "port": 26200,
+    "run": true
+  },
+  {
+    "aOS": true,
+    "proxyserver": "127.0.0.1",
+    "aospath": "/opt/did/BRAandroid.log",
+    "geo": "BR",
+    "iOS": true,
+    "iospath": "/opt/did/BRAios.log.dist",
+    "offset": 100,
+    "port": 26400,
+    "run": true
+  },
+  {
+    "aOS": false,
+    "proxyserver": "127.0.0.1",
+    "aospath": "",
+    "geo": "VN",
+    "iOS": true,
+    "iospath": "/opt/did/VNMios.log.dist",
+    "offset": 100,
+    "skip": 100000,
+    "port": 24000,
+    "run": true
+  },
+  {
+    "aOS": false,
+    "proxyserver": "127.0.0.1",
+    "aospath": "",
+    "geo": "PH",
+    "iOS": true,
+    "iospath": "/opt/did/PHLios.log.dist",
+    "offset": 100,
+    "port": 25200,
+    "run": true
+  },
+  {
+    "aOS": false,
+    "proxyserver": "127.0.0.1",
+    "aospath": "",
+    "geo": "MY",
+    "iOS": true,
+    "iospath": "/opt/did/PHLios.log.dist",
+    "offset": 100,
+    "port": 24800,
     "run": true
   }
 ]

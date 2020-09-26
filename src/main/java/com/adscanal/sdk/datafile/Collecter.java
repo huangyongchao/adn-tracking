@@ -155,7 +155,7 @@ public class Collecter {
             });
         });
     }
-    public static final Set<String> ACTI_GEOS = Sets.newHashSet("HKG");
+    public static final Set<String> ACTI_GEOS = Sets.newHashSet("THA","PHL","VNM","MYS","SGP","IDN");
     public static final List<String> ACTI_OS = Lists.newArrayList("ios","android");
 
     static {
