@@ -153,7 +153,10 @@ public class LoadProxyJob {
                 JSONObject json = (JSONObject) n;
                 String geo = json.getString("country");
                 int port = json.getInteger("port");
-                int offset = json.getInteger("multiply");
+                Integer offset = json.getInteger("multiply");
+                if(offset==null){
+                    offset = 0;
+                }
                 if (StringUtils.isEmpty(geo)) {
                     return;
                 }
