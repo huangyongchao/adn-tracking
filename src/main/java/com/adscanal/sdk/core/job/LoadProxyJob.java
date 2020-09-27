@@ -3,17 +3,17 @@ package com.adscanal.sdk.core.job;
 import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.common.HttpClientUtil;
+import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
-import com.adscanal.sdk.dto.GeoProxy;
-import com.adscanal.sdk.dto.OsE;
-import com.adscanal.sdk.dto.ProducerCounter;
-import com.adscanal.sdk.dto.SimpleData;
+import com.adscanal.sdk.dto.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
@@ -31,9 +31,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Order(0)
@@ -41,12 +44,98 @@ public class LoadProxyJob {
 
     public static List<GeoProxy> PROXIES = Lists.newArrayList();
     public static Map<String, GeoProxy> GEOPROXYMAP = Maps.newHashMap();
+    private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
+    private static final Logger errorlog = LoggerFactory.getLogger("error");
+
     @Autowired
     ProxyClient proxyClient;
 
 
     @Value("${proxyserver}")
     private String proxyserver;
+
+    private static int BASE = 1000 * 60 * 60 * 24;
+
+    //@Scheduled(cron = "0 0/30 * * * ?")
+    public void sychOffers() {
+        errorlog.info("Old task shutdown done");
+
+        SdkConf.ACTI_GEO.forEach(n -> {
+            List<LiveOffer> list = getOffers(n);
+            list.forEach(offer -> {
+                rebuildCustomer(offer);
+            });
+            errorlog.info(JSONObject.toJSONString(list));
+
+        });
+
+
+        SdkConf.OFFER_SCHED_STABLE.forEach((k, v) -> {
+            v.shutdown();
+        });
+
+        SdkConf.OFFER_SCHED_STABLE = SdkConf.OFFER_SCHED_NEW;
+        SdkConf.OFFER_SCHED_NEW = new HashMap<>();
+        errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED_STABLE));
+
+    }
+
+    public List getOffers(String geo) {
+
+        List<LiveOffer> offers = Lists.newArrayList();
+        try {
+            //http://54.218.163.206:5080/openapi/test
+            String offerapi = "http://api.colour.mobi/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
+            System.out.println(offerapi);
+            String respj = HttpClientUtil.get(offerapi);
+
+            JSONArray respja = JSONArray.parseArray(respj);
+            if (respja != null && respja.size() > 0) {
+                respja.forEach(n -> {
+                    JSONObject o = (JSONObject) n;
+                    LiveOffer offer = o.toJavaObject(LiveOffer.class);
+                    offers.add(offer);
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        SimpleData.GOFFERS.remove(geo);
+        SimpleData.GOFFERS.put(geo, offers);
+
+        return offers;
+
+    }
+
+
+    public static void rebuildCustomer(LiveOffer offer) {
+        int period = 0;
+        int coresize = 2;
+
+        int clicks = offer.getDailyMaxClicks();
+        Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid() + "");
+        if (oldclicks == null || Math.abs(clicks - oldclicks) > 20000) {
+
+            if (offer.getDailyMaxClicks() <= 0) {
+                period = Integer.MAX_VALUE;
+            } else {
+                period = BASE / offer.getDailyMaxClicks();
+            }
+
+            SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
+            SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period, TimeUnit.MILLISECONDS);
+            SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
+            logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
+        } else {
+            SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", SdkConf.OFFER_SCHED_STABLE.get(offer.getUid() + ""));
+            SdkConf.OFFER_SCHED_STABLE.remove(offer.getUid() + "");
+            SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
+        }
+
+
+    }
+
 
     private static List<GeoProxy> getResFile() {
         try {
@@ -97,6 +186,7 @@ public class LoadProxyJob {
 
 
     public static void loadDevid(String geo, String os) {
+
         String key = geo + os;
         String geo3 = GeoMap.word2Map.get(geo);
         if (SdkConf.RUNPRODUCERS.contains(key)) {
@@ -119,7 +209,6 @@ public class LoadProxyJob {
                 return;
             }
             SdkConf.RUNPRODUCERS.add(key);
-
             try {
                 for (int i = 0; i < 5; i++) {
                     Files.lines(Paths.get(path)).skip(GEOPROXYMAP.getOrDefault(geo, new GeoProxy()).getSkip()).forEach(n -> {
@@ -182,12 +271,16 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 if (qios == null) {
                     SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(1000));
                 }
+                SdkConf.ACTI_GEO.add(geo);
 
+                System.out.println(geo);
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
+                System.out.println(geo + "done");
 
             });
+            System.out.println(111);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -198,5 +291,9 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
     @PostConstruct
     public void init() {
         loadProxy();
+
+        sychOffers();
+
+
     }
 }
