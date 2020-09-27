@@ -20,6 +20,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -263,7 +264,40 @@ public class HttpClientUtil {
             }
         }
     }
+    public static String httpPostWithJsonAndHeader(String url, String json, Map<String, String> headsMap) {
+        String result = "";
 
+        HttpPost httpPost = new HttpPost(url);
+        StringEntity entity = new StringEntity(json, "utf-8");
+        entity.setContentEncoding("UTF-8");
+        entity.setContentType("application/json");
+        httpPost.setEntity(entity);
+        //头
+        if (headsMap != null && !headsMap.isEmpty()) {
+            headsMap.forEach((key, value) -> {
+                httpPost.addHeader(key, value);
+            });
+        }
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(httpPost)) {
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                // 从响应模型中获取响应实体
+                HttpEntity responseEntity = response.getEntity();
+                if (responseEntity != null) {
+                    result = EntityUtils.toString(responseEntity);
+                }
+
+            } else {
+                return null;
+            }
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static void main(String[] args) throws Exception {
     }

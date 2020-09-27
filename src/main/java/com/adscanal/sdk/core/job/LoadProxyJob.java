@@ -1,5 +1,6 @@
 package com.adscanal.sdk.core.job;
 
+import com.adscanal.sdk.common.AddressUtils;
 import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.common.HttpClientUtil;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -42,6 +44,7 @@ public class LoadProxyJob {
     public static Map<String, GeoProxy> GEOPROXYMAP = Maps.newHashMap();
     @Autowired
     ProxyClient proxyClient;
+
 
     @Value("${proxyserver}")
     private String proxyserver;
@@ -103,6 +106,9 @@ public class LoadProxyJob {
         ExecutorPool.getExecutor().execute(() -> {
 
             ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
+            if(q==null){
+                SdkConf.GEO_OS_QUE.put(key, new ArrayBlockingQueue<String>(1000));
+            }
             SimpleData.PRODUCERCOUNTER.put(key, new ProducerCounter());
             String path1 = "/opt/did/" + geo3 + os + ".log.dist";
             String path2 = "/opt/did/" + geo3 + os + ".log";
@@ -135,6 +141,12 @@ public class LoadProxyJob {
 
     @Scheduled(cron = "0 0/30 * * * ?")
     public void loadProxy() {
+
+/*
+curl -X GET "http://127.0.0.1:22999/api/gen_token" -H "accept: application/json"
+curl -v http://127.0.0.1:22999/api/add_wip -X POST -H "Content-Type: application/json" -H "Authorization:8bEc4LTSumzFmK" -d '{"ip":"1.1.1.1"}'
+curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: application/json" -d '{"ip":"111.197.245.147"}'
+*/
         try {
 
             List<GeoProxy> geoProxies = getResFile();

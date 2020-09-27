@@ -11,14 +11,12 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -98,7 +96,7 @@ public class LoadOfferJob {
             }
 
             SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
-            SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), new Random().nextInt(1000), period, TimeUnit.MILLISECONDS);
+            SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period, TimeUnit.MILLISECONDS);
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
             logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
         } else {
