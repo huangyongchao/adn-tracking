@@ -107,9 +107,9 @@ public class LoadProxyJob {
             String path1 = "/opt/did/" + geo3 + os + ".log.dist";
             String path2 = "/opt/did/" + geo3 + os + ".log";
             String path = null;
-            if (!Files.exists(Paths.get(path1))) {
+            if (Files.exists(Paths.get(path1))) {
                 path = path1;
-            } else if (!Files.exists(Paths.get(path2))) {
+            } else if (Files.exists(Paths.get(path2))) {
                 path = path2;
             } else {
                 return;
