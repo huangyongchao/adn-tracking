@@ -1,12 +1,12 @@
 package com.adscanal.sdk.core.job;
 
-import com.adscanal.sdk.common.AddressUtils;
 import com.adscanal.sdk.common.ExecutorPool;
 import com.adscanal.sdk.common.GeoMap;
 import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.dto.GeoProxy;
+import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.ProducerCounter;
 import com.adscanal.sdk.dto.SimpleData;
 import com.alibaba.fastjson.JSON;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -103,12 +102,11 @@ public class LoadProxyJob {
         if (SdkConf.RUNPRODUCERS.contains(key)) {
             return;
         }
+
         ExecutorPool.getExecutor().execute(() -> {
 
             ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
-            if(q==null){
-                SdkConf.GEO_OS_QUE.put(key, new ArrayBlockingQueue<String>(1000));
-            }
+
             SimpleData.PRODUCERCOUNTER.put(key, new ProducerCounter());
             String path1 = "/opt/did/" + geo3 + os + ".log.dist";
             String path2 = "/opt/did/" + geo3 + os + ".log";
@@ -166,7 +164,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 String geo = json.getString("country");
                 int port = json.getInteger("port");
                 Integer offset = json.getInteger("multiply");
-                if(offset==null){
+                if (offset == null) {
                     offset = 0;
                 }
                 if (StringUtils.isEmpty(geo)) {
@@ -175,8 +173,18 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 geo = geo.toUpperCase();
                 String zone = json.getString("static");
 
-                loadDevid(geo, "android");
-                loadDevid(geo, "ios");
+                ArrayBlockingQueue qaos = SdkConf.GEO_OS_QUE.get(geo + OsE.AOS.name);
+                if (qaos == null) {
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(1000));
+                }
+                ArrayBlockingQueue qios = SdkConf.GEO_OS_QUE.get(geo + OsE.IOS.name);
+
+                if (qios == null) {
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(1000));
+                }
+
+                loadDevid(geo, OsE.AOS.name);
+                loadDevid(geo, OsE.IOS.name);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
 
             });
