@@ -231,8 +231,8 @@ public class LoadProxyJob {
 
 /*
 curl -X GET "http://127.0.0.1:22999/api/gen_token" -H "accept: application/json"
-curl -v http://127.0.0.1:22999/api/add_wip -X POST -H "Content-Type: application/json" -H "Authorization:8bEc4LTSumzFmK" -d '{"ip":"1.1.1.1"}'
-curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: application/json" -d '{"ip":"111.197.245.147"}'
+curl -v http://127.0.0.1:22999/api/add_wip -X POST -H "Content-Type: application/json" -H "Authorization:8bEc4LTSumzFmK" -d '{"ip":"111.197.245.125"}'
+curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: application/json" -d '{"ip":"111.197.245.125"}'
 */
         try {
 
@@ -246,6 +246,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 GEOPROXYMAP = geoProxyMap;
             }
             String proxystr = HttpClientUtil.get("http://" + proxyserver + ":22999/api/proxies_running");
+            logger.info(proxystr);
             JSONArray proxys = JSONArray.parseArray(proxystr);
             proxys.forEach(n -> {
                 //初始化安卓 设备号生产者
