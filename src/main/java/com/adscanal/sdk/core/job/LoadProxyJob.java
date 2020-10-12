@@ -124,7 +124,7 @@ public class LoadProxyJob {
             }
 
             SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
-            SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period, TimeUnit.MILLISECONDS);
+            SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, 144, TimeUnit.MILLISECONDS);
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
             logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
         } else {
@@ -274,14 +274,11 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 }
                 SdkConf.ACTI_GEO.add(geo);
 
-                System.out.println(geo);
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
-                System.out.println(geo + "done");
 
             });
-            System.out.println(111);
         } catch (IOException e) {
             e.printStackTrace();
         }
