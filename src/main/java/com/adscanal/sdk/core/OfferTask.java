@@ -83,7 +83,7 @@ public class OfferTask implements Runnable {
     }
 
 
-    public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public synchronized void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
             for (int i = 0; i < 5; i++) {
