@@ -44,12 +44,12 @@ public class OfferTask implements Runnable {
                 }
 
                 SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
-                long s = System.currentTimeMillis();
+                //long s = System.currentTimeMillis();
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-                long d = System.currentTimeMillis();
-                System.out.println(deviceid+"   "+(s-d));
+                //long d = System.currentTimeMillis();
+                //System.out.println(deviceid+"   "+(s-d));
 
 
 
@@ -91,7 +91,6 @@ public class OfferTask implements Runnable {
                 if (i == 4) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                 }
-                //logger.info(offer.getName()+url);
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);

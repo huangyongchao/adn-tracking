@@ -122,13 +122,11 @@ public class LoadProxyJob {
             } else {
                 period = BASE / offer.getDailyMaxClicks();
             }
-            System.out.println("周期"+offer.getOsName()+period);
             SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
             for (int i = 0; i < coresize; i++) {
-                SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, 144, TimeUnit.MILLISECONDS);
+                SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*10, TimeUnit.MILLISECONDS);
             }
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
-            logger.info("LOADOFFER:" + offer.getName() + " " + offer.getDailyMaxClicks());
         } else {
             SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", SdkConf.OFFER_SCHED_STABLE.get(offer.getUid() + ""));
             SdkConf.OFFER_SCHED_STABLE.remove(offer.getUid() + "");
