@@ -108,8 +108,8 @@ public class AdTool {
         int le = pls.length;
         int i = new Random().nextInt(le);
         return pls[i];*/
-
-        return "AC" + new Date().getHours();
+        int h  =new Date().getHours();
+        return "AC" + h/2;
     }
 
 
