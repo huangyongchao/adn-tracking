@@ -113,13 +113,9 @@ public class OfferTask implements Runnable {
 
                 if (isRedirect(offer, response)) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ","").trim();
-                    if (!AdTool.isStore(url)) {
-                        headers = response.getHeaders("set-cookie");
-                        continue;
-                    }else{
-                        //302到商店的话
-                        SimpleData.PRODUCERCOUNTER.get(key).getSuccess().incrementAndGet();
-                    }
+                    headers = response.getHeaders("set-cookie");
+                    continue;
+                    //SimpleData.PRODUCERCOUNTER.get(key).getSuccess().incrementAndGet();
                 } else {
                     break;
                 }
