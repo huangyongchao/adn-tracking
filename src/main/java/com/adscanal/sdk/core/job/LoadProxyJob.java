@@ -58,7 +58,7 @@ public class LoadProxyJob {
 
     private static int BASE = 1000 * 60 * 60 * 24;
 
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0/3 * * * ?")
     public void sychOffers() {
         errorlog.info("Old task shutdown done");
         Set<String> acoffers = Sets.newHashSet();
