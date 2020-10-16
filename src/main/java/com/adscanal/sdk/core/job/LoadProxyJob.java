@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -56,27 +58,30 @@ public class LoadProxyJob {
 
     private static int BASE = 1000 * 60 * 60 * 24;
 
-    //@Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0/30 * * * ?")
     public void sychOffers() {
         errorlog.info("Old task shutdown done");
-
+        Set<String> acoffers = Sets.newHashSet();
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
             list.forEach(offer -> {
                 rebuildCustomer(offer);
+                acoffers.add(offer.getUid()+"");
+            });
+            SdkConf.OFFER_SCHED.forEach((k,v)->{
+                if(!acoffers.contains(k)){
+                    try {
+                        v.shutdownNow();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             });
             errorlog.info(JSONObject.toJSONString(list));
 
         });
 
-
-        SdkConf.OFFER_SCHED_STABLE.forEach((k, v) -> {
-            v.shutdown();
-        });
-
-        SdkConf.OFFER_SCHED_STABLE = SdkConf.OFFER_SCHED_NEW;
-        SdkConf.OFFER_SCHED_NEW = new HashMap<>();
-        errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED_STABLE));
+        errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED));
 
     }
 
@@ -126,14 +131,15 @@ public class LoadProxyJob {
                 period = BASE / offer.getDailyMaxClicks();
             }
             coresize = clicks / 20000;
-            SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
+            if(SdkConf.OFFER_SCHED.containsKey(offer.getUid() + "")){
+                return;
+            }
+            SdkConf.OFFER_SCHED.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
             for (int i = 0; i < coresize; i++) {
-                SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*10, TimeUnit.MILLISECONDS);
+                SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*10, TimeUnit.MILLISECONDS);
             }
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
         } else {
-            SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", SdkConf.OFFER_SCHED_STABLE.get(offer.getUid() + ""));
-            SdkConf.OFFER_SCHED_STABLE.remove(offer.getUid() + "");
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
         }
 

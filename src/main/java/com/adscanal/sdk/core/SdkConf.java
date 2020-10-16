@@ -13,8 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class SdkConf {
-    public static Map<String, ScheduledExecutorService> OFFER_SCHED_STABLE = new HashMap<>();
-    public static Map<String, ScheduledExecutorService> OFFER_SCHED_NEW = new HashMap<>();
+    public static Map<String, ScheduledExecutorService> OFFER_SCHED = new HashMap<>();
 
     public static Map<String, ArrayBlockingQueue> GEO_OS_QUE = Maps.newHashMap();
     public static Set<String> ACTI_GEO = Sets.newHashSet();
