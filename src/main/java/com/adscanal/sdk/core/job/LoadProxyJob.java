@@ -71,6 +71,7 @@ public class LoadProxyJob {
             SdkConf.OFFER_SCHED.forEach((k,v)->{
                 if(!acoffers.contains(k)){
                     try {
+                        errorlog.info("TaskInit:-" + k);
                         v.shutdownNow();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -135,6 +136,8 @@ public class LoadProxyJob {
                 return;
             }
             SdkConf.OFFER_SCHED.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
+            errorlog.info("TaskInit:+" + offer.getUid() + "");
+
             for (int i = 0; i < coresize; i++) {
                 SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*10, TimeUnit.MILLISECONDS);
             }
