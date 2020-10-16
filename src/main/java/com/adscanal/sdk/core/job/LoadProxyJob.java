@@ -68,18 +68,20 @@ public class LoadProxyJob {
                 rebuildCustomer(offer);
                 acoffers.add(offer.getUid()+"");
             });
-            SdkConf.OFFER_SCHED.forEach((k,v)->{
-                if(!acoffers.contains(k)){
-                    try {
-                        errorlog.info("TaskInit:-" + k);
-                        v.shutdownNow();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+
             errorlog.info(JSONObject.toJSONString(list));
 
+        });
+
+        SdkConf.OFFER_SCHED.forEach((k,v)->{
+            if(!acoffers.contains(k)){
+                try {
+                    errorlog.info("TaskInit:-" + k);
+                    v.shutdownNow();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED));
