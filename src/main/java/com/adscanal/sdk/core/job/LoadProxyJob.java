@@ -128,7 +128,7 @@ public class LoadProxyJob {
             coresize = clicks / 20000;
             SdkConf.OFFER_SCHED_NEW.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
             for (int i = 0; i < coresize; i++) {
-                SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*10, TimeUnit.MILLISECONDS);
+                SdkConf.OFFER_SCHED_NEW.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*40, TimeUnit.MILLISECONDS);
             }
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
         } else {
