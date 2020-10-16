@@ -72,18 +72,23 @@ public class LoadProxyJob {
             errorlog.info(JSONObject.toJSONString(list));
 
         });
+        Set<String> stopoffers = Sets.newHashSet();
 
         SdkConf.OFFER_SCHED.forEach((k,v)->{
             if(!acoffers.contains(k)){
                 try {
                     errorlog.info("TaskInit:-" + k);
                     v.shutdownNow();
+                    stopoffers.add(k);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
 
+        stopoffers.forEach(v->{
+            SdkConf.OFFER_SCHED.remove(v);
+        });
         errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED));
 
     }
