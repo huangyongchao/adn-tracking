@@ -51,9 +51,7 @@ public class CounterJob {
     @Scheduled(cron = "59 9,19,29,39,49,59 * * * ?")
     public void saveClicks() {
 
-        int h = Counter.CURRENT_HOUR;
         String d = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH") + ":00:00";
-
         Counter.counterMap().forEach((k, v) -> {
             long ss = v.success1.longValue();
             long dv = ss - v.getSuccess1snp();
