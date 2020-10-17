@@ -234,7 +234,6 @@ public class LoadProxyJob {
                     Files.lines(Paths.get(path)).skip(GEOPROXYMAP.getOrDefault(geo, new GeoProxy()).getSkip()).forEach(n -> {
                         try {
                             q.put(n);
-                            SimpleData.PRODUCERCOUNTER.get(key).getCursor().incrementAndGet();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
