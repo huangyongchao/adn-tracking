@@ -2,6 +2,7 @@ package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.GeoLang;
+import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
 import org.apache.http.*;
@@ -81,11 +82,14 @@ public class OfferTask implements Runnable {
 
     public synchronized void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
+            Counter.increaseSuccess(offer.getUid());
             CloseableHttpResponse response = null;
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 7; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if (i == 6) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
+                    Counter.increaseError(offer.getUid());
+                    break;
                 }
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
@@ -115,15 +119,17 @@ public class OfferTask implements Runnable {
                     url = response.getHeaders("Location")[0].toString().replace("location: ","").trim();
                     headers = response.getHeaders("set-cookie");
                     continue;
-                    //SimpleData.PRODUCERCOUNTER.get(key).getSuccess().incrementAndGet();
+
                 } else {
+                    Counter.increaseSuccess1(offer.getUid());
                     break;
                 }
 
             }
             handle_response(key, offer, response);
             SimpleData.PRODUCERCOUNTER.get(key).getRequest().incrementAndGet();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Counter.increaseError1(offer.getUid());
             errorlog.error(e.getMessage(), e);
             error_req_account.incrementAndGet();
         }
@@ -131,8 +137,7 @@ public class OfferTask implements Runnable {
     }
 
     public static boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
-        if (response != null && response.getStatusLine() != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
-            String location = response.getHeaders("Location")[0].toString().substring(10).trim();
+        if (response != null && response.getStatusLine() != null &&( response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY ||response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT)) {
             return true;
         }
         return false;
@@ -159,8 +164,6 @@ public class OfferTask implements Runnable {
     }
 
     public List<CloseableHttpClient> switch_session_id() {
-
         return null;
-
     }
 }

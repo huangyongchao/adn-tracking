@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.LongAdder;
 public class OfferCounter {
     public String id;
     /**
-     * 落地商店
+     * 点击成功
      */
     public LongAdder success = new LongAdder();
     /**
@@ -14,7 +14,7 @@ public class OfferCounter {
     public LongAdder error = new LongAdder();
     public LongAdder total = new LongAdder();
     /**
-     * 非商店落地页
+     * 到200落地页
      */
     public LongAdder success1 = new LongAdder();
     /**
