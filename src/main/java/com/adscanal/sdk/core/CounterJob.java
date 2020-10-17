@@ -5,6 +5,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -43,7 +44,6 @@ public class CounterJob {
                 "select '0','',s.aId,s.affiliateName,s.affiliateId,s.affiliateName,s.offerId,s.offerName,s.countries,CONCAT(date_format(now(),'%Y%m%d%H'),'0000'),s.id,s.appId,s.offerName,  s.sourceAffiliateId,s.sourceOfferId," +
                 " 0,0 from offer s where s.status = 'active' " +
                 "and s.priority >=2 ON DUPLICATE KEY UPDATE click_count = click_count+0,click_invalid=click_invalid+0";
-        errorlog.error(sql);
 
         jdbcTemplate.execute(sql);
     }
@@ -57,13 +57,19 @@ public class CounterJob {
         Counter.counterMap().forEach((k, v) -> {
             long ss = v.success1.longValue();
             long dv = ss - v.getSuccess1snp();
-            v.setSuccess1snp(ss);
             long er1 = v.getError1().longValue();
             long dv1 = er1 - v.getError1snp();
-            v.setError1snp(er1);
-            String sql1 = "update daily_report s set s.click_count = click_count+" + dv + ",s.click_invalid=s.click_invalid+" + dv1 + " where s.state_date = '" + d + "' and s.offer_uid = " + k;
-            errorlog.error(sql1);
-            jdbcTemplate.execute(sql1);
+            try {
+                String sql1 = "update daily_report s set s.click_count = click_count+" + dv + ",s.click_invalid=s.click_invalid+" + dv1 + " where s.state_date = '" + d + "' and s.offer_uid = " + k;
+                jdbcTemplate.execute(sql1);
+                v.setSuccess1snp(ss);
+                v.setError1snp(er1);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+
+
+
         });
     }
 
