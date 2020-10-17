@@ -89,6 +89,7 @@ public class OfferTask implements Runnable {
                 if (i == 6) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                     Counter.increaseError(offer.getUid());
+                    Counter.increaseError1(offer.getUid());
                     break;
                 }
                 HttpGet request = new HttpGet(url);
