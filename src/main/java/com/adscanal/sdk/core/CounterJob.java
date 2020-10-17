@@ -81,5 +81,6 @@ public class CounterJob {
     @PostConstruct
     public void autoStart() {
         setCurrentHour();
+        initdailayreport();
     }
 }
