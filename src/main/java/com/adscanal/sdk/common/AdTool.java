@@ -101,15 +101,15 @@ public class AdTool {
 
 
     public static String randomSub(LiveOffer offer) {
-/*        if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
+        if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
             return "AC" + new Date().getHours();
         }
         String[] pls = offer.getPlacements().split(",");
         int le = pls.length;
         int i = new Random().nextInt(le);
-        return pls[i];*/
-        int h  =new Date().getHours();
-        return "AC" + h/2;
+        return pls[i];
+       /* int h  =new Date().getHours();
+        return "AC" + h/2;*/
     }
 
 
