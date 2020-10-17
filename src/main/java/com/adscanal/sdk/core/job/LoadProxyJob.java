@@ -63,6 +63,9 @@ public class LoadProxyJob {
         Set<String> acoffers = Sets.newHashSet();
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
+            if(list == null){
+                return;
+            }
             list.forEach(offer -> {
                 rebuildCustomer(offer);
                 acoffers.add(offer.getUid()+"");
@@ -113,8 +116,9 @@ public class LoadProxyJob {
                     offers.add(offer);
                 });
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         SimpleData.GOFFERS.remove(geo);
