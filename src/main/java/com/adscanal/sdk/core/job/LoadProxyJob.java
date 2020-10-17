@@ -142,11 +142,13 @@ public class LoadProxyJob {
             if(SdkConf.OFFER_SCHED.containsKey(offer.getUid() + "")){
                 return;
             }
+            period = period * coresize;
             SdkConf.OFFER_SCHED.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
             errorlog.info("TaskInit:+" + offer.getUid() + "");
 
             for (int i = 0; i < coresize; i++) {
-                SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()), 10 * 1000, period*10, TimeUnit.MILLISECONDS);
+                SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
+                        i* 1000, period, TimeUnit.MILLISECONDS);
             }
             SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
         } else {
@@ -230,7 +232,7 @@ public class LoadProxyJob {
             }
             SdkConf.RUNPRODUCERS.add(key);
             try {
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 100; i++) {
                     Files.lines(Paths.get(path)).skip(GEOPROXYMAP.getOrDefault(geo, new GeoProxy()).getSkip()).forEach(n -> {
                         try {
                             q.put(n);
