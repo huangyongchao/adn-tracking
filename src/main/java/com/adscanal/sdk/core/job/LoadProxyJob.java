@@ -256,7 +256,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 */
         try {
 
-            List<GeoProxy> geoProxies = getResFile();
+    /*        List<GeoProxy> geoProxies = getResFile();
 
             if (!CollectionUtils.isEmpty(geoProxies)) {
                 Map<String, GeoProxy> geoProxyMap = Maps.newHashMap();
@@ -264,7 +264,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     geoProxyMap.put(gp.getGeo(), gp);
                 });
                 GEOPROXYMAP = geoProxyMap;
-            }
+            }*/
             String proxystr = HttpClientUtil.get("http://" + proxyserver + ":22999/api/proxies_running");
             logger.info(proxystr);
             JSONArray proxys = JSONArray.parseArray(proxystr);
@@ -296,8 +296,9 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
-                ProxyClient.GEO_OFFSET.put(geo, offset);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
+                ProxyClient.GEO_OFFSET.put(geo, offset);
+
 
             });
         } catch (IOException e) {

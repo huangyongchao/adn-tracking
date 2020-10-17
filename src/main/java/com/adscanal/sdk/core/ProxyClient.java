@@ -121,6 +121,13 @@ public class ProxyClient {
         return sc;
     }
 
+    /**
+     * 要不要覆盖client?
+     * @param host
+     * @param portMin
+     * @param offset
+     * @param geo
+     */
     public void putClientPool(String host, int portMin, int offset, String geo) {
         if (GEO_CLIENTS.containsKey(geo)) {
             return;
