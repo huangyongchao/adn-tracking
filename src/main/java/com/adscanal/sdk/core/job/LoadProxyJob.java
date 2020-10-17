@@ -69,7 +69,7 @@ public class LoadProxyJob {
             list.forEach(offer -> {
                 rebuildCustomer(offer);
                 acoffers.add(offer.getUid()+"");
-                errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED));
+                SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
             });
 
             errorlog.info(JSONObject.toJSONString(list));
@@ -149,7 +149,6 @@ public class LoadProxyJob {
             period = period * coresize;
             SdkConf.OFFER_SCHED.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
             errorlog.info("TaskInit:+" + offer.getUid() + "");
-
             for (int i = 0; i < coresize; i++) {
                 SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                         i* 1000, period, TimeUnit.MILLISECONDS);
