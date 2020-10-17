@@ -60,13 +60,13 @@ public class LoadProxyJob {
 
     @Scheduled(cron = "0 0/3 * * * ?")
     public void sychOffers() {
-        errorlog.info("Old task shutdown done");
         Set<String> acoffers = Sets.newHashSet();
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
             list.forEach(offer -> {
                 rebuildCustomer(offer);
                 acoffers.add(offer.getUid()+"");
+                errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED));
             });
 
             errorlog.info(JSONObject.toJSONString(list));
@@ -77,8 +77,6 @@ public class LoadProxyJob {
         SdkConf.OFFER_SCHED.forEach((k,v)->{
             if(!acoffers.contains(k)){
                 try {
-                    errorlog.info("TaskInit:-" + k);
-                    v.shutdownNow();
                     stopoffers.add(k);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -87,9 +85,11 @@ public class LoadProxyJob {
         });
 
         stopoffers.forEach(v->{
+
+            SdkConf.OFFER_SCHED.get(v).shutdownNow();
             SdkConf.OFFER_SCHED.remove(v);
+            errorlog.info("TaskInit:-" + v);
         });
-        errorlog.info("New task start done" + JSONObject.toJSONString(SdkConf.OFFER_SCHED));
 
     }
 
