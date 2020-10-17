@@ -296,6 +296,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
+                ProxyClient.GEO_OFFSET.put(geo, offset);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
 
             });

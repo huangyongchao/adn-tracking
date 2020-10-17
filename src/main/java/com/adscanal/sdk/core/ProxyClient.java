@@ -2,6 +2,7 @@ package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.dto.GeoProxy;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -18,7 +19,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ProxyClient {
 
-
+    public static Map<String, Integer> GEO_OFFSET = Maps.newHashMap();
 
     public static final int req_timeout = 10 * 1000;
 
@@ -43,8 +43,7 @@ public class ProxyClient {
 
     public static CloseableHttpClient getConn(String geo) {
 
-        int size = GEO_CLIENTS.get(geo).size();
-        return GEO_CLIENTS.get(geo).get(new Random().nextInt(size));
+        return GEO_CLIENTS.get(geo).get(new Random().nextInt(GEO_OFFSET.get(geo)));
     }
 
     public static CloseableHttpClient getClient(String host, int port) {
