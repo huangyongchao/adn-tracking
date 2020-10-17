@@ -8,19 +8,28 @@ public class OfferCounter {
      * 点击成功
      */
     public LongAdder success = new LongAdder();
+    public long successsnp;
     /**
      * 404 500
      */
     public LongAdder error = new LongAdder();
+    public long errorssnp;
+
     public LongAdder total = new LongAdder();
+    public long totalsnp;
+
     /**
      * 到200落地页
      */
     public LongAdder success1 = new LongAdder();
+    public long success1snp;
+
     /**
      * 非商店 非落地页 其他页面 属于点击不成功
      */
     public LongAdder error1 = new LongAdder();
+    public long error1snp;
+
 
     public String getId() {
         return id;
@@ -70,6 +79,43 @@ public class OfferCounter {
         this.error1 = error1;
     }
 
+    public long getSuccesssnp() {
+        return successsnp;
+    }
 
+    public void setSuccesssnp(long successsnp) {
+        this.successsnp = successsnp;
+    }
 
+    public long getErrorssnp() {
+        return errorssnp;
+    }
+
+    public void setErrorssnp(long errorssnp) {
+        this.errorssnp = errorssnp;
+    }
+
+    public long getTotalsnp() {
+        return totalsnp;
+    }
+
+    public void setTotalsnp(long totalsnp) {
+        this.totalsnp = totalsnp;
+    }
+
+    public long getSuccess1snp() {
+        return success1snp;
+    }
+
+    public void setSuccess1snp(long success1snp) {
+        this.success1snp = success1snp;
+    }
+
+    public long getError1snp() {
+        return error1snp;
+    }
+
+    public void setError1snp(long error1snp) {
+        this.error1snp = error1snp;
+    }
 }
