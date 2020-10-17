@@ -82,9 +82,9 @@ public class OfferTask implements Runnable {
     public synchronized void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 6; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
-                if (i == 3) {
+                if (i == 6) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                 }
                 HttpGet request = new HttpGet(url);
