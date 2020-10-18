@@ -22,7 +22,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
@@ -39,6 +38,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Order(0)
@@ -70,6 +70,7 @@ public class LoadProxyJob {
                 rebuildCustomer(offer);
                 acoffers.add(offer.getUid()+"");
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
+                SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
             });
 
             errorlog.info(JSONObject.toJSONString(list));

@@ -4,6 +4,7 @@ import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.SimpleData;
+import com.sun.jndi.toolkit.url.UrlUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -125,6 +126,7 @@ public class AdTool {
         }
         return false;
     }
+
 
 
     public static void saveLand(LiveOffer offer, String url) {

@@ -113,6 +113,7 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
+                SimpleDataFunc.saveReriects(offer.getUid(), url);
                 response = client.execute(request);
                 request.releaseConnection();
 

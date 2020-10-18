@@ -25,6 +25,13 @@ public class OpenApi {
 
     }
 
+    @GetMapping("/rcnt")
+    public Object rcnt() {
+        return JSONObject.toJSONString(SimpleData.LIVEOFFERSR_EDIRECT);
+
+    }
+
+
     @GetMapping("/geo_run")
     public Object acgeos() {
         return JSONObject.toJSONString(SdkConf.ACTI_GEO);

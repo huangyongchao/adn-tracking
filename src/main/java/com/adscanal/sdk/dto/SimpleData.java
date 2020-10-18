@@ -1,7 +1,6 @@
 package com.adscanal.sdk.dto;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SimpleData {
@@ -12,5 +11,7 @@ public class SimpleData {
     public static Set<String> BLACK_OFFERS = new HashSet<>();
     public static Map<String, String> OFFER_LAND = new HashMap();
     public static Map<String, AtomicLong> OFFERERROR = new HashMap();
+    public static Map<Integer, Map<String, AtomicLong>> LIVEOFFERSR_EDIRECT = new HashMap();
+
 
 }
