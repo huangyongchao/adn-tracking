@@ -102,7 +102,7 @@ public class LoadProxyJob {
         List<LiveOffer> offers = Lists.newArrayList();
         try {
             //http://54.218.163.206:5080/openapi/test
-            String offerapi = "http://api.colour.mobi/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
+            String offerapi = "http://127.0.0.1:8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
             System.out.println(offerapi);
             String respj = HttpClientUtil.get(offerapi);
 
