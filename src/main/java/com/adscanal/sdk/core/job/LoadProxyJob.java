@@ -147,7 +147,7 @@ public class LoadProxyJob {
             if(SdkConf.OFFER_SCHED.containsKey(offer.getUid() + "")){
                 return;
             }
-            period = period * 10;
+            period = period * 20;
             SdkConf.OFFER_SCHED.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
             errorlog.info("TaskInit:+" + offer.getUid() + "");
             for (int i = 0; i < coresize; i++) {
