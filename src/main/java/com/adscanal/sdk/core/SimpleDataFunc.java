@@ -24,9 +24,13 @@ public class SimpleDataFunc {
 
     public static void saveReriects(int offerUid,String url){
 
-        Map<String,AtomicLong> offer =  SimpleData.LIVEOFFERSR_EDIRECT.get(offerUid);
+        Map<String, AtomicLong> offer = SimpleData.LIVEOFFERSR_EDIRECT.get(offerUid);
         String domain = getHostByReg(url);
-        offer.getOrDefault(domain, new AtomicLong()).incrementAndGet();
+        if (offer.containsKey(domain)) {
+            offer.get(domain).incrementAndGet();
+        } else {
+            offer.put(domain, new AtomicLong());
+        }
     }
 
     public static void main(String[] args) {
