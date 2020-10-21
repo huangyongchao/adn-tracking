@@ -67,10 +67,10 @@ public class LoadProxyJob {
                 return;
             }
             list.forEach(offer -> {
+                SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
+                SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
                 rebuildCustomer(offer);
                 acoffers.add(offer.getUid()+"");
-                SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
-                SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
             });
 
             errorlog.info(JSONObject.toJSONString(list));
