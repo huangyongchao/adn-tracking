@@ -1,6 +1,7 @@
 package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.dto.Counter;
+import com.adscanal.sdk.dto.OfferCounter;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class CounterJob {
@@ -52,7 +54,8 @@ public class CounterJob {
     public void saveClicks() {
 
         String d = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH") + ":00:00";
-        Counter.counterMap().forEach((k, v) -> {
+        Map<Integer, OfferCounter>  map = Counter.counterMap();
+        map.forEach((k, v) -> {
             long ss = v.success1.longValue();
             long dv = ss - v.getSuccess1snp();
             long er1 = v.getError1().longValue();
