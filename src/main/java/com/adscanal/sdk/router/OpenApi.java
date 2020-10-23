@@ -47,7 +47,11 @@ public class OpenApi {
         return SimpleData.BLACK_OFFERS;
 
     }
+    @GetMapping("/offer_pause")
+    public Object pause() {
+        return SimpleData.PAUSE_OFFERS;
 
+    }
     @GetMapping("/offer_setblack")
     public Object blackoffer(@RequestParam(name = "id") Integer id) {
         if (id != null) {
