@@ -152,11 +152,21 @@ public class LoadProxyJob {
         } else {
             period = BASE / offer.getDailyMaxClicks();
         }
-        coresize = clicks / 15000;
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             return;
         }
-        period = period * 10;
+        int priority = offer.getPriority();
+        if (priority <= 0) {
+            priority = 2;
+        }
+        if (priority > 5) {
+            priority = 5;
+        }
+        int weight = (10 / priority);
+        coresize = clicks / 10000 * weight;
+
+
+        period = period * 10 * weight;
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
