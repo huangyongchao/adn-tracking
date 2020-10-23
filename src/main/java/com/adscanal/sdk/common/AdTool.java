@@ -130,8 +130,8 @@ public class AdTool {
 
     public static void saveLand(LiveOffer offer, String url) {
 
-        if (!SimpleData.OFFER_LAND.containsKey(offer.getUid()+"")) {
-            SimpleData.OFFER_LAND.put(offer.getUid()+"", url);
+        if (!SimpleData.OFFER_LAND.containsKey(offer.getUid())) {
+            SimpleData.OFFER_LAND.put(offer.getUid(), url);
         }
     }
 
