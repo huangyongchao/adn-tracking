@@ -162,7 +162,7 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 10000 ;
+        coresize = clicks / 40000 ;
 
         int weight = (10 / priority);
         period = period * 10 * weight;
