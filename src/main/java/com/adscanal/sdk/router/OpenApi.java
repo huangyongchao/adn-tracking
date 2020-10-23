@@ -5,7 +5,6 @@ import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,8 +49,8 @@ public class OpenApi {
     }
 
     @GetMapping("/offer_setblack")
-    public Object blackoffer(@RequestParam(name = "id") String id) {
-        if (StringUtils.isNotBlank(id)) {
+    public Object blackoffer(@RequestParam(name = "id") Integer id) {
+        if (id != null) {
             SimpleData.BLACK_OFFERS.add(id);
             return "ok";
         }

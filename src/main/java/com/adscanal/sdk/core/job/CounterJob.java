@@ -1,4 +1,4 @@
-package com.adscanal.sdk.core;
+package com.adscanal.sdk.core.job;
 
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.OfferCounter;

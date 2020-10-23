@@ -60,7 +60,7 @@ public class LoadProxyJob {
 
     @Scheduled(cron = "0 0/3 * * * ?")
     public void sychOffers() {
-        Set<String> acoffers = Sets.newHashSet();
+        Set<Integer> acoffers = Sets.newHashSet();
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
             if(list == null){
@@ -68,20 +68,23 @@ public class LoadProxyJob {
             }
             list.forEach(offer -> {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
+                // 存储当前激活的offer
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
                 rebuildCustomer(offer);
-                acoffers.add(offer.getUid()+"");
+                acoffers.add(offer.getUid());
             });
 
             errorlog.info(JSONObject.toJSONString(list));
 
         });
-        Set<String> stopoffers = Sets.newHashSet();
+        Set<Integer> stopoffers = Sets.newHashSet();
 
         SdkConf.OFFER_SCHED.forEach((k,v)->{
             if(!acoffers.contains(k)){
                 try {
                     stopoffers.add(k);
+                    //移除当前停止的offer
+                    SimpleData.LIVEOFFERS.remove(k);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -129,34 +132,53 @@ public class LoadProxyJob {
 
     }
 
+    public static void setCustomerTask(LiveOffer offer) {
+        if(SimpleData.PAUSE_OFFERS.contains(offer.getUid())){
+            return;
+        }
+        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+            try {
+                SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-    public static void rebuildCustomer(LiveOffer offer) {
         int period = 0;
         int coresize = 100;
-
         int clicks = offer.getDailyMaxClicks();
-        Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid() + "");
-        if (oldclicks == null || Math.abs(clicks - oldclicks) > 20000) {
-
-            if (offer.getDailyMaxClicks() <= 0) {
-                period = Integer.MAX_VALUE;
-            } else {
-                period = BASE / offer.getDailyMaxClicks();
-            }
-            coresize = clicks / 20000;
-            if(SdkConf.OFFER_SCHED.containsKey(offer.getUid() + "")){
-                return;
-            }
-            period = period * 20;
-            SdkConf.OFFER_SCHED.put(offer.getUid() + "", Executors.newScheduledThreadPool(coresize));
-            errorlog.info("TaskInit:+" + offer.getUid() + "");
-            for (int i = 0; i < coresize; i++) {
-                SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                        i* 1000, period, TimeUnit.MILLISECONDS);
-            }
-            SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
+        if (offer.getDailyMaxClicks() <= 0) {
+            period = Integer.MAX_VALUE;
         } else {
-            SimpleData.OFFER_CLICKS.put(offer.getUid() + "", offer.getDailyMaxClicks());
+            period = BASE / offer.getDailyMaxClicks();
+        }
+        coresize = clicks / 15000;
+        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+            return;
+        }
+        period = period * 10;
+
+        SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
+        for (int i = 0; i < coresize; i++) {
+            SdkConf.OFFER_SCHED.get(offer.getUid() + "").scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
+                    i * 1000, period, TimeUnit.MILLISECONDS);
+        }
+
+        //记录过去之前的点击数
+        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
+
+
+    }
+
+    public static void rebuildCustomer(LiveOffer offer) {
+
+        if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+            logger.warn("INIT:" + offer.getUid());
+            setCustomerTask(offer);
+        } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
+                && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
+            logger.warn("INIT-RE:" + offer.getUid());
+            setCustomerTask(offer);
         }
 
 

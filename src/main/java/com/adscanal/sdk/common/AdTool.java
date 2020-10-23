@@ -102,7 +102,6 @@ public class AdTool {
 
 
     public static String randomSub(LiveOffer offer) {
-        offer = SimpleData.LIVEOFFERS.get(offer.getUid());
         if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
             return "AC" + new Date().getHours();
         }
