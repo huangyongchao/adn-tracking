@@ -1,6 +1,5 @@
 package com.adscanal.sdk.router;
 
-import com.adscanal.sdk.common.Statistics;
 import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
@@ -100,11 +99,15 @@ public class OpenApi {
         return SimpleData.OFFERERROR;
     }
 
-    @GetMapping("/offer_tracking")
-    public Object getTracker() {
-        return JSONObject.toJSONString((Statistics.offer_tracker));
+    @GetMapping("/offer_schedules")
+    public Object offer_sched() {
+        return SdkConf.OFFER_SCHED;
     }
 
+    @GetMapping("/geo_os_queue")
+    public Object geo_os_que() {
+        return SdkConf.GEO_OS_QUE;
+    }
 
     @RequestMapping("/apis")
     public Object getAllUrl() {
