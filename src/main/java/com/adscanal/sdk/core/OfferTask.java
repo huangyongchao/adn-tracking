@@ -80,7 +80,7 @@ public class OfferTask implements Runnable {
     }
 
 
-    public synchronized void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public  void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             Counter.increaseSuccess(offer.getUid());
             CloseableHttpResponse response = null;
