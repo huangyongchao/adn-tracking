@@ -139,6 +139,7 @@ public class LoadProxyJob {
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             try {
                 SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
+                SdkConf.OFFER_SCHED.remove(offer.getUid());
             } catch (Exception e) {
                 e.printStackTrace();
             }

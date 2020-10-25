@@ -132,7 +132,7 @@ public class OfferTask implements Runnable {
             SimpleData.PRODUCERCOUNTER.get(key).getRequest().incrementAndGet();
         } catch (Exception e) {
             Counter.increaseError1(offer.getUid());
-            errorlog.error(e.getMessage(), e);
+            errorlog.error(e.getMessage(), offer.getName()+"\n"+e);
             error_req_account.incrementAndGet();
         }
 

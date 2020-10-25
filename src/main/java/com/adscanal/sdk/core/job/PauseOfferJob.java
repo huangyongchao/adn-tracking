@@ -47,7 +47,7 @@ public class PauseOfferJob {
                     if (clicks > (oldclicks - 10000)) {
                         SimpleData.PAUSE_OFFERS.add(id);
                         SdkConf.OFFER_SCHED.get(id).shutdownNow();
-                        SimpleData.OFFER_CLICKS.remove(id);
+                        SdkConf.OFFER_SCHED.remove(id);
                         logger.warn("PAUSEOFFER:" + id);
                     }
                 }
