@@ -48,8 +48,7 @@ public class OfferTask implements Runnable {
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-                /*当天点击计数累计+1*/
-                Counter.DAILY_CLICKS.get(offer.getUid()).incrementAndGet();
+
 
             } catch (InterruptedException e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -85,11 +84,10 @@ public class OfferTask implements Runnable {
         try {
             Counter.increaseSuccess(offer.getUid());
             CloseableHttpResponse response = null;
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 4; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
-                if (i == 6) {
+                if (i == 3) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
-                    Counter.increaseError(offer.getUid());
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
@@ -132,7 +130,7 @@ public class OfferTask implements Runnable {
             handle_response(key, offer, response);
             SimpleData.PRODUCERCOUNTER.get(key).getRequest().incrementAndGet();
         } catch (Exception e) {
-            Counter.increaseError1(offer.getUid());
+            Counter.increaseError(offer.getUid());
             errorlog.error(e.getMessage(), offer.getUid()+" "+offer.getId()+"\n"+e);
             error_req_account.incrementAndGet();
         }
