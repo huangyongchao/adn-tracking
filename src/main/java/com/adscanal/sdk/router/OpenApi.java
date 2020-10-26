@@ -81,6 +81,11 @@ public class OpenApi {
     public Object offers() {
         return SimpleData.GOFFERS;
     }
+    @GetMapping("/offer_d_clicks")
+    public Object dailyclicks() {
+        return Counter.DAILY_CLICKS;
+    }
+
 
     @GetMapping("/geo_producers")
     public Object producercnt() {
