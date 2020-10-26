@@ -28,7 +28,7 @@ public class CounterJob {
     }
 
 
-    @Scheduled(cron = "0 0,5,15,35,55 0 */1 * ?")
+    @Scheduled(cron = "1 0,5,15,35,55 0 */1 * ?")
     public void exchangeCounter() {
         Counter.exchange();
     }

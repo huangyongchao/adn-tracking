@@ -48,7 +48,8 @@ public class OfferTask implements Runnable {
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-
+                /*当天点击计数累计+1*/
+                Counter.DAILY_CLICKS.get(offer.getUid()).incrementAndGet();
 
             } catch (InterruptedException e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();

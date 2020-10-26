@@ -4,7 +4,7 @@ import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.SimpleData;
-import com.sun.jndi.toolkit.url.UrlUtil;
+import com.adscanal.sdk.dto.SubidTypeE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -102,15 +102,19 @@ public class AdTool {
 
 
     public static String randomSub(LiveOffer offer) {
-        if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
-            return "AC" + new Date().getHours();
+        if (SubidTypeE.AUTO_P360.code == offer.getAutosubid()) {
+            String h = DateFormatUtils.format(new Date(), "HHddMM") + offer.getUid();
+            return h;
+        } else {
+            if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
+                return "AC" + new Date().getHours();
+            }
+            String[] pls = offer.getPlacements().split(",");
+            int le = pls.length;
+            int i = new Random().nextInt(le);
+            return pls[i];
+
         }
-        String[] pls = offer.getPlacements().split(",");
-        int le = pls.length;
-        int i = new Random().nextInt(le);
-        return pls[i];
-       /* int h  =new Date().getHours();
-        return "AC" + h/2;*/
     }
 
 
@@ -119,6 +123,12 @@ public class AdTool {
         return DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getUid();
     }
 
+    public static void main(String[] args) {
+
+        String h = DateFormatUtils.format(new Date(), "HHddMM");
+
+        System.out.println(h);
+    }
     public static boolean isStore(String url) {
         if (url.indexOf("apple.com") > 0 || url.indexOf("google.com") > 0) {
             return true;
@@ -135,8 +145,6 @@ public class AdTool {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(DateFormatUtils.format(new Date(), "MMddHHmmss"));
-    }
+
 
 }

@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
@@ -133,8 +134,13 @@ public class LoadProxyJob {
     }
 
     public static void setCustomerTask(LiveOffer offer) {
+        /*如果单子在点击满暂停的集合里就停止设置任务*/
         if(SimpleData.PAUSE_OFFERS.contains(offer.getUid())){
             return;
+        }
+        /*如果没有初始化点击计数器 同步时候初始化*/
+        if(!Counter.DAILY_CLICKS.containsKey(offer.getUid())){
+            Counter.DAILY_CLICKS.put(offer.getUid(), new AtomicInteger());
         }
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             try {

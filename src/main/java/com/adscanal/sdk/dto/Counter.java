@@ -1,8 +1,12 @@
 package com.adscanal.sdk.dto;
 
+import com.google.common.collect.Sets;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author huangyongchao
@@ -11,8 +15,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Counter {
     public static volatile int CURRENT_HOUR = 0;
     public static AtomicBoolean EXCHANGE_LOCK = new AtomicBoolean(false);
+    public static Map<Integer, AtomicInteger> DAILY_CLICKS = new HashMap<>();
 
     public static Map<Integer, Map<Integer, OfferCounter>> TODAY_COUNTER = null;
+
     public static Map<Integer, Map<Integer, OfferCounter>> YESDAY_COUNTER = null;
 
     public static Map<Integer, Map<Integer, OfferCounter>> initToday() {
@@ -51,13 +57,15 @@ public class Counter {
         }
         return TODAY_COUNTER.get(CURRENT_HOUR);
     }
-
+    /*每天凌晨初始化一次*/
     public static synchronized boolean exchange() {
         if (EXCHANGE_LOCK.get()) {
             return false;
         }
         YESDAY_COUNTER = TODAY_COUNTER;
         TODAY_COUNTER = initToday();
+        SimpleData.PAUSE_OFFERS = Sets.newHashSet();
+        DAILY_CLICKS = new HashMap<>();
         EXCHANGE_LOCK.set(true);
         return true;
     }

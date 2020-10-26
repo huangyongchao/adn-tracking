@@ -59,6 +59,7 @@ public class LiveOffer {
     private float monthlyPayOutCap;
     private String defaultGoalName;
     private int useTargetRules;
+    private int autosubid;
     private int isExpired;
     private String apprvoalStatus;
     private String osName;
@@ -93,6 +94,14 @@ public class LiveOffer {
     private String placements;
     private String proxyinfo;
     private String pid;
+
+    public int getAutosubid() {
+        return autosubid;
+    }
+
+    public void setAutosubid(int autosubid) {
+        this.autosubid = autosubid;
+    }
 
     private String whitelist;
     private String blacklist;
