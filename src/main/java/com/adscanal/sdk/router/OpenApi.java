@@ -86,6 +86,10 @@ public class OpenApi {
         return Counter.DAILY_CLICKS;
     }
 
+    @GetMapping("/offer_clicks")
+    public Object offer_clicks() {
+        return SimpleData.OFFER_CLICKS;
+    }
 
     @GetMapping("/geo_producers")
     public Object producercnt() {
@@ -146,7 +150,7 @@ public class OpenApi {
         StringBuilder stringBuilder = new StringBuilder();
         list.forEach(n -> {
 
-            stringBuilder.append("<a href=\"http://sdk.colour.mobi" + n.get("url") + "\">" + n.get("url") + "</a><br>\n");
+            stringBuilder.append("<a target='_blank' href=\"http://sdk.colour.mobi" + n.get("url") + "\">" + n.get("url") + "</a><br>\n");
 
         });
 

@@ -180,12 +180,13 @@ public class LoadProxyJob {
         }
 
         //记录过去之前的点击数
-        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
 
     }
 
     public static void rebuildCustomer(LiveOffer offer) {
+
+        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
         if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             logger.warn("INIT:" + offer.getUid());
