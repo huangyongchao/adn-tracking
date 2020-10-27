@@ -142,14 +142,6 @@ public class LoadProxyJob {
         if(!Counter.DAILY_CLICKS.containsKey(offer.getUid())){
             Counter.DAILY_CLICKS.put(offer.getUid(), new AtomicInteger());
         }
-        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
-            try {
-                SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
-                SdkConf.OFFER_SCHED.remove(offer.getUid());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         int period = 0;
         int coresize = 100;
