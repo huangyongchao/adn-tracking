@@ -48,8 +48,10 @@ public class PauseOfferJob {
         SimpleData.OFFER_CLICKS.forEach((id, v) -> {
             if (v < Counter.DAILY_CLICKS.get(id).get()) {
                 SimpleData.PAUSE_OFFERS.add(id);
-                SdkConf.OFFER_SCHED.get(id).shutdownNow();
-                SdkConf.OFFER_SCHED.remove(id);
+                if(SdkConf.OFFER_SCHED.containsKey(id)){
+                    SdkConf.OFFER_SCHED.get(id).shutdownNow();
+                    SdkConf.OFFER_SCHED.remove(id);
+                }
                 logger.warn("PAUSEOFFER:" + id);
             }
         });
