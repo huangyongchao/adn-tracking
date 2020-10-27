@@ -110,7 +110,7 @@ public class OpenApi {
 
     @GetMapping("/offer_schedules")
     public Object offer_sched() {
-        return SdkConf.OFFER_SCHED;
+        return SdkConf.OFFER_SCHED.keySet();
     }
 
     @GetMapping("/geo_os_queue")
