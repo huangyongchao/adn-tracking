@@ -309,7 +309,9 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 GEOPROXYMAP = geoProxyMap;
             }*/
             String proxystr = HttpClientUtil.get("http://" + proxyserver + ":22999/api/proxies_running");
+/*
             logger.info(proxystr);
+*/
             JSONArray proxys = JSONArray.parseArray(proxystr);
             proxys.forEach(n -> {
                 //初始化安卓 设备号生产者
