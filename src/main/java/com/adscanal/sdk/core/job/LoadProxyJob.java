@@ -75,7 +75,9 @@ public class LoadProxyJob {
                 acoffers.add(offer.getUid());
             });
 
-            errorlog.info(JSONObject.toJSONString(list));
+/*
+            logger.info(JSONObject.toJSONString(list));
+*/
 
         });
         Set<Integer> stopoffers = Sets.newHashSet();
