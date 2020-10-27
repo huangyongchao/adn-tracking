@@ -170,7 +170,9 @@ public class LoadProxyJob {
             priority = 5;
         }
         coresize = clicks / 15000 ;
-
+        if(coresize>100){
+            coresize = 100;
+        }
         int weight = (5/ priority);
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
