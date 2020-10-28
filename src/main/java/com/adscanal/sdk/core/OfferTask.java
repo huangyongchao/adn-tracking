@@ -113,6 +113,8 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
+                logger.warn(url);
+
                 response = client.execute(request);
                 request.releaseConnection();
 
