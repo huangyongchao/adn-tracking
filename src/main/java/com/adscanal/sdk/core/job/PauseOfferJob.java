@@ -24,7 +24,7 @@ public class PauseOfferJob {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-
+    @Scheduled(cron = "1 0/10 * * * ?")
     @PostConstruct
     public void loadOfferClicks() {
         String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
@@ -38,23 +38,31 @@ public class PauseOfferJob {
                 Integer id = Integer.parseInt(o.get("uid").toString());
                 Integer clicks = Integer.parseInt(o.get("clicks").toString());
                 Counter.DAILY_CLICKS.put(id, new AtomicInteger(clicks));
+                if (clicks > SimpleData.OFFER_CLICKS.get(id)) {
+                    logger.warn("PAUSEOFFER:" + id);
+                    SimpleData.PAUSE_OFFERS.add(id);
+                    if (SdkConf.OFFER_SCHED.containsKey(id)) {
+                        SdkConf.OFFER_SCHED.get(id).shutdownNow();
+                        SdkConf.OFFER_SCHED.remove(id);
+                    }
+                }
             });
         }
 
     }
 
-    @Scheduled(cron = "1 0/2 * * * ?")
+/*    @Scheduled(cron = "1 0/2 * * * ?")
     public void checkPauseOffersByClicks() {
         SimpleData.OFFER_CLICKS.forEach((id, v) -> {
             if (v < Counter.DAILY_CLICKS.get(id).get()) {
                 SimpleData.PAUSE_OFFERS.add(id);
                 logger.warn("PAUSEOFFER:" + id);
-            /*    if(SdkConf.OFFER_SCHED.containsKey(id)){
+            *//*    if(SdkConf.OFFER_SCHED.containsKey(id)){
                     SdkConf.OFFER_SCHED.get(id).shutdownNow();
                     SdkConf.OFFER_SCHED.remove(id);
-                }*/
+                }*//*
             }
         });
-    }
+    }*/
 
 }
