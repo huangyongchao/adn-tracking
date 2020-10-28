@@ -71,8 +71,8 @@ public class LoadProxyJob {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
                 // 存储当前激活的offer
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
-                rebuildCustomer(offer);
                 acoffers.add(offer.getUid());
+                rebuildCustomer(offer);
             });
 
 /*
@@ -95,10 +95,9 @@ public class LoadProxyJob {
         });
 
         stopoffers.forEach(v->{
-
+            errorlog.info("TaskInit:-" + v);
             SdkConf.OFFER_SCHED.get(v).shutdownNow();
             SdkConf.OFFER_SCHED.remove(v);
-            errorlog.info("TaskInit:-" + v);
         });
 
     }
@@ -154,6 +153,7 @@ public class LoadProxyJob {
             period = BASE / offer.getDailyMaxClicks();
         }
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+            logger.warn("REINIT:" + offer.getUid());
             return;
         }
         int priority = offer.getPriority();
