@@ -13,7 +13,6 @@ import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,6 +41,7 @@ public class OfferTask implements Runnable {
                 offer = SimpleData.LIVEOFFERS.get(offer.getUid());
                 String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
                 if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
+                    logger.warn("NOPROXY:" + geo+offer+deviceid);
                     return;
                 }
                 SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
@@ -49,6 +49,7 @@ public class OfferTask implements Runnable {
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
                 Counter.DAILY_CLICKS.get(offer.getUid()).incrementAndGet();
+
 
             } catch (InterruptedException e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -112,7 +113,6 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
-                logger.warn(url);
                 response = client.execute(request);
                 request.releaseConnection();
 
