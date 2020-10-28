@@ -23,8 +23,7 @@ public class PauseOfferJob {
     private static final Logger logger = LoggerFactory.getLogger(PauseOfferJob.class);
     @Autowired
     JdbcTemplate jdbcTemplate;
-
-    @Scheduled(cron = "1 0/10 * * * ?")
+    @Scheduled(cron = "1 0/3 * * * ?")
     @PostConstruct
     public void loadOfferClicks() {
         String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
@@ -38,7 +37,7 @@ public class PauseOfferJob {
                 Integer id = Integer.parseInt(o.get("uid").toString());
                 Integer clicks = Integer.parseInt(o.get("clicks").toString());
                 Counter.DAILY_CLICKS.put(id, new AtomicInteger(clicks));
-                if (clicks > SimpleData.OFFER_CLICKS.get(id)) {
+                if (SimpleData.OFFER_CLICKS.containsKey(id)&&(clicks > SimpleData.OFFER_CLICKS.get(id))) {
                     logger.warn("PAUSEOFFER:" + id);
                     SimpleData.PAUSE_OFFERS.add(id);
                     if (SdkConf.OFFER_SCHED.containsKey(id)) {
