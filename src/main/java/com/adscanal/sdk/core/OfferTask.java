@@ -37,12 +37,7 @@ public class OfferTask implements Runnable {
     @Override
     public void run() {
             try {
-                logger.info("ERRORREDIRECT:" + offer.getOfferId() );
-                if(SimpleData.PAUSE_OFFERS.contains(offer.getUid())){
-                    return;
-                }
                 offer = SimpleData.LIVEOFFERS.get(offer.getUid());
-
                 String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
                 if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
                     return;
@@ -91,6 +86,7 @@ public class OfferTask implements Runnable {
             for (int i = 0; i < 4; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if (i == 3) {
+                    logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
