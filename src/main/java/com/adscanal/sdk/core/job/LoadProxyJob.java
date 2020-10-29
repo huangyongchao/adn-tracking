@@ -57,6 +57,9 @@ public class LoadProxyJob {
     @Value("${proxyserver}")
     private String proxyserver;
 
+    @Value("${apiserver}")
+    private String apiserver;
+
     private static int BASE = 1000 * 60 * 60 * 24;
 
     @Scheduled(cron = "0 0/3 * * * ?")
@@ -84,7 +87,6 @@ public class LoadProxyJob {
                 try {
                     stopoffers.add(k);
                     //移除当前停止的offer
-                    SimpleData.LIVEOFFERS.remove(k);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -95,6 +97,7 @@ public class LoadProxyJob {
 
             SdkConf.OFFER_SCHED.get(v).shutdownNow();
             SdkConf.OFFER_SCHED.remove(v);
+            SimpleData.LIVEOFFERS.remove(v);
             errorlog.info("TaskInit:-" + v);
         });
 
@@ -105,7 +108,7 @@ public class LoadProxyJob {
         List<LiveOffer> offers = Lists.newArrayList();
         try {
             //http://54.218.163.206:5080/openapi/test
-            String offerapi = "http://127.0.0.1:8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
+            String offerapi = "http://"+apiserver+":8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
             System.out.println(offerapi);
             String respj = HttpClientUtil.get(offerapi);
 

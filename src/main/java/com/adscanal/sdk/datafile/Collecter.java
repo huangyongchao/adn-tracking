@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author huangyongchao
  */
 public class Collecter {
-    public static final String rootPath = "/Volumes/FrankSSD/deviceid/devid1";
+    public static final String rootPath = "/Volumes/FrankSSD/deviceid/devid2";
     public static final String deviceidlog = "/Volumes/FrankSSD/";
     private static BufferedWriter writer = null;
 
@@ -155,8 +155,8 @@ public class Collecter {
             });
         });
     }
-    public static final Set<String> ACTI_GEOS = Sets.newHashSet("GBR","DEU","RUS");
-    public static final List<String> ACTI_OS = Lists.newArrayList("ios");
+    public static final Set<String> ACTI_GEOS = Sets.newHashSet("IND");
+    public static final List<String> ACTI_OS = Lists.newArrayList("android");
 
     static {
         ACTI_GEOS.forEach(geo -> {
