@@ -135,7 +135,12 @@ public class AdTool {
         }
         return false;
     }
-
+    public static boolean is3pt(String url) {
+        if (url.indexOf("adjust.com") > 0 || url.indexOf("appsflyer.com") > 0) {
+            return true;
+        }
+        return false;
+    }
 
 
     public static void saveLand(LiveOffer offer, String url) {

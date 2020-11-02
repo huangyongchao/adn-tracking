@@ -46,7 +46,6 @@ public class OfferTask implements Runnable {
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-                System.out.println(deviceid);
                 Counter.DAILY_CLICKS.get(offer.getUid()).incrementAndGet();
 
 
@@ -114,9 +113,9 @@ public class OfferTask implements Runnable {
                 }
                 response = client.execute(request);
                 request.releaseConnection();
-
-                if (isRedirect(offer, response)) {
-                    url = response.getHeaders("Location")[0].toString().replace("location: ","").trim();
+                System.out.println(url);
+                if (isRedirect(offer, response) && !AdTool.is3pt(url)) {
+                    url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
                     continue;
 
