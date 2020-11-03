@@ -83,9 +83,9 @@ public class OfferTask implements Runnable {
         try {
             Counter.increaseSuccess(offer.getUid());
             CloseableHttpResponse response = null;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
-                if (i == 3) {
+                if (i == 2) {
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
                     Counter.increaseError1(offer.getUid());
                     break;
