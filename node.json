@@ -1,0 +1,175 @@
+{
+  "_defaults": {
+    "customer": "huangyongchao",
+    "logs": 0,
+    "lpm_token": "kQjuA6FEx7QFrJKzZHyLLhsjtJYwDhQv|huangyongchao",
+    "password": "q5srrwcvkx9x",
+    "token_auth": "",
+    "version": "1.203.920",
+    "www_whitelist_ips": [
+      "172.31.8.75",
+      "61.149.217.98",
+      "44.235.122.213",
+      "172.31.15.127",
+      "157.245.167.159"
+    ]
+  },
+  "proxies": [
+    {
+      "country": "in",
+      "dns": "remote",
+      "internal_name": "in",
+      "multiply": 100,
+      "port": 20000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "gb",
+      "dns": "remote",
+      "internal_name": "gb",
+      "multiply":30,
+      "port": 27000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "my",
+      "dns": "remote",
+      "internal_name": "my",
+      "multiply":30,
+      "port": 30000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "ph",
+      "dns": "remote",
+      "internal_name": "ph",
+      "multiply":30,
+      "port": 31000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "kr",
+      "dns": "remote",
+      "internal_name": "kr",
+      "multiply":30,
+      "port": 34000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "au",
+      "dns": "remote",
+      "internal_name": "au",
+      "multiply":30,
+      "port": 25300,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "th",
+      "dns": "remote",
+      "internal_name": "th",
+      "multiply":30,
+      "port": 27000,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "vn",
+      "dns": "remote",
+      "internal_name": "vn",
+      "multiply":30,
+      "port": 27100,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "sg",
+      "dns": "remote",
+      "internal_name": "sg",
+      "multiply":30,
+      "port": 27200,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "tw",
+      "dns": "remote",
+      "internal_name": "tw",
+      "multiply":30,
+      "port": 27300,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "hk",
+      "dns": "remote",
+      "internal_name": "hk",
+      "multiply":30,
+      "port": 27400,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "sa",
+      "dns": "remote",
+      "internal_name": "sa",
+      "multiply":30,
+      "port": 27500,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    },
+    {
+      "country": "kw",
+      "dns": "remote",
+      "internal_name": "kw",
+      "multiply":30,
+      "port": 27600,
+      "preset": "rotating",
+      "rotate_session": true,
+      "route_err": "block",
+      "ssl": true,
+      "zone": "static"
+    }
+  ]
+}
