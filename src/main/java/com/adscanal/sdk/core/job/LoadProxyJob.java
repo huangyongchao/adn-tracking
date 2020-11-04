@@ -1,8 +1,6 @@
 package com.adscanal.sdk.core.job;
 
-import com.adscanal.sdk.common.ExecutorPool;
-import com.adscanal.sdk.common.GeoMap;
-import com.adscanal.sdk.common.HttpClientUtil;
+import com.adscanal.sdk.common.*;
 import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
@@ -31,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +69,11 @@ public class LoadProxyJob {
             if(list == null){
                 return;
             }
+            //如果不在受众时间,停止投放
+            if (!AdTool.isTargetTimeByGeo2word(n)) {
+                return;
+            }
+
             list.forEach(offer -> {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
                 // 存储当前激活的offer
@@ -233,15 +237,12 @@ public class LoadProxyJob {
     }
 
     public static void main(String[] args) {
-        //getResFile();
-        System.out.println(1);
+        LocalDateTime reqTime = LocalDateTime.now(Ctz.of(GeoMap.word2Map.get("CN")));
 
-        try {
-            HttpClientUtil.get("http://44.235.122.213:22999/api/proxies_running");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        System.out.println(reqTime.toString());
+        System.out.println(reqTime.getDayOfWeek());
+        System.out.println(reqTime.getHour());
+        System.out.println(reqTime.getDayOfWeek().getValue());
     }
 
 

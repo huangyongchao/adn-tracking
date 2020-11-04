@@ -8,6 +8,7 @@ import com.adscanal.sdk.dto.SubidTypeE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -125,9 +126,15 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        String h = DateFormatUtils.format(new Date(), "HHddMM");
+        String geo = "VN";
+        LocalDateTime reqTime = LocalDateTime.now(Ctz.of(GeoMap.word2Map.get(geo)));
 
-        System.out.println(h);
+        System.out.println(reqTime.toString());
+        System.out.println(reqTime.getDayOfWeek());
+        System.out.println(reqTime.getHour());
+        System.out.println(reqTime.getDayOfWeek().getValue());
+        System.out.println(isTargetTimeByGeo2word(geo));
+
     }
     public static boolean isStore(String url) {
         if (url.indexOf("apple.com") > 0 || url.indexOf("google.com") > 0) {
@@ -148,6 +155,26 @@ public class AdTool {
         if (!SimpleData.OFFER_LAND.containsKey(offer.getUid())) {
             SimpleData.OFFER_LAND.put(offer.getUid(), url);
         }
+    }
+
+
+    public static boolean isTargetTimeByGeo2word(String geo) {
+        if (StringUtils.isBlank(geo)) {
+            return false;
+        }
+        LocalDateTime reqTime = LocalDateTime.now(Ctz.of(GeoMap.word2Map.get(geo.toUpperCase())));
+        int h = reqTime.getHour();
+        int d = reqTime.getDayOfWeek().getValue();
+        if (d == 6 || d == 7) {
+            if (h >= 9 && h <= 23) {
+                return true;
+            }
+        } else {
+            if (h == 11 || h == 12 || h == 13  || h == 17 || h == 18 || h == 19 || h == 20 || h == 21 || h == 22 || h == 23) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
