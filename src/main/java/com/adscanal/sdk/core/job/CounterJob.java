@@ -57,11 +57,19 @@ public class CounterJob {
         Map<Integer, OfferCounter>  map = Counter.counterMap();
         map.forEach((k, v) -> {
             long ss = v.success1.longValue();
-            long dv = ss - v.getSuccess1snp();
+            long dvs = ss - v.getSuccess1snp();
+
+            long ss2 = v.success.longValue();
+            long dvs2 = ss2 - v.getSuccesssnp();
+
             long er1 = v.getError1().longValue();
             long dv1 = er1 - v.getError1snp();
+
+            long er2 = v.getError().longValue();
+            long dv2 = er2 - v.getErrorssnp();
+
             try {
-                String sql1 = "update daily_report s set s.click_count = click_count+" + dv + ",s.click_invalid=s.click_invalid+" + dv1 + " where s.state_date = '" + d + "' and s.offer_uid = " + k;
+                String sql1 = "update daily_report s set s.click_count = click_count+" + (dvs+dvs2) + ",s.click_invalid=s.click_invalid+" + (dv1+dv2) + " where s.state_date = '" + d + "' and s.offer_uid = " + k;
                 jdbcTemplate.execute(sql1);
                 v.setSuccess1snp(ss);
                 v.setError1snp(er1);

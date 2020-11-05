@@ -118,13 +118,14 @@ public class OfferTask implements Runnable {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
                     continue;
-
                 } else  {
-
                     int status = response.getStatusLine().getStatusCode();
-                    if ((status == HttpStatus.SC_OK)||is3rd) {
+                    if ((status == HttpStatus.SC_OK)) {
+                        Counter.increaseSuccess(offer.getUid());
+                    }
+                    if (is3rd) {
                         Counter.increaseSuccess1(offer.getUid());
-                    }else{
+                    } else {
                         Counter.increaseError(offer.getUid());
                     }
                     break;
