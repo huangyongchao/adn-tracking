@@ -178,8 +178,12 @@ public class LoadProxyJob {
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                    i * 1000, period, TimeUnit.MILLISECONDS);
+/*            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
+                    i * 1000, period, TimeUnit.MILLISECONDS);*/
+
+            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
+                    i * 1000, 10, TimeUnit.MILLISECONDS);
+
         }
 
         //记录过去之前的点击数
