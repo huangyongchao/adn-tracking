@@ -86,9 +86,6 @@ public class OfferTask implements Runnable {
             for (int i = 0; i < 3; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if (i == 2) {
-/*
-                    logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
-*/
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
@@ -115,16 +112,21 @@ public class OfferTask implements Runnable {
                 }
                 response = client.execute(request);
                 request.releaseConnection();
-/*
-                System.out.println(url);
-*/
-                if (isRedirect(offer, response) && !AdTool.is3pt(url)) {
+
+                boolean is3rd = AdTool.is3pt(url);
+                if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
                     continue;
 
-                } else {
-                    Counter.increaseSuccess1(offer.getUid());
+                } else  {
+
+                    int status = response.getStatusLine().getStatusCode();
+                    if ((status == HttpStatus.SC_OK)||is3rd) {
+                        Counter.increaseSuccess1(offer.getUid());
+                    }else{
+                        Counter.increaseError(offer.getUid());
+                    }
                     break;
                 }
 
@@ -149,10 +151,7 @@ public class OfferTask implements Runnable {
     public void handle_response(String key, LiveOffer offer, HttpResponse response) {
 
 
-        int status = response.getStatusLine().getStatusCode();
-        if (status == HttpStatus.SC_OK) {
-            SimpleData.PRODUCERCOUNTER.get(key).getSuccess().incrementAndGet();
-        }
+
         if (response != null && !status_code_requires_exit_node_switch(
                 response.getStatusLine().getStatusCode())) {
             // success or other client/website error like 404...
