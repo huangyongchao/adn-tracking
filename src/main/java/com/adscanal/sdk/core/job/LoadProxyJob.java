@@ -171,8 +171,8 @@ public class LoadProxyJob {
         if(coresize>100){
             coresize = 100;
         }
-        if(coresize<40){
-            coresize = 40;
+        if(coresize<80){
+            coresize = 80;
         }
         int weight = (5/ priority);
 
