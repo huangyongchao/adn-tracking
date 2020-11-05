@@ -90,6 +90,7 @@
     {
       "country": "th",
       "dns": "remote",
+      "error": "Proxy port already exists",
       "internal_name": "th",
       "multiply": 100,
       "port": 27000,
@@ -153,18 +154,6 @@
       "internal_name": "sa",
       "multiply": 100,
       "port": 27500,
-      "preset": "rotating",
-      "rotate_session": true,
-      "route_err": "block",
-      "ssl": true,
-      "zone": "static"
-    },
-    {
-      "country": "kw",
-      "dns": "remote",
-      "internal_name": "kw",
-      "multiply": 100,
-      "port": 27600,
       "preset": "rotating",
       "rotate_session": true,
       "route_err": "block",
@@ -268,18 +257,6 @@
       "zone": "static"
     },
     {
-      "country": "ir",
-      "dns": "remote",
-      "internal_name": "ir",
-      "multiply": 100,
-      "port": 28400,
-      "preset": "rotating",
-      "rotate_session": true,
-      "route_err": "block",
-      "ssl": true,
-      "zone": "static"
-    },
-    {
       "country": "ca",
       "dns": "remote",
       "internal_name": "ca",
@@ -318,6 +295,7 @@
     {
       "country": "fr",
       "dns": "remote",
+      "error": "Proxy port already exists",
       "internal_name": "fr",
       "multiply": 100,
       "port": 28800,
@@ -345,18 +323,6 @@
       "internal_name": "es",
       "multiply": 100,
       "port": 29000,
-      "preset": "rotating",
-      "rotate_session": true,
-      "route_err": "block",
-      "ssl": true,
-      "zone": "static"
-    },
-    {
-      "country": "om",
-      "dns": "remote",
-      "internal_name": "om",
-      "multiply": 100,
-      "port": 29100,
       "preset": "rotating",
       "rotate_session": true,
       "route_err": "block",
