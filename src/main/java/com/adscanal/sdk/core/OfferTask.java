@@ -86,7 +86,9 @@ public class OfferTask implements Runnable {
             for (int i = 0; i < 3; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if (i == 2) {
+/*
                     logger.info("ERRORREDIRECT:" + offer.getOfferId() + " " + offer.getName() + ua + url);
+*/
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
@@ -113,7 +115,9 @@ public class OfferTask implements Runnable {
                 }
                 response = client.execute(request);
                 request.releaseConnection();
+/*
                 System.out.println(url);
+*/
                 if (isRedirect(offer, response) && !AdTool.is3pt(url)) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
