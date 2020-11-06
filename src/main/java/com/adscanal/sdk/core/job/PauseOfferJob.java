@@ -44,7 +44,7 @@ public class PauseOfferJob {
 
     }
 
-    @Scheduled(cron = "1 0/2 * * * ?")
+    @Scheduled(cron = "1 0/1 * * * ?")
     public void checkPauseOffersByClicks() {
         SimpleData.OFFER_CLICKS.forEach((id, v) -> {
             if (v < Counter.DAILY_CLICKS.get(id).get()) {
