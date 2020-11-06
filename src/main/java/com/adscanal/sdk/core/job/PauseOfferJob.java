@@ -26,6 +26,7 @@ public class PauseOfferJob {
 
 
     @PostConstruct
+    @Scheduled(cron = "0 1,10,20,30,40,50 * * * ?")
     public void loadOfferClicks() {
         String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
         String start = today + " 00:00:00";
