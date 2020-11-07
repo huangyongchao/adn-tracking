@@ -261,11 +261,11 @@ public class LoadProxyJob {
                     String geo = path.substring(i - 4, i - 1);
                     if (i > 0 && !StringUtils.isEmpty(geo) && !StringUtils.isEmpty(os)) {
                         String key = geo.toUpperCase() + os;
-                        if (GEO_FILES.containsKey(key)) {
-                            GEO_FILES.get(key).add(path);
-                        } else {
+                        if (!GEO_FILES.containsKey(key)) {
                             GEO_FILES.put(key, Lists.newArrayList());
                         }
+                        GEO_FILES.get(key).add(path);
+                        System.out.println(path);
                     }
 
                     return super.visitFile(file, attrs);
@@ -450,10 +450,11 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
     public void init() {
 
         getGeoOsFiles();
-
+        logger.warn("FIRSTTIME:GEO FILES INIT DONE");
         loadProxy();
-
+        logger.warn("FIRSTTIME:PROXY INIT DONE");
         sychOffers();
+        logger.warn("FIRSTTIME:OFFERS INIT DONE");
 
 
     }
