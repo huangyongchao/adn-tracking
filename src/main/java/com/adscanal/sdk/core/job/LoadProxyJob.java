@@ -1,6 +1,9 @@
 package com.adscanal.sdk.core.job;
 
-import com.adscanal.sdk.common.*;
+import com.adscanal.sdk.common.AdTool;
+import com.adscanal.sdk.common.ExecutorPool;
+import com.adscanal.sdk.common.GeoMap;
+import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
@@ -27,13 +30,9 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +54,8 @@ public class LoadProxyJob {
 
     @Value("${proxyserver}")
     private String proxyserver;
+    @Value("${devidrootpath}")
+    private String devidrootpath;
 
     @Value("${apiserver}")
     private String apiserver;
@@ -243,21 +244,107 @@ public class LoadProxyJob {
         return null;
     }
 
-    public static void main(String[] args) {
-        LocalDateTime reqTime = LocalDateTime.now(Ctz.of(GeoMap.word2Map.get("CN")));
+    public static final Map<String, Collection<String>> GEO_FILES = Maps.newHashMap();
 
-        System.out.println(reqTime.toString());
-        System.out.println(reqTime.getDayOfWeek());
-        System.out.println(reqTime.getHour());
-        System.out.println(reqTime.getDayOfWeek().getValue());
+    public void getGeoOsFiles() {
+        try {
+            java.nio.file.Files.walkFileTree(new File(devidrootpath).toPath(), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    String path = file.toString();
+                    String os = OsE.IOS.name;
+                    int i = path.indexOf("ios.device");
+                    if (i < 0) {
+                        os = OsE.AOS.name;
+                        i = path.indexOf("android.device");
+                    }
+                    String geo = path.substring(i - 4, i - 1);
+                    if (i > 0 && !StringUtils.isEmpty(geo) && !StringUtils.isEmpty(os)) {
+                        String key = geo.toUpperCase() + os;
+                        if (GEO_FILES.containsKey(key)) {
+                            GEO_FILES.get(key).add(path);
+                        } else {
+                            GEO_FILES.put(key, Lists.newArrayList());
+                        }
+                    }
+
+                    return super.visitFile(file, attrs);
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    public static void main(String[] args) {
+        try {
+            java.nio.file.Files.walkFileTree(new File("/Volumes/FrankSSD/deviceid/").toPath(), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    String path = file.toString();
+                    String os = OsE.IOS.name;
+                    int i = path.indexOf("ios.device");
+                    if (i < 0) {
+                        os = OsE.AOS.name;
+                        i = path.indexOf("android.device");
+                    }
+                    String geo = path.substring(i - 4, i - 1);
+                    if (i > 0 && !StringUtils.isEmpty(geo) && !StringUtils.isEmpty(os)) {
+                        String key = geo.toUpperCase() + os;
+                        if (GEO_FILES.containsKey(key)) {
+                            GEO_FILES.get(key).add(path);
+                        } else {
+                            GEO_FILES.put(key, Lists.newArrayList());
+                        }
+                    }
+
+                    return super.visitFile(file, attrs);
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        GEO_FILES.get("PERios").forEach(p -> {
+            try {
+                Files.lines(Paths.get(p)).forEach(n -> {
+                    try {
+                        System.out.println(p + "    " + n);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        System.out.println(1);
+    }
 
     public static void loadDevid(String geo, String os) {
 
         String key = geo + os;
         String geo3 = GeoMap.word2Map.get(geo);
+        String key3 = geo3 + os;
+
         if (SdkConf.RUNPRODUCERS.contains(key)) {
+            return;
+        }
+        if (!GEO_FILES.containsKey(key3)) {
             return;
         }
 
@@ -266,30 +353,28 @@ public class LoadProxyJob {
             ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
 
             SimpleData.PRODUCERCOUNTER.put(key, new ProducerCounter());
-            String path1 = "/opt/did/" + geo3 + os + ".log.dist";
-            String path2 = "/opt/did/" + geo3 + os + ".log";
-            String path = null;
-            if (Files.exists(Paths.get(path1))) {
-                path = path1;
-            } else if (Files.exists(Paths.get(path2))) {
-                path = path2;
-            } else {
-                return;
-            }
+
+
             SdkConf.RUNPRODUCERS.add(key);
-            try {
-                for (int i = 0; i < 100; i++) {
-                    Files.lines(Paths.get(path)).skip(GEOPROXYMAP.getOrDefault(geo, new GeoProxy()).getSkip()).forEach(n -> {
-                        try {
-                            q.put(n);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (true) {
+
+                GEO_FILES.get(key3).forEach(p -> {
+                    try {
+                        Files.lines(Paths.get(p)).forEach(n -> {
+                            try {
+                                q.put(n);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                });
+                System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
             }
+
         });
     }
 
@@ -316,6 +401,10 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 /*
             logger.info(proxystr);
 */
+
+            if (proxystr.indexOf("forbidden") > 0) {
+                System.out.println("-----++++++++++++++Please set Ip white list++++++++++++++-----");
+            }
             JSONArray proxys = JSONArray.parseArray(proxystr);
             proxys.forEach(n -> {
                 //初始化安卓 设备号生产者
@@ -359,6 +448,8 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
     @PostConstruct
     public void init() {
+
+        getGeoOsFiles();
         loadProxy();
 
         sychOffers();

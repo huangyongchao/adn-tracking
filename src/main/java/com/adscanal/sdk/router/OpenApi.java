@@ -1,6 +1,7 @@
 package com.adscanal.sdk.router;
 
 import com.adscanal.sdk.core.SdkConf;
+import com.adscanal.sdk.core.job.LoadProxyJob;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
 import com.alibaba.fastjson.JSONObject;
@@ -117,6 +118,12 @@ public class OpenApi {
     public Object geo_os_que() {
         return SdkConf.GEO_OS_QUE;
     }
+
+    @GetMapping("/geo_devfiles")
+    public Object geo_devfiles() {
+        return LoadProxyJob.GEO_FILES;
+    }
+
 
     @RequestMapping("/apis")
     public Object getAllUrl() {
