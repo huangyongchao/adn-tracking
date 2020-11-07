@@ -450,6 +450,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
     public void init() {
 
         getGeoOsFiles();
+
         loadProxy();
 
         sychOffers();
