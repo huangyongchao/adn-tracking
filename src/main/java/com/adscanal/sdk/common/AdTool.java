@@ -4,7 +4,6 @@ import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.SimpleData;
-import com.adscanal.sdk.dto.SubidTypeE;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -101,9 +100,9 @@ public class AdTool {
         return offers.get(i);
     }
 
-
+    static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
-        String h = DateFormatUtils.format(new Date(), "HHddMM") + offer.getUid();
+        String h = DateFormatUtils.format(new Date(), "HHddMM") + r.nextInt(10) + offer.getAffiliateId();
         return h;
     }
 
