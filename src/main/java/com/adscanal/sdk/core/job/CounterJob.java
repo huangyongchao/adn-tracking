@@ -47,8 +47,11 @@ public class CounterJob {
 
     @Scheduled(cron = "1 0 * * * ?")
     public void initdailayreport() {
+        String current = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH");
+        String state_date = current + ":00:00";
+
         String sql = "INSERT INTO daily_report (channel_id,sub_id,advertiser_id,advertiser_name,affiliate_id,affiliate_name,offer_id,offer_name,country,state_date,offer_uid,app_id,app_name,source_affiliate_id,source_campaign,click_count,click_invalid) " +
-                "select '0','',s.aId,s.affiliateName,s.affiliateId,s.affiliateName,s.offerId,s.offerName,s.countries,CONCAT(date_format(now(),'%Y%m%d%H'),'0000'),s.id,s.appId,s.offerName,  s.sourceAffiliateId,s.sourceOfferId," +
+                "select '0','',s.aId,s.affiliateName,s.affiliateId,s.affiliateName,s.offerId,s.offerName,s.countries,'"+state_date+"',s.id,s.appId,s.offerName,  s.sourceAffiliateId,s.sourceOfferId," +
                 " 0,0 from offer s where s.status = 'active' " +
                 "and s.priority >=2 ON DUPLICATE KEY UPDATE click_count = click_count+0,click_invalid=click_invalid+0";
 
@@ -58,7 +61,9 @@ public class CounterJob {
     @Scheduled(cron = "59 9,19,29,39,49,59 * * * ?")
     public void saveClicks() {
 
-        String d = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH") + ":00:00";
+        String current = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH");
+        String state_date = current + ":00:00";
+
         Map<Integer, OfferCounter>  map = Counter.counterMap();
         map.forEach((k, v) -> {
             long ss = v.success1.longValue();
@@ -74,7 +79,7 @@ public class CounterJob {
             long dv2 = er2 - v.getErrorssnp();
 
             try {
-                String sql1 = "update daily_report s set s.click_count = click_count+" + (dvs+dvs2) + ",s.click_invalid=s.click_invalid+" + (dv1+dv2) + " where s.state_date = '" + d + "' and s.offer_uid = " + k;
+                String sql1 = "update daily_report s set s.click_count = click_count+" + (dvs+dvs2) + ",s.click_invalid=s.click_invalid+" + (dv1+dv2) + " where s.state_date = '" + state_date + "' and s.offer_uid =" + k;
                 jdbcTemplate.execute(sql1);
                 v.setSuccess1snp(ss);
                 v.setError1snp(er1);
@@ -109,6 +114,8 @@ public class CounterJob {
     @PostConstruct
     @Scheduled(cron = "0 1,10,20,30,40,50 * * * ?")
     public void loadOfferClicks() {
+        //http://admin.colour.mobi/api/open/dailyclicks/1
+        //http://admin.colour.mobi/api/open/saveclicks/11588/2/1
         String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
         String start = today + " 00:00:00";
         String end = today + " 23:59:59";
