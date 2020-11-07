@@ -103,19 +103,8 @@ public class AdTool {
 
 
     public static String randomSub(LiveOffer offer) {
-        if (SubidTypeE.AUTO_P360.code == offer.getAutosubid()) {
-            String h = DateFormatUtils.format(new Date(), "HHddMM") + offer.getUid();
-            return h;
-        } else {
-            if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
-                return "AC" + new Date().getHours();
-            }
-            String[] pls = offer.getPlacements().split(",");
-            int le = pls.length;
-            int i = new Random().nextInt(le);
-            return pls[i];
-
-        }
+        String h = DateFormatUtils.format(new Date(), "HHddMM") + offer.getUid();
+        return h;
     }
 
 
