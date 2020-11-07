@@ -37,11 +37,15 @@ public class OfferTask implements Runnable {
     @Override
     public void run() {
             try {
-                offer = SimpleData.LIVEOFFERS.get(offer.getUid());
-                String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
+                if(SimpleData.PAUSE_OFFERS.contains(offer.getUid())){
+                    return;
+                }
                 if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
                     return;
                 }
+                offer = SimpleData.LIVEOFFERS.get(offer.getUid());
+                String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
+
                 SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
