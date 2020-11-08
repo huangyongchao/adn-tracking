@@ -403,7 +403,11 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 */
 
             if (proxystr.indexOf("forbidden") > 0) {
-                System.out.println("-----++++++++++++++Please set Ip white list++++++++++++++-----");
+
+                int e = proxystr.lastIndexOf(" to ");
+                int s = proxystr.lastIndexOf(" add ");
+                logger.error(proxystr);
+                System.out.println("-----++++++++++++++Please set Ip white list (lpm_whitelist_ip "+proxystr.substring(s+5,e)+") ++++++++++++++-----");
             }
             JSONArray proxys = JSONArray.parseArray(proxystr);
             proxys.forEach(n -> {

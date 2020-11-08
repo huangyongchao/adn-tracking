@@ -68,7 +68,7 @@ public class CounterJob {
         jdbcTemplate.execute(sql);
     }
 
-    @Scheduled(cron = "59 9,19,29,39,49,59 * * * ?")
+    @Scheduled(cron = "55 9,19,29,39,49,59 * * * ?")
     public void saveClicks() {
 
         String current = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH");
