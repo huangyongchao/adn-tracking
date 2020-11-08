@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -86,15 +85,23 @@ public class CounterJob {
             long er1 = v.getError1().longValue();
             long dv1 = er1 - v.getError1snp();
 
-            long er2 = v.getError().longValue();
-            long dv2 = er2 - v.getErrorssnp();
+            long er = v.getError().longValue();
+            long dv0 = er - v.getErrorssnp();
 
+            long clicks = (dvs + dvs2);
+            long vclicks = (dv1 + dv0);
             try {
-                String sql1 = "update daily_report s set s.click_count = click_count+" + (dvs+dvs2) + ",s.click_invalid=s.click_invalid+" + (dv1+dv2) + " where s.state_date = '" + state_date + "' and s.offer_uid =" + k;
-                jdbcTemplate.execute(sql1);
-                v.setSuccess1snp(ss);
-                v.setError1snp(er1);
-            } catch (DataAccessException e) {
+            /*    String sql1 = "update daily_report s set s.click_count = click_count+" + (dvs+dvs2) + ",s.click_invalid=s.click_invalid+" + (dv1+dv0) + " where s.state_date = '" + state_date + "' and s.offer_uid =" + k;
+                jdbcTemplate.execute(sql1);*/
+
+                String s = HttpClientUtil.get("http://" + businessserver + "/api/open/saveclicks/" + k + "/" + clicks + "/" + vclicks);
+                if (s != null && s.indexOf("error") < 0) {
+                    v.setSuccess1snp(ss);
+                    v.setSuccesssnp(ss2);
+                    v.setError1snp(er1);
+                    v.setErrorssnp(er);
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -121,9 +128,8 @@ public class CounterJob {
     }
 
 
-
     @PostConstruct
-    @Scheduled(cron = "0 1,10,20,30,40,50 * * * ?")
+    @Scheduled(cron = "0 */3 * * * ?")
     public void loadOfferClicks() {
         //http://admin.colour.mobi/api/open/dailyclicks/1
         //http://admin.colour.mobi/api/open/saveclicks/11588/2/1
