@@ -102,7 +102,7 @@ public class AdTool {
 
     static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
-        String h = DateFormatUtils.format(new Date(), "HHddMM") + r.nextInt(10) + offer.getAffiliateId();
+        String h = DateFormatUtils.format(new Date(), "HHddMM") +  offer.getAffiliateId();
         return h;
     }
 
