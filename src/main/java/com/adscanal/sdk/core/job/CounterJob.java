@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class CounterJob {
@@ -132,7 +133,7 @@ public class CounterJob {
             List<OfferClick> offerClicks = JSONArray.parseArray(json, OfferClick.class);
             if (!CollectionUtils.isEmpty(offerClicks)) {
                 offerClicks.forEach(n -> {
-                    Counter.DAILY_CLICKS.get(n.getUid()).addAndGet(n.getClicks());
+                    Counter.DAILY_CLICKS.put(n.getUid(), new AtomicInteger(n.getClicks()));
                 });
             }
         } catch (IOException e) {
@@ -148,7 +149,7 @@ public class CounterJob {
             list.forEach(o -> {
                 Integer id = Integer.parseInt(o.get("uid").toString());
                 Integer clicks = Integer.parseInt(o.get("clicks").toString());
-                Counter.DAILY_CLICKS.get(n.getUid()).addAndGet(n.getClicks());
+                Counter.DAILY_CLICKS.put(id, new AtomicInteger(clicks));
             });
         }
 */
