@@ -79,6 +79,7 @@ public class Counter {
         counterMap().get(offerid).total.increment();
     }
 
+
     public static void increaseError(int offerid) {
         if (!counterMap().containsKey(offerid)) {
             counterMap().put(offerid, new OfferCounter());

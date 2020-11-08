@@ -1,28 +1,38 @@
 package com.adscanal.sdk.core.job;
 
+import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.dto.Counter;
+import com.adscanal.sdk.dto.OfferClick;
 import com.adscanal.sdk.dto.OfferCounter;
 import com.adscanal.sdk.dto.SimpleData;
+import com.alibaba.fastjson.JSONArray;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class CounterJob {
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger logger = LoggerFactory.getLogger(CounterJob.class);
+
+
+    @Value("${businessserver}")
+    private String businessserver;
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -116,7 +126,19 @@ public class CounterJob {
     public void loadOfferClicks() {
         //http://admin.colour.mobi/api/open/dailyclicks/1
         //http://admin.colour.mobi/api/open/saveclicks/11588/2/1
-        String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
+
+        try {
+            String json = HttpClientUtil.get("http://" + businessserver + "/api/open/dailyclicks/1");
+            List<OfferClick> offerClicks = JSONArray.parseArray(json, OfferClick.class);
+            if (!CollectionUtils.isEmpty(offerClicks)) {
+                offerClicks.forEach(n -> {
+                    Counter.DAILY_CLICKS.get(n.getUid()).addAndGet(n.getClicks());
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    /*    String today = DateFormatUtils.format(new Date(), "yyyy-MM-dd");
         String start = today + " 00:00:00";
         String end = today + " 23:59:59";
 
@@ -126,9 +148,11 @@ public class CounterJob {
             list.forEach(o -> {
                 Integer id = Integer.parseInt(o.get("uid").toString());
                 Integer clicks = Integer.parseInt(o.get("clicks").toString());
-                Counter.DAILY_CLICKS.put(id, new AtomicInteger(clicks));
+                Counter.DAILY_CLICKS.get(n.getUid()).addAndGet(n.getClicks());
             });
         }
+*/
+
 
     }
 
