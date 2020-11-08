@@ -123,8 +123,7 @@ public class OfferTask implements Runnable {
                     int status = response.getStatusLine().getStatusCode();
                     if ((status == HttpStatus.SC_OK)) {
                         Counter.increaseSuccess(offer.getUid());
-                    }
-                    if (is3rd) {
+                    } else if (is3rd) {
                         Counter.increaseSuccess1(offer.getUid());
                     } else {
                         Counter.increaseError(offer.getUid());
