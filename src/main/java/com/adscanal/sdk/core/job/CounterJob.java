@@ -166,7 +166,8 @@ public class CounterJob {
     @Scheduled(cron = "1 0/1 * * * ?")
     public void checkPauseOffersByClicks() {
         SimpleData.OFFER_CLICKS.forEach((id, v) -> {
-            if (v < Counter.DAILY_CLICKS.get(id).get()) {
+            AtomicInteger d = Counter.DAILY_CLICKS.get(id);
+            if (d!=null && (v <d.get())) {
                 SimpleData.PAUSE_OFFERS.add(id);
                 if(SdkConf.OFFER_SCHED.containsKey(id)){
                     SdkConf.OFFER_SCHED.get(id).shutdownNow();
