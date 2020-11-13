@@ -114,7 +114,7 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        String geo = "VN";
+     /*   String geo = "VN";
         LocalDateTime reqTime = LocalDateTime.now(Ctz.of(GeoMap.word2Map.get(geo)));
 
         System.out.println(reqTime.toString());
@@ -122,6 +122,8 @@ public class AdTool {
         System.out.println(reqTime.getHour());
         System.out.println(reqTime.getDayOfWeek().getValue());
         System.out.println(isTargetTimeByGeo2word(geo));
+*/
+        System.out.println(is3pt("https://shemaroome.app.link/ClylXjcikbb?%243p=a_virgil_media&~click_id={clickid}&%24idfa=={idfa}&~secondary_publisher=1164_{pub_subid}"));
 
     }
     public static boolean isStore(String url) {
