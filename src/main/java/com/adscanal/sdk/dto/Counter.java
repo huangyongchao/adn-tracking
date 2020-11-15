@@ -16,6 +16,7 @@ public class Counter {
     public static volatile int CURRENT_HOUR = 0;
     public static AtomicBoolean EXCHANGE_LOCK = new AtomicBoolean(false);
     public static Map<Integer, AtomicInteger> DAILY_CLICKS = new HashMap<>();
+    public static Map<Integer, AtomicInteger> SUB_CLICKS = new HashMap<>();
 
     public static Map<Integer, Map<Integer, OfferCounter>> TODAY_COUNTER = null;
 

@@ -150,6 +150,13 @@ public class LoadProxyJob {
             Counter.DAILY_CLICKS.put(offer.getUid(), new AtomicInteger());
         }
 
+        /*如果没有初始化点击计数器 同步时候初始化*/
+        if(!Counter.SUB_CLICKS.containsKey(offer.getUid())){
+            Counter.SUB_CLICKS.put(offer.getUid(), new AtomicInteger());
+        }
+
+
+
         int period = 0;
         int coresize = 100;
         int clicks = offer.getDailyMaxClicks();

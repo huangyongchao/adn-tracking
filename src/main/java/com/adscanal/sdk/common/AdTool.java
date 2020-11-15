@@ -1,6 +1,7 @@
 package com.adscanal.sdk.common;
 
 import com.adscanal.sdk.datafile.Collecter;
+import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.SimpleData;
@@ -102,7 +103,9 @@ public class AdTool {
 
     static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
-        String h = DateFormatUtils.format(new Date(), "HHddMM") +  offer.getAffiliateId();
+        int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
+        int seed = i / 40000;
+        String h =seed + DateFormatUtils.format(new Date(), "HHddMM") +  offer.getAffiliateId();
         return h;
     }
 
