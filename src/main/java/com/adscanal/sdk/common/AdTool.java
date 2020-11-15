@@ -5,12 +5,14 @@ import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.SimpleData;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -103,9 +105,11 @@ public class AdTool {
 
     static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
+        Date date = new Date();
         int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
+        int m = date.getDate ();
         int seed = i / 40000;
-        String h =seed + DateFormatUtils.format(new Date(), "HHddMM") +  offer.getAffiliateId();
+        String h =(1000+seed) +"_"+ DateFormatUtils.format(date, "HHddMM");
         return h;
     }
 
