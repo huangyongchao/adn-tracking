@@ -108,7 +108,7 @@ public class AdTool {
         Date date = new Date();
         int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
         int m = date.getDate ();
-        int seed = i / 40000;
+        int seed = i / 5000;
         String h =(1000+seed) +"_"+ DateFormatUtils.format(date, "HHddMM");
         return h;
     }
