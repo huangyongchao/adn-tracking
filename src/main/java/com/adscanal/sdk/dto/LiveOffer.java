@@ -112,6 +112,8 @@ public class LiveOffer {
     private String payevent;
 
     private String affiliatePayevent;
+    private Integer clickSteps ;
+
 
     public String getWhitelist() {
         return whitelist;
@@ -924,5 +926,13 @@ public class LiveOffer {
 
     public void setPubisherId(String pubisherId) {
         this.pubisherId = pubisherId;
+    }
+
+    public Integer getClickSteps() {
+        return clickSteps;
+    }
+
+    public void setClickSteps(Integer clickSteps) {
+        this.clickSteps = clickSteps;
     }
 }

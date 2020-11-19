@@ -84,7 +84,11 @@ public class OfferTask implements Runnable {
     public  void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
-            for (int i = 0; i < 3; i++) {
+            int steps = 3;
+            if(offer.getClickSteps()!=null && offer.getClickSteps()>=3){
+                steps = offer.getClickSteps();
+            }
+            for (int i = 0; i < steps; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
                 if (i == 2) {
                     Counter.increaseError1(offer.getUid());
