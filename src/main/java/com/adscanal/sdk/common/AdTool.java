@@ -1,10 +1,7 @@
 package com.adscanal.sdk.common;
 
 import com.adscanal.sdk.datafile.Collecter;
-import com.adscanal.sdk.dto.Counter;
-import com.adscanal.sdk.dto.LiveOffer;
-import com.adscanal.sdk.dto.OsE;
-import com.adscanal.sdk.dto.SimpleData;
+import com.adscanal.sdk.dto.*;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -105,12 +102,23 @@ public class AdTool {
 
     static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
-        Date date = new Date();
-        int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
-        int m = date.getDate ();
-        int seed = i / 40000;
-        String h =(1000+seed) +"_"+ DateFormatUtils.format(date, "HHddMM");
-        return h;
+        if (SubidTypeE.AUTO_P360.code == offer.getAutosubid()) {
+            Date date = new Date();
+            int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
+            int seed = i / 40000;
+            String h =(1000+seed) +"_"+ DateFormatUtils.format(date, "HHddMM");
+            return h;
+        } else {
+            if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
+                return "AC" + new Date().getHours();
+            }
+            String[] pls = offer.getPlacements().split(",");
+            int le = pls.length;
+            int i = new Random().nextInt(le);
+            return pls[i];
+
+        }
+
     }
 
 
