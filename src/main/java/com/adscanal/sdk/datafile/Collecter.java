@@ -209,7 +209,7 @@ public class Collecter {
 
     public static void initUANEW() {
         try {
-            File file = new File("/Volumes/FrankSSD/appsokdist.log");
+            File file = new File("/opt/did/appsokdist.log");
             InputStreamReader reader = new InputStreamReader(new FileInputStream(file)); // 建立一个输入流对象reader
             BufferedReader br = new BufferedReader(reader); // 建立一个对象，它把文件内容转成计算机能读懂的语言
             String line = ""; // 每一行的内容

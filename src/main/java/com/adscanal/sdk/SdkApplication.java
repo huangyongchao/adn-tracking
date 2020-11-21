@@ -12,7 +12,7 @@ public class SdkApplication {
     public static void main(String[] args) {
         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,TLSv3");
         System.setProperty("domainId", "colour.mobi");
-        Collecter.initGua();
+        Collecter.initUANEW();
         System.out.println("UA init success!!!!!!");
         SpringApplication.run(SdkApplication.class, args);
     }
