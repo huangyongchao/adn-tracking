@@ -7,6 +7,7 @@ import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
+import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -110,10 +111,16 @@ public class LoadProxyJob {
 
     public List getOffers(String geo) {
 
+        String geo3 = GeoMap.word2Map.get(geo.toUpperCase());
+
         List<LiveOffer> offers = Lists.newArrayList();
+        if (!Collecter.GEO_OS_UA.containsKey(geo3)) {
+            logger.warn("NOUA:" + geo3);
+            return offers;
+        }
         try {
             //http://54.218.163.206:5080/openapi/test
-            String offerapi = "http://"+apiserver+":8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
+            String offerapi = "http://" + apiserver + ":8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
             System.out.println(offerapi);
             String respj = HttpClientUtil.get(offerapi);
 
@@ -186,7 +193,7 @@ public class LoadProxyJob {
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
+            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                     i * 1000, period, TimeUnit.MILLISECONDS);
 /*
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),

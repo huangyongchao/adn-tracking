@@ -32,6 +32,7 @@ public class OfferTask implements Runnable {
     private LiveOffer offer;
     private String key;
     private String geo;
+    private String geo3;
     private String os;
 
     @Override
@@ -48,7 +49,7 @@ public class OfferTask implements Runnable {
 
                 SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                String ua = AdTool.randomUA(os);
+                String ua = AdTool.randomUA(geo3,os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
 
             } catch (InterruptedException e) {
@@ -57,11 +58,13 @@ public class OfferTask implements Runnable {
             }
     }
 
-    public OfferTask(LiveOffer offer, String key, String geo, String os) {
+    public OfferTask(LiveOffer offer, String key, String geo3,String geo, String os) {
         this.offer = offer;
         this.key = key;
         this.geo = geo;
+        this.geo3 = geo3;
         this.os = os;
+        logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
     }
 
     public String getKey() {

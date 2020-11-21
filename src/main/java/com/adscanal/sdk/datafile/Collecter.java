@@ -4,9 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
@@ -32,7 +30,7 @@ public class Collecter {
     public static final String ANDROID = "android";
     public static Path uapath = Paths.get("/opt/did/ua");
     public static Map<String, List<String>> OS_UA = Maps.newHashMap();
-
+    public static Map<String, Map<String, List<String>>> GEO_OS_UA = Maps.newHashMap();
 /*
     System.out.println(Files.lines(Paths.get(path)).count());
     System.out.println(Files.lines(Paths.get(path)).distinct().count());
@@ -155,6 +153,7 @@ public class Collecter {
             });
         });
     }
+
     public static final Set<String> ACTI_GEOS = Sets.newHashSet("AUS");
     public static final List<String> ACTI_OS = Lists.newArrayList("ios");
 
@@ -164,10 +163,91 @@ public class Collecter {
             GEO_FILES.put(geo + ANDROID, new ConcurrentSkipListSet<>());
         });
     }
+
+    public static void ua() {
+
+
+        try {
+            File file = new File("/Volumes/FrankSSD/appsok.log");
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(file)); // 建立一个输入流对象reader
+            BufferedReader br = new BufferedReader(reader); // 建立一个对象，它把文件内容转成计算机能读懂的语言
+            String line = ""; // 每一行的内容
+            int i = 1;
+            Path p = Paths.get("/Volumes/FrankSSD/appsokdist.log");
+            if (!Files.exists(p)) {
+                Files.createFile(p);
+            }
+            final BufferedWriter writer = Files.newBufferedWriter(p);
+            Set<String> uset = Sets.newConcurrentHashSet();
+            while ((line = br.readLine()) != null) {
+                String mdg = MD5Encode.md5(line, null);
+       /*         if (line.indexOf("|2|") > 0) {
+                    if (line.indexOf("Android 9") > 0 || line.indexOf("Android 10") > 0 || line.indexOf("Android 11") > 0 || line.indexOf("Android 12") > 0) {
+                        writer.write(line);
+                    }
+                } else {
+                    if (line.indexOf("iPhone OS 14") > 0 || line.indexOf("iPhone OS 13") > 0) {
+                        writer.write(line);
+                    }
+                }*/
+                if (!uset.contains(mdg)) {
+                    uset.add(mdg);
+                    writer.write(line);
+                    writer.newLine();
+                    i++;
+                }
+            }
+
+            System.out.println(i);
+            reader.close();
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void initUANEW() {
+        try {
+            File file = new File("/Volumes/FrankSSD/appsokdist.log");
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(file)); // 建立一个输入流对象reader
+            BufferedReader br = new BufferedReader(reader); // 建立一个对象，它把文件内容转成计算机能读懂的语言
+            String line = ""; // 每一行的内容
+            int i = 1;
+            Set<String> uset = Sets.newConcurrentHashSet();
+            while ((line = br.readLine()) != null) {
+                String[] as = line.split("\\|");
+                if (as == null || as.length != 4) {
+                    continue;
+                }
+                String geo = as[0];
+                String os = as[1];
+                String app = as[2];
+                String uaa = as[3];
+                if (!GEO_OS_UA.containsKey(geo)) {
+                    GEO_OS_UA.put(geo, Maps.newConcurrentMap());
+                }
+                if (!GEO_OS_UA.get(geo).containsKey(os)) {
+                    GEO_OS_UA.get(geo).put(os, Lists.newArrayList());
+                }
+                GEO_OS_UA.get(geo).get(os).add(uaa);
+
+            }
+            GEO_OS_UA.forEach((k, v) -> {
+                v.forEach((kk, vv) -> {
+                    if (vv.size() < 20) {
+                        System.out.println("UA信息较少的地区和系统" + k + kk);
+                    }
+                });
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
 
-
-        initFilePath();
+        initUANEW();
         //dist();
         System.out.println(1);
 
