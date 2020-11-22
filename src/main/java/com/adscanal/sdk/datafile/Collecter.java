@@ -28,7 +28,7 @@ public class Collecter {
     public static final String NEWL = "\r\n";
     public static final String IOS = "ios";
     public static final String ANDROID = "android";
-    public static Path uapath = Paths.get("/opt/did/appsokdistsimp.log");
+    public static Path uapath = Paths.get("/opt/did/ualist");
     public static Map<String, List<String>> OS_UA = Maps.newHashMap();
     public static Map<String, Map<String, List<String>>> GEO_OS_UA = Maps.newHashMap();
 /*
