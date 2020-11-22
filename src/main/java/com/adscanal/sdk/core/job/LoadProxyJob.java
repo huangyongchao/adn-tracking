@@ -114,10 +114,7 @@ public class LoadProxyJob {
         String geo3 = GeoMap.word2Map.get(geo.toUpperCase());
 
         List<LiveOffer> offers = Lists.newArrayList();
-        if (!Collecter.GEO_OS_UA.containsKey(geo3)) {
-            logger.warn("NOUA:" + geo3);
-            return offers;
-        }
+
         try {
             //http://54.218.163.206:5080/openapi/test
             String offerapi = "http://" + apiserver + ":8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
