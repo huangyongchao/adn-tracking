@@ -49,7 +49,7 @@ public class OfferTask implements Runnable {
 
                 SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
-                String ua = AdTool.randomUA(geo3,os);
+                String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
 
             } catch (InterruptedException e) {

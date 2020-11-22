@@ -78,22 +78,12 @@ public class AdTool {
      * @param os
      * @return
      */
-    public static String randomUA(String geo,String os) {
+    public static String randomUA(String os) {
 
-        try {
-            List<String> uas = Collecter.GEO_OS_UA.get(geo).get(OsE.IOS.name.equalsIgnoreCase(os) ? OsE.IOS.v : OsE.AOS.v);
-            int le = uas.size();
-            int i = new Random().nextInt(le);
-            return uas.get(i);
-        } catch (Exception e) {
-            e.printStackTrace();
-            if(os.equalsIgnoreCase(OsE.IOS.name)){
-                return "Mozilla/5.0 (iPhone; CPU iPhone OS 14_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile";
-            }else{
-                return "Mozilla/5.0 (Linux; Android 9; moto e(6) plus Build/PTBS29.401-36-4; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 ";
-
-            }
-        }
+        List<String> uas = Collecter.OS_UA.get(OsE.IOS.name.equalsIgnoreCase(os) ? OsE.IOS.v : OsE.AOS.v);
+        int le = uas.size();
+        int i = new Random().nextInt(le);
+        return uas.get(i);
     }
 
 

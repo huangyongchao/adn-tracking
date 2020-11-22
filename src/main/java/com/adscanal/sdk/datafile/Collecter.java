@@ -28,7 +28,7 @@ public class Collecter {
     public static final String NEWL = "\r\n";
     public static final String IOS = "ios";
     public static final String ANDROID = "android";
-    public static Path uapath = Paths.get("/opt/did/ua");
+    public static Path uapath = Paths.get("/opt/did/appsokdistsimp.log");
     public static Map<String, List<String>> OS_UA = Maps.newHashMap();
     public static Map<String, Map<String, List<String>>> GEO_OS_UA = Maps.newHashMap();
 /*
@@ -61,6 +61,7 @@ public class Collecter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("UA INIT oVER");
     }
 
 
@@ -168,18 +169,34 @@ public class Collecter {
 
 
         try {
-            File file = new File("/Volumes/FrankSSD/appsok.log");
+            File file = new File("/Volumes/FrankSSD/appsokdist.log");
             InputStreamReader reader = new InputStreamReader(new FileInputStream(file)); // 建立一个输入流对象reader
             BufferedReader br = new BufferedReader(reader); // 建立一个对象，它把文件内容转成计算机能读懂的语言
             String line = ""; // 每一行的内容
             int i = 1;
-            Path p = Paths.get("/Volumes/FrankSSD/appsokdist.log");
+            Path p = Paths.get("/Volumes/FrankSSD/appsokdistsimp.log");
             if (!Files.exists(p)) {
                 Files.createFile(p);
             }
             final BufferedWriter writer = Files.newBufferedWriter(p);
             Set<String> uset = Sets.newConcurrentHashSet();
             while ((line = br.readLine()) != null) {
+
+                String[] as = line.split("\\|");
+                if (as == null || as.length != 4) {
+                    continue;
+                }
+                String geo = as[0];
+                String os = as[1];
+                String app = as[2];
+
+                int s = line.indexOf("(");
+                int e = line.indexOf(")");
+                if(s<0||e<0){
+                    continue;
+                }
+                line = line.substring(s+1, e);
+
                 String mdg = MD5Encode.md5(line, null);
        /*         if (line.indexOf("|2|") > 0) {
                     if (line.indexOf("Android 9") > 0 || line.indexOf("Android 10") > 0 || line.indexOf("Android 11") > 0 || line.indexOf("Android 12") > 0) {
@@ -192,7 +209,7 @@ public class Collecter {
                 }*/
                 if (!uset.contains(mdg)) {
                     uset.add(mdg);
-                    writer.write(line);
+                    writer.write(os+"|"+line);
                     writer.newLine();
                     i++;
                 }
@@ -247,7 +264,7 @@ public class Collecter {
 
     public static void main(String[] args) {
 
-        initUANEW();
+        initGua();
         //dist();
         System.out.println(1);
 
