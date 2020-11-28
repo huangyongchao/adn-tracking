@@ -2,14 +2,12 @@ package com.adscanal.sdk.common;
 
 import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.*;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -42,12 +40,30 @@ public class AdTool {
         return url;
     }
 
+    static Random random100 = new Random();
+    static Random random1000 = new Random();
+
     public static String trackurl(String os, String track, String pubsub, String deviceid, String clickid, String appname) {
         if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(pubsub)) {
             track = StringUtils.replaceAll(track, "\\{pub_subid}", pubsub);
         }
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(clickid)) {
             track = StringUtils.replaceAll(track, "\\{click_id}", clickid);
+        }
+        if (track.indexOf("{campaign100}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{campaign100}", String.valueOf(random100.nextInt(100)));
+        }
+        if (track.indexOf("{campaign10}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{campaign10}", String.valueOf(random100.nextInt(10)));
+        }
+        if (track.indexOf("{ios}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{ios}", OsE.IOS.name);
+        }
+        if (track.indexOf("{android}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{android}", OsE.AOS.name);
+        }
+        if (track.indexOf("{pubid}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{pubid}", "" + (1000 + random1000.nextInt(1000)));
         }
         if (track.indexOf("{device_id}") > -1 && StringUtils.isNotBlank(deviceid)) {
             track = StringUtils.replaceAll(track, "\\{device_id}", deviceid);
