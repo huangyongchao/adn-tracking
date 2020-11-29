@@ -47,6 +47,9 @@ public class AdTool {
         if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(pubsub)) {
             track = StringUtils.replaceAll(track, "\\{pub_subid}", pubsub);
         }
+        if (track.indexOf("{hour}") > -1 ) {
+            track = StringUtils.replaceAll(track, "\\{hour}", ""+Counter.CURRENT_HOUR);
+        }
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(clickid)) {
             track = StringUtils.replaceAll(track, "\\{click_id}", clickid);
         }
