@@ -71,6 +71,12 @@ public class AdTool {
         if (track.indexOf("{device_id}") > -1 && StringUtils.isNotBlank(deviceid)) {
             track = StringUtils.replaceAll(track, "\\{device_id}", deviceid);
         }
+        if (OsE.IOS.name.equalsIgnoreCase(os) && track.indexOf("{idfa}") == -1) {
+            track = track + "&idfa=" + deviceid;
+        }
+        if (OsE.AOS.name.equalsIgnoreCase(os) && track.indexOf("{gaid}") == -1) {
+            track = track + "&gaid=" + deviceid;
+        }
         if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
             track = StringUtils.replaceAll(track, "\\{idfa}", deviceid);
         }
@@ -80,12 +86,7 @@ public class AdTool {
         if (track.indexOf("{store_appid}") > -1 && StringUtils.isNotBlank(appname)) {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);
         }
-        if (OsE.IOS.name.equalsIgnoreCase(os) && track.indexOf("{idfa}") == -1) {
-            track = track + "&idfa=" + deviceid;
-        }
-        if (OsE.AOS.name.equalsIgnoreCase(os) && track.indexOf("{gaid}") == -1) {
-            track = track + "&gaid=" + deviceid;
-        }
+
         return track;
 
     }
