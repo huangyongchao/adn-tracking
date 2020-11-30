@@ -7,7 +7,6 @@ import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
-import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -269,16 +268,19 @@ public class LoadProxyJob {
                         os = OsE.AOS.name;
                         i = path.indexOf("android.device");
                     }
-                    String geo = path.substring(i - 4, i - 1);
-                    if (i > 0 && !StringUtils.isEmpty(geo) && !StringUtils.isEmpty(os)) {
-                        String key = geo.toUpperCase() + os;
-                        if (!GEO_FILES.containsKey(key)) {
-                            GEO_FILES.put(key, Lists.newArrayList());
+                    if (i < 4) {
+                        logger.warn("errorpath:" + path);
+                    } else {
+                        String geo = path.substring(i - 4, i - 1);
+                        if (i > 0 && !StringUtils.isEmpty(geo) && !StringUtils.isEmpty(os)) {
+                            String key = geo.toUpperCase() + os;
+                            if (!GEO_FILES.containsKey(key)) {
+                                GEO_FILES.put(key, Lists.newArrayList());
+                            }
+                            GEO_FILES.get(key).add(path);
+                            //System.out.println(path);
                         }
-                        GEO_FILES.get(key).add(path);
-                        //System.out.println(path);
                     }
-
                     return super.visitFile(file, attrs);
                 }
 
