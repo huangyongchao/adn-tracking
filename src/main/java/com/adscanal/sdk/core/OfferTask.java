@@ -64,7 +64,7 @@ public class OfferTask implements Runnable {
         this.geo = geo;
         this.geo3 = geo3;
         this.os = os;
-        logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
+       // logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
     }
 
     public String getKey() {
