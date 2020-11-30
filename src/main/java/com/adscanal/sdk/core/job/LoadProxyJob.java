@@ -276,7 +276,7 @@ public class LoadProxyJob {
                             GEO_FILES.put(key, Lists.newArrayList());
                         }
                         GEO_FILES.get(key).add(path);
-                        System.out.println(path);
+                        //System.out.println(path);
                     }
 
                     return super.visitFile(file, attrs);
