@@ -13,6 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class SdkConf {
+    public static boolean DEBUG_REQ_LOG = false;
     public static Map<Integer, ScheduledExecutorService> OFFER_SCHED = new HashMap<>();
 
     public static Map<String, ArrayBlockingQueue> GEO_OS_QUE = Maps.newHashMap();

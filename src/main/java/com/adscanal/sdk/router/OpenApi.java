@@ -56,6 +56,26 @@ public class OpenApi {
 
     }
 
+    @GetMapping("/debuglog")
+    public Object debuglog() {
+        return SdkConf.DEBUG_REQ_LOG;
+
+    }
+
+    @GetMapping("/debuglog_open")
+    public Object debuglog_open() {
+        SdkConf.DEBUG_REQ_LOG = true;
+        return SdkConf.DEBUG_REQ_LOG;
+
+    }
+
+    @GetMapping("/debuglog_close")
+    public Object debuglog_close() {
+        SdkConf.DEBUG_REQ_LOG = false;
+        return SdkConf.DEBUG_REQ_LOG;
+
+    }
+
     @GetMapping("/black_offers")
     public Object bo() {
         return SimpleData.BLACK_OFFERS;

@@ -97,6 +97,9 @@ public class OfferTask implements Runnable {
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
+                if (SdkConf.DEBUG_REQ_LOG) {
+                    logger.warn(url);
+                }
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
