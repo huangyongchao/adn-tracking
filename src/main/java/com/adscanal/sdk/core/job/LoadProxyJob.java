@@ -464,12 +464,30 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
     @PostConstruct
     public void init() {
 
-        getGeoOsFiles();
-        logger.warn("FIRSTTIME:GEO FILES INIT DONE");
-        loadProxy();
-        logger.warn("FIRSTTIME:PROXY INIT DONE");
-        sychOffers();
-        logger.warn("FIRSTTIME:OFFERS INIT DONE");
+        try {
+            getGeoOsFiles();
+            logger.warn("FIRSTTIME:GEO FILES INIT DONE");
+        } catch (Exception e) {
+            logger.warn("FIRSTTIME:GEO FILES INIT ERROR");
+
+            e.printStackTrace();
+        }
+        try {
+            loadProxy();
+            logger.warn("FIRSTTIME:PROXY INIT DONE");
+        } catch (Exception e) {
+            logger.warn("FIRSTTIME:PROXY INIT ERROR");
+
+            e.printStackTrace();
+        }
+        try {
+            sychOffers();
+            logger.warn("FIRSTTIME:OFFERS INIT DONE");
+        } catch (Exception e) {
+            logger.warn("FIRSTTIME:OFFERS INIT ERROR");
+
+            e.printStackTrace();
+        }
 
 
     }
