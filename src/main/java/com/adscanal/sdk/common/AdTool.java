@@ -30,6 +30,15 @@ public class AdTool {
             }
 
             url = url + "&redirect=false";
+        }else if(url.indexOf(".adjust.")>0){
+            if (OsE.IOS.name.equalsIgnoreCase(os) && url.indexOf("idfa") == -1) {
+                url = url + "&idfa=" + deviceid;
+            }
+            if (OsE.AOS.name.equalsIgnoreCase(os) && url.indexOf("gps_adid") == -1) {
+                url = url + "&gps_adid=" + deviceid;
+            }
+
+            url = url + "&redirect=none";
         }
         if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
             url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);

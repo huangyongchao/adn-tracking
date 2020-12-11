@@ -125,6 +125,9 @@ public class OfferTask implements Runnable {
                 request.releaseConnection();
 
                 boolean is3rd = AdTool.is3pt(url);
+                if(1368311==offer.getUid()){
+                    logger.info(url);
+                }
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
