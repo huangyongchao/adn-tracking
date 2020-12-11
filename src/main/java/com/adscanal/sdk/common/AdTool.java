@@ -143,6 +143,9 @@ public class AdTool {
             }
             String[] pls = offer.getPlacements().split(",");
             int le = pls.length;
+            if(le>3){
+                le = 4;
+            }
             int i = new Random().nextInt(le);
             return pls[i];
 
