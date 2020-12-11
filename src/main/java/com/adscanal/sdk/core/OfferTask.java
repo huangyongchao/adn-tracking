@@ -97,9 +97,7 @@ public class OfferTask implements Runnable {
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
-                if (SdkConf.DEBUG_REQ_LOG) {
-                    logger.warn(url);
-                }
+
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
@@ -125,8 +123,8 @@ public class OfferTask implements Runnable {
                 request.releaseConnection();
 
                 boolean is3rd = AdTool.is3pt(url);
-                if(1368311==offer.getUid()){
-                    logger.info(url);
+                if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
+                    logger.warn(url);
                 }
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();

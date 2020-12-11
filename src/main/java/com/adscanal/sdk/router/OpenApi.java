@@ -5,6 +5,7 @@ import com.adscanal.sdk.core.job.LoadProxyJob;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -62,18 +63,26 @@ public class OpenApi {
 
     }
 
-    @GetMapping("/debuglog_open")
-    public Object debuglog_open() {
-        SdkConf.DEBUG_REQ_LOG = true;
+
+    @GetMapping("/adddebuglog/{id}")
+    public Object debuglog_open(@PathVariable Integer id) {
+        if (id != null) {
+            SdkConf.DEBUG_REQ_LOG.add(id);
+        }
         return SdkConf.DEBUG_REQ_LOG;
 
     }
 
-    @GetMapping("/debuglog_close")
-    public Object debuglog_close() {
-        SdkConf.DEBUG_REQ_LOG = false;
+    @GetMapping("/rmdebuglog/{id}")
+    public Object debuglog_close(@PathVariable Integer id) {
+        SdkConf.DEBUG_REQ_LOG.remove(id);
         return SdkConf.DEBUG_REQ_LOG;
+    }
 
+    @GetMapping("/resetdebuglog")
+    public Object resetdebuglog() {
+        SdkConf.DEBUG_REQ_LOG = Sets.newHashSet();
+        return SdkConf.DEBUG_REQ_LOG;
     }
 
     @GetMapping("/black_offers")
