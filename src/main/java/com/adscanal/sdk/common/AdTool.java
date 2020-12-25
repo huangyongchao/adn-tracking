@@ -38,7 +38,7 @@ public class AdTool {
                 url = url + "&gps_adid=" + deviceid;
             }
 
-            url = url + "&redirect=none";
+          //  url = url + "&redirect=none";
         }
         if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
             url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);
