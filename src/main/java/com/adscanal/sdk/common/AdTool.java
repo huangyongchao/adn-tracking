@@ -2,6 +2,7 @@ package com.adscanal.sdk.common;
 
 import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -156,7 +157,7 @@ public class AdTool {
 
     public static String geClickid(LiveOffer offer) {
 
-        return DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getUid();
+        return RandomStringUtils.randomAlphabetic(4) + DateFormatUtils.format(new Date(), "MMddHHmmss") + offer.getUid();
     }
 
     public static void main(String[] args) {
@@ -170,7 +171,8 @@ public class AdTool {
         System.out.println(reqTime.getDayOfWeek().getValue());
         System.out.println(isTargetTimeByGeo2word(geo));
 */
-        System.out.println(is3pt("https://shemaroome.app.link/ClylXjcikbb?%243p=a_virgil_media&~click_id={clickid}&%24idfa=={idfa}&~secondary_publisher=1164_{pub_subid}"));
+
+        System.out.println(RandomStringUtils.randomAlphabetic(4));
 
     }
     public static boolean isStore(String url) {
@@ -213,7 +215,6 @@ public class AdTool {
         }
         return false;
     }
-
 
 
 }
