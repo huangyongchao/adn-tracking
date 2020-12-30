@@ -7,9 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author huangyongchao
@@ -47,6 +46,8 @@ public class AdTool {
         if (url.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(deviceid)) {
             url = StringUtils.replaceAll(url, "\\{gaid}", deviceid);
         }
+
+
         return url;
     }
 
@@ -97,9 +98,37 @@ public class AdTool {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);
         }
 
+
+        if (track.indexOf("{subcreative}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{subcreative}", getSubCreative(pubsub));
+        }
         return track;
 
     }
+
+    public static Map<String, String> PUBSUB_RANDOM_STR = new HashMap<>();
+    public static Map<String, AtomicInteger> PUBSUB_CLICKS = new HashMap<>();
+
+    public static String getSubCreative(String pubsub) {
+        AtomicInteger pubsubcounter = PUBSUB_CLICKS.get(pubsub);
+        String sub_creative = null;
+        if (pubsubcounter == null) {
+            PUBSUB_CLICKS.put(pubsub, new AtomicInteger(0));
+            return pubsub;
+        }
+        int seed = (pubsubcounter.incrementAndGet() / 12000) + 1;
+        String key = pubsub + "@" + seed;
+        if (PUBSUB_RANDOM_STR.containsKey(key)) {
+            sub_creative = PUBSUB_RANDOM_STR.get(key);
+        } else {
+            String sc = RandomStringUtils.randomAlphabetic(4);
+            PUBSUB_RANDOM_STR.put(key, sc);
+            PUBSUB_RANDOM_STR.remove(pubsub + "@" + (seed - 1));
+            sub_creative = "";
+        }
+        return pubsub + "_" + sub_creative;
+    }
+
 
     /**
      * geo char3
@@ -132,19 +161,16 @@ public class AdTool {
 
     static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
-        if (SubidTypeE.AUTO_P360.code == offer.getAutosubid()) {
+        if (StringUtils.isBlank(offer.getPlacements()) || SubidTypeE.AUTO_P360.code == offer.getAutosubid()) {
             Date date = new Date();
             int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
-            int seed = i / 40000;
-            String h =(1000+seed) +"_"+ DateFormatUtils.format(date, "HHddMM");
+            int seed = i / 10000;
+            String h = (1000 + seed) + "_" + DateFormatUtils.format(date, "HHddMM");
             return h;
         } else {
-            if (offer == null || StringUtils.isBlank(offer.getPlacements())) {
-                return "AC" + new Date().getHours();
-            }
             String[] pls = offer.getPlacements().split(",");
             int le = pls.length;
-            if(le>3){
+            if (le > 3) {
                 le = 4;
             }
             int i = new Random().nextInt(le);
@@ -162,17 +188,12 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-     /*   String geo = "VN";
-        LocalDateTime reqTime = LocalDateTime.now(Ctz.of(GeoMap.word2Map.get(geo)));
-
-        System.out.println(reqTime.toString());
-        System.out.println(reqTime.getDayOfWeek());
-        System.out.println(reqTime.getHour());
-        System.out.println(reqTime.getDayOfWeek().getValue());
-        System.out.println(isTargetTimeByGeo2word(geo));
-*/
-
-        System.out.println(RandomStringUtils.randomAlphabetic(4));
+        for (int i = 0; i < 100001; i++) {
+            ExecutorPool.getExecutor().execute(() -> {
+                System.out.println(getSubCreative("SSS"));
+            });
+        }
+        System.out.println(111);
 
     }
     public static boolean isStore(String url) {
