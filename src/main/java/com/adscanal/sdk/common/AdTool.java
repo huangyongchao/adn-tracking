@@ -83,11 +83,12 @@ public class AdTool {
         if (track.indexOf("{android}") > -1) {
             track = StringUtils.replaceAll(track, "\\{android}", OsE.AOS.name);
         }
+        int s = random5.nextInt(r);
         if (track.indexOf("{pubid}") > -1) {
-            track = StringUtils.replaceAll(track, "\\{pubid}", "" + (1500 + random100.nextInt(100)));
+            track = StringUtils.replaceAll(track, "\\{pubid}", "" + (1500 + random100.nextInt(100) + s));
         }
         if (track.indexOf("{subid}") > -1) {
-            int s = random5.nextInt(r);
+
             track = StringUtils.replaceAll(track, "\\{subid}", subprefix.get(s) + (100 + s));
         }
         if (track.indexOf("{device_id}") > -1 && StringUtils.isNotBlank(deviceid)) {
