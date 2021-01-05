@@ -2,6 +2,7 @@ package com.adscanal.sdk.common;
 
 import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.*;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -52,20 +53,26 @@ public class AdTool {
     }
 
     static Random random100 = new Random();
+    static Random random5 = new Random();
     static Random random1000 = new Random();
+    static List<String> subprefix = Lists.newArrayList("K", "D", "B", "V");
+    static int r = subprefix.size();
 
     public static String trackurl(String os, String track, String pubsub, String deviceid, String clickid, String appname) {
         if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(pubsub)) {
             track = StringUtils.replaceAll(track, "\\{pub_subid}", pubsub);
         }
-        if (track.indexOf("{hour}") > -1 ) {
-            track = StringUtils.replaceAll(track, "\\{hour}", ""+Counter.CURRENT_HOUR);
+        if (track.indexOf("{hour}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{hour}", "" + Counter.CURRENT_HOUR);
         }
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(clickid)) {
             track = StringUtils.replaceAll(track, "\\{click_id}", clickid);
         }
         if (track.indexOf("{campaign100}") > -1) {
             track = StringUtils.replaceAll(track, "\\{campaign100}", String.valueOf(random100.nextInt(100)));
+        }
+        if (track.indexOf("{campaign1000}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{campaign100}", String.valueOf(random1000.nextInt(1000)));
         }
         if (track.indexOf("{campaign10}") > -1) {
             track = StringUtils.replaceAll(track, "\\{campaign10}", String.valueOf(random100.nextInt(10)));
@@ -77,7 +84,11 @@ public class AdTool {
             track = StringUtils.replaceAll(track, "\\{android}", OsE.AOS.name);
         }
         if (track.indexOf("{pubid}") > -1) {
-            track = StringUtils.replaceAll(track, "\\{pubid}", "" + (1000 + random1000.nextInt(1000)));
+            track = StringUtils.replaceAll(track, "\\{pubid}", "" + (1500 + random100.nextInt(100)));
+        }
+        if (track.indexOf("{subid}") > -1) {
+            int s = random5.nextInt(r);
+            track = StringUtils.replaceAll(track, "\\{subid}", subprefix.get(s) + (100 + s));
         }
         if (track.indexOf("{device_id}") > -1 && StringUtils.isNotBlank(deviceid)) {
             track = StringUtils.replaceAll(track, "\\{device_id}", deviceid);
@@ -98,36 +109,12 @@ public class AdTool {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);
         }
 
-
-        if (track.indexOf("{subcreative}") > -1) {
-            track = StringUtils.replaceAll(track, "\\{subcreative}", getSubCreative(pubsub));
-        }
         return track;
 
     }
 
     public static Map<String, String> PUBSUB_RANDOM_STR = new HashMap<>();
     public static Map<String, AtomicInteger> PUBSUB_CLICKS = new HashMap<>();
-
-    public static String getSubCreative(String pubsub) {
-        AtomicInteger pubsubcounter = PUBSUB_CLICKS.get(pubsub);
-        String sub_creative = null;
-        if (pubsubcounter == null) {
-            PUBSUB_CLICKS.put(pubsub, new AtomicInteger(0));
-            return pubsub;
-        }
-        int seed = (pubsubcounter.incrementAndGet() / 12000) + 1;
-        String key = pubsub + "@" + seed;
-        if (PUBSUB_RANDOM_STR.containsKey(key)) {
-            sub_creative = PUBSUB_RANDOM_STR.get(key);
-        } else {
-            String sc = RandomStringUtils.randomAlphabetic(4);
-            PUBSUB_RANDOM_STR.put(key, sc);
-            PUBSUB_RANDOM_STR.remove(pubsub + "@" + (seed - 1));
-            sub_creative = "";
-        }
-        return pubsub + "_" + sub_creative;
-    }
 
 
     /**
@@ -159,12 +146,11 @@ public class AdTool {
         return offers.get(i);
     }
 
-    static Random r = new Random();
     public static String randomSub(LiveOffer offer) {
         if (StringUtils.isBlank(offer.getPlacements()) || SubidTypeE.AUTO_P360.code == offer.getAutosubid()) {
             Date date = new Date();
             int i = Counter.SUB_CLICKS.get(offer.getUid()).incrementAndGet();
-            int seed = i / 10000;
+            int seed = i / 3500;
             String h = (1000 + seed) + "_" + DateFormatUtils.format(date, "HHddMM");
             return h;
         } else {
@@ -190,7 +176,6 @@ public class AdTool {
 
         for (int i = 0; i < 100001; i++) {
             ExecutorPool.getExecutor().execute(() -> {
-                System.out.println(getSubCreative("SSS"));
             });
         }
         System.out.println(111);
