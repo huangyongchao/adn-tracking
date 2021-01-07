@@ -15,14 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author huangyongchao
  */
 public class AdTool {
-    public static String urlEncode(String url,String deviceid,String os) {
-        if (url.indexOf("{") > -1) {
-            url = StringUtils.replaceAll(url, "\\{", "%7B");
-        }
-        if (url.indexOf("}") > -1) {
-            url = StringUtils.replaceAll(url, "\\}", "%7D");
-        }
-        if(url.indexOf("appsflyer.com")>0){
+    public static String urlEncode(String url, String deviceid, String os) {
+
+
+        if (url.indexOf("appsflyer.com") > 0) {
             if (OsE.IOS.name.equalsIgnoreCase(os) && url.indexOf("idfa") == -1) {
                 url = url + "&idfa=" + deviceid;
             }
@@ -30,24 +26,41 @@ public class AdTool {
                 url = url + "&advertising_id=" + deviceid;
             }
 
-            url = url + "&redirect=false";
-        }else if(url.indexOf(".adjust.")>0){
+        } else if (url.indexOf(".adjust.") > 0) {
             if (OsE.IOS.name.equalsIgnoreCase(os) && url.indexOf("idfa") == -1) {
                 url = url + "&idfa=" + deviceid;
             }
             if (OsE.AOS.name.equalsIgnoreCase(os) && url.indexOf("gps_adid") == -1) {
                 url = url + "&gps_adid=" + deviceid;
             }
+            url = url + "&s2s=1";
 
-          //  url = url + "&redirect=none";
         }
-        if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
-            url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);
+        if (OsE.IOS.name.equalsIgnoreCase(os)) {
+            if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
+                url = StringUtils.replaceAll(url, "\\{idfa}", deviceid);
+            }
         }
-        if (url.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(deviceid)) {
-            url = StringUtils.replaceAll(url, "\\{gaid}", deviceid);
+        if (OsE.AOS.name.equalsIgnoreCase(os)) {
+            if (url.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(deviceid)) {
+                url = StringUtils.replaceAll(url, "\\{gaid}", deviceid);
+            }
         }
-
+        if (url.indexOf("{") > -1) {
+            url = StringUtils.replaceAll(url, "\\{", "%7B");
+        }
+        if (url.indexOf("}") > -1) {
+            url = StringUtils.replaceAll(url, "\\}", "%7D");
+        }
+        if (url.indexOf("[") > -1) {
+            url = StringUtils.replaceAll(url, "\\[", "%5b");
+        }
+        if (url.indexOf("]") > -1) {
+            url = StringUtils.replaceAll(url, "\\]", "%5d");
+        }
+        if (url.indexOf("|") > -1) {
+            url = StringUtils.replaceAll(url, "\\|", "%7c");
+        }
 
         return url;
     }
@@ -182,14 +195,16 @@ public class AdTool {
         System.out.println(111);
 
     }
+
     public static boolean isStore(String url) {
         if (url.indexOf("apple.com") > 0 || url.indexOf("google.com") > 0) {
             return true;
         }
         return false;
     }
+
     public static boolean is3pt(String url) {
-        if (url.indexOf(".adjust.") > 0 || url.indexOf(".appsflyer.com") > 0|| url.indexOf(".app.link") > 0) {
+        if (url.indexOf(".adjust.") > 0 || url.indexOf(".appsflyer.com") > 0 || url.indexOf(".app.link") > 0) {
             return true;
         }
         return false;
@@ -216,7 +231,7 @@ public class AdTool {
                 return true;
             }
         } else {
-            if (h == 11 || h == 12 || h == 13  || h == 17 || h == 18 || h == 19 || h == 20 || h == 21 || h == 22 || h == 23) {
+            if (h == 11 || h == 12 || h == 13 || h == 17 || h == 18 || h == 19 || h == 20 || h == 21 || h == 22 || h == 23) {
                 return true;
             }
         }
