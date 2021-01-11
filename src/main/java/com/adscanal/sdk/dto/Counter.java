@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Counter {
     public static volatile int CURRENT_HOUR = 0;
+    public static volatile int DAY = 1;
     public static AtomicBoolean EXCHANGE_LOCK = new AtomicBoolean(false);
     public static Map<Integer, AtomicInteger> DAILY_CLICKS = new HashMap<>();
     public static Map<Integer, AtomicInteger> SUB_CLICKS = new HashMap<>();

@@ -78,6 +78,9 @@ public class AdTool {
         if (track.indexOf("{hour}") > -1) {
             track = StringUtils.replaceAll(track, "\\{hour}", "" + Counter.CURRENT_HOUR);
         }
+        if (track.indexOf("{day}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{day}", "" + Counter.DAY);
+        }
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(clickid)) {
             track = StringUtils.replaceAll(track, "\\{click_id}", clickid);
         }
@@ -188,11 +191,15 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        for (int i = 0; i < 100001; i++) {
+  /*      for (int i = 0; i < 100001; i++) {
             ExecutorPool.getExecutor().execute(() -> {
             });
         }
-        System.out.println(111);
+        System.out.println(111);*/
+
+        String url = "https://app.adjust.com/m46zsbd?adgroup=11323_4&tracker_limit=990000&campaign=11323&creative=B_4&gps_adid=8f575c7d-0e8e-4c30-978f-11044b961701&click_id=ObGC01082347251368311&install_callback=http%3a%2f%2fpostback.adscanal.com%2finstall%3faffid%3d1030%26clickid%3DObGC01082347251368311\u0003&s2s=1";
+
+        System.out.println((char) 80);
 
     }
 

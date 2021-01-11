@@ -40,6 +40,7 @@ public class CounterJob {
     @Scheduled(cron = "1 0,10,20,30,40,50 * * * ?")
     public void setCurrentHour() {
         Counter.CURRENT_HOUR = new Date().getHours();
+        Counter.DAY = new Date().getDate();
     }
 
 
