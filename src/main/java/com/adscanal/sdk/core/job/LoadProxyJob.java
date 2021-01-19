@@ -67,12 +67,12 @@ public class LoadProxyJob {
         Set<Integer> acoffers = Sets.newHashSet();
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
-            if(list == null){
+            if (list == null) {
                 return;
             }
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-               // return;
+                // return;
             }
 
             list.forEach(offer -> {
@@ -87,8 +87,8 @@ public class LoadProxyJob {
         });
         Set<Integer> stopoffers = Sets.newHashSet();
 
-        SdkConf.OFFER_SCHED.forEach((k,v)->{
-            if(!acoffers.contains(k)){
+        SdkConf.OFFER_SCHED.forEach((k, v) -> {
+            if (!acoffers.contains(k)) {
                 try {
                     stopoffers.add(k);
                     //移除当前停止的offer
@@ -98,7 +98,7 @@ public class LoadProxyJob {
             }
         });
 
-        stopoffers.forEach(v->{
+        stopoffers.forEach(v -> {
 
             SdkConf.OFFER_SCHED.get(v).shutdownNow();
             SdkConf.OFFER_SCHED.remove(v);
@@ -125,8 +125,11 @@ public class LoadProxyJob {
                 respja.forEach(n -> {
                     JSONObject o = (JSONObject) n;
                     LiveOffer offer = o.toJavaObject(LiveOffer.class);
-                    if("UK".equalsIgnoreCase(offer.getCountry())){
+                    if ("UK".equalsIgnoreCase(offer.getCountry())) {
                         offer.setCountry("GB");
+                    }
+                    if ("android".equalsIgnoreCase(offer.getOsName())) {
+                        offer.setOsName(OsE.AOS.name);
                     }
                     offers.add(offer);
                 });
@@ -145,19 +148,18 @@ public class LoadProxyJob {
 
     public static void setCustomerTask(LiveOffer offer) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
-        if(SimpleData.PAUSE_OFFERS.contains(offer.getUid())){
+        if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
         }
         /*如果没有初始化点击计数器 同步时候初始化*/
-        if(!Counter.DAILY_CLICKS.containsKey(offer.getUid())){
+        if (!Counter.DAILY_CLICKS.containsKey(offer.getUid())) {
             Counter.DAILY_CLICKS.put(offer.getUid(), new AtomicInteger());
         }
 
         /*如果没有初始化点击计数器 同步时候初始化*/
-        if(!Counter.SUB_CLICKS.containsKey(offer.getUid())){
+        if (!Counter.SUB_CLICKS.containsKey(offer.getUid())) {
             Counter.SUB_CLICKS.put(offer.getUid(), new AtomicInteger());
         }
-
 
 
         int period = 0;
@@ -179,19 +181,19 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 15000 ;
-        if(coresize>200){
+        coresize = clicks / 15000;
+        if (coresize > 200) {
             coresize = 200;
         }
-        if(coresize<50){
+        if (coresize < 50) {
             coresize = 50;
         }
-        int weight = (5/ priority);
+        int weight = (5 / priority);
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                    i * 1000, new Random().nextInt(20), TimeUnit.MILLISECONDS);
+                i * 1000, new Random().nextInt(20), TimeUnit.MILLISECONDS);
 /*
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                     i * 1000, 10, TimeUnit.MILLISECONDS);*/
@@ -211,7 +213,7 @@ public class LoadProxyJob {
             logger.warn("INIT:" + offer.getUid());
             setCustomerTask(offer);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-                && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
+            && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer);
         }
@@ -421,7 +423,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 int e = proxystr.lastIndexOf(" to ");
                 int s = proxystr.lastIndexOf(" add ");
                 logger.error(proxystr);
-                System.out.println("-----++++++++++++++Please set Ip white list (lpm_whitelist_ip "+proxystr.substring(s+5,e)+") ++++++++++++++-----");
+                System.out.println("-----++++++++++++++Please set Ip white list (lpm_whitelist_ip " + proxystr.substring(s + 5, e) + ") ++++++++++++++-----");
             }
             JSONArray proxys = JSONArray.parseArray(proxystr);
             proxys.forEach(n -> {
