@@ -93,7 +93,7 @@ public class OfferTask implements Runnable {
             }
             for (int i = 0; i < steps; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
-                if (i == 2) {
+                if (i == 5) {
                     Counter.increaseError1(offer.getUid());
                     break;
                 }

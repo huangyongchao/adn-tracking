@@ -168,6 +168,7 @@ public class LoadProxyJob {
         } else {
             period = BASE / offer.getDailyMaxClicks();
         }
+
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             return;
         }
@@ -190,7 +191,7 @@ public class LoadProxyJob {
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                    i * 1000, period, TimeUnit.MILLISECONDS);
+                    i * 1000, new Random().nextInt(20), TimeUnit.MILLISECONDS);
 /*
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                     i * 1000, 10, TimeUnit.MILLISECONDS);*/
