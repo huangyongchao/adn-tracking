@@ -65,6 +65,8 @@ public class LoadProxyJob {
     @Scheduled(cron = "0 0/3 * * * ?")
     public void sychOffers() {
         Set<Integer> acoffers = Sets.newHashSet();
+        Set<Integer> stopoffers = Sets.newHashSet();
+
         SdkConf.ACTI_GEO.forEach(n -> {
             List<LiveOffer> list = getOffers(n);
             if (list == null) {
@@ -72,7 +74,7 @@ public class LoadProxyJob {
             }
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-                // return;
+                 return;
             }
 
             list.forEach(offer -> {
@@ -85,7 +87,6 @@ public class LoadProxyJob {
 
 
         });
-        Set<Integer> stopoffers = Sets.newHashSet();
 
         SdkConf.OFFER_SCHED.forEach((k, v) -> {
             if (!acoffers.contains(k)) {
