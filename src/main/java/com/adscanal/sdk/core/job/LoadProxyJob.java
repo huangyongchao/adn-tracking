@@ -74,7 +74,7 @@ public class LoadProxyJob {
             }
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-                 return;
+                // return;
             }
 
             list.forEach(offer -> {
@@ -301,6 +301,16 @@ public class LoadProxyJob {
     }
 
     public static void main(String[] args) {
+        LoadProxyJob l = new LoadProxyJob();
+        l.devidrootpath= "/Users/huangyongchao/workspace/devid1";
+        l.getGeoOsFiles();
+        GEO_FILES.forEach((k,v)->{
+            v.forEach(n->{
+                System.out.println(k+"  "+n);
+            });
+        });
+    }
+    public static void main1(String[] args) {
         try {
             java.nio.file.Files.walkFileTree(new File("/Volumes/FrankSSD/deviceid/").toPath(), new SimpleFileVisitor<Path>() {
                 @Override
@@ -497,4 +507,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
 
     }
+
+
+
 }
