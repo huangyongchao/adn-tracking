@@ -174,9 +174,11 @@ public class LoadProxyJob {
             period = BASE / offer.getDailyMaxClicks();
         }
 
-        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+
+/*        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+
             return;
-        }
+        }*/
         int priority = offer.getPriority();
         if (priority <= 0) {
             priority = 2;
@@ -189,6 +191,8 @@ public class LoadProxyJob {
         int weight = (5 / priority);
         CORE_SIZE.put(offer.getOfferId(), coresize);
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
+        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
+
         for (int i = 0; i < coresize; i++) {
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                 i * 1000,10, TimeUnit.MILLISECONDS);
@@ -205,15 +209,30 @@ public class LoadProxyJob {
 
     public static void rebuildCustomer(LiveOffer offer) {
 
-        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
         if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             logger.warn("INIT:" + offer.getUid());
             setCustomerTask(offer);
-        } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-            && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
-            logger.warn("INIT-RE:" + offer.getUid());
-            setCustomerTask(offer);
+        } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())) {
+
+            Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid());
+            Integer newclicks = offer.getDailyMaxClicks();
+            if(oldclicks!=null && newclicks!=null){
+                double old = oldclicks.doubleValue();
+                double neww = newclicks.doubleValue();
+                if(neww/old>1.1){
+                    logger.warn("INIT-RE:" + offer.getUid());
+                    try {
+                        SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
+                        SdkConf.OFFER_SCHED.remove(offer.getUid());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    setCustomerTask(offer);
+                }
+            }
+
+
         }
 
 
