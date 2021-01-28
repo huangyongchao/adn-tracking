@@ -34,6 +34,7 @@ public class OfferTask implements Runnable {
     private String geo;
     private String geo3;
     private String os;
+    private String id;
 
     @Override
     public void run() {
@@ -47,10 +48,10 @@ public class OfferTask implements Runnable {
                 offer = SimpleData.LIVEOFFERS.get(offer.getUid());
                 String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
 
-                SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
+                System.out.println(id+":"+SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet());
 
             } catch (Exception e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -58,12 +59,13 @@ public class OfferTask implements Runnable {
             }
     }
 
-    public OfferTask(LiveOffer offer, String key, String geo3,String geo, String os) {
+    public OfferTask(LiveOffer offer, String key, String geo3,String geo, String os,String  id) {
         this.offer = offer;
         this.key = key;
         this.geo = geo;
         this.geo3 = geo3;
         this.os = os;
+        this.id = id;
        // logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
     }
 
