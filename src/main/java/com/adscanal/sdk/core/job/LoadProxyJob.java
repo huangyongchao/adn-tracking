@@ -85,7 +85,7 @@ public class LoadProxyJob {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
                 // 存储当前激活的offer
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
-                rebuildCustomer(offer);
+                rebuildCustomer(offer,n);
                 acoffers.add(offer.getUid());
             });
 
@@ -151,7 +151,7 @@ public class LoadProxyJob {
 
     }
 
-    public static void setCustomerTask(LiveOffer offer) {
+    public static void setCustomerTask(LiveOffer offer,String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
         if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
@@ -198,7 +198,7 @@ public class LoadProxyJob {
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
-        List<CloseableHttpClient> cons = ProxyClient.GEO_CLIENTS.get(offer.getCountry());
+        List<CloseableHttpClient> cons = ProxyClient.GEO_CLIENTS.get(geoUP);
         for (int i = 0; i < 300; i++) {
             OfferTask offerTask = new OfferTask(cons.get(i), offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), offer.getId() + i);
             /*SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
@@ -214,12 +214,12 @@ public class LoadProxyJob {
 
     }
 
-    public static void rebuildCustomer(LiveOffer offer) {
+    public static void rebuildCustomer(LiveOffer offer,String geoUP) {
 
 
         if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             logger.warn("INIT:" + offer.getUid());
-            setCustomerTask(offer);
+            setCustomerTask(offer,geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())) {
 
             Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid());
@@ -235,7 +235,7 @@ public class LoadProxyJob {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    setCustomerTask(offer);
+                    setCustomerTask(offer,geoUP);
                 }
             }
 
