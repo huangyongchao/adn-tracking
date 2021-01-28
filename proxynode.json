@@ -71,7 +71,7 @@
             "dns": "remote",
             "internal_name": "au",
             "multiply": 200,
-            "port": 34500,
+            "port": 44000,
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
