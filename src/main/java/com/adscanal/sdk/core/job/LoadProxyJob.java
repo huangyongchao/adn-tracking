@@ -187,6 +187,9 @@ public class LoadProxyJob {
             priority = 5;
         }
         coresize = clicks / 5000;
+        if(coresize>300){
+            coresize = 300;
+        }
 
         int weight = (5 / priority);
         CORE_SIZE.put(offer.getOfferId(), coresize);
@@ -196,9 +199,6 @@ public class LoadProxyJob {
         for (int i = 0; i < coresize; i++) {
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                 i * 1000,10, TimeUnit.MILLISECONDS);
-/*
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                    i * 1000, 10, TimeUnit.MILLISECONDS);*/
 
         }
 
