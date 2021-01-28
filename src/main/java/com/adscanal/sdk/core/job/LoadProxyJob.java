@@ -220,7 +220,7 @@ public class LoadProxyJob {
             if(oldclicks!=null && newclicks!=null){
                 double old = oldclicks.doubleValue();
                 double neww = newclicks.doubleValue();
-                if(neww/old>1.1){
+                if(neww/old>1.1|| old/neww>1.1){
                     logger.warn("INIT-RE:" + offer.getUid());
                     try {
                         SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
