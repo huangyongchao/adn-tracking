@@ -57,6 +57,7 @@ public class OfferTask implements Runnable {
             } catch (Exception e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
 
+                errorlog.error(e.getMessage(), e);
 
             }
         }
