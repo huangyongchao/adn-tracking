@@ -44,6 +44,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LoadProxyJob {
 
     public static List<GeoProxy> PROXIES = Lists.newArrayList();
+    public static  Map<String,Integer> CORE_SIZE = new HashMap();
+
     public static Map<String, GeoProxy> GEOPROXYMAP = Maps.newHashMap();
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
@@ -185,10 +187,10 @@ public class LoadProxyJob {
         coresize = clicks / 5000;
 
         int weight = (5 / priority);
-
+        CORE_SIZE.put(offer.getOfferId(), coresize);
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
+            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                 i * 1000,10, TimeUnit.MILLISECONDS);
 /*
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),

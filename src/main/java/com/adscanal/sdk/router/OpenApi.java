@@ -140,7 +140,8 @@ public class OpenApi {
 
     @GetMapping("/offer_schedules")
     public Object offer_sched() {
-        return SdkConf.OFFER_SCHED.keySet();
+
+        return LoadProxyJob.CORE_SIZE ;
     }
 
     @GetMapping("/geo_os_queue")
