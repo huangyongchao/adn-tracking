@@ -200,9 +200,12 @@ public class LoadProxyJob {
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
         List<CloseableHttpClient> cons = ProxyClient.GEO_CLIENTS.get(offer.getCountry());
         for (int i = 0; i < 300; i++) {
-
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(cons.get(i), offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), offer.getId() + i),
-                i * 1000, 1, TimeUnit.MILLISECONDS);
+            OfferTask offerTask = new OfferTask(cons.get(i), offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), offer.getId() + i);
+            /*SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
+                i * 1000, 1, TimeUnit.MILLISECONDS);*/
+            ExecutorPool.getExecutor().execute(() -> {
+                offerTask.consumer();
+            });
 
         }
 

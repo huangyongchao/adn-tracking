@@ -37,12 +37,10 @@ public class OfferTask implements Runnable {
     private String id;
     private CloseableHttpClient conn;
 
-
-
-    @Override
-    public void run() {
+    public void consumer() {
+        while (true) {
             try {
-                if(SimpleData.PAUSE_OFFERS.contains(offer.getUid())){
+                if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
                     return;
                 }
                 if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
@@ -54,15 +52,40 @@ public class OfferTask implements Runnable {
                 String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
                 String ua = AdTool.randomUA(os);
                 request(key, conn, url, ua, offer, null, deviceid, os);
-                logger.info(id+":"+SimpleData.OFFERREQCOUNTER.get(offer.getOfferId()).incrementAndGet());
+                logger.info(id + ":" + SimpleData.OFFERREQCOUNTER.get(offer.getOfferId()).incrementAndGet());
 
             } catch (Exception e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
-                errorlog.error(e.getMessage(), e);
+
+
             }
+        }
     }
 
-    public OfferTask(CloseableHttpClient conn ,LiveOffer offer, String key, String geo3,String geo, String os,String  id) {
+    @Override
+    public void run() {
+        try {
+            if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
+                return;
+            }
+            if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
+                return;
+            }
+            offer = SimpleData.LIVEOFFERS.get(offer.getUid());
+            String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
+
+            String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
+            String ua = AdTool.randomUA(os);
+            request(key, conn, url, ua, offer, null, deviceid, os);
+            logger.info(id + ":" + SimpleData.OFFERREQCOUNTER.get(offer.getOfferId()).incrementAndGet());
+
+        } catch (Exception e) {
+            SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
+            errorlog.error(e.getMessage(), e);
+        }
+    }
+
+    public OfferTask(CloseableHttpClient conn, LiveOffer offer, String key, String geo3, String geo, String os, String id) {
         this.offer = offer;
         this.key = key;
         this.geo = geo;
@@ -70,7 +93,7 @@ public class OfferTask implements Runnable {
         this.os = os;
         this.id = id;
         this.conn = conn;
-       // logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
+        // logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
     }
 
     public String getKey() {
@@ -90,11 +113,11 @@ public class OfferTask implements Runnable {
     }
 
 
-    public  void  request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
             int steps = 3;
-            if(offer.getClickSteps()!=null && offer.getClickSteps()>=3){
+            if (offer.getClickSteps() != null && offer.getClickSteps() >= 3) {
                 steps = offer.getClickSteps();
             }
             for (int i = 0; i < steps; i++) {
@@ -136,7 +159,7 @@ public class OfferTask implements Runnable {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
                     continue;
-                } else  {
+                } else {
                     int status = response.getStatusLine().getStatusCode();
                     if ((status == HttpStatus.SC_OK)) {
                         Counter.increaseSuccess(offer.getUid());
@@ -160,7 +183,7 @@ public class OfferTask implements Runnable {
     }
 
     public static boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
-        if (response != null && response.getStatusLine() != null &&( response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY ||response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT)) {
+        if (response != null && response.getStatusLine() != null && (response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY || response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT)) {
             return true;
         }
         return false;
@@ -169,9 +192,8 @@ public class OfferTask implements Runnable {
     public void handle_response(String key, LiveOffer offer, HttpResponse response) {
 
 
-
         if (response != null && !status_code_requires_exit_node_switch(
-                response.getStatusLine().getStatusCode())) {
+            response.getStatusLine().getStatusCode())) {
             // success or other client/website error like 404...
             return;
         }
