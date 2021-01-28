@@ -38,6 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 
 @Component
 @Order(0)
@@ -195,8 +196,9 @@ public class LoadProxyJob {
         CORE_SIZE.put(offer.getOfferId(), coresize);
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
+        SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
-        for (int i = 0; i < coresize; i++) {
+        for (int i = 0; i < 1000; i++) {
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(),offer.getId()+i),
                 i * 1000,1, TimeUnit.MILLISECONDS);
 
