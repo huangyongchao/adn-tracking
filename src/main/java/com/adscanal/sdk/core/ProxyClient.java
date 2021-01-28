@@ -133,7 +133,7 @@ public class ProxyClient {
             return;
         }
         int portMax = portMin + offset;
-        ArrayList<CloseableHttpClient> pool = new ArrayList<>();
+        ArrayList<CloseableHttpClient> pool = new ArrayList<>(offset);
         for (int p = portMin; p < portMax; p++) {
             pool.add(getClient(host, p));
         }
