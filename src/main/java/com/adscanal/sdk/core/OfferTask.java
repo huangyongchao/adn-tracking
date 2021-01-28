@@ -127,10 +127,10 @@ public class OfferTask implements Runnable {
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
-                if (!url.startsWith("http")) {
+          /*      if (!url.startsWith("http")) {
                     Counter.increaseError(offer.getUid());
                     break;
-                }
+                }*/
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
