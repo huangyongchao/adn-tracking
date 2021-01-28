@@ -74,7 +74,7 @@ public class LoadProxyJob {
             }
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-               //  return;
+                //  return;
             }
 
             list.forEach(offer -> {
@@ -183,14 +183,14 @@ public class LoadProxyJob {
             priority = 5;
         }
         coresize = clicks / 15000;
-  
+
         int weight = (5 / priority);
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                i * 1000,10, TimeUnit.MILLISECONDS);
+                i * 1000, 10, TimeUnit.MILLISECONDS);
 /*
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
                     i * 1000, 10, TimeUnit.MILLISECONDS);*/
@@ -254,7 +254,7 @@ public class LoadProxyJob {
         return null;
     }
 
-    public static final Map<String, Collection<String>> GEO_FILES = Maps.newHashMap();
+    public static final Map<String, List<String>> GEO_FILES = Maps.newHashMap();
 
     public void getGeoOsFiles() {
         try {
@@ -298,14 +298,15 @@ public class LoadProxyJob {
 
     public static void main(String[] args) {
         LoadProxyJob l = new LoadProxyJob();
-        l.devidrootpath= "/Users/huangyongchao/workspace/devid1";
+        l.devidrootpath = "/Users/huangyongchao/workspace/devid1";
         l.getGeoOsFiles();
-        GEO_FILES.forEach((k,v)->{
-            v.forEach(n->{
-                System.out.println(k+"  "+n);
+        GEO_FILES.forEach((k, v) -> {
+            v.forEach(n -> {
+                System.out.println(k + "  " + n);
             });
         });
     }
+
     public static void main1(String[] args) {
         try {
             java.nio.file.Files.walkFileTree(new File("/Volumes/FrankSSD/deviceid/").toPath(), new SimpleFileVisitor<Path>() {
@@ -370,7 +371,6 @@ public class LoadProxyJob {
         if (!GEO_FILES.containsKey(key3)) {
             return;
         }
-
         ExecutorPool.getExecutor().execute(() -> {
 
             ArrayBlockingQueue q = SdkConf.GEO_OS_QUE.get(key);
@@ -379,9 +379,10 @@ public class LoadProxyJob {
 
 
             SdkConf.RUNPRODUCERS.add(key);
+            List<String> files = GEO_FILES.get(key3);
+            Collections.reverse(files);
             while (true) {
-
-                GEO_FILES.get(key3).forEach(p -> {
+                files.forEach(p -> {
                     try {
                         Files.lines(Paths.get(p)).forEach(n -> {
                             try {
@@ -503,7 +504,6 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
 
     }
-
 
 
 }
