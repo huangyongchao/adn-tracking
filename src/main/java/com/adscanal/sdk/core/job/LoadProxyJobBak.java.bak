@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,11 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Order(0)
-public class LoadProxyJob {
+public class LoadProxyJobBak {
 
     public static List<GeoProxy> PROXIES = Lists.newArrayList();
+    public static Map<String, Integer> CORE_SIZE = new HashMap();
+
     public static Map<String, GeoProxy> GEOPROXYMAP = Maps.newHashMap();
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
@@ -74,14 +77,14 @@ public class LoadProxyJob {
             }
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-               //  return;
+                //  return;
             }
 
             list.forEach(offer -> {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
                 // 存储当前激活的offer
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
-                rebuildCustomer(offer);
+                rebuildCustomer(offer, n);
                 acoffers.add(offer.getUid());
             });
 
@@ -147,7 +150,7 @@ public class LoadProxyJob {
 
     }
 
-    public static void setCustomerTask(LiveOffer offer) {
+    public static void setCustomerTask(LiveOffer offer, String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
         if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
@@ -172,9 +175,11 @@ public class LoadProxyJob {
             period = BASE / offer.getDailyMaxClicks();
         }
 
-        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+
+/*        if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
+
             return;
-        }
+        }*/
         int priority = offer.getPriority();
         if (priority <= 0) {
             priority = 2;
@@ -182,18 +187,30 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 15000;
-  
-        int weight = (5 / priority);
-        SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
+        coresize = clicks / 5000;
+        if (coresize > 300) {
+            coresize = 300;
+        }
 
+        int weight = (5 / priority);
+        CORE_SIZE.put(offer.getOfferId(), coresize);
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
-        for (int i = 0; i < coresize; i++) {
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                i * 1000,10, TimeUnit.MILLISECONDS);
-/*
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                    i * 1000, 10, TimeUnit.MILLISECONDS);*/
+        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
+        SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
+        List<CloseableHttpClient> cons = ProxyClient.GEO_CLIENTS.get(geoUP);
+        int con = ProxyClient.GEO_OFFSET.get(geoUP);
+        logger.info("INITCONSUMER:" + geoUP + "" + cons.size());
+        for (int i = 0; i < cons.size(); i++) {
+            OfferTask offerTask = new OfferTask(cons.get(i), offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), offer.getId() + i);
+
+            if ("GB".equalsIgnoreCase(geoUP)) {
+                ExecutorPool.getExecutor().execute(() -> {
+                    offerTask.consumer();
+                });
+            } else {
+                SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
+                    i * 1000, 1, TimeUnit.MILLISECONDS);
+            }
 
         }
 
@@ -202,17 +219,32 @@ public class LoadProxyJob {
 
     }
 
-    public static void rebuildCustomer(LiveOffer offer) {
+    public static void rebuildCustomer(LiveOffer offer, String geoUP) {
 
-        SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
         if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             logger.warn("INIT:" + offer.getUid());
-            setCustomerTask(offer);
-        } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-            && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
-            logger.warn("INIT-RE:" + offer.getUid());
-            setCustomerTask(offer);
+            setCustomerTask(offer, geoUP);
+        } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())) {
+
+            Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid());
+            Integer newclicks = offer.getDailyMaxClicks();
+            if (oldclicks != null && newclicks != null) {
+                double old = oldclicks.doubleValue();
+                double neww = newclicks.doubleValue();
+                if (neww / old > 1.1 || old / neww > 1.1) {
+                    logger.warn("INIT-RE:" + offer.getUid());
+                    try {
+                        SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
+                        SdkConf.OFFER_SCHED.remove(offer.getUid());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    setCustomerTask(offer, geoUP);
+                }
+            }
+
+
         }
 
 
@@ -258,7 +290,7 @@ public class LoadProxyJob {
 
     public void getGeoOsFiles() {
         try {
-            java.nio.file.Files.walkFileTree(new File(devidrootpath).toPath(), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(new File(devidrootpath).toPath(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     String path = file.toString();
@@ -297,18 +329,19 @@ public class LoadProxyJob {
     }
 
     public static void main(String[] args) {
-        LoadProxyJob l = new LoadProxyJob();
-        l.devidrootpath= "/Users/huangyongchao/workspace/devid1";
+        LoadProxyJobBak l = new LoadProxyJobBak();
+        l.devidrootpath = "/Users/huangyongchao/workspace/devid1";
         l.getGeoOsFiles();
-        GEO_FILES.forEach((k,v)->{
-            v.forEach(n->{
-                System.out.println(k+"  "+n);
+        GEO_FILES.forEach((k, v) -> {
+            v.forEach(n -> {
+                System.out.println(k + "  " + n);
             });
         });
     }
+
     public static void main1(String[] args) {
         try {
-            java.nio.file.Files.walkFileTree(new File("/Volumes/FrankSSD/deviceid/").toPath(), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(new File("/Volumes/FrankSSD/deviceid/").toPath(), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     String path = file.toString();
@@ -450,18 +483,20 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 ArrayBlockingQueue qaos = SdkConf.GEO_OS_QUE.get(geo + OsE.AOS.name);
                 if (qaos == null) {
-                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(1000));
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(5000));
                 }
                 ArrayBlockingQueue qios = SdkConf.GEO_OS_QUE.get(geo + OsE.IOS.name);
 
                 if (qios == null) {
-                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(1000));
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(5000));
                 }
                 SdkConf.ACTI_GEO.add(geo);
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
+
+
                 ProxyClient.GEO_OFFSET.put(geo, offset);
 
 
@@ -503,7 +538,6 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
 
     }
-
 
 
 }
