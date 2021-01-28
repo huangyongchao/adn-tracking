@@ -52,7 +52,7 @@ public class OfferTask implements Runnable {
                 String ua = AdTool.randomUA(os);
                 request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
 
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
                 errorlog.error(e.getMessage(), e);
             }
