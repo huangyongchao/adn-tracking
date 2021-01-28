@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ import java.util.concurrent.atomic.LongAdder;
 public class LoadProxyJob {
 
     public static List<GeoProxy> PROXIES = Lists.newArrayList();
-    public static  Map<String,Integer> CORE_SIZE = new HashMap();
+    public static Map<String, Integer> CORE_SIZE = new HashMap();
 
     public static Map<String, GeoProxy> GEOPROXYMAP = Maps.newHashMap();
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
@@ -77,7 +78,7 @@ public class LoadProxyJob {
             }
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-               //  return;
+                //  return;
             }
 
             list.forEach(offer -> {
@@ -188,7 +189,7 @@ public class LoadProxyJob {
             priority = 5;
         }
         coresize = clicks / 5000;
-        if(coresize>300){
+        if (coresize > 300) {
             coresize = 300;
         }
 
@@ -197,10 +198,11 @@ public class LoadProxyJob {
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
+        List<CloseableHttpClient> cons = ProxyClient.GEO_CLIENTS.get(offer.getCountry());
+        for (int i = 0; i < 300; i++) {
 
-        for (int i = 0; i < 1000; i++) {
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(),offer.getId()+i),
-                i * 1000,1, TimeUnit.MILLISECONDS);
+            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(cons.get(i), offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), offer.getId() + i),
+                i * 1000, 1, TimeUnit.MILLISECONDS);
 
         }
 
@@ -219,10 +221,10 @@ public class LoadProxyJob {
 
             Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid());
             Integer newclicks = offer.getDailyMaxClicks();
-            if(oldclicks!=null && newclicks!=null){
+            if (oldclicks != null && newclicks != null) {
                 double old = oldclicks.doubleValue();
                 double neww = newclicks.doubleValue();
-                if(neww/old>1.1|| old/neww>1.1){
+                if (neww / old > 1.1 || old / neww > 1.1) {
                     logger.warn("INIT-RE:" + offer.getUid());
                     try {
                         SdkConf.OFFER_SCHED.get(offer.getUid()).shutdownNow();
@@ -320,14 +322,15 @@ public class LoadProxyJob {
 
     public static void main(String[] args) {
         LoadProxyJob l = new LoadProxyJob();
-        l.devidrootpath= "/Users/huangyongchao/workspace/devid1";
+        l.devidrootpath = "/Users/huangyongchao/workspace/devid1";
         l.getGeoOsFiles();
-        GEO_FILES.forEach((k,v)->{
-            v.forEach(n->{
-                System.out.println(k+"  "+n);
+        GEO_FILES.forEach((k, v) -> {
+            v.forEach(n -> {
+                System.out.println(k + "  " + n);
             });
         });
     }
+
     public static void main1(String[] args) {
         try {
             java.nio.file.Files.walkFileTree(new File("/Volumes/FrankSSD/deviceid/").toPath(), new SimpleFileVisitor<Path>() {
@@ -525,7 +528,6 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
 
     }
-
 
 
 }
