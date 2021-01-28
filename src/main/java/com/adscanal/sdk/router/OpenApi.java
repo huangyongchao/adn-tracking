@@ -138,11 +138,13 @@ public class OpenApi {
         return SimpleData.OFFERERROR;
     }
 
+/*
     @GetMapping("/offer_schedules")
     public Object offer_sched() {
 
         return LoadProxyJob.CORE_SIZE ;
     }
+*/
 
     @GetMapping("/geo_os_queue")
     public Object geo_os_que() {
