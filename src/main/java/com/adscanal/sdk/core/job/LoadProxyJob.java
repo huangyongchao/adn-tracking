@@ -85,7 +85,7 @@ public class LoadProxyJob {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
                 // 存储当前激活的offer
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
-                rebuildCustomer(offer,n);
+                rebuildCustomer(offer, n);
                 acoffers.add(offer.getUid());
             });
 
@@ -151,7 +151,7 @@ public class LoadProxyJob {
 
     }
 
-    public static void setCustomerTask(LiveOffer offer,String geoUP) {
+    public static void setCustomerTask(LiveOffer offer, String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
         if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
@@ -199,7 +199,7 @@ public class LoadProxyJob {
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
         List<CloseableHttpClient> cons = ProxyClient.GEO_CLIENTS.get(geoUP);
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < ProxyClient.GEO_OFFSET.get(geoUP); i++) {
             OfferTask offerTask = new OfferTask(cons.get(i), offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), offer.getId() + i);
             /*SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
                 i * 1000, 1, TimeUnit.MILLISECONDS);*/
@@ -214,12 +214,12 @@ public class LoadProxyJob {
 
     }
 
-    public static void rebuildCustomer(LiveOffer offer,String geoUP) {
+    public static void rebuildCustomer(LiveOffer offer, String geoUP) {
 
 
         if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             logger.warn("INIT:" + offer.getUid());
-            setCustomerTask(offer,geoUP);
+            setCustomerTask(offer, geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())) {
 
             Integer oldclicks = SimpleData.OFFER_CLICKS.get(offer.getUid());
@@ -235,7 +235,7 @@ public class LoadProxyJob {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    setCustomerTask(offer,geoUP);
+                    setCustomerTask(offer, geoUP);
                 }
             }
 
@@ -478,18 +478,20 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 ArrayBlockingQueue qaos = SdkConf.GEO_OS_QUE.get(geo + OsE.AOS.name);
                 if (qaos == null) {
-                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(1000));
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(5000));
                 }
                 ArrayBlockingQueue qios = SdkConf.GEO_OS_QUE.get(geo + OsE.IOS.name);
 
                 if (qios == null) {
-                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(1000));
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(5000));
                 }
                 SdkConf.ACTI_GEO.add(geo);
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
                 proxyClient.putClientPool(proxyserver, port, offset, geo);
+
+
                 ProxyClient.GEO_OFFSET.put(geo, offset);
 
 
