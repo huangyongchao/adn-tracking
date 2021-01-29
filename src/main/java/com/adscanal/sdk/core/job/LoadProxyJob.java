@@ -182,7 +182,7 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 20000;
+        coresize = clicks / 15000;
 
         int weight = (5 / priority);
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
@@ -190,13 +190,14 @@ public class LoadProxyJob {
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
             final int serNo = i;
-            ExecutorPool.getExecutor().execute(()->{
-                OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
+            OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
+
+      /*      ExecutorPool.getExecutor().execute(()->{
                 offerTask.consumer(serNo);
 
-            });
-      /*      SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
-                i * 1000, 10, TimeUnit.MILLISECONDS);*/
+            });*/
+            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
+                i * 1000, 0, TimeUnit.MILLISECONDS);
 
         }
 
