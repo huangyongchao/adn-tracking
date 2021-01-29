@@ -383,7 +383,7 @@ public class LoadProxyJob {
 
             SdkConf.RUNPRODUCERS.add(key);
             List<String> files = GEO_FILES.get(key3);
-            Collections.reverse(files);
+            Collections.shuffle(files);
             while (true) {
                 files.forEach(p -> {
                     try {
