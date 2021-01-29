@@ -61,7 +61,6 @@ public class OfferTask implements Runnable {
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
             request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-            logger.info(offer.getOfferId() + ":NO" +serNo+":"+ SimpleData.OFFERREQCOUNTER.get(offer.getOfferId()).incrementAndGet());
 
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -108,10 +107,7 @@ public class OfferTask implements Runnable {
                     Counter.increaseError1(offer.getUid());
                     break;
                 }
-                if (!url.startsWith("http")) {
-                    Counter.increaseError(offer.getUid());
-                    break;
-                }
+
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
