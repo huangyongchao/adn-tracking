@@ -81,7 +81,7 @@ public class LoadProxyJob {
                 SimpleData.LIVEOFFERSR_EDIRECT.put(offer.getUid(), new HashMap<String, AtomicLong>());
                 // 存储当前激活的offer
                 SimpleData.LIVEOFFERS.put(offer.getUid(), offer);
-                rebuildCustomer(offer);
+                rebuildCustomer(offer, n);
                 acoffers.add(offer.getUid());
             });
 
@@ -147,7 +147,7 @@ public class LoadProxyJob {
 
     }
 
-    public static void setCustomerTask(LiveOffer offer) {
+    public static void setCustomerTask(LiveOffer offer, String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
         if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
@@ -173,7 +173,7 @@ public class LoadProxyJob {
         }
 
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
-           // return;
+            // return;
         }
         int priority = offer.getPriority();
         if (priority <= 0) {
@@ -182,18 +182,21 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 15000;
+        coresize = clicks / 50000;
 
         int weight = (5 / priority);
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                i * 1000, 10, TimeUnit.MILLISECONDS);
-/*
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase()),
-                    i * 1000, 10, TimeUnit.MILLISECONDS);*/
+
+            ExecutorPool.getExecutor().execute(()->{
+                OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
+                offerTask.consumer();
+
+            });
+      /*      SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
+                i * 1000, 10, TimeUnit.MILLISECONDS);*/
 
         }
 
@@ -202,17 +205,17 @@ public class LoadProxyJob {
 
     }
 
-    public static void rebuildCustomer(LiveOffer offer) {
+    public static void rebuildCustomer(LiveOffer offer, String geoUP) {
 
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
         if (!SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             logger.warn("INIT:" + offer.getUid());
-            setCustomerTask(offer);
+            setCustomerTask(offer, geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
             && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
             logger.warn("INIT-RE:" + offer.getUid());
-            setCustomerTask(offer);
+            setCustomerTask(offer, geoUP);
         }
 
 
