@@ -197,7 +197,7 @@ public class LoadProxyJob {
 
             });*/
             SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
-                i * 1000, 0, TimeUnit.MILLISECONDS);
+                i * 1000, 1, TimeUnit.MILLISECONDS);
 
         }
 
