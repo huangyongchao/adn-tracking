@@ -173,7 +173,7 @@ public class LoadProxyJob {
         }
 
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
-            return;
+           // return;
         }
         int priority = offer.getPriority();
         if (priority <= 0) {
