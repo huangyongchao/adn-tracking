@@ -35,18 +35,18 @@ public class OfferTask implements Runnable {
     private String geo3;
     private String os;
 
-    public void consumer(){
+    public void consumer(int  serNo){
         while (true){
-            exec();
+            exec(serNo);
         }
 
     }
     @Override
     public void run() {
-        exec();
+        exec(1);
     }
 
-    public void exec(){
+    public void exec(int  serNo){
         try {
             if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
                 return;
@@ -61,7 +61,7 @@ public class OfferTask implements Runnable {
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
             request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-            logger.info(offer.getOfferId() + ":" + SimpleData.OFFERREQCOUNTER.get(offer.getOfferId()).incrementAndGet());
+            logger.info(offer.getOfferId() + ":" +serNo+":"+ SimpleData.OFFERREQCOUNTER.get(offer.getOfferId()).incrementAndGet());
 
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();

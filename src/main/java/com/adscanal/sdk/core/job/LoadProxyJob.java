@@ -189,10 +189,10 @@ public class LoadProxyJob {
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < coresize; i++) {
-
+            final int serNo = i;
             ExecutorPool.getExecutor().execute(()->{
                 OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
-                offerTask.consumer();
+                offerTask.consumer(serNo);
 
             });
       /*      SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
