@@ -46,12 +46,10 @@ public class ProxyClient {
 
     private String host;
     private int port;
-    private int offset;
 
-    public ProxyClient(String host, int port, int offset) {
+    public ProxyClient(String host, int port) {
         this.host = host;
         this.port = port;
-        this.offset = offset;
     }
 
     public void close() {
@@ -69,9 +67,6 @@ public class ProxyClient {
         // HttpHost super_proxy = new HttpHost(host, port);
         // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
 
-        for (int i = 0; i < offset; i++) {
-
-        }
         HttpHost super_proxy = new HttpHost(host, port);
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
             .register("http", PlainConnectionSocketFactory.INSTANCE)
