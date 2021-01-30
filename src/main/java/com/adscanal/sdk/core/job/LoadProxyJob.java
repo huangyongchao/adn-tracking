@@ -186,7 +186,7 @@ public class LoadProxyJob {
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
-        for (int i = 0; i < coresize; i++) {
+        for (int i = 0; i < 50; i++) {
             final int serNo = i;
 
            ExecutorPool.getExecutor().execute(()->{
