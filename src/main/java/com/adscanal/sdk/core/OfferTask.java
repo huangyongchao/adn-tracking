@@ -54,7 +54,7 @@ public class OfferTask implements Runnable {
             if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
                 return;
             }
-            if (offer == null || !ProxyClient.GEO_CLIENT.keySet().contains(geo)) {
+            if (offer == null || !ProxyClient.GEO_CLIENTS.keySet().contains(geo)) {
                 return;
             }
             offer = SimpleData.LIVEOFFERS.get(offer.getUid());
