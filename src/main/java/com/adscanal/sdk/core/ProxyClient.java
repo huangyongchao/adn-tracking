@@ -41,9 +41,9 @@ public class ProxyClient {
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
 
-    public static CloseableHttpClient getConn(String geo) {
+    public static CloseableHttpClient getConn(String geo, int serNo) {
 
-        return GEO_CLIENTS.get(geo).get(0);
+        return GEO_CLIENTS.get(geo).get(serNo);
     }
 
     public static CloseableHttpClient getClient(String host, int port) {
@@ -52,38 +52,38 @@ public class ProxyClient {
         // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
         HttpHost super_proxy = new HttpHost(host, port);
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.INSTANCE)
-                .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
-                .build();
+            .register("http", PlainConnectionSocketFactory.INSTANCE)
+            .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
+            .build();
 
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(req_timeout)
-                .setConnectionRequestTimeout(req_timeout)
-                .build();
+            .setConnectTimeout(req_timeout)
+            .setConnectionRequestTimeout(req_timeout)
+            .build();
         PoolingHttpClientConnectionManager conn_mgr =
-                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         conn_mgr.closeExpiredConnections();
         conn_mgr.closeIdleConnections(req_timeout, TimeUnit.MILLISECONDS);
         CloseableHttpClient client = HttpClients.custom()
-                .setConnectionManager(conn_mgr)
-                .disableAutomaticRetries()
-                .setRedirectStrategy(new RedirectStrategy() {
-                    @Override
-                    public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                        return false;
-                    }
+            .setConnectionManager(conn_mgr)
+            .disableAutomaticRetries()
+            .setRedirectStrategy(new RedirectStrategy() {
+                @Override
+                public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                    return false;
+                }
 
-                    @Override
-                    public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                        return null;
-                    }
-                })
-                .setProxy(super_proxy)
-                // .setDefaultCredentialsProvider(cred_provider)
-                .setDefaultRequestConfig(config)
-                .build();
+                @Override
+                public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                    return null;
+                }
+            })
+            .setProxy(super_proxy)
+            // .setDefaultCredentialsProvider(cred_provider)
+            .setDefaultRequestConfig(config)
+            .build();
 
         return client;
 
@@ -98,14 +98,14 @@ public class ProxyClient {
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
                 public void checkClientTrusted(
-                        X509Certificate[] paramArrayOfX509Certificate,
-                        String paramString) throws CertificateException {
+                    X509Certificate[] paramArrayOfX509Certificate,
+                    String paramString) throws CertificateException {
                 }
 
                 @Override
                 public void checkServerTrusted(
-                        X509Certificate[] paramArrayOfX509Certificate,
-                        String paramString) throws CertificateException {
+                    X509Certificate[] paramArrayOfX509Certificate,
+                    String paramString) throws CertificateException {
                 }
 
                 @Override
@@ -123,6 +123,7 @@ public class ProxyClient {
 
     /**
      * 要不要覆盖client?
+     *
      * @param host
      * @param portMin
      * @param offset
