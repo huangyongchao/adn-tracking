@@ -1,7 +1,5 @@
 package com.adscanal.sdk.core;
 
-import com.adscanal.sdk.dto.GeoProxy;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -19,8 +17,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -28,10 +24,8 @@ import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class ProxyClient {
