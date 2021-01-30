@@ -142,7 +142,7 @@ public class OfferTask implements Runnable {
                     }
                 }
                 response = client.execute(request);
-                request.releaseConnection();
+                //request.releaseConnection();
 
                 boolean is3rd = AdTool.is3pt(url);
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
