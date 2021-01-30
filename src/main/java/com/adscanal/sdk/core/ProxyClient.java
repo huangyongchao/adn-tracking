@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -40,16 +41,38 @@ public class ProxyClient {
 
     public static final int req_timeout = 10 * 1000;
 
-    public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
+    //public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
     public static Map<String, CloseableHttpClient> GEO_CLIENT = new HashMap();
 
     public static CloseableHttpClient getConn(String geo, int serNo) {
 
-        return GEO_CLIENTS.get(geo).get(0);
+        return GEO_CLIENT.get(geo);
     }
 
-    public static CloseableHttpClient getClient(String host, int port, int offset) {
+    public CloseableHttpClient client;
 
+    private String host;
+    private int port;
+    private int offset;
+
+    public ProxyClient(String host, int port, int offset) {
+        this.host = host;
+        this.port = port;
+        this.offset = offset;
+    }
+
+    public void close() {
+        if (client != null)
+            try {
+                client.close();
+            } catch (IOException e) {
+            }
+        client = null;
+    }
+
+
+    public CloseableHttpClient getClient() {
+        close();
         // HttpHost super_proxy = new HttpHost(host, port);
         // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
 
@@ -69,10 +92,10 @@ public class ProxyClient {
         PoolingHttpClientConnectionManager conn_mgr =
             new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
-        conn_mgr.setMaxTotal(10000);
+        conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         conn_mgr.closeExpiredConnections();
         conn_mgr.closeIdleConnections(req_timeout, TimeUnit.MILLISECONDS);
-        CloseableHttpClient client = HttpClients.custom()
+        client = HttpClients.custom()
             .setConnectionManager(conn_mgr)
             .disableAutomaticRetries()
             .setRedirectStrategy(new RedirectStrategy() {
@@ -95,7 +118,7 @@ public class ProxyClient {
 
     }
 
-    public static SSLContext createIgnoreVerifySSL() {
+    public SSLContext createIgnoreVerifySSL() {
         SSLContext sc = null;
         // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
         try {
@@ -131,7 +154,6 @@ public class ProxyClient {
      * 要不要覆盖client?
      *
      * @param host
-     * @param portMin
      * @param offset
      * @param geo
      */
@@ -150,30 +172,9 @@ public class ProxyClient {
         if (GEO_CLIENT.containsKey(geo)) {
             return;
         }
-        GEO_CLIENT.put(geo, getClient(host, port, offset));
+        GEO_CLIENT.put(geo, new ProxyClient(host, port, offset).getClient());
 
 
-    }
-
-
-    // @PostConstruct
-    public void initClient() {
-
-
-    }
-
-    public static void main(String[] args) {
-        GeoProxy geoProxy = new GeoProxy();
-        geoProxy.setAOS(true);
-        geoProxy.setIOS(true);
-        geoProxy.setOffset(100);
-        geoProxy.setRun(true);
-        geoProxy.setGeo("CO");
-        geoProxy.setPort(24200);
-        geoProxy.setIospath("");
-        geoProxy.setAospath("");
-
-        System.out.println(JSONObject.toJSONString(geoProxy));
     }
 
 }
