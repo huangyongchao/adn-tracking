@@ -48,8 +48,7 @@ public class LoadProxyJob {
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
 
-    @Autowired
-    ProxyClient proxyClient;
+
 
 
     @Value("${proxyserver}")
@@ -471,7 +470,12 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
-                proxyClient.putClientPool1(proxyserver, port, offset, geo);
+
+                if (ProxyClient.GEO_CLIENT.containsKey(geo)) {
+                    return;
+                }
+                ProxyClient.GEO_CLIENT.put(geo, new ProxyClient(proxyserver, port, offset).getClient());
+
                 ProxyClient.GEO_OFFSET.put(geo, offset);
 
 
