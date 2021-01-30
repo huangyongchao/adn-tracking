@@ -1,5 +1,7 @@
 package com.adscanal.sdk.core;
 
+import com.adscanal.sdk.dto.GeoProxy;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -17,18 +19,20 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
+import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class ProxyClient {
 
     public static Map<String, Integer> GEO_OFFSET = Maps.newHashMap();
@@ -37,76 +41,55 @@ public class ProxyClient {
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
 
-    public static CloseableHttpClient getConn(String geo, int serNo) {
+    public static CloseableHttpClient getConn(String geo) {
 
-        return GEO_CLIENTS.get(geo).get(serNo);
+        return GEO_CLIENTS.get(geo).get(new Random().nextInt(GEO_OFFSET.get(geo)));
     }
 
-    public CloseableHttpClient client;
+    public static CloseableHttpClient getClient(String host, int port) {
 
-    private String host;
-    private int port;
-
-    public ProxyClient(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    public void close() {
-        if (client != null)
-            try {
-                client.close();
-            } catch (IOException e) {
-            }
-        client = null;
-    }
-
-
-    public CloseableHttpClient getClient() {
-        close();
         // HttpHost super_proxy = new HttpHost(host, port);
         // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
-
         HttpHost super_proxy = new HttpHost(host, port);
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-            .register("http", PlainConnectionSocketFactory.INSTANCE)
-            .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
-            .build();
+                .register("http", PlainConnectionSocketFactory.INSTANCE)
+                .register("https", new SSLConnectionSocketFactory(createIgnoreVerifySSL()))
+                .build();
 
         RequestConfig config = RequestConfig.custom()
-            .setConnectTimeout(req_timeout)
-            .setConnectionRequestTimeout(req_timeout)
-            .build();
+                .setConnectTimeout(req_timeout)
+                .setConnectionRequestTimeout(req_timeout)
+                .build();
         PoolingHttpClientConnectionManager conn_mgr =
-            new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+                new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
         conn_mgr.setMaxTotal(Integer.MAX_VALUE);
         conn_mgr.closeExpiredConnections();
         conn_mgr.closeIdleConnections(req_timeout, TimeUnit.MILLISECONDS);
-        client = HttpClients.custom()
-            .setConnectionManager(conn_mgr)
-            .disableAutomaticRetries()
-            .setRedirectStrategy(new RedirectStrategy() {
-                @Override
-                public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                    return false;
-                }
+        CloseableHttpClient client = HttpClients.custom()
+                .setConnectionManager(conn_mgr)
+                .disableAutomaticRetries()
+                .setRedirectStrategy(new RedirectStrategy() {
+                    @Override
+                    public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                        return false;
+                    }
 
-                @Override
-                public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
-                    return null;
-                }
-            })
-            .setProxy(super_proxy)
-            // .setDefaultCredentialsProvider(cred_provider)
-            .setDefaultRequestConfig(config)
-            .build();
+                    @Override
+                    public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws ProtocolException {
+                        return null;
+                    }
+                })
+                .setProxy(super_proxy)
+                // .setDefaultCredentialsProvider(cred_provider)
+                .setDefaultRequestConfig(config)
+                .build();
 
         return client;
 
     }
 
-    public SSLContext createIgnoreVerifySSL() {
+    public static SSLContext createIgnoreVerifySSL() {
         SSLContext sc = null;
         // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
         try {
@@ -115,14 +98,14 @@ public class ProxyClient {
             X509TrustManager trustManager = new X509TrustManager() {
                 @Override
                 public void checkClientTrusted(
-                    X509Certificate[] paramArrayOfX509Certificate,
-                    String paramString) throws CertificateException {
+                        X509Certificate[] paramArrayOfX509Certificate,
+                        String paramString) throws CertificateException {
                 }
 
                 @Override
                 public void checkServerTrusted(
-                    X509Certificate[] paramArrayOfX509Certificate,
-                    String paramString) throws CertificateException {
+                        X509Certificate[] paramArrayOfX509Certificate,
+                        String paramString) throws CertificateException {
                 }
 
                 @Override
@@ -140,28 +123,45 @@ public class ProxyClient {
 
     /**
      * 要不要覆盖client?
-     *
      * @param host
+     * @param portMin
      * @param offset
      * @param geo
      */
-//    public void putClientPool(String host, int portMin, int offset, String geo) {
-//        if (GEO_CLIENTS.containsKey(geo)) {
-//            return;
-//        }
-//        int portMax = portMin + offset;
-//        ArrayList<CloseableHttpClient> pool = new ArrayList<>(offset);
-//        for (int p = portMin; p < portMax; p++) {
-//            pool.add(getClient(host, p, offset));
-//        }
-//        GEO_CLIENTS.put(geo, pool);
-//    }
-//    public void putClientPool1(String host, int port, int offset, String geo) {
-//        if (GEO_CLIENT.containsKey(geo)) {
-//            return;
-//        }
-//        GEO_CLIENT.put(geo, new ProxyClient(host, port, offset).getClient());
-//
-//    }
+    public void putClientPool(String host, int portMin, int offset, String geo) {
+        if (GEO_CLIENTS.containsKey(geo)) {
+            return;
+        }
+        int portMax = portMin + offset;
+        ArrayList<CloseableHttpClient> pool = new ArrayList<>();
+        for (int p = portMin; p < portMax; p++) {
+            pool.add(getClient(host, p));
+        }
+        GEO_CLIENTS.put(geo, pool);
+    }
+
+    // @PostConstruct
+    public void initClient() {
+
+
+        putClientPool("", 24200, 100, "CO");
+        putClientPool("", 26400, 100, "BR");
+        putClientPool("", 26200, 100, "CL");
+
+    }
+
+    public static void main(String[] args) {
+        GeoProxy geoProxy = new GeoProxy();
+        geoProxy.setAOS(true);
+        geoProxy.setIOS(true);
+        geoProxy.setOffset(100);
+        geoProxy.setRun(true);
+        geoProxy.setGeo("CO");
+        geoProxy.setPort(24200);
+        geoProxy.setIospath("");
+        geoProxy.setAospath("");
+
+        System.out.println(JSONObject.toJSONString(geoProxy));
+    }
 
 }
