@@ -100,7 +100,7 @@ public class OfferTask implements Runnable {
 
     public void request(String key, HttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
-            HttpResponse response = null;
+            CloseableHttpResponse response = null;
             int steps = 3;
             if (offer.getClickSteps() != null && offer.getClickSteps() >= 3) {
                 steps = offer.getClickSteps();
@@ -139,6 +139,8 @@ public class OfferTask implements Runnable {
                     }
                 }
                 response = ProxyClient.GEO_CLIENT.get(geo).execute(request);
+                request.releaseConnection();
+
                 boolean is3rd = AdTool.is3pt(url);
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
                     logger.warn(url);
