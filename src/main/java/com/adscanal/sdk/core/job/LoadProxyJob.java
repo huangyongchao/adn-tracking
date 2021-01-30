@@ -49,8 +49,6 @@ public class LoadProxyJob {
     private static final Logger errorlog = LoggerFactory.getLogger("error");
 
 
-
-
     @Value("${proxyserver}")
     private String proxyserver;
     @Value("${devidrootpath}")
@@ -186,21 +184,23 @@ public class LoadProxyJob {
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
-        for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
-            final int serNo = i;
+        for (int j = 0; j < 50; j++) {
+            for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
+                final int serNo = i;
 
-           ExecutorPool.getExecutor().execute(()->{
-               OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
+                ExecutorPool.getExecutor().execute(() -> {
+                    OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
 
-               offerTask.consumer(serNo);
+                    offerTask.consumer(serNo);
 
-            });
+                });
       /*      SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
                 i * 1000, 1, TimeUnit.MILLISECONDS);*/
 
-        }
+            }
 
-        //记录过去之前的点击数
+            //记录过去之前的点击数
+        }
 
 
     }
@@ -464,7 +464,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(50000));
                 }
                 SdkConf.ACTI_GEO.add(geo);
-                GEO_FILES.forEach((k,files)->{
+                GEO_FILES.forEach((k, files) -> {
                     Collections.shuffle(files);
                     GEO_FILES.replace(k, files);
                 });
@@ -476,7 +476,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     return;
                 }
                 ProxyClient.GEO_CLIENTS.put(geo, new ArrayList<>());
-                for(int i=port;i<(port+offset);i++){
+                for (int i = port; i < (port + offset); i++) {
                     ProxyClient.GEO_CLIENTS.get(geo).add(new ProxyClient(proxyserver, i, offset).getClient());
                 }
                 ProxyClient.GEO_OFFSET.put(geo, offset);
