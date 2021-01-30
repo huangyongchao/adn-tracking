@@ -36,6 +36,7 @@ public class OfferTask implements Runnable {
     private String geo;
     private String geo3;
     private String os;
+    private int serNo;
 
     public void consumer(int serNo) {
         while (true) {
@@ -46,7 +47,7 @@ public class OfferTask implements Runnable {
 
     @Override
     public void run() {
-        exec(1);
+        exec(serNo);
     }
 
     public void exec(int serNo) {
@@ -71,12 +72,13 @@ public class OfferTask implements Runnable {
         }
     }
 
-    public OfferTask(LiveOffer offer, String key, String geo3, String geo, String os) {
+    public OfferTask(LiveOffer offer, String key, String geo3, String geo, String os, int serNo) {
         this.offer = offer;
         this.key = key;
         this.geo = geo;
         this.geo3 = geo3;
         this.os = os;
+        this.serNo = serNo;
         // logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
     }
 
