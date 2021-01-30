@@ -24,6 +24,7 @@ import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -34,12 +35,11 @@ public class ProxyClient {
 
     public static final int req_timeout = 10 * 1000;
 
-    //public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
-    public static Map<String, CloseableHttpClient> GEO_CLIENT = new HashMap();
+    public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
 
     public static CloseableHttpClient getConn(String geo, int serNo) {
 
-        return GEO_CLIENT.get(geo);
+        return GEO_CLIENTS.get(geo).get(serNo);
     }
 
     public CloseableHttpClient client;
@@ -161,13 +161,12 @@ public class ProxyClient {
 //        }
 //        GEO_CLIENTS.put(geo, pool);
 //    }
-    public void putClientPool1(String host, int port, int offset, String geo) {
-        if (GEO_CLIENT.containsKey(geo)) {
-            return;
-        }
-        GEO_CLIENT.put(geo, new ProxyClient(host, port, offset).getClient());
-
-
-    }
+//    public void putClientPool1(String host, int port, int offset, String geo) {
+//        if (GEO_CLIENT.containsKey(geo)) {
+//            return;
+//        }
+//        GEO_CLIENT.put(geo, new ProxyClient(host, port, offset).getClient());
+//
+//    }
 
 }

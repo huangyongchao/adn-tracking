@@ -186,7 +186,7 @@ public class LoadProxyJob {
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
             final int serNo = i;
 
            ExecutorPool.getExecutor().execute(()->{
@@ -472,11 +472,13 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
 
-                if (ProxyClient.GEO_CLIENT.containsKey(geo)) {
+                if (ProxyClient.GEO_CLIENTS.containsKey(geo)) {
                     return;
                 }
-                ProxyClient.GEO_CLIENT.put(geo, new ProxyClient(proxyserver, port, offset).getClient());
-
+                ProxyClient.GEO_CLIENTS.put(geo, new ArrayList<>());
+                for(int i=port;i<(port+offset);i++){
+                    ProxyClient.GEO_CLIENTS.get(geo).add(new ProxyClient(proxyserver, i, offset).getClient());
+                }
                 ProxyClient.GEO_OFFSET.put(geo, offset);
 
 

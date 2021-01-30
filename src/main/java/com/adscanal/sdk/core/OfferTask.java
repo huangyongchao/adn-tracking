@@ -63,8 +63,8 @@ public class OfferTask implements Runnable {
             SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
-            //request(key, ProxyClient.getConn(geo, serNo), url, ua, offer, null, deviceid, os);
-            request(key, null, url, ua, offer, null, deviceid, os);
+            //request(key, , url, ua, offer, null, deviceid, os);
+            request(key, ProxyClient.getConn(geo, serNo), url, ua, offer, null, deviceid, os);
             at_req.incrementAndGet();
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -98,7 +98,7 @@ public class OfferTask implements Runnable {
     }
 
 
-    public void request(String key, HttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
             int steps = 3;
@@ -138,7 +138,7 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
-                response = ProxyClient.GEO_CLIENT.get(geo).execute(request);
+                response = client.execute(request);
                 request.releaseConnection();
 
                 boolean is3rd = AdTool.is3pt(url);
