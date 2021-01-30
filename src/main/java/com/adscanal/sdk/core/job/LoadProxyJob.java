@@ -454,12 +454,12 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 ArrayBlockingQueue qaos = SdkConf.GEO_OS_QUE.get(geo + OsE.AOS.name);
                 if (qaos == null) {
-                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(50000));
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.AOS.name, new ArrayBlockingQueue<String>(10000));
                 }
                 ArrayBlockingQueue qios = SdkConf.GEO_OS_QUE.get(geo + OsE.IOS.name);
 
                 if (qios == null) {
-                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(50000));
+                    SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(10000));
                 }
                 SdkConf.ACTI_GEO.add(geo);
                 GEO_FILES.forEach((k, files) -> {
