@@ -2,10 +2,8 @@
     "_defaults": {
         "account_id": "c_97bee780",
         "customer": "huangyongchao",
-        "logs": 0,
-        "lpm_token": "kQjuA6FEx7QFrJKzZHyLLhsjtJYwDhQv|huangyongchao",
+        "lpm_token": "xQjNeKAHwQYBhnXxJQSFcN2qt5gqrhrW|huangyongchao",
         "password": "q5srrwcvkx9x",
-        "token_auth": "",
         "version": "1.218.904",
         "www_whitelist_ips": [
             "172.31.8.75",
@@ -22,7 +20,6 @@
             "country": "in",
             "dns": "remote",
             "internal_name": "in",
-            
             "port": 44500,
             "preset": "rotating",
             "rotate_session": true,
@@ -34,7 +31,6 @@
             "country": "gb",
             "dns": "remote",
             "internal_name": "gb",
-            
             "port": 42500,
             "preset": "rotating",
             "rotate_session": true,
@@ -46,7 +42,6 @@
             "country": "my",
             "dns": "remote",
             "internal_name": "my",
-            
             "port": 43000,
             "preset": "rotating",
             "rotate_session": true,
@@ -58,7 +53,6 @@
             "country": "ph",
             "dns": "remote",
             "internal_name": "ph",
-            
             "port": 43500,
             "preset": "rotating",
             "rotate_session": true,
@@ -70,7 +64,6 @@
             "country": "au",
             "dns": "remote",
             "internal_name": "au",
-            
             "port": 44000,
             "preset": "rotating",
             "rotate_session": true,
@@ -82,7 +75,6 @@
             "country": "th",
             "dns": "remote",
             "internal_name": "th",
-            
             "port": 34000,
             "preset": "rotating",
             "rotate_session": true,
@@ -94,7 +86,6 @@
             "country": "vn",
             "dns": "remote",
             "internal_name": "vn",
-            
             "port": 34500,
             "preset": "rotating",
             "rotate_session": true,
@@ -106,7 +97,6 @@
             "country": "sg",
             "dns": "remote",
             "internal_name": "sg",
-            
             "port": 35000,
             "preset": "rotating",
             "rotate_session": true,
@@ -118,7 +108,6 @@
             "country": "tw",
             "dns": "remote",
             "internal_name": "tw",
-            
             "port": 35500,
             "preset": "rotating",
             "rotate_session": true,
@@ -130,7 +119,6 @@
             "country": "hk",
             "dns": "remote",
             "internal_name": "hk",
-            
             "port": 36000,
             "preset": "rotating",
             "rotate_session": true,
@@ -142,7 +130,6 @@
             "country": "sa",
             "dns": "remote",
             "internal_name": "sa",
-            
             "port": 36500,
             "preset": "rotating",
             "rotate_session": true,
@@ -154,7 +141,6 @@
             "country": "ae",
             "dns": "remote",
             "internal_name": "ae",
-            
             "port": 37000,
             "preset": "rotating",
             "rotate_session": true,
@@ -166,7 +152,6 @@
             "country": "th",
             "dns": "remote",
             "internal_name": "th",
-            
             "port": 37500,
             "preset": "rotating",
             "rotate_session": true,
@@ -178,7 +163,6 @@
             "country": "id",
             "dns": "remote",
             "internal_name": "id",
-            
             "port": 38000,
             "preset": "rotating",
             "rotate_session": true,
@@ -190,7 +174,6 @@
             "country": "jp",
             "dns": "remote",
             "internal_name": "jp",
-            
             "port": 38500,
             "preset": "rotating",
             "rotate_session": true,
@@ -202,7 +185,6 @@
             "country": "ru",
             "dns": "remote",
             "internal_name": "ru",
-            
             "port": 39000,
             "preset": "rotating",
             "rotate_session": true,
@@ -214,7 +196,6 @@
             "country": "br",
             "dns": "remote",
             "internal_name": "br",
-            
             "port": 39500,
             "preset": "rotating",
             "rotate_session": true,
@@ -226,7 +207,6 @@
             "country": "mx",
             "dns": "remote",
             "internal_name": "mx",
-            
             "port": 40000,
             "preset": "rotating",
             "rotate_session": true,
@@ -238,7 +218,6 @@
             "country": "ca",
             "dns": "remote",
             "internal_name": "ca",
-            
             "port": 40500,
             "preset": "rotating",
             "rotate_session": true,
@@ -250,7 +229,6 @@
             "country": "de",
             "dns": "remote",
             "internal_name": "de",
-            
             "port": 41000,
             "preset": "rotating",
             "rotate_session": true,
@@ -262,7 +240,6 @@
             "country": "fr",
             "dns": "remote",
             "internal_name": "fr",
-            
             "port": 41500,
             "preset": "rotating",
             "rotate_session": true,
@@ -274,7 +251,6 @@
             "country": "tr",
             "dns": "remote",
             "internal_name": "tr",
-            
             "port": 31500,
             "preset": "rotating",
             "rotate_session": true,
@@ -286,7 +262,6 @@
             "country": "es",
             "dns": "remote",
             "internal_name": "es",
-            
             "port": 32000,
             "preset": "rotating",
             "rotate_session": true,
@@ -298,7 +273,6 @@
             "country": "it",
             "dns": "remote",
             "internal_name": "it",
-            
             "port": 32500,
             "preset": "rotating",
             "rotate_session": true,
@@ -310,7 +284,6 @@
             "country": "us",
             "dns": "remote",
             "internal_name": "us",
-            
             "port": 33500,
             "preset": "rotating",
             "rotate_session": true,
