@@ -36,18 +36,19 @@ public class OfferTask implements Runnable {
     private String geo3;
     private String os;
 
-    public void consumer(int  serNo){
-        while (true){
+    public void consumer(int serNo) {
+        while (true) {
             exec(serNo);
         }
 
     }
+
     @Override
     public void run() {
         exec(1);
     }
 
-    public void exec(int  serNo){
+    public void exec(int serNo) {
         try {
             if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
                 return;
@@ -61,7 +62,7 @@ public class OfferTask implements Runnable {
             SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
-            request(key, ProxyClient.getConn(geo,serNo), url, ua, offer, null, deviceid, os);
+            request(key, ProxyClient.getConn(geo, serNo), url, ua, offer, null, deviceid, os);
             at_req.incrementAndGet();
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -107,6 +108,11 @@ public class OfferTask implements Runnable {
                 if (i == 5) {
                     Counter.increaseError1(offer.getUid());
                     break;
+                }
+                if (!url.startsWith("http")) {
+                    Counter.increaseError(offer.getUid());
+                    break;
+
                 }
 
                 HttpGet request = new HttpGet(url);
