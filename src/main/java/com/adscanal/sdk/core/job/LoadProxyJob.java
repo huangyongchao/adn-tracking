@@ -186,7 +186,6 @@ public class LoadProxyJob {
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
         for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
             final int serNo = i;
-            logger.info("CHECKCLIENT:" + geoUP + " " + serNo + " " + ProxyClient.getConn(geoUP, serNo).hashCode());
             ExecutorPool.getExecutor().execute(() -> {
                 OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
                 offerTask.consumer(serNo);
