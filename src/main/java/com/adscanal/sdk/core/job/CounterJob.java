@@ -1,6 +1,7 @@
 package com.adscanal.sdk.core.job;
 
 import com.adscanal.sdk.common.HttpClientUtil;
+import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.OfferClick;
@@ -62,9 +63,9 @@ public class CounterJob {
         String state_date = current + ":00:00";
 
         String sql = "INSERT INTO daily_report (channel_id,sub_id,advertiser_id,advertiser_name,affiliate_id,affiliate_name,offer_id,offer_name,country,state_date,offer_uid,app_id,app_name,source_affiliate_id,source_campaign,click_count,click_invalid) " +
-                "select '0','',s.aId,s.affiliateName,s.affiliateId,s.affiliateName,s.offerId,s.offerName,s.countries,'"+state_date+"',s.id,s.appId,s.offerName,  s.sourceAffiliateId,s.sourceOfferId," +
-                " 0,0 from offer s where s.status = 'active' " +
-                "and s.priority >=2 ON DUPLICATE KEY UPDATE click_count = click_count+0,click_invalid=click_invalid+0";
+            "select '0','',s.aId,s.affiliateName,s.affiliateId,s.affiliateName,s.offerId,s.offerName,s.countries,'" + state_date + "',s.id,s.appId,s.offerName,  s.sourceAffiliateId,s.sourceOfferId," +
+            " 0,0 from offer s where s.status = 'active' " +
+            "and s.priority >=2 ON DUPLICATE KEY UPDATE click_count = click_count+0,click_invalid=click_invalid+0";
 
         jdbcTemplate.execute(sql);
     }
@@ -75,7 +76,7 @@ public class CounterJob {
         String current = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH");
         String state_date = current + ":00:00";
 
-        Map<Integer, OfferCounter>  map = Counter.counterMap();
+        Map<Integer, OfferCounter> map = Counter.counterMap();
         map.forEach((k, v) -> {
             long ss = v.success1.longValue();
             long dvs = ss - v.getSuccess1snp();
@@ -107,13 +108,12 @@ public class CounterJob {
             }
 
 
-
         });
     }
 
     public static void main(String[] args) {
         System.out.println(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH") + ":00:00");
-        long dv =100;
+        long dv = 100;
         long dv1 = 1000;
         String d = "2020-10-17 12:00:00";
         int k = 111;
@@ -168,15 +168,24 @@ public class CounterJob {
     public void checkPauseOffersByClicks() {
         SimpleData.OFFER_CLICKS.forEach((id, v) -> {
             AtomicInteger d = Counter.DAILY_CLICKS.get(id);
-            if (d!=null && (v <d.get())) {
+            if (d != null && (v < d.get())) {
                 SimpleData.PAUSE_OFFERS.add(id);
-                if(SdkConf.OFFER_SCHED.containsKey(id)){
+                if (SdkConf.OFFER_SCHED.containsKey(id)) {
                     SdkConf.OFFER_SCHED.get(id).shutdownNow();
                     SdkConf.OFFER_SCHED.remove(id);
                 }
                 logger.warn("PAUSEOFFER:" + id);
             }
         });
+    }
+
+
+    @Scheduled(cron = "1 0/1 * * * ?")
+    public void acc() {
+
+        long c = OfferTask.at_req.get();
+        logger.warn("ACCOUNT:" + c + ":" + (c - OfferTask.n_total_req));
+        OfferTask.n_total_req = c;
     }
 
 

@@ -15,14 +15,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class OfferTask implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
 
 
-    public static final int n_total_req = 10000000;
-    public static AtomicInteger at_req = new AtomicInteger(0);
+    public static volatile long n_total_req = 0;
+    public static AtomicLong at_req = new AtomicLong(0);
     public AtomicInteger success_req_account_store = new AtomicInteger(0);
     public AtomicInteger success_req_account_200 = new AtomicInteger(0);
     public AtomicInteger error_req_account_500 = new AtomicInteger(0);
@@ -61,7 +62,7 @@ public class OfferTask implements Runnable {
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
             request(key, ProxyClient.getConn(geo), url, ua, offer, null, deviceid, os);
-
+            at_req.incrementAndGet();
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
             errorlog.error(e.getMessage(), e);
