@@ -383,7 +383,6 @@ public class LoadProxyJob {
 
             SdkConf.RUNPRODUCERS.add(key);
             List<String> files = GEO_FILES.get(key3);
-            Collections.shuffle(files);
             while (true) {
                 files.forEach(p -> {
                     try {
@@ -465,6 +464,11 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(50000));
                 }
                 SdkConf.ACTI_GEO.add(geo);
+                GEO_FILES.forEach((k,files)->{
+                    Collections.shuffle(files);
+                    GEO_FILES.replace(k, files);
+                });
+                System.out.println(JSONObject.toJSONString(GEO_FILES));
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
