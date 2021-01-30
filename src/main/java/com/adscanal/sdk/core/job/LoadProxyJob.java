@@ -188,7 +188,7 @@ public class LoadProxyJob {
             final int serNo = i;
             ExecutorPool.getExecutor().execute(() -> {
                 OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase());
-                offerTask.consumer(serNo);
+                offerTask.consumer(0);
             });
 
         }
