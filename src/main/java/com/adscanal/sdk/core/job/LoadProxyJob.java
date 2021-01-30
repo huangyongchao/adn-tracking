@@ -446,6 +446,9 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 if (offset == null) {
                     offset = 0;
                 }
+                if (offset == null || offset == 0) {
+                    offset = 1;
+                }
                 if (StringUtils.isEmpty(geo)) {
                     return;
                 }
