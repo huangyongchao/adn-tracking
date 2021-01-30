@@ -468,7 +468,6 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     Collections.shuffle(files);
                     GEO_FILES.replace(k, files);
                 });
-                System.out.println(JSONObject.toJSONString(GEO_FILES));
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
