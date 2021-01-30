@@ -125,11 +125,11 @@ public class AdTool {
         if (track.indexOf("{store_appid}") > -1 && StringUtils.isNotBlank(appname)) {
             track = StringUtils.replaceAll(track, "\\{store_appid}", appname);
         }
-        if (track.indexOf("\n") > 0) {
+        if (track.indexOf("\n") >= 0) {
             track = track.replace("\n", "");
 
         }
-        if (track.indexOf("\\s") > 0) {
+        if (track.indexOf("\\s") >= 0) {
             track = track.replace("\\s", "");
 
         }
