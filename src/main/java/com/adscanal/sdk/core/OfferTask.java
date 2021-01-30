@@ -6,6 +6,7 @@ import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
 import org.apache.http.*;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -62,7 +63,8 @@ public class OfferTask implements Runnable {
             SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
-            request(key, ProxyClient.getConn(geo, serNo), url, ua, offer, null, deviceid, os);
+            //request(key, ProxyClient.getConn(geo, serNo), url, ua, offer, null, deviceid, os);
+            request(key, ProxyClient.GEO_CLIENT.get(geo).getHttpClient(), url, ua, offer, null, deviceid, os);
             at_req.incrementAndGet();
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
@@ -96,9 +98,9 @@ public class OfferTask implements Runnable {
     }
 
 
-    public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public void request(String key, HttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
-            CloseableHttpResponse response = null;
+            HttpResponse response = null;
             int steps = 3;
             if (offer.getClickSteps() != null && offer.getClickSteps() >= 3) {
                 steps = offer.getClickSteps();
@@ -136,9 +138,7 @@ public class OfferTask implements Runnable {
                         request.addHeader("Cookie", header.getValue());
                     }
                 }
-                response = client.execute(request);
-                request.releaseConnection();
-
+                response = ProxyClient.GEO_CLIENT.get(geo).getHttpClient().execute(request);
                 boolean is3rd = AdTool.is3pt(url);
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
                     logger.warn(url);
@@ -171,7 +171,7 @@ public class OfferTask implements Runnable {
 
     }
 
-    public static boolean isRedirect(LiveOffer offer, CloseableHttpResponse response) {
+    public static boolean isRedirect(LiveOffer offer, HttpResponse response) {
         if (response != null && response.getStatusLine() != null && (response.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY || response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT)) {
             return true;
         }

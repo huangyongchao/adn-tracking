@@ -19,6 +19,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.SSLContext;
@@ -40,16 +41,21 @@ public class ProxyClient {
     public static final int req_timeout = 10 * 1000;
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
+    public static Map<String, HttpComponentsClientHttpRequestFactory> GEO_CLIENT = new HashMap();
 
     public static CloseableHttpClient getConn(String geo, int serNo) {
 
         return GEO_CLIENTS.get(geo).get(0);
     }
 
-    public static CloseableHttpClient getClient(String host, int port) {
+    public static CloseableHttpClient getClient(String host, int port, int offset) {
 
         // HttpHost super_proxy = new HttpHost(host, port);
         // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
+
+        for (int i=0;i<offset;i++){
+
+        }
         HttpHost super_proxy = new HttpHost(host, port);
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
             .register("http", PlainConnectionSocketFactory.INSTANCE)
@@ -63,7 +69,7 @@ public class ProxyClient {
         PoolingHttpClientConnectionManager conn_mgr =
             new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         conn_mgr.setDefaultMaxPerRoute(Integer.MAX_VALUE);
-        conn_mgr.setMaxTotal(Integer.MAX_VALUE);
+        conn_mgr.setMaxTotal(10000);
         conn_mgr.closeExpiredConnections();
         conn_mgr.closeIdleConnections(req_timeout, TimeUnit.MILLISECONDS);
         CloseableHttpClient client = HttpClients.custom()
@@ -129,25 +135,34 @@ public class ProxyClient {
      * @param offset
      * @param geo
      */
-    public void putClientPool(String host, int portMin, int offset, String geo) {
-        if (GEO_CLIENTS.containsKey(geo)) {
+//    public void putClientPool(String host, int portMin, int offset, String geo) {
+//        if (GEO_CLIENTS.containsKey(geo)) {
+//            return;
+//        }
+//        int portMax = portMin + offset;
+//        ArrayList<CloseableHttpClient> pool = new ArrayList<>(offset);
+//        for (int p = portMin; p < portMax; p++) {
+//            pool.add(getClient(host, p, offset));
+//        }
+//        GEO_CLIENTS.put(geo, pool);
+//    }
+
+
+    public void putClientPool1(String host, int port, int offset, String geo) {
+        if (GEO_CLIENT.containsKey(geo)) {
             return;
         }
-        int portMax = portMin + offset;
-        ArrayList<CloseableHttpClient> pool = new ArrayList<>(offset);
-        for (int p = portMin; p < portMax; p++) {
-            pool.add(getClient(host, p));
-        }
-        GEO_CLIENTS.put(geo, pool);
+        GEO_CLIENT.put(geo,new HttpComponentsClientHttpRequestFactory(getClient(host,port,offset)));
+
+
+
     }
+
 
     // @PostConstruct
     public void initClient() {
 
 
-        putClientPool("", 24200, 100, "CO");
-        putClientPool("", 26400, 100, "BR");
-        putClientPool("", 26200, 100, "CL");
 
     }
 

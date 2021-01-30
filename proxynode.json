@@ -27,7 +27,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -39,7 +39,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -51,7 +51,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -63,7 +63,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -75,7 +75,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -87,7 +87,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -99,7 +99,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -111,7 +111,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -123,7 +123,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -135,7 +135,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -147,7 +147,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -159,7 +159,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -171,7 +171,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -183,7 +183,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -195,7 +195,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -207,7 +207,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -219,7 +219,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -231,7 +231,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -243,7 +243,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -255,7 +255,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -267,7 +267,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -279,7 +279,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -291,7 +291,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -303,7 +303,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         },
         {
@@ -315,7 +315,7 @@
             "preset": "rotating",
             "rotate_session": true,
             "route_err": "block",
-            "ssl": false,
+            "ssl": true,
             "zone": "static"
         }
     ]
