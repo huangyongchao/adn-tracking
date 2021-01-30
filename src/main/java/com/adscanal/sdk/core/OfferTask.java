@@ -165,7 +165,7 @@ public class OfferTask implements Runnable {
 
         } catch (Exception e) {
             Counter.increaseError(offer.getUid());
-            errorlog.error(e.getMessage(), e);
+            errorlog.error(url, e);
             error_req_account.incrementAndGet();
         }
 
@@ -196,5 +196,12 @@ public class OfferTask implements Runnable {
 
     public List<CloseableHttpClient> switch_session_id() {
         return null;
+    }
+
+
+    public static void main(String[] args) {
+        String url = "https://u.lazada.co.th/u/c.bVWZnP?lp_url=https%3A%2F%2Fpages.lazada.co.th%2Fwow%2Fi%2Fth%2Fmarketing%2Fams_lp%3Fhybrid%3D1%26laz_trackid%3D2%3Amm_164131072_52202903_2011302891%3Aclk5hg4a71et8ingeum6jm%26mkttid%3Dclk5hg4a71et8ingeum6jm%26exlaz%3Dc_5z9KGVExw904bLdPw10DoZOiJVbNcTncscD4vkQsEoM%25253D&fallback=true&deeplink=true";
+
+        new HttpGet(url);
     }
 }
