@@ -41,9 +41,9 @@ public class ProxyClient {
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
 
-    public static CloseableHttpClient getConn(String geo) {
+    public static CloseableHttpClient getConn(String geo,int serNo) {
 
-        return GEO_CLIENTS.get(geo).get(new Random().nextInt(GEO_OFFSET.get(geo)));
+        return GEO_CLIENTS.get(geo).get(serNo);
     }
 
     public static CloseableHttpClient getClient(String host, int port) {
