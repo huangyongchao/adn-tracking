@@ -41,7 +41,7 @@ public class ProxyClient {
     public static final int req_timeout = 10 * 1000;
 
     public static Map<String, ArrayList<CloseableHttpClient>> GEO_CLIENTS = new HashMap();
-    public static Map<String, HttpComponentsClientHttpRequestFactory> GEO_CLIENT = new HashMap();
+    public static Map<String, CloseableHttpClient> GEO_CLIENT = new HashMap();
 
     public static CloseableHttpClient getConn(String geo, int serNo) {
 
@@ -53,7 +53,7 @@ public class ProxyClient {
         // HttpHost super_proxy = new HttpHost(host, port);
         // HttpHost super_proxy = new HttpHost("44.235.122.213", port);
 
-        for (int i=0;i<offset;i++){
+        for (int i = 0; i < offset; i++) {
 
         }
         HttpHost super_proxy = new HttpHost(host, port);
@@ -146,14 +146,11 @@ public class ProxyClient {
 //        }
 //        GEO_CLIENTS.put(geo, pool);
 //    }
-
-
     public void putClientPool1(String host, int port, int offset, String geo) {
         if (GEO_CLIENT.containsKey(geo)) {
             return;
         }
-        GEO_CLIENT.put(geo,new HttpComponentsClientHttpRequestFactory(getClient(host,port,offset)));
-
+        GEO_CLIENT.put(geo, getClient(host, port, offset));
 
 
     }
@@ -161,7 +158,6 @@ public class ProxyClient {
 
     // @PostConstruct
     public void initClient() {
-
 
 
     }
