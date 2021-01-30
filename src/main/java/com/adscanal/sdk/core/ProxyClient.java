@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class ProxyClient {
 
     public static Map<String, Integer> GEO_OFFSET = Maps.newHashMap();
