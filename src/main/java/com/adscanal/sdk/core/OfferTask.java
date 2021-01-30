@@ -112,6 +112,8 @@ public class OfferTask implements Runnable {
                 }
                 if (!url.startsWith("http")) {
                     Counter.increaseError(offer.getUid());
+                    at_req.incrementAndGet();
+
                     break;
 
                 }
