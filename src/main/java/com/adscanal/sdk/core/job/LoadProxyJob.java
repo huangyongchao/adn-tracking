@@ -467,8 +467,8 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     return;
                 }
                 ProxyClient.GEO_CLIENTS.put(geo, new ArrayList<>());
-                for (int i = port; i < (port + offset); i++) {
-                    ProxyClient.GEO_CLIENTS.get(geo).add(new ProxyClient(proxyserver, i).getClient());
+                for (int i = 0; i <  1; i++) {
+                    ProxyClient.GEO_CLIENTS.get(geo).add(new ProxyClient(proxyserver, port+i).getClient());
                     logger.info("INITCLIENT:" + geo + " " + i);
                 }
                 ProxyClient.GEO_OFFSET.put(geo, offset);
