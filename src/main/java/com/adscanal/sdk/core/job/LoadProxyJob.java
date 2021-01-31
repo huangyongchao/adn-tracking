@@ -294,6 +294,10 @@ public class LoadProxyJob {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        GEO_FILES.forEach((k, files) -> {
+            Collections.reverse(files);
+            GEO_FILES.replace(k, files);
+        });
 
     }
 
@@ -462,10 +466,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                     SdkConf.GEO_OS_QUE.put(geo + OsE.IOS.name, new ArrayBlockingQueue<String>(10000));
                 }
                 SdkConf.ACTI_GEO.add(geo);
-                GEO_FILES.forEach((k, files) -> {
-                    Collections.shuffle(files);
-                    GEO_FILES.replace(k, files);
-                });
+
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
