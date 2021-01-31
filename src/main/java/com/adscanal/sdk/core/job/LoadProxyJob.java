@@ -406,7 +406,7 @@ public class LoadProxyJob {
         });
     }
 
-    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "0 0/20 * * * ?")
     public void loadProxy() {
 
 /*
