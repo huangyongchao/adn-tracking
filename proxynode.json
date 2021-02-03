@@ -2,6 +2,7 @@
     "_defaults": {
         "account_id": "c_97bee780",
         "customer": "huangyongchao",
+        "logs": 0,
         "lpm_token": "xQjNeKAHwQYBhnXxJQSFcN2qt5gqrhrW|huangyongchao",
         "password": "q5srrwcvkx9x",
         "version": "1.218.904",
@@ -290,6 +291,17 @@
             "route_err": "block",
             "ssl": true,
             "zone": "static"
+        },
+        {
+            "country": "kr",
+            "dns": "remote",
+            "internal_name": "kr",
+            "port": 45000,
+            "preset": "rotating",
+            "rotate_session": true,
+            "route_err": "block",
+            "session": "",
+            "ssl": true
         }
     ]
 }
