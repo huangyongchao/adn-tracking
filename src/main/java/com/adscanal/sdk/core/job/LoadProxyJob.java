@@ -295,7 +295,7 @@ public class LoadProxyJob {
             e.printStackTrace();
         }
         GEO_FILES.forEach((k, files) -> {
-            Collections.reverse(files);
+            Collections.shuffle(files);
             GEO_FILES.replace(k, files);
         });
 
