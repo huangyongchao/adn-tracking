@@ -17,5 +17,5 @@ echo $datetime
 
 mvn clean install -Dmaven.test.skip=true
 `mv ./target/$name*.jar  ./target/$name.jar`
-java   -Xms4g -Xmx2g  -jar "target/$name.jar"  --spring.profiles.active=prod &
+java -server  -Xms256M -Xmx2048M -Xmn256M  -jar "target/$name.jar"  --spring.profiles.active=prod &
 echo "$name service is up..."
