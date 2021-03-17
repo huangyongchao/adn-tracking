@@ -178,8 +178,10 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 20000;
-
+        coresize = clicks / 30000;
+        if(coresize>50){
+            coresize = 50;
+        }
         int weight = (5 / priority);
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
