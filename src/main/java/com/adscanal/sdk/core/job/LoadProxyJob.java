@@ -178,7 +178,7 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 30000;
+        coresize = clicks / 50000;
         if(coresize>50){
             coresize = 50;
         }
