@@ -74,13 +74,13 @@
             <appender-ref ref="SYSERROR" />
         </AsyncLogger>
 
-        <logger name="org.springframework" level="INFO"></logger>
+      <!--  <logger name="org.springframework" level="INFO"></logger>
         <logger name="org.mybatis" level="ERROR"></logger>
         <logger name="org.apache" level="ERROR"/>
         <logger name="org.apache.kafka" level="ERROR"/>
         <logger name="org.springframework" level="ERROR"/>
         <logger name="org.springframework.data.elasticsearch.client.WIRE" level="trace"/>
-        <logger name="org.elasticsearch.client" level="ERROR"/>
+        <logger name="org.elasticsearch.client" level="ERROR"/>-->
 
 
         <AsyncRoot level="info">
