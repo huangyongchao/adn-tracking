@@ -41,6 +41,7 @@ public class APRconf {
             }
 
         });
+        tomcat.setProtocol("org.apache.coyote.http11.Http11AprProtocol");
         //避免出现 ssl=on 的报错
         AprLifecycleListener aprLifecycleListener = new AprLifecycleListener();
         aprLifecycleListener.setSSLEngine("off");
