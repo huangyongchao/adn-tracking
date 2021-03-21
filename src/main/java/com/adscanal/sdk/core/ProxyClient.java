@@ -8,6 +8,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.RedirectStrategy;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.config.Registry;
@@ -59,6 +60,7 @@ public class ProxyClient {
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
+                .setCookieSpec(CookieSpecs.STANDARD)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
                 new PoolingHttpClientConnectionManager(socketFactoryRegistry);
