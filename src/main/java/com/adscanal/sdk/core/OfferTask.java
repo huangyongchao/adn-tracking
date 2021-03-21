@@ -138,7 +138,7 @@ public class OfferTask implements Runnable {
 
                 if (headers != null && headers.length > 0) {
                     for (Header header : headers) {
-                        request.addHeader("Cookie", header.getValue());
+                       // request.addHeader("Cookie", header.getValue());
                     }
                 }
                 response = client.execute(request);
