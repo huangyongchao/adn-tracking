@@ -5,7 +5,7 @@ import org.springframework.boot.web.server.WebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class EnableAPR implements WebServerFactoryCustomizer<WebServerFactory> {
 
     @Override
