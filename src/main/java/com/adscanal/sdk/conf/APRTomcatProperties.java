@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 
 @ConfigurationProperties(value = APRTomcatProperties.PREFIX)
-@Profile("prod")
+@Profile("dev")
 public class APRTomcatProperties {
     public static final String PREFIX = "aprio";
 

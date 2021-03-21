@@ -19,7 +19,7 @@ import java.util.List;
 
 @Configuration
 @EnableConfigurationProperties(APRTomcatProperties.class)
-@Profile("prod")
+@Profile("dev")
 public class APRconf {
 
     @Bean
