@@ -150,7 +150,7 @@ public class OfferTask implements Runnable {
                 }
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
-                    headers = response.getHeaders("set-cookie");
+                    //headers = response.getHeaders("set-cookie");
                     continue;
                 } else {
                     int status = response.getStatusLine().getStatusCode();
