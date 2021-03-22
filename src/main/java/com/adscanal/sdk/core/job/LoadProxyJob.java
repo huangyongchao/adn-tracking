@@ -114,7 +114,7 @@ public class LoadProxyJob {
 
         try {
             //http://54.218.163.206:5080/openapi/test
-            String offerapi = "http://" + apiserver + ":8180/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
+            String offerapi = "http://" + apiserver + "/liveoffers?auth=18&type=3&location=" + geo.toLowerCase();
             String respj = HttpClientUtil.get(offerapi);
 
             JSONArray respja = JSONArray.parseArray(respj);
