@@ -62,7 +62,7 @@ public class LoadProxyJob {
 
     private static int BASE = 1000 * 60 * 60 * 24;
 
-    @Scheduled(cron = "0 0/10 * * * ?")
+    @Scheduled(cron = "0 0/3 * * * ?")
     public void sychOffers() {
         Set<Integer> acoffers = Sets.newHashSet();
         Set<Integer> stopoffers = Sets.newHashSet();
