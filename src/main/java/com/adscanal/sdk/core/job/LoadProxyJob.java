@@ -74,8 +74,10 @@ public class LoadProxyJob {
         SdkConf.ACTI_GEO.forEach(n -> {
             //List<LiveOffer> list = getOffers(n);
             List<LiveOffer> list = geoOffers.get(n.toLowerCase());
-
-
+            if (list == null) {
+                return;
+            }
+            System.out.println("-----------"+n+"-----------"+list.size());
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
                 //  return;
