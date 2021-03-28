@@ -7,6 +7,7 @@ import com.adscanal.sdk.common.HttpClientUtil;
 import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
+import com.adscanal.sdk.core.dao.OfferDao;
 import com.adscanal.sdk.dto.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -38,11 +39,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 @Component
 @Order(0)
 public class LoadProxyJob {
-
+    @Autowired
+    private OfferDao offerDao;
     public static List<GeoProxy> PROXIES = Lists.newArrayList();
     public static Map<String, GeoProxy> GEOPROXYMAP = Maps.newHashMap();
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
@@ -63,12 +66,16 @@ public class LoadProxyJob {
     public void sychOffers() {
         Set<Integer> acoffers = Sets.newHashSet();
         Set<Integer> stopoffers = Sets.newHashSet();
-
+        List<LiveOffer> offers = offerDao.doBatchFetch();
+        if (offers == null) {
+            return;
+        }
+        Map<String, List<LiveOffer>> geoOffers = offers.stream().collect(Collectors.groupingBy(LiveOffer::getCountry));
         SdkConf.ACTI_GEO.forEach(n -> {
-            List<LiveOffer> list = getOffers(n);
-            if (list == null) {
-                return;
-            }
+            //List<LiveOffer> list = getOffers(n);
+            List<LiveOffer> list = geoOffers.get(n.toLowerCase());
+
+
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
                 //  return;
@@ -179,7 +186,7 @@ public class LoadProxyJob {
             priority = 5;
         }
         coresize = clicks / 15000;
-        if(coresize>80){
+        if (coresize > 80) {
             coresize = 80;
         }
         int weight = (5 / priority);
@@ -191,7 +198,7 @@ public class LoadProxyJob {
                 final int serNo = i;
                 OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo);
                 SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
-                    i * 1000, 1, TimeUnit.MILLISECONDS);
+                        i * 1000, 1, TimeUnit.MILLISECONDS);
 
          /*       ExecutorPool.getExecutor().execute(() -> {
                     offerTask.consumer(serNo);
@@ -213,7 +220,7 @@ public class LoadProxyJob {
             logger.warn("INIT:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-            && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
+                && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         }
@@ -492,7 +499,7 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
     @PostConstruct
     public void init() {
-
+        //sychOffers();
         try {
             getGeoOsFiles();
             logger.warn("FIRSTTIME:GEO FILES INIT DONE");
