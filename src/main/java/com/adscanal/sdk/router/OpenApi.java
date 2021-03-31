@@ -4,6 +4,9 @@ import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.core.job.LoadProxyJob;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
+import com.adscanal.sdk.entity.Offer;
+import com.adscanal.sdk.entity.OfferExample;
+import com.adscanal.sdk.mapper.OfferMapper;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +19,29 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @EnableAutoConfiguration
 public class OpenApi {
     @Autowired
     WebApplicationContext applicationContext;
+    @Autowired
+    OfferMapper offerMapper;
 
     @GetMapping("/live_offers")
     public Object live_offers() {
         return JSONObject.toJSONString(SimpleData.LIVEOFFERS);
+
+    }
+
+    @GetMapping("/activeoffers")
+    public Object activeoffers() {
+        OfferExample example = new OfferExample();
+        example.createCriteria().andPriorityGreaterThan(Short.valueOf("1")).andStatusEqualTo("active");
+
+        List<Offer> offers = offerMapper.selectByExample(example);
+        return JSONObject.toJSONString(Optional.of(offers).orElse(new ArrayList<>()));
 
     }
 
@@ -111,6 +123,7 @@ public class OpenApi {
     public Object offers() {
         return SimpleData.GOFFERS;
     }
+
     @GetMapping("/offer_d_clicks")
     public Object dailyclicks() {
         return Counter.DAILY_CLICKS;
