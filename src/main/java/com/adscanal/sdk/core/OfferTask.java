@@ -171,7 +171,7 @@ public class OfferTask implements Runnable {
 
         } catch (Exception e) {
             //Counter.increaseError(offer.getUid());
-            logger.error(url, e);
+            errorlog.error(url, e);
             error_req_account.incrementAndGet();
         }
 
