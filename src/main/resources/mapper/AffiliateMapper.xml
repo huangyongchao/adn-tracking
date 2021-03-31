@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adscanal.sdk.mapper.AffiliateMapper">
+  <resultMap id="BaseResultMap" type="com.adscanal.sdk.entity.Affiliate">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="affiliateName" jdbcType="VARCHAR" property="affiliatename" />
+    <result column="publisherId" jdbcType="VARCHAR" property="publisherid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="loginUrl" jdbcType="VARCHAR" property="loginurl" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="parasTrack" jdbcType="VARCHAR" property="parastrack" />
+    <result column="apiUrl" jdbcType="VARCHAR" property="apiurl" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="checkLevel" jdbcType="TINYINT" property="checklevel" />
+    <result column="runLevel" jdbcType="TINYINT" property="runlevel" />
+    <result column="campaignMax" jdbcType="INTEGER" property="campaignmax" />
+    <result column="clickMax" jdbcType="INTEGER" property="clickmax" />
+    <result column="jumpMin" jdbcType="TINYINT" property="jumpmin" />
+    <result column="jumpMax" jdbcType="TINYINT" property="jumpmax" />
+    <result column="registerDate" jdbcType="TIMESTAMP" property="registerdate" />
+    <result column="createUser" jdbcType="VARCHAR" property="createuser" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="updateUser" jdbcType="VARCHAR" property="updateuser" />
+    <result column="managerUser" jdbcType="VARCHAR" property="manageruser" />
+    <result column="opuser" jdbcType="VARCHAR" property="opuser" />
+    <result column="bduser" jdbcType="VARCHAR" property="bduser" />
+    <result column="platformlevel" jdbcType="INTEGER" property="platformlevel" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="generatesubid" jdbcType="INTEGER" property="generatesubid" />
+    <result column="autoopen" jdbcType="INTEGER" property="autoopen" />
+    <result column="autoadjust" jdbcType="INTEGER" property="autoadjust" />
+    <result column="postback" jdbcType="VARCHAR" property="postback" />
+    <result column="directguest" jdbcType="INTEGER" property="directguest" />
+    <result column="payevent" jdbcType="VARCHAR" property="payevent" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+    <result column="subidconf" jdbcType="LONGVARBINARY" property="subidconf" />
+    <result column="adjustconf" jdbcType="LONGVARBINARY" property="adjustconf" />
+    <result column="openconf" jdbcType="LONGVARBINARY" property="openconf" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, affiliateName, publisherId, username, password, loginUrl, token, parasTrack, 
+    apiUrl, country, status, checkLevel, runLevel, campaignMax, clickMax, jumpMin, jumpMax, 
+    registerDate, createUser, updateTime, updateUser, managerUser, opuser, bduser, platformlevel, 
+    company, generatesubid, autoopen, autoadjust, postback, directguest, payevent
+  </sql>
+  <sql id="Blob_Column_List">
+    subidconf, adjustconf, openconf
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.adscanal.sdk.entity.AffiliateExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from affiliate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.adscanal.sdk.entity.AffiliateExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from affiliate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from affiliate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from affiliate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.adscanal.sdk.entity.AffiliateExample">
+    delete from affiliate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into affiliate (affiliateName, publisherId, username, 
+      password, loginUrl, token, 
+      parasTrack, apiUrl, country, 
+      status, checkLevel, runLevel, 
+      campaignMax, clickMax, jumpMin, 
+      jumpMax, registerDate, createUser, 
+      updateTime, updateUser, managerUser, 
+      opuser, bduser, platformlevel, 
+      company, generatesubid, autoopen, 
+      autoadjust, postback, directguest, 
+      payevent, subidconf, adjustconf, 
+      openconf)
+    values (#{affiliatename,jdbcType=VARCHAR}, #{publisherid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{loginurl,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
+      #{parastrack,jdbcType=VARCHAR}, #{apiurl,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{checklevel,jdbcType=TINYINT}, #{runlevel,jdbcType=TINYINT}, 
+      #{campaignmax,jdbcType=INTEGER}, #{clickmax,jdbcType=INTEGER}, #{jumpmin,jdbcType=TINYINT}, 
+      #{jumpmax,jdbcType=TINYINT}, #{registerdate,jdbcType=TIMESTAMP}, #{createuser,jdbcType=VARCHAR}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{updateuser,jdbcType=VARCHAR}, #{manageruser,jdbcType=VARCHAR}, 
+      #{opuser,jdbcType=VARCHAR}, #{bduser,jdbcType=VARCHAR}, #{platformlevel,jdbcType=INTEGER}, 
+      #{company,jdbcType=VARCHAR}, #{generatesubid,jdbcType=INTEGER}, #{autoopen,jdbcType=INTEGER}, 
+      #{autoadjust,jdbcType=INTEGER}, #{postback,jdbcType=VARCHAR}, #{directguest,jdbcType=INTEGER}, 
+      #{payevent,jdbcType=VARCHAR}, #{subidconf,jdbcType=LONGVARBINARY}, #{adjustconf,jdbcType=LONGVARBINARY}, 
+      #{openconf,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into affiliate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="affiliatename != null">
+        affiliateName,
+      </if>
+      <if test="publisherid != null">
+        publisherId,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="loginurl != null">
+        loginUrl,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="parastrack != null">
+        parasTrack,
+      </if>
+      <if test="apiurl != null">
+        apiUrl,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="checklevel != null">
+        checkLevel,
+      </if>
+      <if test="runlevel != null">
+        runLevel,
+      </if>
+      <if test="campaignmax != null">
+        campaignMax,
+      </if>
+      <if test="clickmax != null">
+        clickMax,
+      </if>
+      <if test="jumpmin != null">
+        jumpMin,
+      </if>
+      <if test="jumpmax != null">
+        jumpMax,
+      </if>
+      <if test="registerdate != null">
+        registerDate,
+      </if>
+      <if test="createuser != null">
+        createUser,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+      <if test="updateuser != null">
+        updateUser,
+      </if>
+      <if test="manageruser != null">
+        managerUser,
+      </if>
+      <if test="opuser != null">
+        opuser,
+      </if>
+      <if test="bduser != null">
+        bduser,
+      </if>
+      <if test="platformlevel != null">
+        platformlevel,
+      </if>
+      <if test="company != null">
+        company,
+      </if>
+      <if test="generatesubid != null">
+        generatesubid,
+      </if>
+      <if test="autoopen != null">
+        autoopen,
+      </if>
+      <if test="autoadjust != null">
+        autoadjust,
+      </if>
+      <if test="postback != null">
+        postback,
+      </if>
+      <if test="directguest != null">
+        directguest,
+      </if>
+      <if test="payevent != null">
+        payevent,
+      </if>
+      <if test="subidconf != null">
+        subidconf,
+      </if>
+      <if test="adjustconf != null">
+        adjustconf,
+      </if>
+      <if test="openconf != null">
+        openconf,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="affiliatename != null">
+        #{affiliatename,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherid != null">
+        #{publisherid,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="loginurl != null">
+        #{loginurl,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="parastrack != null">
+        #{parastrack,jdbcType=VARCHAR},
+      </if>
+      <if test="apiurl != null">
+        #{apiurl,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="checklevel != null">
+        #{checklevel,jdbcType=TINYINT},
+      </if>
+      <if test="runlevel != null">
+        #{runlevel,jdbcType=TINYINT},
+      </if>
+      <if test="campaignmax != null">
+        #{campaignmax,jdbcType=INTEGER},
+      </if>
+      <if test="clickmax != null">
+        #{clickmax,jdbcType=INTEGER},
+      </if>
+      <if test="jumpmin != null">
+        #{jumpmin,jdbcType=TINYINT},
+      </if>
+      <if test="jumpmax != null">
+        #{jumpmax,jdbcType=TINYINT},
+      </if>
+      <if test="registerdate != null">
+        #{registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createuser != null">
+        #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateuser != null">
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruser != null">
+        #{manageruser,jdbcType=VARCHAR},
+      </if>
+      <if test="opuser != null">
+        #{opuser,jdbcType=VARCHAR},
+      </if>
+      <if test="bduser != null">
+        #{bduser,jdbcType=VARCHAR},
+      </if>
+      <if test="platformlevel != null">
+        #{platformlevel,jdbcType=INTEGER},
+      </if>
+      <if test="company != null">
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="generatesubid != null">
+        #{generatesubid,jdbcType=INTEGER},
+      </if>
+      <if test="autoopen != null">
+        #{autoopen,jdbcType=INTEGER},
+      </if>
+      <if test="autoadjust != null">
+        #{autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="postback != null">
+        #{postback,jdbcType=VARCHAR},
+      </if>
+      <if test="directguest != null">
+        #{directguest,jdbcType=INTEGER},
+      </if>
+      <if test="payevent != null">
+        #{payevent,jdbcType=VARCHAR},
+      </if>
+      <if test="subidconf != null">
+        #{subidconf,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="adjustconf != null">
+        #{adjustconf,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="openconf != null">
+        #{openconf,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.adscanal.sdk.entity.AffiliateExample" resultType="java.lang.Long">
+    select count(*) from affiliate
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update affiliate
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.affiliatename != null">
+        affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.publisherid != null">
+        publisherId = #{record.publisherid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginurl != null">
+        loginUrl = #{record.loginurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.token != null">
+        token = #{record.token,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parastrack != null">
+        parasTrack = #{record.parastrack,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiurl != null">
+        apiUrl = #{record.apiurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null">
+        country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checklevel != null">
+        checkLevel = #{record.checklevel,jdbcType=TINYINT},
+      </if>
+      <if test="record.runlevel != null">
+        runLevel = #{record.runlevel,jdbcType=TINYINT},
+      </if>
+      <if test="record.campaignmax != null">
+        campaignMax = #{record.campaignmax,jdbcType=INTEGER},
+      </if>
+      <if test="record.clickmax != null">
+        clickMax = #{record.clickmax,jdbcType=INTEGER},
+      </if>
+      <if test="record.jumpmin != null">
+        jumpMin = #{record.jumpmin,jdbcType=TINYINT},
+      </if>
+      <if test="record.jumpmax != null">
+        jumpMax = #{record.jumpmax,jdbcType=TINYINT},
+      </if>
+      <if test="record.registerdate != null">
+        registerDate = #{record.registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createuser != null">
+        createUser = #{record.createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updatetime != null">
+        updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateuser != null">
+        updateUser = #{record.updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manageruser != null">
+        managerUser = #{record.manageruser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.opuser != null">
+        opuser = #{record.opuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bduser != null">
+        bduser = #{record.bduser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platformlevel != null">
+        platformlevel = #{record.platformlevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.company != null">
+        company = #{record.company,jdbcType=VARCHAR},
+      </if>
+      <if test="record.generatesubid != null">
+        generatesubid = #{record.generatesubid,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoopen != null">
+        autoopen = #{record.autoopen,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoadjust != null">
+        autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="record.postback != null">
+        postback = #{record.postback,jdbcType=VARCHAR},
+      </if>
+      <if test="record.directguest != null">
+        directguest = #{record.directguest,jdbcType=INTEGER},
+      </if>
+      <if test="record.payevent != null">
+        payevent = #{record.payevent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subidconf != null">
+        subidconf = #{record.subidconf,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="record.adjustconf != null">
+        adjustconf = #{record.adjustconf,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="record.openconf != null">
+        openconf = #{record.openconf,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update affiliate
+    set id = #{record.id,jdbcType=INTEGER},
+      affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
+      publisherId = #{record.publisherid,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      loginUrl = #{record.loginurl,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR},
+      parasTrack = #{record.parastrack,jdbcType=VARCHAR},
+      apiUrl = #{record.apiurl,jdbcType=VARCHAR},
+      country = #{record.country,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      checkLevel = #{record.checklevel,jdbcType=TINYINT},
+      runLevel = #{record.runlevel,jdbcType=TINYINT},
+      campaignMax = #{record.campaignmax,jdbcType=INTEGER},
+      clickMax = #{record.clickmax,jdbcType=INTEGER},
+      jumpMin = #{record.jumpmin,jdbcType=TINYINT},
+      jumpMax = #{record.jumpmax,jdbcType=TINYINT},
+      registerDate = #{record.registerdate,jdbcType=TIMESTAMP},
+      createUser = #{record.createuser,jdbcType=VARCHAR},
+      updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
+      updateUser = #{record.updateuser,jdbcType=VARCHAR},
+      managerUser = #{record.manageruser,jdbcType=VARCHAR},
+      opuser = #{record.opuser,jdbcType=VARCHAR},
+      bduser = #{record.bduser,jdbcType=VARCHAR},
+      platformlevel = #{record.platformlevel,jdbcType=INTEGER},
+      company = #{record.company,jdbcType=VARCHAR},
+      generatesubid = #{record.generatesubid,jdbcType=INTEGER},
+      autoopen = #{record.autoopen,jdbcType=INTEGER},
+      autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      postback = #{record.postback,jdbcType=VARCHAR},
+      directguest = #{record.directguest,jdbcType=INTEGER},
+      payevent = #{record.payevent,jdbcType=VARCHAR},
+      subidconf = #{record.subidconf,jdbcType=LONGVARBINARY},
+      adjustconf = #{record.adjustconf,jdbcType=LONGVARBINARY},
+      openconf = #{record.openconf,jdbcType=LONGVARBINARY}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update affiliate
+    set id = #{record.id,jdbcType=INTEGER},
+      affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
+      publisherId = #{record.publisherid,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      loginUrl = #{record.loginurl,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR},
+      parasTrack = #{record.parastrack,jdbcType=VARCHAR},
+      apiUrl = #{record.apiurl,jdbcType=VARCHAR},
+      country = #{record.country,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      checkLevel = #{record.checklevel,jdbcType=TINYINT},
+      runLevel = #{record.runlevel,jdbcType=TINYINT},
+      campaignMax = #{record.campaignmax,jdbcType=INTEGER},
+      clickMax = #{record.clickmax,jdbcType=INTEGER},
+      jumpMin = #{record.jumpmin,jdbcType=TINYINT},
+      jumpMax = #{record.jumpmax,jdbcType=TINYINT},
+      registerDate = #{record.registerdate,jdbcType=TIMESTAMP},
+      createUser = #{record.createuser,jdbcType=VARCHAR},
+      updateTime = #{record.updatetime,jdbcType=TIMESTAMP},
+      updateUser = #{record.updateuser,jdbcType=VARCHAR},
+      managerUser = #{record.manageruser,jdbcType=VARCHAR},
+      opuser = #{record.opuser,jdbcType=VARCHAR},
+      bduser = #{record.bduser,jdbcType=VARCHAR},
+      platformlevel = #{record.platformlevel,jdbcType=INTEGER},
+      company = #{record.company,jdbcType=VARCHAR},
+      generatesubid = #{record.generatesubid,jdbcType=INTEGER},
+      autoopen = #{record.autoopen,jdbcType=INTEGER},
+      autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      postback = #{record.postback,jdbcType=VARCHAR},
+      directguest = #{record.directguest,jdbcType=INTEGER},
+      payevent = #{record.payevent,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+    update affiliate
+    <set>
+      <if test="affiliatename != null">
+        affiliateName = #{affiliatename,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherid != null">
+        publisherId = #{publisherid,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="loginurl != null">
+        loginUrl = #{loginurl,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="parastrack != null">
+        parasTrack = #{parastrack,jdbcType=VARCHAR},
+      </if>
+      <if test="apiurl != null">
+        apiUrl = #{apiurl,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="checklevel != null">
+        checkLevel = #{checklevel,jdbcType=TINYINT},
+      </if>
+      <if test="runlevel != null">
+        runLevel = #{runlevel,jdbcType=TINYINT},
+      </if>
+      <if test="campaignmax != null">
+        campaignMax = #{campaignmax,jdbcType=INTEGER},
+      </if>
+      <if test="clickmax != null">
+        clickMax = #{clickmax,jdbcType=INTEGER},
+      </if>
+      <if test="jumpmin != null">
+        jumpMin = #{jumpmin,jdbcType=TINYINT},
+      </if>
+      <if test="jumpmax != null">
+        jumpMax = #{jumpmax,jdbcType=TINYINT},
+      </if>
+      <if test="registerdate != null">
+        registerDate = #{registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createuser != null">
+        createUser = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateuser != null">
+        updateUser = #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruser != null">
+        managerUser = #{manageruser,jdbcType=VARCHAR},
+      </if>
+      <if test="opuser != null">
+        opuser = #{opuser,jdbcType=VARCHAR},
+      </if>
+      <if test="bduser != null">
+        bduser = #{bduser,jdbcType=VARCHAR},
+      </if>
+      <if test="platformlevel != null">
+        platformlevel = #{platformlevel,jdbcType=INTEGER},
+      </if>
+      <if test="company != null">
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="generatesubid != null">
+        generatesubid = #{generatesubid,jdbcType=INTEGER},
+      </if>
+      <if test="autoopen != null">
+        autoopen = #{autoopen,jdbcType=INTEGER},
+      </if>
+      <if test="autoadjust != null">
+        autoadjust = #{autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="postback != null">
+        postback = #{postback,jdbcType=VARCHAR},
+      </if>
+      <if test="directguest != null">
+        directguest = #{directguest,jdbcType=INTEGER},
+      </if>
+      <if test="payevent != null">
+        payevent = #{payevent,jdbcType=VARCHAR},
+      </if>
+      <if test="subidconf != null">
+        subidconf = #{subidconf,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="adjustconf != null">
+        adjustconf = #{adjustconf,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="openconf != null">
+        openconf = #{openconf,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+    update affiliate
+    set affiliateName = #{affiliatename,jdbcType=VARCHAR},
+      publisherId = #{publisherid,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      loginUrl = #{loginurl,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      parasTrack = #{parastrack,jdbcType=VARCHAR},
+      apiUrl = #{apiurl,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      checkLevel = #{checklevel,jdbcType=TINYINT},
+      runLevel = #{runlevel,jdbcType=TINYINT},
+      campaignMax = #{campaignmax,jdbcType=INTEGER},
+      clickMax = #{clickmax,jdbcType=INTEGER},
+      jumpMin = #{jumpmin,jdbcType=TINYINT},
+      jumpMax = #{jumpmax,jdbcType=TINYINT},
+      registerDate = #{registerdate,jdbcType=TIMESTAMP},
+      createUser = #{createuser,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      updateUser = #{updateuser,jdbcType=VARCHAR},
+      managerUser = #{manageruser,jdbcType=VARCHAR},
+      opuser = #{opuser,jdbcType=VARCHAR},
+      bduser = #{bduser,jdbcType=VARCHAR},
+      platformlevel = #{platformlevel,jdbcType=INTEGER},
+      company = #{company,jdbcType=VARCHAR},
+      generatesubid = #{generatesubid,jdbcType=INTEGER},
+      autoopen = #{autoopen,jdbcType=INTEGER},
+      autoadjust = #{autoadjust,jdbcType=INTEGER},
+      postback = #{postback,jdbcType=VARCHAR},
+      directguest = #{directguest,jdbcType=INTEGER},
+      payevent = #{payevent,jdbcType=VARCHAR},
+      subidconf = #{subidconf,jdbcType=LONGVARBINARY},
+      adjustconf = #{adjustconf,jdbcType=LONGVARBINARY},
+      openconf = #{openconf,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.adscanal.sdk.entity.Affiliate">
+    update affiliate
+    set affiliateName = #{affiliatename,jdbcType=VARCHAR},
+      publisherId = #{publisherid,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      loginUrl = #{loginurl,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      parasTrack = #{parastrack,jdbcType=VARCHAR},
+      apiUrl = #{apiurl,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      checkLevel = #{checklevel,jdbcType=TINYINT},
+      runLevel = #{runlevel,jdbcType=TINYINT},
+      campaignMax = #{campaignmax,jdbcType=INTEGER},
+      clickMax = #{clickmax,jdbcType=INTEGER},
+      jumpMin = #{jumpmin,jdbcType=TINYINT},
+      jumpMax = #{jumpmax,jdbcType=TINYINT},
+      registerDate = #{registerdate,jdbcType=TIMESTAMP},
+      createUser = #{createuser,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      updateUser = #{updateuser,jdbcType=VARCHAR},
+      managerUser = #{manageruser,jdbcType=VARCHAR},
+      opuser = #{opuser,jdbcType=VARCHAR},
+      bduser = #{bduser,jdbcType=VARCHAR},
+      platformlevel = #{platformlevel,jdbcType=INTEGER},
+      company = #{company,jdbcType=VARCHAR},
+      generatesubid = #{generatesubid,jdbcType=INTEGER},
+      autoopen = #{autoopen,jdbcType=INTEGER},
+      autoadjust = #{autoadjust,jdbcType=INTEGER},
+      postback = #{postback,jdbcType=VARCHAR},
+      directguest = #{directguest,jdbcType=INTEGER},
+      payevent = #{payevent,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into affiliate (
+    affiliateName,
+    publisherId,
+    username,
+    password,
+    loginUrl,
+    token,
+    parasTrack,
+    apiUrl,
+    country,
+    status,
+    checkLevel,
+    runLevel,
+    campaignMax,
+    clickMax,
+    jumpMin,
+    jumpMax,
+    registerDate,
+    createUser,
+    updateTime,
+    updateUser,
+    managerUser,
+    opuser,
+    bduser,
+    platformlevel,
+    company,
+    generatesubid,
+    autoopen,
+    autoadjust,
+    postback,
+    directguest,
+    payevent,
+    subidconf,
+    adjustconf,
+    openconf
+    )
+    values
+    <foreach collection="recordList" index="index" item="item" separator=",">
+      (
+      #{item.affiliatename,jdbcType=VARCHAR},
+      #{item.publisherid,jdbcType=VARCHAR},
+      #{item.username,jdbcType=VARCHAR},
+      #{item.password,jdbcType=VARCHAR},
+      #{item.loginurl,jdbcType=VARCHAR},
+      #{item.token,jdbcType=VARCHAR},
+      #{item.parastrack,jdbcType=VARCHAR},
+      #{item.apiurl,jdbcType=VARCHAR},
+      #{item.country,jdbcType=VARCHAR},
+      #{item.status,jdbcType=VARCHAR},
+      #{item.checklevel,jdbcType=TINYINT},
+      #{item.runlevel,jdbcType=TINYINT},
+      #{item.campaignmax,jdbcType=INTEGER},
+      #{item.clickmax,jdbcType=INTEGER},
+      #{item.jumpmin,jdbcType=TINYINT},
+      #{item.jumpmax,jdbcType=TINYINT},
+      #{item.registerdate,jdbcType=TIMESTAMP},
+      #{item.createuser,jdbcType=VARCHAR},
+      #{item.updatetime,jdbcType=TIMESTAMP},
+      #{item.updateuser,jdbcType=VARCHAR},
+      #{item.manageruser,jdbcType=VARCHAR},
+      #{item.opuser,jdbcType=VARCHAR},
+      #{item.bduser,jdbcType=VARCHAR},
+      #{item.platformlevel,jdbcType=INTEGER},
+      #{item.company,jdbcType=VARCHAR},
+      #{item.generatesubid,jdbcType=INTEGER},
+      #{item.autoopen,jdbcType=INTEGER},
+      #{item.autoadjust,jdbcType=INTEGER},
+      #{item.postback,jdbcType=VARCHAR},
+      #{item.directguest,jdbcType=INTEGER},
+      #{item.payevent,jdbcType=VARCHAR},
+      #{item.subidconf,jdbcType=LONGVARBINARY},
+      #{item.adjustconf,jdbcType=LONGVARBINARY},
+      #{item.openconf,jdbcType=LONGVARBINARY}
+      )
+    </foreach>
+  </insert>
+</mapper>

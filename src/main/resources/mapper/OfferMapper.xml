@@ -1,0 +1,1296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adscanal.sdk.mapper.OfferMapper">
+  <resultMap id="BaseResultMap" type="com.adscanal.sdk.entity.Offer">
+    <id column="offerId" jdbcType="VARCHAR" property="offerid" />
+    <id column="affiliateId" jdbcType="SMALLINT" property="affiliateid" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="offerName" jdbcType="VARCHAR" property="offername" />
+    <result column="affiliateName" jdbcType="VARCHAR" property="affiliatename" />
+    <result column="trackUrl" jdbcType="VARCHAR" property="trackurl" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="payoutType" jdbcType="VARCHAR" property="payouttype" />
+    <result column="conversionCap" jdbcType="INTEGER" property="conversioncap" />
+    <result column="previewUrl" jdbcType="VARCHAR" property="previewurl" />
+    <result column="defaultPayout" jdbcType="REAL" property="defaultpayout" />
+    <result column="currency" jdbcType="VARCHAR" property="currency" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="apprvoalStatus" jdbcType="VARCHAR" property="apprvoalstatus" />
+    <result column="expirationDate" jdbcType="VARCHAR" property="expirationdate" />
+    <result column="sysTime" jdbcType="TIMESTAMP" property="systime" />
+    <result column="appId" jdbcType="VARCHAR" property="appid" />
+    <result column="appName" jdbcType="VARCHAR" property="appname" />
+    <result column="appStoreUrl" jdbcType="VARCHAR" property="appstoreurl" />
+    <result column="appIcon" jdbcType="VARCHAR" property="appicon" />
+    <result column="platform" jdbcType="VARCHAR" property="platform" />
+    <result column="os" jdbcType="VARCHAR" property="os" />
+    <result column="minOS" jdbcType="VARCHAR" property="minos" />
+    <result column="creatives" jdbcType="VARCHAR" property="creatives" />
+    <result column="whitelist" jdbcType="VARCHAR" property="whitelist" />
+    <result column="blacklist" jdbcType="VARCHAR" property="blacklist" />
+    <result column="countries" jdbcType="VARCHAR" property="countries" />
+    <result column="cities" jdbcType="VARCHAR" property="cities" />
+    <result column="priority" jdbcType="SMALLINT" property="priority" />
+    <result column="dailybudget" jdbcType="REAL" property="dailybudget" />
+    <result column="dailymaxclicks" jdbcType="INTEGER" property="dailymaxclicks" />
+    <result column="rtbRunning" jdbcType="SMALLINT" property="rtbrunning" />
+    <result column="running" jdbcType="SMALLINT" property="running" />
+    <result column="clickSteps" jdbcType="TINYINT" property="clicksteps" />
+    <result column="topPublisher" jdbcType="VARCHAR" property="toppublisher" />
+    <result column="monitor" jdbcType="VARCHAR" property="monitor" />
+    <result column="runTime" jdbcType="TIMESTAMP" property="runtime" />
+    <result column="stopTime" jdbcType="TIMESTAMP" property="stoptime" />
+    <result column="placements" jdbcType="VARCHAR" property="placements" />
+    <result column="insertTime" jdbcType="TIMESTAMP" property="inserttime" />
+    <result column="proxyinfo" jdbcType="VARCHAR" property="proxyinfo" />
+    <result column="isReachable" jdbcType="SMALLINT" property="isreachable" />
+    <result column="schedule" jdbcType="VARCHAR" property="schedule" />
+    <result column="restrictions" jdbcType="VARCHAR" property="restrictions" />
+    <result column="kpis" jdbcType="VARCHAR" property="kpis" />
+    <result column="aId" jdbcType="VARCHAR" property="aid" />
+    <result column="sourceAffiliateId" jdbcType="SMALLINT" property="sourceaffiliateid" />
+    <result column="sourceOfferId" jdbcType="VARCHAR" property="sourceofferid" />
+    <result column="modifyUser" jdbcType="VARCHAR" property="modifyuser" />
+    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+    <result column="platformwhitelist" jdbcType="VARCHAR" property="platformwhitelist" />
+    <result column="trackUrlExt" jdbcType="VARCHAR" property="trackurlext" />
+    <result column="imprurl" jdbcType="VARCHAR" property="imprurl" />
+    <result column="categoryname" jdbcType="VARCHAR" property="categoryname" />
+    <result column="risklevel" jdbcType="INTEGER" property="risklevel" />
+    <result column="testStatus" jdbcType="INTEGER" property="teststatus" />
+    <result column="asyncId" jdbcType="VARCHAR" property="asyncid" />
+    <result column="testtime" jdbcType="TIMESTAMP" property="testtime" />
+    <result column="autosubid" jdbcType="INTEGER" property="autosubid" />
+    <result column="autoadjust" jdbcType="INTEGER" property="autoadjust" />
+    <result column="automonitor" jdbcType="INTEGER" property="automonitor" />
+    <result column="ismanual" jdbcType="BIT" property="ismanual" />
+    <result column="isappid" jdbcType="BIT" property="isappid" />
+    <result column="isattrs" jdbcType="BIT" property="isattrs" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    offerId, affiliateId, id, offerName, affiliateName, trackUrl, description, remark, 
+    payoutType, conversionCap, previewUrl, defaultPayout, currency, status, apprvoalStatus, 
+    expirationDate, sysTime, appId, appName, appStoreUrl, appIcon, platform, os, minOS, 
+    creatives, whitelist, blacklist, countries, cities, priority, dailybudget, dailymaxclicks, 
+    rtbRunning, running, clickSteps, topPublisher, monitor, runTime, stopTime, placements, 
+    insertTime, proxyinfo, isReachable, schedule, restrictions, kpis, aId, sourceAffiliateId, 
+    sourceOfferId, modifyUser, modifyTime, platformwhitelist, trackUrlExt, imprurl, categoryname, 
+    risklevel, testStatus, asyncId, testtime, autosubid, autoadjust, automonitor, ismanual, 
+    isappid, isattrs
+  </sql>
+  <select id="selectByExample" parameterType="com.adscanal.sdk.entity.OfferExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from offer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.adscanal.sdk.entity.OfferKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from offer
+    where offerId = #{offerid,jdbcType=VARCHAR}
+      and affiliateId = #{affiliateid,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.adscanal.sdk.entity.OfferKey">
+    delete from offer
+    where offerId = #{offerid,jdbcType=VARCHAR}
+      and affiliateId = #{affiliateid,jdbcType=SMALLINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.adscanal.sdk.entity.OfferExample">
+    delete from offer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.adscanal.sdk.entity.Offer">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into offer (offerId, affiliateId, offerName, 
+      affiliateName, trackUrl, description, 
+      remark, payoutType, conversionCap, 
+      previewUrl, defaultPayout, currency, 
+      status, apprvoalStatus, expirationDate, 
+      sysTime, appId, appName, 
+      appStoreUrl, appIcon, platform, 
+      os, minOS, creatives, 
+      whitelist, blacklist, countries, 
+      cities, priority, dailybudget, 
+      dailymaxclicks, rtbRunning, running, 
+      clickSteps, topPublisher, monitor, 
+      runTime, stopTime, placements, 
+      insertTime, proxyinfo, isReachable, 
+      schedule, restrictions, kpis, 
+      aId, sourceAffiliateId, sourceOfferId, 
+      modifyUser, modifyTime, platformwhitelist, 
+      trackUrlExt, imprurl, categoryname, 
+      risklevel, testStatus, asyncId, 
+      testtime, autosubid, autoadjust, 
+      automonitor, ismanual, isappid, 
+      isattrs)
+    values (#{offerid,jdbcType=VARCHAR}, #{affiliateid,jdbcType=SMALLINT}, #{offername,jdbcType=VARCHAR}, 
+      #{affiliatename,jdbcType=VARCHAR}, #{trackurl,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{payouttype,jdbcType=VARCHAR}, #{conversioncap,jdbcType=INTEGER}, 
+      #{previewurl,jdbcType=VARCHAR}, #{defaultpayout,jdbcType=REAL}, #{currency,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{apprvoalstatus,jdbcType=VARCHAR}, #{expirationdate,jdbcType=VARCHAR}, 
+      #{systime,jdbcType=TIMESTAMP}, #{appid,jdbcType=VARCHAR}, #{appname,jdbcType=VARCHAR}, 
+      #{appstoreurl,jdbcType=VARCHAR}, #{appicon,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
+      #{os,jdbcType=VARCHAR}, #{minos,jdbcType=VARCHAR}, #{creatives,jdbcType=VARCHAR}, 
+      #{whitelist,jdbcType=VARCHAR}, #{blacklist,jdbcType=VARCHAR}, #{countries,jdbcType=VARCHAR}, 
+      #{cities,jdbcType=VARCHAR}, #{priority,jdbcType=SMALLINT}, #{dailybudget,jdbcType=REAL}, 
+      #{dailymaxclicks,jdbcType=INTEGER}, #{rtbrunning,jdbcType=SMALLINT}, #{running,jdbcType=SMALLINT}, 
+      #{clicksteps,jdbcType=TINYINT}, #{toppublisher,jdbcType=VARCHAR}, #{monitor,jdbcType=VARCHAR}, 
+      #{runtime,jdbcType=TIMESTAMP}, #{stoptime,jdbcType=TIMESTAMP}, #{placements,jdbcType=VARCHAR}, 
+      #{inserttime,jdbcType=TIMESTAMP}, #{proxyinfo,jdbcType=VARCHAR}, #{isreachable,jdbcType=SMALLINT}, 
+      #{schedule,jdbcType=VARCHAR}, #{restrictions,jdbcType=VARCHAR}, #{kpis,jdbcType=VARCHAR}, 
+      #{aid,jdbcType=VARCHAR}, #{sourceaffiliateid,jdbcType=SMALLINT}, #{sourceofferid,jdbcType=VARCHAR}, 
+      #{modifyuser,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, #{platformwhitelist,jdbcType=VARCHAR}, 
+      #{trackurlext,jdbcType=VARCHAR}, #{imprurl,jdbcType=VARCHAR}, #{categoryname,jdbcType=VARCHAR}, 
+      #{risklevel,jdbcType=INTEGER}, #{teststatus,jdbcType=INTEGER}, #{asyncid,jdbcType=VARCHAR}, 
+      #{testtime,jdbcType=TIMESTAMP}, #{autosubid,jdbcType=INTEGER}, #{autoadjust,jdbcType=INTEGER}, 
+      #{automonitor,jdbcType=INTEGER}, #{ismanual,jdbcType=BIT}, #{isappid,jdbcType=BIT}, 
+      #{isattrs,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.adscanal.sdk.entity.Offer">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into offer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="offerid != null">
+        offerId,
+      </if>
+      <if test="affiliateid != null">
+        affiliateId,
+      </if>
+      <if test="offername != null">
+        offerName,
+      </if>
+      <if test="affiliatename != null">
+        affiliateName,
+      </if>
+      <if test="trackurl != null">
+        trackUrl,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="payouttype != null">
+        payoutType,
+      </if>
+      <if test="conversioncap != null">
+        conversionCap,
+      </if>
+      <if test="previewurl != null">
+        previewUrl,
+      </if>
+      <if test="defaultpayout != null">
+        defaultPayout,
+      </if>
+      <if test="currency != null">
+        currency,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="apprvoalstatus != null">
+        apprvoalStatus,
+      </if>
+      <if test="expirationdate != null">
+        expirationDate,
+      </if>
+      <if test="systime != null">
+        sysTime,
+      </if>
+      <if test="appid != null">
+        appId,
+      </if>
+      <if test="appname != null">
+        appName,
+      </if>
+      <if test="appstoreurl != null">
+        appStoreUrl,
+      </if>
+      <if test="appicon != null">
+        appIcon,
+      </if>
+      <if test="platform != null">
+        platform,
+      </if>
+      <if test="os != null">
+        os,
+      </if>
+      <if test="minos != null">
+        minOS,
+      </if>
+      <if test="creatives != null">
+        creatives,
+      </if>
+      <if test="whitelist != null">
+        whitelist,
+      </if>
+      <if test="blacklist != null">
+        blacklist,
+      </if>
+      <if test="countries != null">
+        countries,
+      </if>
+      <if test="cities != null">
+        cities,
+      </if>
+      <if test="priority != null">
+        priority,
+      </if>
+      <if test="dailybudget != null">
+        dailybudget,
+      </if>
+      <if test="dailymaxclicks != null">
+        dailymaxclicks,
+      </if>
+      <if test="rtbrunning != null">
+        rtbRunning,
+      </if>
+      <if test="running != null">
+        running,
+      </if>
+      <if test="clicksteps != null">
+        clickSteps,
+      </if>
+      <if test="toppublisher != null">
+        topPublisher,
+      </if>
+      <if test="monitor != null">
+        monitor,
+      </if>
+      <if test="runtime != null">
+        runTime,
+      </if>
+      <if test="stoptime != null">
+        stopTime,
+      </if>
+      <if test="placements != null">
+        placements,
+      </if>
+      <if test="inserttime != null">
+        insertTime,
+      </if>
+      <if test="proxyinfo != null">
+        proxyinfo,
+      </if>
+      <if test="isreachable != null">
+        isReachable,
+      </if>
+      <if test="schedule != null">
+        schedule,
+      </if>
+      <if test="restrictions != null">
+        restrictions,
+      </if>
+      <if test="kpis != null">
+        kpis,
+      </if>
+      <if test="aid != null">
+        aId,
+      </if>
+      <if test="sourceaffiliateid != null">
+        sourceAffiliateId,
+      </if>
+      <if test="sourceofferid != null">
+        sourceOfferId,
+      </if>
+      <if test="modifyuser != null">
+        modifyUser,
+      </if>
+      <if test="modifytime != null">
+        modifyTime,
+      </if>
+      <if test="platformwhitelist != null">
+        platformwhitelist,
+      </if>
+      <if test="trackurlext != null">
+        trackUrlExt,
+      </if>
+      <if test="imprurl != null">
+        imprurl,
+      </if>
+      <if test="categoryname != null">
+        categoryname,
+      </if>
+      <if test="risklevel != null">
+        risklevel,
+      </if>
+      <if test="teststatus != null">
+        testStatus,
+      </if>
+      <if test="asyncid != null">
+        asyncId,
+      </if>
+      <if test="testtime != null">
+        testtime,
+      </if>
+      <if test="autosubid != null">
+        autosubid,
+      </if>
+      <if test="autoadjust != null">
+        autoadjust,
+      </if>
+      <if test="automonitor != null">
+        automonitor,
+      </if>
+      <if test="ismanual != null">
+        ismanual,
+      </if>
+      <if test="isappid != null">
+        isappid,
+      </if>
+      <if test="isattrs != null">
+        isattrs,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="offerid != null">
+        #{offerid,jdbcType=VARCHAR},
+      </if>
+      <if test="affiliateid != null">
+        #{affiliateid,jdbcType=SMALLINT},
+      </if>
+      <if test="offername != null">
+        #{offername,jdbcType=VARCHAR},
+      </if>
+      <if test="affiliatename != null">
+        #{affiliatename,jdbcType=VARCHAR},
+      </if>
+      <if test="trackurl != null">
+        #{trackurl,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="payouttype != null">
+        #{payouttype,jdbcType=VARCHAR},
+      </if>
+      <if test="conversioncap != null">
+        #{conversioncap,jdbcType=INTEGER},
+      </if>
+      <if test="previewurl != null">
+        #{previewurl,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultpayout != null">
+        #{defaultpayout,jdbcType=REAL},
+      </if>
+      <if test="currency != null">
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="apprvoalstatus != null">
+        #{apprvoalstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expirationdate != null">
+        #{expirationdate,jdbcType=VARCHAR},
+      </if>
+      <if test="systime != null">
+        #{systime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appid != null">
+        #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="appname != null">
+        #{appname,jdbcType=VARCHAR},
+      </if>
+      <if test="appstoreurl != null">
+        #{appstoreurl,jdbcType=VARCHAR},
+      </if>
+      <if test="appicon != null">
+        #{appicon,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null">
+        #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null">
+        #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="minos != null">
+        #{minos,jdbcType=VARCHAR},
+      </if>
+      <if test="creatives != null">
+        #{creatives,jdbcType=VARCHAR},
+      </if>
+      <if test="whitelist != null">
+        #{whitelist,jdbcType=VARCHAR},
+      </if>
+      <if test="blacklist != null">
+        #{blacklist,jdbcType=VARCHAR},
+      </if>
+      <if test="countries != null">
+        #{countries,jdbcType=VARCHAR},
+      </if>
+      <if test="cities != null">
+        #{cities,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null">
+        #{priority,jdbcType=SMALLINT},
+      </if>
+      <if test="dailybudget != null">
+        #{dailybudget,jdbcType=REAL},
+      </if>
+      <if test="dailymaxclicks != null">
+        #{dailymaxclicks,jdbcType=INTEGER},
+      </if>
+      <if test="rtbrunning != null">
+        #{rtbrunning,jdbcType=SMALLINT},
+      </if>
+      <if test="running != null">
+        #{running,jdbcType=SMALLINT},
+      </if>
+      <if test="clicksteps != null">
+        #{clicksteps,jdbcType=TINYINT},
+      </if>
+      <if test="toppublisher != null">
+        #{toppublisher,jdbcType=VARCHAR},
+      </if>
+      <if test="monitor != null">
+        #{monitor,jdbcType=VARCHAR},
+      </if>
+      <if test="runtime != null">
+        #{runtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stoptime != null">
+        #{stoptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="placements != null">
+        #{placements,jdbcType=VARCHAR},
+      </if>
+      <if test="inserttime != null">
+        #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proxyinfo != null">
+        #{proxyinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isreachable != null">
+        #{isreachable,jdbcType=SMALLINT},
+      </if>
+      <if test="schedule != null">
+        #{schedule,jdbcType=VARCHAR},
+      </if>
+      <if test="restrictions != null">
+        #{restrictions,jdbcType=VARCHAR},
+      </if>
+      <if test="kpis != null">
+        #{kpis,jdbcType=VARCHAR},
+      </if>
+      <if test="aid != null">
+        #{aid,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceaffiliateid != null">
+        #{sourceaffiliateid,jdbcType=SMALLINT},
+      </if>
+      <if test="sourceofferid != null">
+        #{sourceofferid,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyuser != null">
+        #{modifyuser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null">
+        #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="platformwhitelist != null">
+        #{platformwhitelist,jdbcType=VARCHAR},
+      </if>
+      <if test="trackurlext != null">
+        #{trackurlext,jdbcType=VARCHAR},
+      </if>
+      <if test="imprurl != null">
+        #{imprurl,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryname != null">
+        #{categoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="risklevel != null">
+        #{risklevel,jdbcType=INTEGER},
+      </if>
+      <if test="teststatus != null">
+        #{teststatus,jdbcType=INTEGER},
+      </if>
+      <if test="asyncid != null">
+        #{asyncid,jdbcType=VARCHAR},
+      </if>
+      <if test="testtime != null">
+        #{testtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="autosubid != null">
+        #{autosubid,jdbcType=INTEGER},
+      </if>
+      <if test="autoadjust != null">
+        #{autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="automonitor != null">
+        #{automonitor,jdbcType=INTEGER},
+      </if>
+      <if test="ismanual != null">
+        #{ismanual,jdbcType=BIT},
+      </if>
+      <if test="isappid != null">
+        #{isappid,jdbcType=BIT},
+      </if>
+      <if test="isattrs != null">
+        #{isattrs,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.adscanal.sdk.entity.OfferExample" resultType="java.lang.Long">
+    select count(*) from offer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update offer
+    <set>
+      <if test="record.offerid != null">
+        offerId = #{record.offerid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.affiliateid != null">
+        affiliateId = #{record.affiliateid,jdbcType=SMALLINT},
+      </if>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.offername != null">
+        offerName = #{record.offername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.affiliatename != null">
+        affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trackurl != null">
+        trackUrl = #{record.trackurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payouttype != null">
+        payoutType = #{record.payouttype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.conversioncap != null">
+        conversionCap = #{record.conversioncap,jdbcType=INTEGER},
+      </if>
+      <if test="record.previewurl != null">
+        previewUrl = #{record.previewurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.defaultpayout != null">
+        defaultPayout = #{record.defaultpayout,jdbcType=REAL},
+      </if>
+      <if test="record.currency != null">
+        currency = #{record.currency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apprvoalstatus != null">
+        apprvoalStatus = #{record.apprvoalstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expirationdate != null">
+        expirationDate = #{record.expirationdate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.systime != null">
+        sysTime = #{record.systime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.appid != null">
+        appId = #{record.appid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appname != null">
+        appName = #{record.appname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appstoreurl != null">
+        appStoreUrl = #{record.appstoreurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appicon != null">
+        appIcon = #{record.appicon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platform != null">
+        platform = #{record.platform,jdbcType=VARCHAR},
+      </if>
+      <if test="record.os != null">
+        os = #{record.os,jdbcType=VARCHAR},
+      </if>
+      <if test="record.minos != null">
+        minOS = #{record.minos,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creatives != null">
+        creatives = #{record.creatives,jdbcType=VARCHAR},
+      </if>
+      <if test="record.whitelist != null">
+        whitelist = #{record.whitelist,jdbcType=VARCHAR},
+      </if>
+      <if test="record.blacklist != null">
+        blacklist = #{record.blacklist,jdbcType=VARCHAR},
+      </if>
+      <if test="record.countries != null">
+        countries = #{record.countries,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cities != null">
+        cities = #{record.cities,jdbcType=VARCHAR},
+      </if>
+      <if test="record.priority != null">
+        priority = #{record.priority,jdbcType=SMALLINT},
+      </if>
+      <if test="record.dailybudget != null">
+        dailybudget = #{record.dailybudget,jdbcType=REAL},
+      </if>
+      <if test="record.dailymaxclicks != null">
+        dailymaxclicks = #{record.dailymaxclicks,jdbcType=INTEGER},
+      </if>
+      <if test="record.rtbrunning != null">
+        rtbRunning = #{record.rtbrunning,jdbcType=SMALLINT},
+      </if>
+      <if test="record.running != null">
+        running = #{record.running,jdbcType=SMALLINT},
+      </if>
+      <if test="record.clicksteps != null">
+        clickSteps = #{record.clicksteps,jdbcType=TINYINT},
+      </if>
+      <if test="record.toppublisher != null">
+        topPublisher = #{record.toppublisher,jdbcType=VARCHAR},
+      </if>
+      <if test="record.monitor != null">
+        monitor = #{record.monitor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.runtime != null">
+        runTime = #{record.runtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.stoptime != null">
+        stopTime = #{record.stoptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.placements != null">
+        placements = #{record.placements,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inserttime != null">
+        insertTime = #{record.inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.proxyinfo != null">
+        proxyinfo = #{record.proxyinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isreachable != null">
+        isReachable = #{record.isreachable,jdbcType=SMALLINT},
+      </if>
+      <if test="record.schedule != null">
+        schedule = #{record.schedule,jdbcType=VARCHAR},
+      </if>
+      <if test="record.restrictions != null">
+        restrictions = #{record.restrictions,jdbcType=VARCHAR},
+      </if>
+      <if test="record.kpis != null">
+        kpis = #{record.kpis,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aid != null">
+        aId = #{record.aid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceaffiliateid != null">
+        sourceAffiliateId = #{record.sourceaffiliateid,jdbcType=SMALLINT},
+      </if>
+      <if test="record.sourceofferid != null">
+        sourceOfferId = #{record.sourceofferid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifyuser != null">
+        modifyUser = #{record.modifyuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifytime != null">
+        modifyTime = #{record.modifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.platformwhitelist != null">
+        platformwhitelist = #{record.platformwhitelist,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trackurlext != null">
+        trackUrlExt = #{record.trackurlext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imprurl != null">
+        imprurl = #{record.imprurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryname != null">
+        categoryname = #{record.categoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.risklevel != null">
+        risklevel = #{record.risklevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.teststatus != null">
+        testStatus = #{record.teststatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.asyncid != null">
+        asyncId = #{record.asyncid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.testtime != null">
+        testtime = #{record.testtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.autosubid != null">
+        autosubid = #{record.autosubid,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoadjust != null">
+        autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="record.automonitor != null">
+        automonitor = #{record.automonitor,jdbcType=INTEGER},
+      </if>
+      <if test="record.ismanual != null">
+        ismanual = #{record.ismanual,jdbcType=BIT},
+      </if>
+      <if test="record.isappid != null">
+        isappid = #{record.isappid,jdbcType=BIT},
+      </if>
+      <if test="record.isattrs != null">
+        isattrs = #{record.isattrs,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update offer
+    set offerId = #{record.offerid,jdbcType=VARCHAR},
+      affiliateId = #{record.affiliateid,jdbcType=SMALLINT},
+      id = #{record.id,jdbcType=INTEGER},
+      offerName = #{record.offername,jdbcType=VARCHAR},
+      affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
+      trackUrl = #{record.trackurl,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      payoutType = #{record.payouttype,jdbcType=VARCHAR},
+      conversionCap = #{record.conversioncap,jdbcType=INTEGER},
+      previewUrl = #{record.previewurl,jdbcType=VARCHAR},
+      defaultPayout = #{record.defaultpayout,jdbcType=REAL},
+      currency = #{record.currency,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      apprvoalStatus = #{record.apprvoalstatus,jdbcType=VARCHAR},
+      expirationDate = #{record.expirationdate,jdbcType=VARCHAR},
+      sysTime = #{record.systime,jdbcType=TIMESTAMP},
+      appId = #{record.appid,jdbcType=VARCHAR},
+      appName = #{record.appname,jdbcType=VARCHAR},
+      appStoreUrl = #{record.appstoreurl,jdbcType=VARCHAR},
+      appIcon = #{record.appicon,jdbcType=VARCHAR},
+      platform = #{record.platform,jdbcType=VARCHAR},
+      os = #{record.os,jdbcType=VARCHAR},
+      minOS = #{record.minos,jdbcType=VARCHAR},
+      creatives = #{record.creatives,jdbcType=VARCHAR},
+      whitelist = #{record.whitelist,jdbcType=VARCHAR},
+      blacklist = #{record.blacklist,jdbcType=VARCHAR},
+      countries = #{record.countries,jdbcType=VARCHAR},
+      cities = #{record.cities,jdbcType=VARCHAR},
+      priority = #{record.priority,jdbcType=SMALLINT},
+      dailybudget = #{record.dailybudget,jdbcType=REAL},
+      dailymaxclicks = #{record.dailymaxclicks,jdbcType=INTEGER},
+      rtbRunning = #{record.rtbrunning,jdbcType=SMALLINT},
+      running = #{record.running,jdbcType=SMALLINT},
+      clickSteps = #{record.clicksteps,jdbcType=TINYINT},
+      topPublisher = #{record.toppublisher,jdbcType=VARCHAR},
+      monitor = #{record.monitor,jdbcType=VARCHAR},
+      runTime = #{record.runtime,jdbcType=TIMESTAMP},
+      stopTime = #{record.stoptime,jdbcType=TIMESTAMP},
+      placements = #{record.placements,jdbcType=VARCHAR},
+      insertTime = #{record.inserttime,jdbcType=TIMESTAMP},
+      proxyinfo = #{record.proxyinfo,jdbcType=VARCHAR},
+      isReachable = #{record.isreachable,jdbcType=SMALLINT},
+      schedule = #{record.schedule,jdbcType=VARCHAR},
+      restrictions = #{record.restrictions,jdbcType=VARCHAR},
+      kpis = #{record.kpis,jdbcType=VARCHAR},
+      aId = #{record.aid,jdbcType=VARCHAR},
+      sourceAffiliateId = #{record.sourceaffiliateid,jdbcType=SMALLINT},
+      sourceOfferId = #{record.sourceofferid,jdbcType=VARCHAR},
+      modifyUser = #{record.modifyuser,jdbcType=VARCHAR},
+      modifyTime = #{record.modifytime,jdbcType=TIMESTAMP},
+      platformwhitelist = #{record.platformwhitelist,jdbcType=VARCHAR},
+      trackUrlExt = #{record.trackurlext,jdbcType=VARCHAR},
+      imprurl = #{record.imprurl,jdbcType=VARCHAR},
+      categoryname = #{record.categoryname,jdbcType=VARCHAR},
+      risklevel = #{record.risklevel,jdbcType=INTEGER},
+      testStatus = #{record.teststatus,jdbcType=INTEGER},
+      asyncId = #{record.asyncid,jdbcType=VARCHAR},
+      testtime = #{record.testtime,jdbcType=TIMESTAMP},
+      autosubid = #{record.autosubid,jdbcType=INTEGER},
+      autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      automonitor = #{record.automonitor,jdbcType=INTEGER},
+      ismanual = #{record.ismanual,jdbcType=BIT},
+      isappid = #{record.isappid,jdbcType=BIT},
+      isattrs = #{record.isattrs,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.adscanal.sdk.entity.Offer">
+    update offer
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="offername != null">
+        offerName = #{offername,jdbcType=VARCHAR},
+      </if>
+      <if test="affiliatename != null">
+        affiliateName = #{affiliatename,jdbcType=VARCHAR},
+      </if>
+      <if test="trackurl != null">
+        trackUrl = #{trackurl,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="payouttype != null">
+        payoutType = #{payouttype,jdbcType=VARCHAR},
+      </if>
+      <if test="conversioncap != null">
+        conversionCap = #{conversioncap,jdbcType=INTEGER},
+      </if>
+      <if test="previewurl != null">
+        previewUrl = #{previewurl,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultpayout != null">
+        defaultPayout = #{defaultpayout,jdbcType=REAL},
+      </if>
+      <if test="currency != null">
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="apprvoalstatus != null">
+        apprvoalStatus = #{apprvoalstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expirationdate != null">
+        expirationDate = #{expirationdate,jdbcType=VARCHAR},
+      </if>
+      <if test="systime != null">
+        sysTime = #{systime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appid != null">
+        appId = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="appname != null">
+        appName = #{appname,jdbcType=VARCHAR},
+      </if>
+      <if test="appstoreurl != null">
+        appStoreUrl = #{appstoreurl,jdbcType=VARCHAR},
+      </if>
+      <if test="appicon != null">
+        appIcon = #{appicon,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null">
+        platform = #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null">
+        os = #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="minos != null">
+        minOS = #{minos,jdbcType=VARCHAR},
+      </if>
+      <if test="creatives != null">
+        creatives = #{creatives,jdbcType=VARCHAR},
+      </if>
+      <if test="whitelist != null">
+        whitelist = #{whitelist,jdbcType=VARCHAR},
+      </if>
+      <if test="blacklist != null">
+        blacklist = #{blacklist,jdbcType=VARCHAR},
+      </if>
+      <if test="countries != null">
+        countries = #{countries,jdbcType=VARCHAR},
+      </if>
+      <if test="cities != null">
+        cities = #{cities,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=SMALLINT},
+      </if>
+      <if test="dailybudget != null">
+        dailybudget = #{dailybudget,jdbcType=REAL},
+      </if>
+      <if test="dailymaxclicks != null">
+        dailymaxclicks = #{dailymaxclicks,jdbcType=INTEGER},
+      </if>
+      <if test="rtbrunning != null">
+        rtbRunning = #{rtbrunning,jdbcType=SMALLINT},
+      </if>
+      <if test="running != null">
+        running = #{running,jdbcType=SMALLINT},
+      </if>
+      <if test="clicksteps != null">
+        clickSteps = #{clicksteps,jdbcType=TINYINT},
+      </if>
+      <if test="toppublisher != null">
+        topPublisher = #{toppublisher,jdbcType=VARCHAR},
+      </if>
+      <if test="monitor != null">
+        monitor = #{monitor,jdbcType=VARCHAR},
+      </if>
+      <if test="runtime != null">
+        runTime = #{runtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stoptime != null">
+        stopTime = #{stoptime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="placements != null">
+        placements = #{placements,jdbcType=VARCHAR},
+      </if>
+      <if test="inserttime != null">
+        insertTime = #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="proxyinfo != null">
+        proxyinfo = #{proxyinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="isreachable != null">
+        isReachable = #{isreachable,jdbcType=SMALLINT},
+      </if>
+      <if test="schedule != null">
+        schedule = #{schedule,jdbcType=VARCHAR},
+      </if>
+      <if test="restrictions != null">
+        restrictions = #{restrictions,jdbcType=VARCHAR},
+      </if>
+      <if test="kpis != null">
+        kpis = #{kpis,jdbcType=VARCHAR},
+      </if>
+      <if test="aid != null">
+        aId = #{aid,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceaffiliateid != null">
+        sourceAffiliateId = #{sourceaffiliateid,jdbcType=SMALLINT},
+      </if>
+      <if test="sourceofferid != null">
+        sourceOfferId = #{sourceofferid,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyuser != null">
+        modifyUser = #{modifyuser,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null">
+        modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="platformwhitelist != null">
+        platformwhitelist = #{platformwhitelist,jdbcType=VARCHAR},
+      </if>
+      <if test="trackurlext != null">
+        trackUrlExt = #{trackurlext,jdbcType=VARCHAR},
+      </if>
+      <if test="imprurl != null">
+        imprurl = #{imprurl,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryname != null">
+        categoryname = #{categoryname,jdbcType=VARCHAR},
+      </if>
+      <if test="risklevel != null">
+        risklevel = #{risklevel,jdbcType=INTEGER},
+      </if>
+      <if test="teststatus != null">
+        testStatus = #{teststatus,jdbcType=INTEGER},
+      </if>
+      <if test="asyncid != null">
+        asyncId = #{asyncid,jdbcType=VARCHAR},
+      </if>
+      <if test="testtime != null">
+        testtime = #{testtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="autosubid != null">
+        autosubid = #{autosubid,jdbcType=INTEGER},
+      </if>
+      <if test="autoadjust != null">
+        autoadjust = #{autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="automonitor != null">
+        automonitor = #{automonitor,jdbcType=INTEGER},
+      </if>
+      <if test="ismanual != null">
+        ismanual = #{ismanual,jdbcType=BIT},
+      </if>
+      <if test="isappid != null">
+        isappid = #{isappid,jdbcType=BIT},
+      </if>
+      <if test="isattrs != null">
+        isattrs = #{isattrs,jdbcType=BIT},
+      </if>
+    </set>
+    where offerId = #{offerid,jdbcType=VARCHAR}
+      and affiliateId = #{affiliateid,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.adscanal.sdk.entity.Offer">
+    update offer
+    set id = #{id,jdbcType=INTEGER},
+      offerName = #{offername,jdbcType=VARCHAR},
+      affiliateName = #{affiliatename,jdbcType=VARCHAR},
+      trackUrl = #{trackurl,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      payoutType = #{payouttype,jdbcType=VARCHAR},
+      conversionCap = #{conversioncap,jdbcType=INTEGER},
+      previewUrl = #{previewurl,jdbcType=VARCHAR},
+      defaultPayout = #{defaultpayout,jdbcType=REAL},
+      currency = #{currency,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      apprvoalStatus = #{apprvoalstatus,jdbcType=VARCHAR},
+      expirationDate = #{expirationdate,jdbcType=VARCHAR},
+      sysTime = #{systime,jdbcType=TIMESTAMP},
+      appId = #{appid,jdbcType=VARCHAR},
+      appName = #{appname,jdbcType=VARCHAR},
+      appStoreUrl = #{appstoreurl,jdbcType=VARCHAR},
+      appIcon = #{appicon,jdbcType=VARCHAR},
+      platform = #{platform,jdbcType=VARCHAR},
+      os = #{os,jdbcType=VARCHAR},
+      minOS = #{minos,jdbcType=VARCHAR},
+      creatives = #{creatives,jdbcType=VARCHAR},
+      whitelist = #{whitelist,jdbcType=VARCHAR},
+      blacklist = #{blacklist,jdbcType=VARCHAR},
+      countries = #{countries,jdbcType=VARCHAR},
+      cities = #{cities,jdbcType=VARCHAR},
+      priority = #{priority,jdbcType=SMALLINT},
+      dailybudget = #{dailybudget,jdbcType=REAL},
+      dailymaxclicks = #{dailymaxclicks,jdbcType=INTEGER},
+      rtbRunning = #{rtbrunning,jdbcType=SMALLINT},
+      running = #{running,jdbcType=SMALLINT},
+      clickSteps = #{clicksteps,jdbcType=TINYINT},
+      topPublisher = #{toppublisher,jdbcType=VARCHAR},
+      monitor = #{monitor,jdbcType=VARCHAR},
+      runTime = #{runtime,jdbcType=TIMESTAMP},
+      stopTime = #{stoptime,jdbcType=TIMESTAMP},
+      placements = #{placements,jdbcType=VARCHAR},
+      insertTime = #{inserttime,jdbcType=TIMESTAMP},
+      proxyinfo = #{proxyinfo,jdbcType=VARCHAR},
+      isReachable = #{isreachable,jdbcType=SMALLINT},
+      schedule = #{schedule,jdbcType=VARCHAR},
+      restrictions = #{restrictions,jdbcType=VARCHAR},
+      kpis = #{kpis,jdbcType=VARCHAR},
+      aId = #{aid,jdbcType=VARCHAR},
+      sourceAffiliateId = #{sourceaffiliateid,jdbcType=SMALLINT},
+      sourceOfferId = #{sourceofferid,jdbcType=VARCHAR},
+      modifyUser = #{modifyuser,jdbcType=VARCHAR},
+      modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+      platformwhitelist = #{platformwhitelist,jdbcType=VARCHAR},
+      trackUrlExt = #{trackurlext,jdbcType=VARCHAR},
+      imprurl = #{imprurl,jdbcType=VARCHAR},
+      categoryname = #{categoryname,jdbcType=VARCHAR},
+      risklevel = #{risklevel,jdbcType=INTEGER},
+      testStatus = #{teststatus,jdbcType=INTEGER},
+      asyncId = #{asyncid,jdbcType=VARCHAR},
+      testtime = #{testtime,jdbcType=TIMESTAMP},
+      autosubid = #{autosubid,jdbcType=INTEGER},
+      autoadjust = #{autoadjust,jdbcType=INTEGER},
+      automonitor = #{automonitor,jdbcType=INTEGER},
+      ismanual = #{ismanual,jdbcType=BIT},
+      isappid = #{isappid,jdbcType=BIT},
+      isattrs = #{isattrs,jdbcType=BIT}
+    where offerId = #{offerid,jdbcType=VARCHAR}
+      and affiliateId = #{affiliateid,jdbcType=SMALLINT}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into offer (
+    offerId,
+    affiliateId,
+    offerName,
+    affiliateName,
+    trackUrl,
+    description,
+    remark,
+    payoutType,
+    conversionCap,
+    previewUrl,
+    defaultPayout,
+    currency,
+    status,
+    apprvoalStatus,
+    expirationDate,
+    sysTime,
+    appId,
+    appName,
+    appStoreUrl,
+    appIcon,
+    platform,
+    os,
+    minOS,
+    creatives,
+    whitelist,
+    blacklist,
+    countries,
+    cities,
+    priority,
+    dailybudget,
+    dailymaxclicks,
+    rtbRunning,
+    running,
+    clickSteps,
+    topPublisher,
+    monitor,
+    runTime,
+    stopTime,
+    placements,
+    insertTime,
+    proxyinfo,
+    isReachable,
+    schedule,
+    restrictions,
+    kpis,
+    aId,
+    sourceAffiliateId,
+    sourceOfferId,
+    modifyUser,
+    modifyTime,
+    platformwhitelist,
+    trackUrlExt,
+    imprurl,
+    categoryname,
+    risklevel,
+    testStatus,
+    asyncId,
+    testtime,
+    autosubid,
+    autoadjust,
+    automonitor,
+    ismanual,
+    isappid,
+    isattrs
+    )
+    values
+    <foreach collection="recordList" index="index" item="item" separator=",">
+      (
+      #{item.offerid,jdbcType=VARCHAR},
+      #{item.affiliateid,jdbcType=SMALLINT},
+      #{item.offername,jdbcType=VARCHAR},
+      #{item.affiliatename,jdbcType=VARCHAR},
+      #{item.trackurl,jdbcType=VARCHAR},
+      #{item.description,jdbcType=VARCHAR},
+      #{item.remark,jdbcType=VARCHAR},
+      #{item.payouttype,jdbcType=VARCHAR},
+      #{item.conversioncap,jdbcType=INTEGER},
+      #{item.previewurl,jdbcType=VARCHAR},
+      #{item.defaultpayout,jdbcType=REAL},
+      #{item.currency,jdbcType=VARCHAR},
+      #{item.status,jdbcType=VARCHAR},
+      #{item.apprvoalstatus,jdbcType=VARCHAR},
+      #{item.expirationdate,jdbcType=VARCHAR},
+      #{item.systime,jdbcType=TIMESTAMP},
+      #{item.appid,jdbcType=VARCHAR},
+      #{item.appname,jdbcType=VARCHAR},
+      #{item.appstoreurl,jdbcType=VARCHAR},
+      #{item.appicon,jdbcType=VARCHAR},
+      #{item.platform,jdbcType=VARCHAR},
+      #{item.os,jdbcType=VARCHAR},
+      #{item.minos,jdbcType=VARCHAR},
+      #{item.creatives,jdbcType=VARCHAR},
+      #{item.whitelist,jdbcType=VARCHAR},
+      #{item.blacklist,jdbcType=VARCHAR},
+      #{item.countries,jdbcType=VARCHAR},
+      #{item.cities,jdbcType=VARCHAR},
+      #{item.priority,jdbcType=SMALLINT},
+      #{item.dailybudget,jdbcType=REAL},
+      #{item.dailymaxclicks,jdbcType=INTEGER},
+      #{item.rtbrunning,jdbcType=SMALLINT},
+      #{item.running,jdbcType=SMALLINT},
+      #{item.clicksteps,jdbcType=TINYINT},
+      #{item.toppublisher,jdbcType=VARCHAR},
+      #{item.monitor,jdbcType=VARCHAR},
+      #{item.runtime,jdbcType=TIMESTAMP},
+      #{item.stoptime,jdbcType=TIMESTAMP},
+      #{item.placements,jdbcType=VARCHAR},
+      #{item.inserttime,jdbcType=TIMESTAMP},
+      #{item.proxyinfo,jdbcType=VARCHAR},
+      #{item.isreachable,jdbcType=SMALLINT},
+      #{item.schedule,jdbcType=VARCHAR},
+      #{item.restrictions,jdbcType=VARCHAR},
+      #{item.kpis,jdbcType=VARCHAR},
+      #{item.aid,jdbcType=VARCHAR},
+      #{item.sourceaffiliateid,jdbcType=SMALLINT},
+      #{item.sourceofferid,jdbcType=VARCHAR},
+      #{item.modifyuser,jdbcType=VARCHAR},
+      #{item.modifytime,jdbcType=TIMESTAMP},
+      #{item.platformwhitelist,jdbcType=VARCHAR},
+      #{item.trackurlext,jdbcType=VARCHAR},
+      #{item.imprurl,jdbcType=VARCHAR},
+      #{item.categoryname,jdbcType=VARCHAR},
+      #{item.risklevel,jdbcType=INTEGER},
+      #{item.teststatus,jdbcType=INTEGER},
+      #{item.asyncid,jdbcType=VARCHAR},
+      #{item.testtime,jdbcType=TIMESTAMP},
+      #{item.autosubid,jdbcType=INTEGER},
+      #{item.autoadjust,jdbcType=INTEGER},
+      #{item.automonitor,jdbcType=INTEGER},
+      #{item.ismanual,jdbcType=BIT},
+      #{item.isappid,jdbcType=BIT},
+      #{item.isattrs,jdbcType=BIT}
+      )
+    </foreach>
+  </insert>
+</mapper>
