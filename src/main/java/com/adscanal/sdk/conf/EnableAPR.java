@@ -7,7 +7,7 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Configuration
+//@Configuration
 @Profile("prod")
 public class EnableAPR implements WebServerFactoryCustomizer<WebServerFactory> {
 
