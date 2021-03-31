@@ -15,8 +15,9 @@ public class EnableAPR implements WebServerFactoryCustomizer<WebServerFactory> {
     public void customize(WebServerFactory factory) {
         TomcatServletWebServerFactory containerFactory = (TomcatServletWebServerFactory) factory;
         containerFactory.setProtocol("org.apache.coyote.http11.Http11AprProtocol");
-        Ssl ssl = new Ssl();
+        Ssl ssl = containerFactory.getSsl();
         ssl.setEnabled(false);
+
         containerFactory.setSsl(ssl);
     }
 }
