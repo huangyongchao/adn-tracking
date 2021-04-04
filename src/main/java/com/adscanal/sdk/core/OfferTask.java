@@ -135,11 +135,11 @@ public class OfferTask implements Runnable {
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang+";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
                 if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
-                    System.out.println(url);
+                    logger.warn(url);
                     if (headers != null && headers.length > 0) {
                         for (Header header : headers) {
 
-                            System.out.println(header.getValue());
+                            logger.warn(header.getValue());
                         }
                     }
                 }
