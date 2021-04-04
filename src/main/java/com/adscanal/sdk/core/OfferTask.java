@@ -150,13 +150,13 @@ public class OfferTask implements Runnable {
                 }
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
-                    if (LazadaCPIExt.AID_VN.equals(offer.getaId())
+           /*         if (LazadaCPIExt.AID_VN.equals(offer.getaId())
                             || LazadaCPIExt.AID_ID.equals(offer.getaId())
                             || LazadaCPIExt.AID_SG.equals(offer.getaId())
                             || LazadaCPIExt.AID_PH.equals(offer.getaId())) {
                         logger.warn(url);
                     }
-
+*/
                     isStore = AdTool.isStore(url);
                     if (!isStore) {
                         continue;
