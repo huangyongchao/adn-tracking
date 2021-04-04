@@ -147,9 +147,14 @@ public class OfferTask implements Runnable {
                 if (isRedirect(offer, response) && !is3rd) {
                     if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
 
-                        for (Header header : response.getAllHeaders()) {
+                        try {
+                            for (Header header : response.getAllHeaders()) {
 
-                            logger.warn(header.getValue());
+                                logger.warn(header.getValue());
+                                System.out.println(header.getValue());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
                     }
