@@ -148,32 +148,24 @@ public class OfferTask implements Runnable {
                 if (502 == response.getStatusLine().getStatusCode()) {
                     break;
                 }
-                if (isRedirect(offer, response) && !is3rd) {
+                isStore = AdTool.isStore(url);
+
+                if (isRedirect(offer, response) && !is3rd && !isStore) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
-           /*         if (LazadaCPIExt.AID_VN.equals(offer.getaId())
-                            || LazadaCPIExt.AID_ID.equals(offer.getaId())
-                            || LazadaCPIExt.AID_SG.equals(offer.getaId())
-                            || LazadaCPIExt.AID_PH.equals(offer.getaId())) {
-                        logger.warn(url);
-                    }
-*/
-                    isStore = AdTool.isStore(url);
-                    if (!isStore) {
-                        continue;
-                    }
-                } else {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (isStore) {
-                        Counter.increaseSuccess(offer.getUid());
-                    } else if ((status == HttpStatus.SC_OK)) {
-                        Counter.increaseSuccess(offer.getUid());
-                    } else if (is3rd) {
-                        Counter.increaseSuccess1(offer.getUid());
-                    } else {
-                        Counter.increaseError(offer.getUid());
-                    }
-                    break;
+                    continue;
+
                 }
+                int status = response.getStatusLine().getStatusCode();
+                if (isStore) {
+                    Counter.increaseSuccess(offer.getUid());
+                } else if ((status == HttpStatus.SC_OK)) {
+                    Counter.increaseSuccess(offer.getUid());
+                } else if (is3rd) {
+                    Counter.increaseSuccess1(offer.getUid());
+                } else {
+                    Counter.increaseError(offer.getUid());
+                }
+                break;
 
             }
             handle_response(key, offer, response);
