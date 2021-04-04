@@ -144,11 +144,10 @@ public class OfferTask implements Runnable {
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
                     logger.warn(url);
                 }
-                boolean isStore = false;
                 if (502 == response.getStatusLine().getStatusCode()) {
                     break;
                 }
-                isStore = AdTool.isStore(url);
+                boolean isStore = AdTool.isStore(url);
 
                 if (isRedirect(offer, response) && !is3rd && !isStore) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
