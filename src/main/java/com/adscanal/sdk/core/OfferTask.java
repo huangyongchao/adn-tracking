@@ -144,7 +144,16 @@ public class OfferTask implements Runnable {
                     logger.warn(url);
                 }
                 boolean isStore = false;
-                if (!is3rd) {
+                if (isRedirect(offer, response) && !is3rd) {
+                    if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
+
+                        for (Header header : response.getAllHeaders()) {
+
+                            logger.warn(header.getValue());
+                        }
+
+                    }
+
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
                     if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
