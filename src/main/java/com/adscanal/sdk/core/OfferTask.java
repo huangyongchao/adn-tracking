@@ -145,7 +145,7 @@ public class OfferTask implements Runnable {
                     logger.warn(url);
                 }
                 if (502 == response.getStatusLine().getStatusCode()) {
-                    break;
+                    return;
                 }
                 boolean isStore = AdTool.isStore(url);
 
