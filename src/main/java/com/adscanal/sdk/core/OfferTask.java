@@ -133,16 +133,13 @@ public class OfferTask implements Runnable {
                     lang = "en-" + geo;
                 }
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang+";q=0.9,en-US;q=0.8,en;q=0.7");
-
                 request.setHeader("upgrade-insecure-requests", "1");
-                if(i==1&&LazadaCPIExt.AID_VN.equals(offer.getaId())){
                     if (headers != null && headers.length > 0) {
                         for (Header header : headers) {
 
                             System.out.println(header.getValue());
                         }
                     }
-                }
 
                 response = client.execute(request);
                 request.releaseConnection();
