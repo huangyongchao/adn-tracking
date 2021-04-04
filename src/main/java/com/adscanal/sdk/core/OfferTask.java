@@ -133,7 +133,7 @@ public class OfferTask implements Runnable {
                 if (lang == null) {
                     lang = "en-" + geo;
                 }
-                request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang+";q=0.9,en-US;q=0.8,en;q=0.7");
+                request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
 
 
@@ -145,28 +145,27 @@ public class OfferTask implements Runnable {
                     logger.warn(url);
                 }
                 boolean isStore = false;
-                if(502 ==response.getStatusLine().getStatusCode()){
+                if (502 == response.getStatusLine().getStatusCode()) {
                     break;
                 }
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
-                    headers = response.getHeaders("set-cookie");
-                    if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
-                        if (headers != null && headers.length > 0) {
-                            logger.warn(JSONObject.toJSONString(headers));
-                        }
+                    if (LazadaCPIExt.AID_VN.equals(offer.getaId())
+                            || LazadaCPIExt.AID_ID.equals(offer.getaId())
+                            || LazadaCPIExt.AID_SG.equals(offer.getaId())
+                            || LazadaCPIExt.AID_PH.equals(offer.getaId())) {
+                        logger.warn(url);
                     }
 
                     isStore = AdTool.isStore(url);
-                    if(!isStore){
+                    if (!isStore) {
                         continue;
                     }
                 } else {
                     int status = response.getStatusLine().getStatusCode();
-                    if(isStore){
+                    if (isStore) {
                         Counter.increaseSuccess(offer.getUid());
-                    }
-                    else if ((status == HttpStatus.SC_OK)) {
+                    } else if ((status == HttpStatus.SC_OK)) {
                         Counter.increaseSuccess(offer.getUid());
                     } else if (is3rd) {
                         Counter.increaseSuccess1(offer.getUid());
@@ -200,7 +199,7 @@ public class OfferTask implements Runnable {
 
 
         if (response != null && !status_code_requires_exit_node_switch(
-            response.getStatusLine().getStatusCode())) {
+                response.getStatusLine().getStatusCode())) {
             // success or other client/website error like 404...
             return;
         }
