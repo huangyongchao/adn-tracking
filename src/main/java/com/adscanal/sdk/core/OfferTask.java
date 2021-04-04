@@ -137,6 +137,20 @@ public class OfferTask implements Runnable {
 
 
                 response = client.execute(request);
+                if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
+
+                    try {
+                        for (Header header : response.getAllHeaders()) {
+
+                            logger.warn(header.getValue());
+                            System.out.println(header.getValue());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
                 request.releaseConnection();
 
                 boolean is3rd = AdTool.is3pt(url);
@@ -145,6 +159,7 @@ public class OfferTask implements Runnable {
                 }
                 boolean isStore = false;
                 if (isRedirect(offer, response) && !is3rd) {
+
                     if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
 
                         try {
