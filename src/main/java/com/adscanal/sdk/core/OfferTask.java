@@ -137,20 +137,6 @@ public class OfferTask implements Runnable {
 
 
                 response = client.execute(request);
-                if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
-
-                    try {
-                        for (Header header : response.getAllHeaders()) {
-
-                            logger.warn(header.getValue());
-                            System.out.println(header.getValue());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
                 request.releaseConnection();
 
                 boolean is3rd = AdTool.is3pt(url);
@@ -158,29 +144,15 @@ public class OfferTask implements Runnable {
                     logger.warn(url);
                 }
                 boolean isStore = false;
+                if(502 ==response.getStatusLine().getStatusCode()){
+                    break;
+                }
                 if (isRedirect(offer, response) && !is3rd) {
-
-                    if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
-
-                        try {
-                            for (Header header : response.getAllHeaders()) {
-
-                                logger.warn(header.getValue());
-                                System.out.println(header.getValue());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
                     if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
-                        logger.warn(url);
                         if (headers != null && headers.length > 0) {
                             for (Header header : headers) {
-
                                 logger.warn(header.getValue());
                             }
                         }
