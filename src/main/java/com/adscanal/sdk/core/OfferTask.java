@@ -5,6 +5,7 @@ import com.adscanal.sdk.common.GeoLang;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -152,7 +153,7 @@ public class OfferTask implements Runnable {
                     headers = response.getHeaders("set-cookie");
                     if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
                         if (headers != null && headers.length > 0) {
-                            logger.warn(headers.toString());
+                            logger.warn(JSONObject.toJSONString(headers));
                         }
                     }
 
