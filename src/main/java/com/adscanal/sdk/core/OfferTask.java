@@ -124,7 +124,7 @@ public class OfferTask implements Runnable {
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
                 request.setHeader(HttpHeaders.USER_AGENT, ua);
                 request.setHeader(HttpHeaders.CONNECTION, HTTP.CONN_CLOSE);
-                request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate");
+                request.setHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
                 request.setHeader(HttpHeaders.ACCEPT, "*/*");
                 request.setHeader(HttpHeaders.PRAGMA, "no-cache");
                 request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
@@ -132,7 +132,7 @@ public class OfferTask implements Runnable {
                 if (lang == null) {
                     lang = "en-" + geo;
                 }
-                request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang);
+                request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang+";q=0.9,en-US;q=0.8,en;q=0.7");
 
                 request.setHeader("upgrade-insecure-requests", "1");
 
@@ -148,13 +148,20 @@ public class OfferTask implements Runnable {
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
                     logger.warn(url);
                 }
+                boolean isStore = false;
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
-                    continue;
+                    isStore = AdTool.isStore(url);
+                    if(!isStore){
+                        continue;
+                    }
                 } else {
                     int status = response.getStatusLine().getStatusCode();
-                    if ((status == HttpStatus.SC_OK)) {
+                    if(isStore){
+                        Counter.increaseSuccess(offer.getUid());
+                    }
+                    else if ((status == HttpStatus.SC_OK)) {
                         Counter.increaseSuccess(offer.getUid());
                     } else if (is3rd) {
                         Counter.increaseSuccess1(offer.getUid());
