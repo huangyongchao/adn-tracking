@@ -134,15 +134,7 @@ public class OfferTask implements Runnable {
                 }
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang+";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
-                if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
-                    logger.warn(url);
-                    if (headers != null && headers.length > 0) {
-                        for (Header header : headers) {
 
-                            logger.warn(header.getValue());
-                        }
-                    }
-                }
 
                 response = client.execute(request);
                 request.releaseConnection();
@@ -155,7 +147,15 @@ public class OfferTask implements Runnable {
                 if (isRedirect(offer, response) && !is3rd) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     headers = response.getHeaders("set-cookie");
+                    if(LazadaCPIExt.AID_VN.equals(offer.getaId())){
+                        logger.warn(url);
+                        if (headers != null && headers.length > 0) {
+                            for (Header header : headers) {
 
+                                logger.warn(header.getValue());
+                            }
+                        }
+                    }
 
                     isStore = AdTool.isStore(url);
                     if(!isStore){
