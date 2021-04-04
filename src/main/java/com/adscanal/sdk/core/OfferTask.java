@@ -109,15 +109,12 @@ public class OfferTask implements Runnable {
             }
             for (int i = 0; i < steps; i++) {
                 url = AdTool.urlEncode(url, deviceid, os);
-                if (i == 5) {
-                    Counter.increaseError1(offer.getUid());
-                    break;
-                }
+
                 if (!url.startsWith("http")) {
                     Counter.increaseError(offer.getUid());
                     at_req.incrementAndGet();
 
-                    break;
+                    return;
 
                 }
 
@@ -161,6 +158,8 @@ public class OfferTask implements Runnable {
                     Counter.increaseSuccess(offer.getUid());
                 } else if (is3rd) {
                     Counter.increaseSuccess1(offer.getUid());
+                } else if (i == 5) {
+                    Counter.increaseError1(offer.getUid());
                 } else {
                     Counter.increaseError(offer.getUid());
                 }
