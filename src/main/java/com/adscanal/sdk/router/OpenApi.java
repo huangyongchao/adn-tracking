@@ -210,7 +210,7 @@ public class OpenApi {
         StringBuilder stringBuilder = new StringBuilder();
         list.forEach(n -> {
 
-            stringBuilder.append("<a target='_blank' href=\"http://sdk.colour.mobi" + n.get("url") + "\">" + n.get("url") + "</a><br>\n");
+            stringBuilder.append("<a target='_blank' href=\"http://sdk.pingme.fans/" + n.get("url") + "\">" + n.get("url") + "</a><br>\n");
 
         });
 
