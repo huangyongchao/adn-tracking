@@ -2,6 +2,7 @@ package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.GeoLang;
+import com.adscanal.sdk.core.job.LumiJob;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
 import com.adscanal.sdk.dto.SimpleData;
@@ -53,6 +54,11 @@ public class OfferTask implements Runnable {
 
     public void exec(int serNo) {
         try {
+            if(LumiJob.STOP_ALL_REQUEST){
+
+                return;
+            }
+
             if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
                 return;
             }
