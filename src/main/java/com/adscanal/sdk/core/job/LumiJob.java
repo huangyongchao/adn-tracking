@@ -18,8 +18,8 @@ public class LumiJob {
     @Scheduled(cron = "0 0/20 * * * ?")
     public void getZoneInfo() {
         try {
-            String cost = Request.Get("https://luminati.io/api/zone/cost?zone=static").addHeader("Authorization", "Bearer f1290b71a089b5d803cdf6304fb1076f").execute().returnContent().asString(Consts.UTF_8);
-            String zone = Request.Get("https://luminati.io/api/zone?zone=static").addHeader("Authorization", "Bearer f1290b71a089b5d803cdf6304fb1076f").execute().returnContent().asString(Consts.UTF_8);
+            String cost = Request.Get("http://luminati.io/api/zone/cost?zone=static").addHeader("Authorization", "Bearer f1290b71a089b5d803cdf6304fb1076f").execute().returnContent().asString(Consts.UTF_8);
+            String zone = Request.Get("http://luminati.io/api/zone?zone=static").addHeader("Authorization", "Bearer f1290b71a089b5d803cdf6304fb1076f").execute().returnContent().asString(Consts.UTF_8);
             System.out.println(cost);
             System.out.println(zone);
         } catch (IOException e) {
