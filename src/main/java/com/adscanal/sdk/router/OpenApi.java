@@ -2,6 +2,7 @@ package com.adscanal.sdk.router;
 
 import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.core.job.LoadProxyJob;
+import com.adscanal.sdk.core.job.LumiJob;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.SimpleData;
 import com.adscanal.sdk.entity.Offer;
@@ -28,6 +29,13 @@ public class OpenApi {
     WebApplicationContext applicationContext;
     @Autowired
     OfferMapper offerMapper;
+
+    @GetMapping("/cost_limit")
+    public Object cost_limit() {
+        return "Cost Full Usage:" + LumiJob.STOP_ALL_REQUEST + ",Daily Cost:" + LumiJob.DAILY + ",Daily Limit:" + LumiJob.LIMIT;
+
+    }
+
 
     @GetMapping("/live_offers")
     public Object live_offers() {

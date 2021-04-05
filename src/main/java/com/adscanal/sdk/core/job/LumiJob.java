@@ -17,6 +17,9 @@ public class LumiJob {
     private static final Logger logger = LoggerFactory.getLogger(LumiJob.class);
 
     public static Boolean STOP_ALL_REQUEST = false;
+    public static float DAILY = 0;
+    public static float LIMIT = 0;
+
 
     @Scheduled(cron = "0 0/20 * * * ?")
     public void getZoneInfo() {
@@ -32,11 +35,14 @@ public class LumiJob {
             Float daylimit = zoneJ.getJSONObject("usage_limit").getFloat("limit");
             if (daycost > (daylimit * 0.95)) {
                 STOP_ALL_REQUEST = true;
+
                 logger.warn("LumiJobStopAll:dailycost=" + daycost + ",limit=" + daylimit);
             } else {
                 logger.warn("LumiJobStartAll:dailycost=" + daycost + ",limit=" + daylimit);
                 STOP_ALL_REQUEST = false;
             }
+            DAILY = daycost;
+            LIMIT = daylimit;
         } catch (IOException e) {
             e.printStackTrace();
         }
