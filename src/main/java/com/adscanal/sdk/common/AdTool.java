@@ -243,11 +243,11 @@ public class AdTool {
         int h = reqTime.getHour();
         int d = reqTime.getDayOfWeek().getValue();
         if (d == 6 || d == 7) {
-            if (h >= 9 && h <= 23) {
+            if (h >= 7 && h <= 23) {
                 return true;
             }
         } else {
-            if (h == 11 || h == 12 || h == 13 || h == 17 || h == 18 || h == 19 || h == 20 || h == 21 || h == 22 || h == 23) {
+            if (h == 6||h == 7||h == 8||h == 9||h == 10||h == 11 || h == 12 || h == 13 || h == 17 || h == 18 || h == 19 || h == 20 || h == 21 || h == 22 || h == 23) {
                 return true;
             }
         }
