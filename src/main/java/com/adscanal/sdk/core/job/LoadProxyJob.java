@@ -77,10 +77,10 @@ public class LoadProxyJob {
             if (list == null) {
                 return;
             }
-            System.out.println("-----------"+n+"-----------"+list.size());
+            System.out.println("-----------" + n + "-----------" + list.size());
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-                  return;
+                return;
             }
 
             list.forEach(offer -> {
@@ -176,7 +176,7 @@ public class LoadProxyJob {
         } else {
             period = BASE / offer.getDailyMaxClicks();
         }
-        final int fixed = new Float(""+(period*0.7)).intValue();
+        final int fixed = new Float("" + (period * 0.7)).intValue();
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             // return;
         }
@@ -212,13 +212,13 @@ public class LoadProxyJob {
             }
         }*/
         OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), 0);
-
-        ExecutorPool.getExecutor().execute(() -> {
-            int i = 0;
-            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
-                    i * 1000, fixed, TimeUnit.MILLISECONDS);
-
-        });
+        int i = (clicks / 500000) + 1;
+        for (int k = 0; k < i; k++) {
+            ExecutorPool.getExecutor().execute(() -> {
+                SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
+                        1, 1, TimeUnit.MILLISECONDS);
+            });
+        }
 
 
     }
