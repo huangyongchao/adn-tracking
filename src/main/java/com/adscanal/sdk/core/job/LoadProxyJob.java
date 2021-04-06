@@ -176,7 +176,7 @@ public class LoadProxyJob {
         } else {
             period = BASE / offer.getDailyMaxClicks();
         }
-        final int fixed = period;
+        final int fixed = new Float(""+(period*0.7)).intValue();
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             // return;
         }
