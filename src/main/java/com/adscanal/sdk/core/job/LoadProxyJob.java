@@ -176,7 +176,7 @@ public class LoadProxyJob {
         } else {
             period = BASE / offer.getDailyMaxClicks();
         }
-
+        final int fixed = period;
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             // return;
         }
@@ -215,17 +215,8 @@ public class LoadProxyJob {
 
         ExecutorPool.getExecutor().execute(() -> {
             int i = 0;
-            while (true) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                offerTask.consumer(i++% pool);
-                if(i==pool){
-                    i = 0;
-                }
-            }
+            SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleAtFixedRate(offerTask,
+                    i * 1000, fixed, TimeUnit.MILLISECONDS);
 
         });
 
