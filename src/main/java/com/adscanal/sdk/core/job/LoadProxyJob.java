@@ -216,6 +216,11 @@ public class LoadProxyJob {
         ExecutorPool.getExecutor().execute(() -> {
             int i = 0;
             while (true) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 offerTask.consumer(i++% pool);
                 if(i==pool){
                     i = 0;
