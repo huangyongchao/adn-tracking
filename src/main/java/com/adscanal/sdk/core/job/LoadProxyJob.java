@@ -70,6 +70,8 @@ public class LoadProxyJob {
         if (offers == null) {
             return;
         }
+        threads.set(0);
+
         Map<String, List<LiveOffer>> geoOffers = offers.stream().collect(Collectors.groupingBy(LiveOffer::getCountry));
         SdkConf.ACTI_GEO.forEach(n -> {
             //List<LiveOffer> list = getOffers(n);
@@ -93,6 +95,7 @@ public class LoadProxyJob {
 
 
         });
+        logger.warn("++++++++++TOTAL+++++++:"+threads.get());
 
         SdkConf.OFFER_SCHED.forEach((k, v) -> {
             if (!acoffers.contains(k)) {
@@ -226,7 +229,6 @@ public class LoadProxyJob {
     static  AtomicInteger threads = new AtomicInteger(0);
 
     public static void rebuildCustomer(LiveOffer offer, String geoUP) {
-        threads.set(0);
 
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
@@ -244,7 +246,6 @@ public class LoadProxyJob {
             e.printStackTrace();
         }
 
-        logger.warn("++++++++++TOTAL+++++++:"+threads.get());
 
     }
 
