@@ -200,7 +200,7 @@ public class LoadProxyJob {
                 final int serNo = i;
                 OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo);
                 SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
-                        i * 1000, 2, TimeUnit.MILLISECONDS);
+                        i * 1000, 1, TimeUnit.MILLISECONDS);
 
          /*       ExecutorPool.getExecutor().execute(() -> {
                     offerTask.consumer(serNo);
