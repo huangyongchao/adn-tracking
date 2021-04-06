@@ -70,8 +70,6 @@ public class LoadProxyJob {
         if (offers == null) {
             return;
         }
-        threads.set(0);
-
         Map<String, List<LiveOffer>> geoOffers = offers.stream().collect(Collectors.groupingBy(LiveOffer::getCountry));
         SdkConf.ACTI_GEO.forEach(n -> {
             //List<LiveOffer> list = getOffers(n);
@@ -79,10 +77,10 @@ public class LoadProxyJob {
             if (list == null) {
                 return;
             }
-            System.out.println("-----------" + n + "-----------" + list.size());
+            System.out.println("-----------"+n+"-----------"+list.size());
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-                return;
+                //  return;
             }
 
             list.forEach(offer -> {
@@ -95,7 +93,6 @@ public class LoadProxyJob {
 
 
         });
-        logger.warn("++++++++++TOTAL+++++++:"+threads.get());
 
         SdkConf.OFFER_SCHED.forEach((k, v) -> {
             if (!acoffers.contains(k)) {
@@ -179,7 +176,7 @@ public class LoadProxyJob {
         } else {
             period = BASE / offer.getDailyMaxClicks();
         }
-        final int fixed = new Float("" + (period * 0.7)).intValue();
+
         if (SdkConf.OFFER_SCHED.containsKey(offer.getUid())) {
             // return;
         }
@@ -190,43 +187,32 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 20000;
+        coresize = clicks / 25000;
         if (coresize > 80) {
             coresize = 80;
         }
         int weight = (5 / priority);
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
-        int pool = ProxyClient.GEO_CLIENTS.get(geoUP).size();
-        Random poolRandom = new Random();
+
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
-        /*for (int j = 0; j < coresize; j++) {
+        for (int j = 0; j < coresize; j++) {
             for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
                 final int serNo = i;
                 OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo);
-          *//*      SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
-                        i * 1000, 1, TimeUnit.MILLISECONDS);*//*
+                SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
+                        i * 1000, 2, TimeUnit.MILLISECONDS);
 
-                ExecutorPool.getExecutor().execute(() -> {
+         /*       ExecutorPool.getExecutor().execute(() -> {
                     offerTask.consumer(serNo);
 
-                });
+                });*/
 
 
             }
-        }*/
-        OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), 0);
-        int i = (clicks / 500000) + 1;
-        for (int k = 0; k < i; k++) {
-            threads.incrementAndGet();
-            ExecutorPool.getExecutor().execute(() -> {
-                SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
-                        1, 1, TimeUnit.MILLISECONDS);
-            });
         }
 
 
     }
-    static  AtomicInteger threads = new AtomicInteger(0);
 
     public static void rebuildCustomer(LiveOffer offer, String geoUP) {
 
@@ -239,11 +225,6 @@ public class LoadProxyJob {
                 && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer, geoUP);
-        }
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
 
 
