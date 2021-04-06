@@ -80,7 +80,7 @@ public class LoadProxyJob {
             System.out.println("-----------"+n+"-----------"+list.size());
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
-                //  return;
+                  return;
             }
 
             list.forEach(offer -> {
