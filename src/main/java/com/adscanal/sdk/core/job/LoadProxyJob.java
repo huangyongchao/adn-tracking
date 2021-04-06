@@ -214,6 +214,7 @@ public class LoadProxyJob {
         OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), 0);
         int i = (clicks / 500000) + 1;
         for (int k = 0; k < i; k++) {
+            threads.incrementAndGet();
             ExecutorPool.getExecutor().execute(() -> {
                 SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
                         1, 1, TimeUnit.MILLISECONDS);
@@ -222,8 +223,10 @@ public class LoadProxyJob {
 
 
     }
+    static  AtomicInteger threads = new AtomicInteger(0);
 
     public static void rebuildCustomer(LiveOffer offer, String geoUP) {
+        threads.set(0);
 
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
@@ -235,7 +238,13 @@ public class LoadProxyJob {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        logger.warn("++++++++++TOTAL+++++++:"+threads.get());
 
     }
 
