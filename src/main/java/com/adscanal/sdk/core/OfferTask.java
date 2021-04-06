@@ -41,10 +41,7 @@ public class OfferTask implements Runnable {
     private int serNo;
 
     public void consumer(int serNo) {
-        while (true) {
-            exec(serNo);
-        }
-
+        exec(serNo);
     }
 
     @Override
@@ -52,9 +49,9 @@ public class OfferTask implements Runnable {
         exec(serNo);
     }
 
-    public void exec(int serNo) {
+    public void exec(int seriNo) {
         try {
-            if(LumiJob.STOP_ALL_REQUEST){
+            if (LumiJob.STOP_ALL_REQUEST) {
 
                 return;
             }
@@ -72,7 +69,7 @@ public class OfferTask implements Runnable {
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
             //request(key, , url, ua, offer, null, deviceid, os);
-            request(key, ProxyClient.getConn(geo, serNo), url, ua, offer, null, deviceid, os);
+            request(key, ProxyClient.getConn(geo, seriNo), url, ua, offer, null, deviceid, os);
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
             errorlog.error(e.getMessage(), e);
