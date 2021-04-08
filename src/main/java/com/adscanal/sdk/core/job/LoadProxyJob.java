@@ -60,6 +60,7 @@ public class LoadProxyJob {
     private String apiserver;
 
     static AtomicInteger totalOffer = new AtomicInteger(0);
+    static int lastX = 1;
     private static int BASE = 1000 * 60 * 60 * 24;
 
     @Scheduled(cron = "0 0/3 * * * ?")
@@ -95,6 +96,9 @@ public class LoadProxyJob {
 
 
         });
+
+        logger.warn("XXXXXXXXXXXXXXXXX last:"+lastX+" get XXXXX:"+getX());
+        lastX = getX().intValue();
 
         SdkConf.OFFER_SCHED.forEach((k, v) -> {
             if (!acoffers.contains(k)) {
@@ -154,7 +158,7 @@ public class LoadProxyJob {
 
     }
 
-    public static float getX(){
+    public static Float getX(){
         int t = totalOffer.get();
          if(t>30){
             return 1.3f;
@@ -243,7 +247,7 @@ public class LoadProxyJob {
             logger.warn("INIT:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-                && (Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)) {
+                && ((Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)||getX()!=lastX)) {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         }
