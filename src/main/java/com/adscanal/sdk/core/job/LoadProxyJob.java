@@ -80,7 +80,7 @@ public class LoadProxyJob {
             if (list == null) {
                 return;
             }
-            System.out.println("-----------"+n+"-----------"+list.size());
+            System.out.println("-----------" + n + "-----------" + list.size());
             //如果不在受众时间,停止投放
             if (!AdTool.isTargetTimeByGeo2word(n)) {
                 //  return;
@@ -97,7 +97,7 @@ public class LoadProxyJob {
 
         });
 
-        logger.warn("XXXXXXXXXXXXXXXXX last:"+lastX+" get XXXXX:"+getX());
+        logger.warn("XXXXXXXXXXXXXXXXX last:" + lastX + " get XXXXX:" + getX());
         lastX = getX().intValue();
 
         SdkConf.OFFER_SCHED.forEach((k, v) -> {
@@ -158,24 +158,30 @@ public class LoadProxyJob {
 
     }
 
-    public static Float getX(){
+    /**
+     * offer逐步减少时候 增加线程数
+     *
+     * @return
+     */
+    public static Float getX() {
         int t = totalOffer.get();
-         if(t>30){
+        if (t > 40) {
+            return 1f;
+        } else if (t > 30) {
             return 1.3f;
-        }else if(t>20){
-             return 1.6f;
-        }else if(t>10){
-             return 2f;
-         }else if(t>=1){
-             return 3f;
-         }else {
-             return 1f;
-         }
+        } else if (t > 20) {
+            return 2f;
+        } else if (t > 10) {
+            return 4f;
+        } else if (t >= 1) {
+            return 8f;
+        } else {
+            return 1f;
+        }
     }
 
 
-
-    public  void setCustomerTask(LiveOffer offer, String geoUP) {
+    public void setCustomerTask(LiveOffer offer, String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
         if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
@@ -223,7 +229,7 @@ public class LoadProxyJob {
         for (int j = 0; j < threads.intValue(); j++) {
             for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
                 final int serNo = i;
-                OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo,mailer);
+                OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo, mailer);
                 SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
                         i * 1000, 1, TimeUnit.MILLISECONDS);
 
@@ -239,7 +245,7 @@ public class LoadProxyJob {
 
     }
 
-    public  void rebuildCustomer(LiveOffer offer, String geoUP) {
+    public void rebuildCustomer(LiveOffer offer, String geoUP) {
 
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
@@ -247,7 +253,7 @@ public class LoadProxyJob {
             logger.warn("INIT:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-                && ((Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000)||getX()!=lastX)) {
+                && ((Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000) || getX() != lastX)) {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         }
