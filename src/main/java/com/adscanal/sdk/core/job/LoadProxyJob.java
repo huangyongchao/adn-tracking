@@ -172,9 +172,9 @@ public class LoadProxyJob {
         } else if (t > 20) {
             return 2f;
         } else if (t > 10) {
-            return 4f;
+            return 10f;
         } else if (t >= 1) {
-            return 8f;
+            return 30f;
         } else {
             return 1f;
         }
