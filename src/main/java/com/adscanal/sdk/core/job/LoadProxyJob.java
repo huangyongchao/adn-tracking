@@ -253,12 +253,14 @@ public class LoadProxyJob {
             logger.warn("INIT:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         } else if (SimpleData.OFFER_CLICKS.containsKey(offer.getUid())
-                && ((getX() != lastX)||(Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000))) {
+                && ((Math.abs(offer.getDailyMaxClicks() - SimpleData.OFFER_CLICKS.get(offer.getUid())) > 50000))) {
             logger.warn("INIT-RE:" + offer.getUid());
             setCustomerTask(offer, geoUP);
         }
 
-
+/*
+        (getX() != lastX)||
+*/
     }
 
 
