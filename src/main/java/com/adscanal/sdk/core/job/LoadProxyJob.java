@@ -1,9 +1,6 @@
 package com.adscanal.sdk.core.job;
 
-import com.adscanal.sdk.common.AdTool;
-import com.adscanal.sdk.common.ExecutorPool;
-import com.adscanal.sdk.common.GeoMap;
-import com.adscanal.sdk.common.HttpClientUtil;
+import com.adscanal.sdk.common.*;
 import com.adscanal.sdk.core.OfferTask;
 import com.adscanal.sdk.core.ProxyClient;
 import com.adscanal.sdk.core.SdkConf;
@@ -51,6 +48,8 @@ public class LoadProxyJob {
     private static final Logger logger = LoggerFactory.getLogger(OfferTask.class);
     private static final Logger errorlog = LoggerFactory.getLogger("error");
 
+    @Autowired
+    private Mailer mailer;
 
     @Value("${proxyserver}")
     private String proxyserver;
@@ -60,6 +59,7 @@ public class LoadProxyJob {
     @Value("${apiserver}")
     private String apiserver;
 
+    static AtomicInteger totalOffer = new AtomicInteger(0);
     private static int BASE = 1000 * 60 * 60 * 24;
 
     @Scheduled(cron = "0 0/3 * * * ?")
@@ -70,6 +70,8 @@ public class LoadProxyJob {
         if (offers == null) {
             return;
         }
+        totalOffer.set(offers.size());
+
         Map<String, List<LiveOffer>> geoOffers = offers.stream().collect(Collectors.groupingBy(LiveOffer::getCountry));
         SdkConf.ACTI_GEO.forEach(n -> {
             //List<LiveOffer> list = getOffers(n);
@@ -152,7 +154,24 @@ public class LoadProxyJob {
 
     }
 
-    public static void setCustomerTask(LiveOffer offer, String geoUP) {
+    public static float getX(){
+        int t = totalOffer.get();
+         if(t>30){
+            return 1.3f;
+        }else if(t>20){
+             return 1.6f;
+        }else if(t>10){
+             return 2f;
+         }else if(t>=1){
+             return 3f;
+         }else {
+             return 1f;
+         }
+    }
+
+
+
+    public  void setCustomerTask(LiveOffer offer, String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
         if (SimpleData.PAUSE_OFFERS.contains(offer.getUid())) {
             return;
@@ -191,14 +210,16 @@ public class LoadProxyJob {
         if (coresize > 80) {
             coresize = 80;
         }
+
+        Float threads = coresize * getX();
         int weight = (5 / priority);
         SimpleData.OFFERREQCOUNTER.put(offer.getOfferId(), new AtomicLong());
 
         SdkConf.OFFER_SCHED.put(offer.getUid(), Executors.newScheduledThreadPool(coresize));
-        for (int j = 0; j < coresize; j++) {
+        for (int j = 0; j < threads.intValue(); j++) {
             for (int i = 0; i < ProxyClient.GEO_CLIENTS.get(geoUP).size(); i++) {
                 final int serNo = i;
-                OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo);
+                OfferTask offerTask = new OfferTask(offer, offer.getCountry().toUpperCase() + offer.getOsName().toLowerCase(), GeoMap.word2Map.get(offer.getCountry().toUpperCase()), offer.getCountry().toUpperCase(), offer.getOsName().toLowerCase(), serNo,mailer);
                 SdkConf.OFFER_SCHED.get(offer.getUid()).scheduleWithFixedDelay(offerTask,
                         i * 1000, 1, TimeUnit.MILLISECONDS);
 
@@ -214,7 +235,7 @@ public class LoadProxyJob {
 
     }
 
-    public static void rebuildCustomer(LiveOffer offer, String geoUP) {
+    public  void rebuildCustomer(LiveOffer offer, String geoUP) {
 
         SimpleData.OFFER_CLICKS.put(offer.getUid(), offer.getDailyMaxClicks());
 
@@ -313,14 +334,17 @@ public class LoadProxyJob {
     }
 
     public static void main(String[] args) {
-        LoadProxyJob l = new LoadProxyJob();
+/*        LoadProxyJob l = new LoadProxyJob();
         l.devidrootpath = "/Users/huangyongchao/workspace/devid1";
         l.getGeoOsFiles();
         GEO_FILES.forEach((k, v) -> {
             v.forEach(n -> {
                 System.out.println(k + "  " + n);
             });
-        });
+        });*/
+
+        totalOffer.set(20);
+        System.out.println(getX());
     }
 
     public static void main1(String[] args) {

@@ -2,6 +2,7 @@ package com.adscanal.sdk.core;
 
 import com.adscanal.sdk.common.AdTool;
 import com.adscanal.sdk.common.GeoLang;
+import com.adscanal.sdk.common.Mailer;
 import com.adscanal.sdk.core.job.LumiJob;
 import com.adscanal.sdk.dto.Counter;
 import com.adscanal.sdk.dto.LiveOffer;
@@ -39,6 +40,7 @@ public class OfferTask implements Runnable {
     private String geo3;
     private String os;
     private int serNo;
+    private Mailer mailer;
 
     public void consumer(int serNo) {
         exec(serNo);
@@ -76,13 +78,14 @@ public class OfferTask implements Runnable {
         }
     }
 
-    public OfferTask(LiveOffer offer, String key, String geo3, String geo, String os, int serNo) {
+    public OfferTask(LiveOffer offer, String key, String geo3, String geo, String os, int serNo,Mailer mailer) {
         this.offer = offer;
         this.key = key;
         this.geo = geo;
         this.geo3 = geo3;
         this.os = os;
         this.serNo = serNo;
+        this.mailer = mailer;
         // logger.warn("SCHE INIT:"+geo3 +" "+ key+" "+os);
     }
 
