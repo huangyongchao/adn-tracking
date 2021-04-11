@@ -35,6 +35,13 @@ public class AdTool {
             }
             url = url + "&s2s=1";
 
+        }else if (url.indexOf(".lazada.") > 0) {
+            if (OsE.IOS.name.equalsIgnoreCase(os) && url.indexOf("idfa") == -1) {
+                url = url + "&idfa=" + deviceid;
+            }
+            if (OsE.AOS.name.equalsIgnoreCase(os) && url.indexOf("gps_adid") == -1) {
+                url = url + "&gps_adid=" + deviceid;
+            }
         }
         if (OsE.IOS.name.equalsIgnoreCase(os)) {
             if (url.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(deviceid)) {
