@@ -146,9 +146,7 @@ public class OfferTask implements Runnable {
 
                     if (headers != null && headers.length > 0) {
                         for (Header header : headers) {
-
                             String value = header.getValue();
-                            System.out.println(value);
                             if (value.indexOf(LazadaCPIExt.miidlaz) >= 0 || value.indexOf(LazadaCPIExt.exlaz) >= 0 || value.indexOf(LazadaCPIExt.lzd_click_id) >= 0) {
                                 request.addHeader("set-cookie", value);
                                 logger.warn(value);
@@ -164,7 +162,6 @@ public class OfferTask implements Runnable {
                     logger.warn(url);
                 }
                 if (502 == response.getStatusLine().getStatusCode()) {
-                    System.out.println(502);
                     return;
                 }
                 boolean isStore = AdTool.isStore(url);
@@ -175,10 +172,8 @@ public class OfferTask implements Runnable {
 
                         headers = response.getAllHeaders();
                         if(headers!=null){
-                            System.out.println("111");
                             for(Header header : headers){
                                 System.out.println(header.getValue());
-
                             }
 
                         }
