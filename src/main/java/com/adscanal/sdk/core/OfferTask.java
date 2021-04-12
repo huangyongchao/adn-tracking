@@ -137,7 +137,10 @@ public class OfferTask implements Runnable {
                     lang = "en-" + geo;
                 }
                 boolean iscpi = false ;
-                if (LazadaCPIExt.AID_VN.equals(offer.getaId())) {
+                if (LazadaCPIExt.AID_VN.equals(offer.getaId())
+                ||LazadaCPIExt.AID_PH.equals(offer.getaId())
+                ||LazadaCPIExt.AID_SG.equals(offer.getaId())
+                ||LazadaCPIExt.AID_ID.equals(offer.getaId())) {
                     iscpi = true;
                 }
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
@@ -148,10 +151,7 @@ public class OfferTask implements Runnable {
                         for (Header header : headers) {
                             String value = header.getValue();
                             if (value.indexOf(LazadaCPIExt.miidlaz) >= 0 || value.indexOf(LazadaCPIExt.exlaz) >= 0 || value.indexOf(LazadaCPIExt.lzd_click_id) >= 0) {
-                                int idx = value.indexOf(";");
-                                value = value.substring(0, idx);
                                 request.addHeader("set-cookie",value);
-                                logger.warn(value);
                             }
                         }
                     }
