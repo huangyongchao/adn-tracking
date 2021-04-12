@@ -169,14 +169,7 @@ public class OfferTask implements Runnable {
                 if (isRedirect(offer, response) && !is3rd && !isStore) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                     if(iscpi){
-
                         headers = response.getAllHeaders();
-                        if(headers!=null){
-                            for(Header header : headers){
-                                System.out.println(header.getValue());
-                            }
-
-                        }
                     }
                     continue;
 
