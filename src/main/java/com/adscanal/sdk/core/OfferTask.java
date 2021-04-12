@@ -173,7 +173,14 @@ public class OfferTask implements Runnable {
                     if(iscpi){
 
                         headers = response.getAllHeaders();
+                        if(headers!=null){
+                            logger.error("111");
+                            for(Header header : headers){
+                                logger.error(header.getValue());
 
+                            }
+
+                        }
                     }
                     continue;
 
