@@ -136,9 +136,13 @@ public class OfferTask implements Runnable {
                 if (lang == null) {
                     lang = "en-" + geo;
                 }
+                boolean iscpi = false ;
+                if (LazadaCPIExt.AID_VN==offer.getaId()) {
+                    iscpi = true;
+                }
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
-                if (LazadaCPIExt.AID_VN==offer.getaId()) {
+                if (iscpi) {
 
                     if (headers != null && headers.length > 0) {
                         for (Header header : headers) {
@@ -165,7 +169,11 @@ public class OfferTask implements Runnable {
 
                 if (isRedirect(offer, response) && !is3rd && !isStore) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
-                    headers = response.getHeaders("set-cookie");
+                    if(iscpi){
+
+                        headers = response.getAllHeaders();
+
+                    }
                     continue;
 
                 }
