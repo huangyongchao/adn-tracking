@@ -217,6 +217,11 @@ public class AdTool {
 
         System.out.println((char) 80);
 
+
+        String s = "miidlaz=miidgg2f951f32d6sdb3ii6; Max-Age=86400000; Expi";
+        int idx = s.indexOf(";");
+        System.out.println(s.substring(0,idx));
+
     }
 
     public static boolean isStore(String url) {
