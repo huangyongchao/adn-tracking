@@ -123,6 +123,7 @@ public class OfferTask implements Runnable {
                     return;
 
                 }
+                System.out.println(111);
 
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
