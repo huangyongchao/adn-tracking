@@ -78,7 +78,7 @@ public class OfferTask implements Runnable {
         }
     }
 
-    public OfferTask(LiveOffer offer, String key, String geo3, String geo, String os, int serNo,Mailer mailer) {
+    public OfferTask(LiveOffer offer, String key, String geo3, String geo, String os, int serNo, Mailer mailer) {
         this.offer = offer;
         this.key = key;
         this.geo = geo;
@@ -138,8 +138,19 @@ public class OfferTask implements Runnable {
                 }
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
+                if (offer.getAffiliateName().indexOf("CPI") > 0) {
 
+                    if (headers != null && headers.length > 0) {
+                        for (Header header : headers) {
 
+                            String value = header.getValue();
+                            if (value.indexOf(LazadaCPIExt.miidlaz) >= 0 || value.indexOf(LazadaCPIExt.exlaz) >= 0 || value.indexOf(LazadaCPIExt.lzd_click_id) >= 0) {
+                                request.addHeader("set-cookie", value);
+                                logger.warn(value);
+                            }
+                        }
+                    }
+                }
                 response = client.execute(request);
                 request.releaseConnection();
 
@@ -154,6 +165,7 @@ public class OfferTask implements Runnable {
 
                 if (isRedirect(offer, response) && !is3rd && !isStore) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
+                    headers = response.getHeaders("set-cookie");
                     continue;
 
                 }

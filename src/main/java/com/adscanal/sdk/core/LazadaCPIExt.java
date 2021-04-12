@@ -4,6 +4,10 @@ import java.net.URLEncoder;
 
 public class LazadaCPIExt {
 
+    public static String miidlaz = "miidlaz";
+    public static String exlaz = "exlaz";
+    public static String lzd_click_id = "lzd_click_id";
+
     public static String AID_ID = "1047";
     public static String AID_VN = "1048";
     public static String AID_PH = "1049";
