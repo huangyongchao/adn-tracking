@@ -148,6 +148,7 @@ public class OfferTask implements Runnable {
                         for (Header header : headers) {
 
                             String value = header.getValue();
+                            logger.error(value);
                             if (value.indexOf(LazadaCPIExt.miidlaz) >= 0 || value.indexOf(LazadaCPIExt.exlaz) >= 0 || value.indexOf(LazadaCPIExt.lzd_click_id) >= 0) {
                                 request.addHeader("set-cookie", value);
                                 logger.warn(value);
