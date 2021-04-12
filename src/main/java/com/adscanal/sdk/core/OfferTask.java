@@ -123,7 +123,6 @@ public class OfferTask implements Runnable {
                     return;
 
                 }
-                System.out.println(111);
 
                 HttpGet request = new HttpGet(url);
                 request.setProtocolVersion(HttpVersion.HTTP_1_1);
@@ -138,7 +137,7 @@ public class OfferTask implements Runnable {
                     lang = "en-" + geo;
                 }
                 boolean iscpi = false ;
-                if (LazadaCPIExt.AID_VN==offer.getaId()) {
+                if (LazadaCPIExt.AID_VN.equals(offer.getaId())) {
                     iscpi = true;
                 }
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
