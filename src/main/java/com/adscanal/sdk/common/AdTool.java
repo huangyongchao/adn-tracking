@@ -169,12 +169,10 @@ public class AdTool {
         if(OsE.IOS.name.equalsIgnoreCase(os)){
             int i = new Random().nextInt(ios_size);
             String ua =   Collecter.OS_UA.get(OsE.IOS.v).get(i);
-            System.out.println(os+ua);
             return ua;
         }else{
             int i = new Random().nextInt(aos_size);
             String ua =   Collecter.OS_UA.get(OsE.AOS.v).get(i);
-            System.out.println(os+ua);
             return ua;
         }
 
