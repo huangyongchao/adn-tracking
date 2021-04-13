@@ -157,12 +157,27 @@ public class AdTool {
      * @param os
      * @return
      */
+    public static int ios_size = Collecter.OS_UA.get(OsE.IOS.name).size();
+    public static int aos_size = Collecter.OS_UA.get(OsE.IOS.name).size();
     public static String randomUA(String os) {
+        if(ios_size==0){
+            ios_size = Collecter.OS_UA.get(OsE.IOS.name).size();
+        }
+        if(aos_size==0){
+            aos_size = Collecter.OS_UA.get(OsE.AOS.name).size();
+        }
+        if(OsE.IOS.name.equalsIgnoreCase(os)){
+            int i = new Random().nextInt(ios_size);
+            String ua =   Collecter.OS_UA.get(OsE.IOS.name).get(i);
+            System.out.println(os+ua);
+            return ua;
+        }else{
+            int i = new Random().nextInt(aos_size);
+            String ua =   Collecter.OS_UA.get(OsE.AOS.name).get(i);
+            System.out.println(os+ua);
+            return ua;
+        }
 
-        List<String> uas = Collecter.OS_UA.get(OsE.IOS.name.equalsIgnoreCase(os) ? OsE.IOS.v : OsE.AOS.v);
-        int le = uas.size();
-        int i = new Random().nextInt(le);
-        return uas.get(i);
     }
 
 
