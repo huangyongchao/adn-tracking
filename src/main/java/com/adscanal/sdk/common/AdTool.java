@@ -157,8 +157,8 @@ public class AdTool {
      * @param os
      * @return
      */
-    public static int ios_size = Collecter.OS_UA.get(OsE.IOS.name).size();
-    public static int aos_size = Collecter.OS_UA.get(OsE.IOS.name).size();
+    public static int ios_size =0;
+    public static int aos_size =0;
     public static String randomUA(String os) {
         if(ios_size==0){
             ios_size = Collecter.OS_UA.get(OsE.IOS.name).size();
