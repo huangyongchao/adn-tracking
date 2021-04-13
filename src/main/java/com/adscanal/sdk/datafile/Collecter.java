@@ -264,9 +264,17 @@ public class Collecter {
 
     public static void main(String[] args) {
 
-        initGua();
+/*        initGua();
         //dist();
-        System.out.println(1);
+        System.out.println(1);*/
+        try {
+            Files.lines(Paths.get("/Users/huangyongchao/Downloads/uaios")).distinct().forEach(n->{
+                System.out.println("1|"+n);
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
