@@ -3,7 +3,9 @@ package com.adscanal.sdk.router;
 import com.adscanal.sdk.core.SdkConf;
 import com.adscanal.sdk.core.job.LoadProxyJob;
 import com.adscanal.sdk.core.job.LumiJob;
+import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.Counter;
+import com.adscanal.sdk.dto.OsE;
 import com.adscanal.sdk.dto.SimpleData;
 import com.adscanal.sdk.entity.Offer;
 import com.adscanal.sdk.entity.OfferExample;
@@ -176,7 +178,10 @@ public class OpenApi {
     public Object geo_devfiles() {
         return LoadProxyJob.GEO_FILES;
     }
-
+    @GetMapping("/UA")
+    public Object UA() {
+        return JSONObject.toJSONString(Collecter.OS_UA);
+    }
 
     @RequestMapping("/apis")
     public Object getAllUrl() {

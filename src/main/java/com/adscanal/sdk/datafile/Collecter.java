@@ -61,6 +61,9 @@ public class Collecter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        OS_UA.forEach((k,v)->{
+            System.out.println(k+" "+v.size());
+        });
         System.out.println("UA INIT oVER");
     }
 
