@@ -46,7 +46,7 @@ public class Collecter {
                     OS_UA.put(uary[0], Lists.newArrayList());
                 } else {
                     if (ua.startsWith("1|")) {
-                        if (ua.indexOf("Phone") > 0 && ua.indexOf("13_") > 0) {
+                        if (ua.indexOf("13_") > 0||ua.indexOf("12_") > 0||ua.indexOf("14_") > 0) {
                             OS_UA.get(uary[0]).add(uary[1]);
                         }
                     } else {
