@@ -161,19 +161,19 @@ public class AdTool {
     public static int aos_size =0;
     public static String randomUA(String os) {
         if(ios_size==0){
-            ios_size = Collecter.OS_UA.get(OsE.IOS.name).size();
+            ios_size = Collecter.OS_UA.get(OsE.IOS.v).size();
         }
         if(aos_size==0){
-            aos_size = Collecter.OS_UA.get(OsE.AOS.name).size();
+            aos_size = Collecter.OS_UA.get(OsE.AOS.v).size();
         }
         if(OsE.IOS.name.equalsIgnoreCase(os)){
             int i = new Random().nextInt(ios_size);
-            String ua =   Collecter.OS_UA.get(OsE.IOS.name).get(i);
+            String ua =   Collecter.OS_UA.get(OsE.IOS.v).get(i);
             System.out.println(os+ua);
             return ua;
         }else{
             int i = new Random().nextInt(aos_size);
-            String ua =   Collecter.OS_UA.get(OsE.AOS.name).get(i);
+            String ua =   Collecter.OS_UA.get(OsE.AOS.v).get(i);
             System.out.println(os+ua);
             return ua;
         }
