@@ -1,5 +1,6 @@
 package com.adscanal.sdk.common;
 
+import com.adscanal.sdk.core.LazadaCPIExt;
 import com.adscanal.sdk.datafile.Collecter;
 import com.adscanal.sdk.dto.*;
 import com.google.common.collect.Lists;
@@ -159,6 +160,16 @@ public class AdTool {
      */
     public static int ios_size =0;
     public static int aos_size =0;
+    public static boolean isCpiAff(LiveOffer offer){
+        boolean iscpi = false ;
+        if (LazadaCPIExt.AID_VN.equals(offer.getaId())
+                ||LazadaCPIExt.AID_PH.equals(offer.getaId())
+                ||LazadaCPIExt.AID_SG.equals(offer.getaId())
+                ||LazadaCPIExt.AID_ID.equals(offer.getaId())) {
+            iscpi = true;
+        }
+        return iscpi;
+    }
     public static String randomUA(String os) {
         if(ios_size==0){
             ios_size = Collecter.OS_UA.get(OsE.IOS.v).size();

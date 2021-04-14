@@ -65,13 +65,20 @@ public class OfferTask implements Runnable {
                 return;
             }
             offer = SimpleData.LIVEOFFERS.get(offer.getUid());
+
+            boolean iscpi = AdTool.isCpiAff(offer);
+
             String deviceid = SdkConf.GEO_OS_QUE.get(key).take().toString();
 
             SimpleData.PRODUCERCOUNTER.get(key).getQueue().incrementAndGet();
             String url = AdTool.trackurl(os, offer.getTrackUrl(), AdTool.randomSub(offer), deviceid, AdTool.geClickid(offer), null);
             String ua = AdTool.randomUA(os);
             //request(key, , url, ua, offer, null, deviceid, os);
-            request(key, ProxyClient.getConn(geo, seriNo), url, ua, offer, null, deviceid, os);
+            String connKey = geo;
+            if(iscpi){
+                connKey = geo + "cpi";
+            }
+            request(iscpi, key, ProxyClient.getConn(connKey, seriNo), url, ua, offer, null, deviceid, os);
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
             errorlog.error(e.getMessage(), e);
@@ -106,7 +113,7 @@ public class OfferTask implements Runnable {
     }
 
 
-    public void request(String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public void request(boolean isCpi, String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
             int steps = 3;
@@ -136,22 +143,16 @@ public class OfferTask implements Runnable {
                 if (lang == null) {
                     lang = "en-" + geo;
                 }
-                boolean iscpi = false ;
-                if (LazadaCPIExt.AID_VN.equals(offer.getaId())
-                ||LazadaCPIExt.AID_PH.equals(offer.getaId())
-                ||LazadaCPIExt.AID_SG.equals(offer.getaId())
-                ||LazadaCPIExt.AID_ID.equals(offer.getaId())) {
-                    iscpi = true;
-                }
+
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
-                if (iscpi) {
+                if (isCpi) {
 
                     if (headers != null && headers.length > 0) {
                         for (Header header : headers) {
                             String value = header.getValue();
                             if (value.indexOf(LazadaCPIExt.miidlaz) >= 0 || value.indexOf(LazadaCPIExt.exlaz) >= 0 || value.indexOf(LazadaCPIExt.lzd_click_id) >= 0) {
-                                request.addHeader("set-cookie",value);
+                                request.addHeader("set-cookie", value);
                             }
                         }
                     }
@@ -170,7 +171,7 @@ public class OfferTask implements Runnable {
 
                 if (isRedirect(offer, response) && !is3rd && !isStore) {
                     url = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
-                    if(iscpi){
+                    if (isCpi) {
                         headers = response.getHeaders("set-cookie");
                     }
                     continue;
