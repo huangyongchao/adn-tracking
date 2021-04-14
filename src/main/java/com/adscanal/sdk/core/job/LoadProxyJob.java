@@ -490,6 +490,8 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
                 //初始化安卓 设备号生产者
                 JSONObject json = (JSONObject) n;
                 String geo = json.getString("country");
+                String internal_name = json.getString("internal_name");
+
                 int port = json.getInteger("port");
                 Integer offset = json.getInteger("multiply");
                 if (offset == null) {
@@ -518,14 +520,17 @@ curl -X POST "http://127.0.0.1:22999/api/add_whitelist_ip" -H "Content-Type: app
 
                 loadDevid(geo, OsE.AOS.name);
                 loadDevid(geo, OsE.IOS.name);
-
-
-                ProxyClient.GEO_CLIENTS.put(geo, new ArrayList<>());
-                for (int i = 0; i < offset; i++) {
-                    ProxyClient.GEO_CLIENTS.get(geo).add(ProxyClient.getClient(proxyserver, port + i));
-                    logger.info("INITCLIENT:" + geo + " " + (port + i));
+                boolean iscpi = false;
+                String key = geo;
+                if(internal_name.indexOf("cpi")>0){
+                    key = geo + "cpi";
                 }
-                ProxyClient.GEO_OFFSET.put(geo, offset);
+                ProxyClient.GEO_CLIENTS.put(key, new ArrayList<>());
+                for (int i = 0; i < offset; i++) {
+                    ProxyClient.GEO_CLIENTS.get(key).add(ProxyClient.getClient(proxyserver, port + i));
+                    logger.info("INITCLIENT:" + key + " " + (port + i));
+                }
+                ProxyClient.GEO_OFFSET.put(key, offset);
 
 
             });
