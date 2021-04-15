@@ -54,6 +54,13 @@ public class AdTool {
                 url = StringUtils.replaceAll(url, "\\{gaid}", deviceid);
             }
         }
+
+        if (url.indexOf("deeplink=false") > -1) {
+            url = StringUtils.replaceAll(url, "deeplink=false", "deeplink=true");
+        }
+
+
+
         if (url.indexOf("{") > -1) {
             url = StringUtils.replaceAll(url, "\\{", "%7B");
         }
@@ -237,7 +244,7 @@ public class AdTool {
         }
         System.out.println(111);*/
 
-        String url = "https://app.adjust.com/m46zsbd?adgroup=11323_4&tracker_limit=990000&campaign=11323&creative=B_4&gps_adid=8f575c7d-0e8e-4c30-978f-11044b961701&click_id=ObGC01082347251368311&install_callback=http%3a%2f%2fpostback.adscanal.com%2finstall%3faffid%3d1030%26clickid%3DObGC01082347251368311\u0003&s2s=1";
+        String url = "https://u.lazada.vn/u/c.ZCo5zd?lp_url=https%3A%2F%2Fpages.lazada.vn%2Fwow%2Fgcp%2Froute%2Flazada%2Fvn%2Fupr_1000345_lazada%2Fchannel%2Fvn%2Fupr-router%2Fvn%3Fhybrid%3D1%26data_prefetch%3Dtrue%26prefetch_replace%3D1%26wh_pid%3D%2Flazada%2Fchannel%2Fvn%2Fkhuyen-mai%2Flazada-chao-ban-moi%26laz_trackid%3D4%3Amm_160831343_52003356_2010903443%3Aclkgg5q641f3am0nhn9e7v%26mkttid%3Dclkgg5q641f3am0nhn9e7v%26clickId%3Dclkgg5q641f3am0nhn9e7v%26exlaz%3Dc_BDsvhk7NOz1J39XRAMCJ2ozbId9WGwJIiXEGuifkgls%25253D&fallback=false&deeplink=false";
 
         System.out.println((char) 80);
 
@@ -245,6 +252,12 @@ public class AdTool {
         String s = "miidlaz=miidgg2f951f32d6sdb3ii6; Max-Age=86400000; Expi";
         int idx = s.indexOf(";");
         System.out.println(s.substring(0,idx));
+
+
+        if (url.indexOf("deeplink=false") > -1) {
+            url = StringUtils.replaceAll(url, "deeplink=false", "deeplink=true");
+        }
+        System.out.println(url);
 
     }
 
