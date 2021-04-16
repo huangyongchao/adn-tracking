@@ -177,11 +177,12 @@ public class AdTool {
     public static boolean isCpiAff(LiveOffer offer){
         boolean iscpi = false ;
         if (LazadaCPIExt.AID_VN.equals(offer.getaId())
-                ||LazadaCPIExt.AID_PH.equals(offer.getaId())
-                ||LazadaCPIExt.AID_SG.equals(offer.getaId())
-                ||LazadaCPIExt.AID_ID.equals(offer.getaId())) {
+               ) {
             iscpi = true;
         }
+/*         ||LazadaCPIExt.AID_PH.equals(offer.getaId())
+                ||LazadaCPIExt.AID_SG.equals(offer.getaId())
+                ||LazadaCPIExt.AID_ID.equals(offer.getaId())*/
         return iscpi;
     }
     public static String randomUA(String os) {
