@@ -216,9 +216,9 @@ public class LoadProxyJob {
         if (priority > 5) {
             priority = 5;
         }
-        coresize = clicks / 20000;
-        if (coresize > 80) {
-            coresize = 80;
+        coresize = clicks / 25000;
+        if (coresize > 60) {
+            coresize = 60;
         }
 
         Float threads = coresize * getX();
