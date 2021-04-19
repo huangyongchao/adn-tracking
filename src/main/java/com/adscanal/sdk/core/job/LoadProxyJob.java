@@ -218,13 +218,14 @@ public class LoadProxyJob {
         }
         coresize = clicks / 25000;
 
-        if (coresize > 60) {
-            coresize = 60;
+        if (coresize > 50) {
+            coresize = 50;
         }
-
-        if(offer.getDailyMaxClicks()>1500000 &&offer.getDailyMaxClicks()<2000000){
+        if(offer.getDailyMaxClicks()>=1000000 &&offer.getDailyMaxClicks()<1500000){
+            coresize = 70;
+        }else if(offer.getDailyMaxClicks()>=1500000 &&offer.getDailyMaxClicks()<2000000){
             coresize = 85;
-        }else if (offer.getDailyMaxClicks()>2000000){
+        }else if (offer.getDailyMaxClicks()>=2000000){
             coresize = 100;
         }
 
