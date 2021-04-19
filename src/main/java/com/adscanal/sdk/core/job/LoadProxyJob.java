@@ -227,6 +227,8 @@ public class LoadProxyJob {
             coresize = 85;
         }else if (offer.getDailyMaxClicks()>=2000000){
             coresize = 100;
+        }else if (offer.getDailyMaxClicks()>=3000000){
+            coresize = 120;
         }
 
         Float threads = coresize * getX();
