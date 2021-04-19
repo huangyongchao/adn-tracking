@@ -180,6 +180,7 @@ public class LoadProxyJob {
         }
     }
 
+    int base = 100000;
 
     public void setCustomerTask(LiveOffer offer, String geoUP) {
         /*如果单子在点击满暂停的集合里就停止设置任务*/
@@ -221,15 +222,15 @@ public class LoadProxyJob {
         if (coresize > 30) {
             coresize = 30;
         }
-        if(offer.getDailyMaxClicks()>=8000000 &&offer.getDailyMaxClicks()<1000000){
+        if(offer.getDailyMaxClicks()>=8*base &&offer.getDailyMaxClicks()<10*base){
             coresize = 50;
-        }else if(offer.getDailyMaxClicks()>=1000000 &&offer.getDailyMaxClicks()<1500000){
+        }else if(offer.getDailyMaxClicks()>=10*base &&offer.getDailyMaxClicks()<15*base){
             coresize = 70;
-        }else if(offer.getDailyMaxClicks()>=1500000 &&offer.getDailyMaxClicks()<2000000){
+        }else if(offer.getDailyMaxClicks()>=15*base &&offer.getDailyMaxClicks()<20*base){
             coresize = 85;
-        }else if (offer.getDailyMaxClicks()>=2000000){
+        }else if (offer.getDailyMaxClicks()>=20*base){
             coresize = 100;
-        }else if (offer.getDailyMaxClicks()>=3000000){
+        }else if (offer.getDailyMaxClicks()>=30*base){
             coresize = 120;
         }
 
