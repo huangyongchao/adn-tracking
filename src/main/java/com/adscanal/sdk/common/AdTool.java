@@ -178,8 +178,7 @@ public class AdTool {
     public static int aos_size =0;
     public static boolean isCpiAff(LiveOffer offer){
         boolean iscpi = false ;
-        if (LazadaCPIExt.AID_VN.equals(offer.getaId())
-               ) {
+        if (offer.getRtbRunning()==3) {
             iscpi = true;
         }
 /*         ||LazadaCPIExt.AID_PH.equals(offer.getaId())
