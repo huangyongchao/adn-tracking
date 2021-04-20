@@ -112,6 +112,8 @@ public class OfferTask implements Runnable {
         this.offer = offer;
     }
 
+    public AtomicInteger isok = new AtomicInteger(0);
+    public AtomicInteger isbad = new AtomicInteger(0);
 
     public void request(boolean isCpi, String key, CloseableHttpClient cpiclient, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
@@ -196,20 +198,25 @@ public class OfferTask implements Runnable {
 
                     Counter.increaseSuccess(offer.getUid());
                 } else if ((status == HttpStatus.SC_OK)) {
-                    if(offer.getaId().equals("1050")){
-                        System.out.println(url);
+                    if(offer.getaId().equals("1050")&&!is3rd){
+                        isbad.incrementAndGet();
                     }
                     Counter.increaseSuccess(offer.getUid());
                 } else if (is3rd) {
                     if(offer.getaId().equals("1050")){
-                        System.out.println(url);
+                        isok.incrementAndGet();
                     }
+                    isok.incrementAndGet();
                     Counter.increaseSuccess1(offer.getUid());
                 } else if (i == 5) {
                     Counter.increaseError1(offer.getUid());
                 } else {
                     Counter.increaseError(offer.getUid());
                 }
+                if(offer.getaId().equals("1050")&&!is3rd){
+                    System.out.println(isok.get()+" "+isbad.get()+" "+(isok.get()/isbad.get()+1));
+                }
+
                 break;
 
             }
