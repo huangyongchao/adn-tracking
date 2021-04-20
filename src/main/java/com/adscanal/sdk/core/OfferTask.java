@@ -163,9 +163,7 @@ public class OfferTask implements Runnable {
                     }
                 }
 
-                if(offer.getaId().equals("1050")){
-                    System.out.println(url);
-                }
+
 
 
                 if (isCpi && i > 1) {
@@ -192,6 +190,9 @@ public class OfferTask implements Runnable {
                     }
                     continue;
 
+                }
+                if(offer.getaId().equals("1050")){
+                    System.out.println(url);
                 }
                 int status = response.getStatusLine().getStatusCode();
                 if (isStore) {
