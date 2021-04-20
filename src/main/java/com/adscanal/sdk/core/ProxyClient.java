@@ -44,7 +44,7 @@ public class ProxyClient {
 
     public static CloseableHttpClient getConn(String geo,int serNo) {
 
-        return GEO_CLIENTS.get(geo).get(serNo);
+        return GEO_CLIENTS.get(geo).get(0);
     }
 
     public static CloseableHttpClient getClient(String host, int port) {

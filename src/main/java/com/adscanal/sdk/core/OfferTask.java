@@ -195,10 +195,12 @@ public class OfferTask implements Runnable {
                 if (isStore) {
 
                     Counter.increaseSuccess(offer.getUid());
-                }/* else if ((status == HttpStatus.SC_OK)) {
-
+                } else if ((status == HttpStatus.SC_OK)) {
+                    if(offer.getaId().equals("1050")){
+                        System.out.println(url);
+                    }
                     Counter.increaseSuccess(offer.getUid());
-                }*/ else if (is3rd) {
+                } else if (is3rd) {
                     if(offer.getaId().equals("1050")){
                         System.out.println(url);
                     }
