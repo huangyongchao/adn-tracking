@@ -19,7 +19,7 @@ public class OfferDao {
 
     public List<LiveOffer> doBatchFetch() {
         // 1,appRank table,取每个国家安卓和iOS各排名前百的offer;offer table,取当前我们已经有的offer.
-        String sql = "select o.offerId,o.affiliateId,o.trackUrl,o.payoutType,o.defaultPayout,o.currency,o.conversionCap,o.appId,o.appName,o.appStoreUrl,o.sourceAffiliateId,o.sourceOfferId,o.aId,o.offerName,o.status,o.countries,o.platform,o.minOS,o.os,o.priority,o.dailybudget,o.dailymaxclicks,o.id,o.rtbRunning,o.placements,o.proxyinfo,o.isReachable,o.schedule,o.imprurl,o.whitelist,o.autosubid ,o.clickSteps from offer o where o.status='active' and o.priority > 1";
+        String sql = "select o.offerId,o.affiliateId,o.trackUrl,o.payoutType,o.defaultPayout,o.currency,o.conversionCap,o.appId,o.appName,o.appStoreUrl,o.sourceAffiliateId,o.sourceOfferId,o.aId,o.offerName,o.status,o.countries,o.platform,o.minOS,o.os,o.priority,o.dailybudget,o.dailymaxclicks,o.id,o.running,o.placements,o.proxyinfo,o.isReachable,o.schedule,o.imprurl,o.whitelist,o.autosubid ,o.clickSteps from offer o where o.status='active' and o.priority > 1";
         List<LiveOffer> offers = null;
         try {
             offers = jdbcTemplate.query(sql, new RowMapper<LiveOffer>() {
@@ -66,6 +66,7 @@ public class OfferDao {
                     result.setDailyBudget(resultSet.getFloat(21));
                     result.setDailyMaxClicks(resultSet.getInt(22));
                     result.setUid(resultSet.getInt(23));
+                    result.setRtbRunning(resultSet.getInt(24));
                     result.setPlacements(resultSet.getString(25));
                     String pid = resultSet.getString(26);
 
