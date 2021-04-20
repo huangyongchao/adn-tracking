@@ -214,7 +214,7 @@ public class OfferTask implements Runnable {
                     Counter.increaseError(offer.getUid());
                 }
                 if(offer.getaId().equals("1050")){
-                    System.out.println(isok.get()+" "+isbad.get()+" "+(isok.get()/isbad.get()+1));
+                    System.out.println(isok.get()+" "+isbad.get()+" ");
                 }
 
                 break;
