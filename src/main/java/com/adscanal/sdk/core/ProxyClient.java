@@ -152,8 +152,79 @@ public class ProxyClient {
 
     }
 
+    public static void proxycreate(){
+        String[] geos = new String[]{"PH",
+                "VN",
+                "ID",
+                "TH",
+                "MX",
+                "IN",
+                "SG",
+                "US",
+                "IL",
+                "SA",
+                "MY",
+                "AE",
+                "TR",
+                "TW",
+                "CA",
+                "RU",
+                "BR",
+                "GB",
+                "AU"};
+        StringBuffer proxies = new StringBuffer();
+        int port = 50000;
+        for (String geo :geos){
+            if("AU".equals(geo)||"IN".equals(geo)||"VN".equals(geo)||"TH".equals(geo)||"ID".equals(geo)||
+                    "PH".equals(geo)||"SG".equals(geo)||"MY".equals(geo)||"SA".equals(geo)){
+
+            }else{
+                continue;
+
+            }
+
+/*            "country": "my",
+                    "dns": "remote",
+                    "internal_name": "my",
+                    "port": 43000,
+                    "preset": "rotating",
+                    "rotate_session": true,
+                    "route_err": "block",
+                    "ssl": true,
+                    "zone": "static"*/
+
+            String proxy = "\n" +
+                    "        {\n" +
+                    "            \"country\": \"" + geo.toLowerCase() + "\",\n" +
+                    "            \"dns\": \"remote\",\n" +
+                    "            \"internal_name\": \"" + geo.toLowerCase() + "\",\n" +
+                    "            \"port\": " + port + ",\n" +
+                    "            \"preset\": \"rotating\",\n" +
+                    "            \"rotate_session\": true,\n" +
+                    "            \"route_err\": \"block\",\n" +
+                    "            \"ssl\": true\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"country\": \"" + geo.toLowerCase() + "\",\n" +
+                    "            \"dns\": \"remote\",\n" +
+                    "            \"internal_name\": \"" + geo.toLowerCase() + "cpi" + "\",\n" +
+                    "            \"port\": " + (port + 10) + ",\n" +
+                    "            \"preset\": \"rotating\",\n" +
+                    "            \"rotate_session\": true,\n" +
+                    "            \"route_err\": \"block\",\n" +
+                    "            \"ssl\": true,\n" +
+                    "            \"zone\": \"residential\"\n" +
+                    "        },";
+            proxies.append(proxy);
+            port = port + 20;
+
+        }
+        System.out.println(proxies.toString());
+
+
+    }
     public static void main(String[] args) {
-        GeoProxy geoProxy = new GeoProxy();
+  /*      GeoProxy geoProxy = new GeoProxy();
         geoProxy.setAOS(true);
         geoProxy.setIOS(true);
         geoProxy.setOffset(100);
@@ -163,7 +234,9 @@ public class ProxyClient {
         geoProxy.setIospath("");
         geoProxy.setAospath("");
 
-        System.out.println(JSONObject.toJSONString(geoProxy));
+        System.out.println(JSONObject.toJSONString(geoProxy));*/
+
+        proxycreate();
     }
 
 }

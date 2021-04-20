@@ -75,10 +75,10 @@ public class OfferTask implements Runnable {
             String ua = AdTool.randomUA(os);
             //request(key, , url, ua, offer, null, deviceid, os);
             String connKey = geo;
-            if(iscpi){
+            if (iscpi) {
                 connKey = geo + "cpi";
             }
-            request(iscpi, key, ProxyClient.getConn(connKey, seriNo), url, ua, offer, null, deviceid, os);
+            request(iscpi, key, ProxyClient.getConn(connKey, seriNo), ProxyClient.getConn(geo, seriNo), url, ua, offer, null, deviceid, os);
         } catch (InterruptedException e) {
             SimpleData.PRODUCERCOUNTER.get(key).getError().incrementAndGet();
             errorlog.error(e.getMessage(), e);
@@ -113,7 +113,7 @@ public class OfferTask implements Runnable {
     }
 
 
-    public void request(boolean isCpi, String key, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
+    public void request(boolean isCpi, String key, CloseableHttpClient cpiclient, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
             CloseableHttpResponse response = null;
             int steps = 3;
@@ -139,11 +139,15 @@ public class OfferTask implements Runnable {
                 request.setHeader(HttpHeaders.ACCEPT, "*/*");
                 request.setHeader(HttpHeaders.PRAGMA, "no-cache");
                 request.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+                request.setHeader("sec-fetch-dest", "document");
+                request.setHeader("sec-fetch-mode", "navigate");
+                request.setHeader("sec-fetch-site", "none");
+                request.setHeader("sec-fetch-user", "?1");
+
                 String lang = GeoLang.LAN_M.get(geo);
                 if (lang == null) {
                     lang = "en-" + geo;
                 }
-
                 request.setHeader(HttpHeaders.ACCEPT_LANGUAGE, lang + ";q=0.9,en-US;q=0.8,en;q=0.7");
                 request.setHeader("upgrade-insecure-requests", "1");
                 if (isCpi) {
@@ -157,9 +161,16 @@ public class OfferTask implements Runnable {
                         }
                     }
                 }
-                response = client.execute(request);
-                request.releaseConnection();
+                if (isCpi && i > 1) {
+                    response = cpiclient.execute(request);
 
+                } else {
+                    response = client.execute(request);
+                }
+                request.releaseConnection();
+                if(offer.getAffiliateId()==50||offer.getAffiliateId()==51){
+                    System.out.println(url);
+                }
                 boolean is3rd = AdTool.is3pt(url);
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
                     logger.warn(url);
