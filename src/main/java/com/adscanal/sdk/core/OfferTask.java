@@ -115,6 +115,9 @@ public class OfferTask implements Runnable {
 
     public void request(boolean isCpi, String key, CloseableHttpClient cpiclient, CloseableHttpClient client, String url, String ua, LiveOffer offer, Header[] headers, String deviceid, String os) {
         try {
+            if(offer.getAffiliateId()==50||offer.getAffiliateId()==51){
+                System.out.println(url);
+            }
             CloseableHttpResponse response = null;
             int steps = 3;
             if (offer.getClickSteps() != null && offer.getClickSteps() >= 3) {
@@ -168,9 +171,7 @@ public class OfferTask implements Runnable {
                     response = client.execute(request);
                 }
                 request.releaseConnection();
-                if(offer.getAffiliateId()==50||offer.getAffiliateId()==51){
-                    System.out.println(url);
-                }
+
                 boolean is3rd = AdTool.is3pt(url);
                 if (SdkConf.DEBUG_REQ_LOG.contains(offer.getUid())) {
                     logger.warn(url);
