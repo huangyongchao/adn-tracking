@@ -166,9 +166,8 @@ public class OfferTask implements Runnable {
 
 
 
-                if (isCpi && i > 1) {
+                if (isCpi) {
                     response = cpiclient.execute(request);
-
                 } else {
                     response = client.execute(request);
                 }
