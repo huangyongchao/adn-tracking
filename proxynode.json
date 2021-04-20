@@ -346,6 +346,39 @@
             "route_err": "block",
             "session": "",
             "ssl": true
+        },
+        {
+            "country": "au",
+            "dns": "remote",
+            "internal_name": "aucpi",
+            "port": 45100,
+            "preset": "rotating",
+            "rotate_session": true,
+            "route_err": "block",
+            "ssl": true,
+            "zone": "residential"
+        },
+        {
+            "country": "in",
+            "dns": "remote",
+            "internal_name": "incpi",
+            "port": 45200,
+            "preset": "rotating",
+            "rotate_session": true,
+            "route_err": "block",
+            "ssl": true,
+            "zone": "residential"
+        },
+        {
+            "country": "sa",
+            "dns": "remote",
+            "internal_name": "sacpi",
+            "port": 45300,
+            "preset": "rotating",
+            "rotate_session": true,
+            "route_err": "block",
+            "ssl": true,
+            "zone": "residential"
         }
     ]
 }
