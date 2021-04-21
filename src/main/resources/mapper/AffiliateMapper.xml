@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adscanal.sdk.mapper.AffiliateMapper">
-  <resultMap id="BaseResultMap" type="com.adscanal.sdk.entity.Affiliate">
+<mapper namespace="mobi.xdsp.tracking.mapper.AffiliateMapper">
+  <resultMap id="BaseResultMap" type="mobi.xdsp.tracking.entity.Affiliate">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="affiliateName" jdbcType="VARCHAR" property="affiliatename" />
     <result column="publisherId" jdbcType="VARCHAR" property="publisherid" />
@@ -35,7 +35,7 @@
     <result column="directguest" jdbcType="INTEGER" property="directguest" />
     <result column="payevent" jdbcType="VARCHAR" property="payevent" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.AffiliateWithBLOBs">
     <result column="subidconf" jdbcType="LONGVARBINARY" property="subidconf" />
     <result column="adjustconf" jdbcType="LONGVARBINARY" property="adjustconf" />
     <result column="openconf" jdbcType="LONGVARBINARY" property="openconf" />
@@ -107,7 +107,7 @@
   <sql id="Blob_Column_List">
     subidconf, adjustconf, openconf
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="com.adscanal.sdk.entity.AffiliateExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.tracking.entity.AffiliateExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -123,7 +123,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="com.adscanal.sdk.entity.AffiliateExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="mobi.xdsp.tracking.entity.AffiliateExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -149,13 +149,13 @@
     delete from affiliate
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.adscanal.sdk.entity.AffiliateExample">
+  <delete id="deleteByExample" parameterType="mobi.xdsp.tracking.entity.AffiliateExample">
     delete from affiliate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+  <insert id="insert" parameterType="mobi.xdsp.tracking.entity.AffiliateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -184,7 +184,7 @@
       #{payevent,jdbcType=VARCHAR}, #{subidconf,jdbcType=LONGVARBINARY}, #{adjustconf,jdbcType=LONGVARBINARY}, 
       #{openconf,jdbcType=LONGVARBINARY})
   </insert>
-  <insert id="insertSelective" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+  <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.AffiliateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -398,7 +398,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.adscanal.sdk.entity.AffiliateExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="mobi.xdsp.tracking.entity.AffiliateExample" resultType="java.lang.Long">
     select count(*) from affiliate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -596,7 +596,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.tracking.entity.AffiliateWithBLOBs">
     update affiliate
     <set>
       <if test="affiliatename != null">
@@ -704,7 +704,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.adscanal.sdk.entity.AffiliateWithBLOBs">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.tracking.entity.AffiliateWithBLOBs">
     update affiliate
     set affiliateName = #{affiliatename,jdbcType=VARCHAR},
       publisherId = #{publisherid,jdbcType=VARCHAR},
@@ -742,7 +742,7 @@
       openconf = #{openconf,jdbcType=LONGVARBINARY}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.adscanal.sdk.entity.Affiliate">
+  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.Affiliate">
     update affiliate
     set affiliateName = #{affiliatename,jdbcType=VARCHAR},
       publisherId = #{publisherid,jdbcType=VARCHAR},

@@ -16,7 +16,7 @@
         </Console>
 
         <!--设置级别为INFO日志输出到info.log中-->
-        <RollingFile name="FILE" filename="${logPath}/sdk.log"
+        <RollingFile name="FILE" filename="${logPath}/tracking.log"
                      filepattern="${logPath}/sdk%d{yyyy-MM-dd}.log" >
             <Filters>
                 <!--输出级别，例：level=”info”,日志级别为info或者以上(匹配的界别)
