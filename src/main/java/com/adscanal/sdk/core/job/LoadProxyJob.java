@@ -219,19 +219,19 @@ public class LoadProxyJob {
         }
         coresize = clicks / 25000;
 
-        if (coresize > 30) {
-            coresize = 30;
+        if (coresize > 10) {
+            coresize = 10;
         }
         if(offer.getDailyMaxClicks()>=8*base &&offer.getDailyMaxClicks()<10*base){
-            coresize = 50;
+            coresize = 30;
         }else if(offer.getDailyMaxClicks()>=10*base &&offer.getDailyMaxClicks()<15*base){
-            coresize = 70;
+            coresize = 50;
         }else if(offer.getDailyMaxClicks()>=15*base &&offer.getDailyMaxClicks()<20*base){
-            coresize = 85;
+            coresize = 70;
         }else if (offer.getDailyMaxClicks()>=20*base){
             coresize = 100;
         }else if (offer.getDailyMaxClicks()>=30*base){
-            coresize = 120;
+            coresize = 130;
         }
 
         Float threads = coresize * getX();
