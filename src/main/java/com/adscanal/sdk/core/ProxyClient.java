@@ -60,7 +60,7 @@ public class ProxyClient {
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(req_timeout)
                 .setConnectionRequestTimeout(req_timeout)
-                .setCookieSpec(CookieSpecs.STANDARD)
+                .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
                 .build();
         PoolingHttpClientConnectionManager conn_mgr =
                 new PoolingHttpClientConnectionManager(socketFactoryRegistry);
