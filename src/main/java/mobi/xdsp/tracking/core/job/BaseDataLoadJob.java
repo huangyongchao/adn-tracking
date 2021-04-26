@@ -8,21 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class CounterJob {
+public class BaseDataLoadJob {
     private static final Logger errorlog = LoggerFactory.getLogger("error");
-    private static final Logger logger = LoggerFactory.getLogger(CounterJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseDataLoadJob.class);
 
-
-    @Scheduled(cron = "1 0,10,20,30,40,50 * * * ?")
-    public void setCurrentHour() {
-
-    }
-
-
-    @Scheduled(cron = "*/2 * * * * ?")
-    public void testjob() {
-        System.out.println(new Date());
-
-    }
 
 }

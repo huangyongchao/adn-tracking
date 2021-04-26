@@ -1,4 +1,4 @@
-package mobi.xdsp.tracking.datafile;
+package mobi.xdsp.tracking.common;
 
 import java.security.MessageDigest;
 
