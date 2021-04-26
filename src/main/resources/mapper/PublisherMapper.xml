@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mobi.xdsp.tracking.mapper.PublisherMapper">
+  <resultMap id="BaseResultMap" type="mobi.xdsp.tracking.entity.Publisher">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="companyname" jdbcType="VARCHAR" property="companyname" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="address2" jdbcType="VARCHAR" property="address2" />
+    <result column="workphone" jdbcType="VARCHAR" property="workphone" />
+    <result column="billinginfo" jdbcType="VARCHAR" property="billinginfo" />
+    <result column="applytype" jdbcType="INTEGER" property="applytype" />
+    <result column="dailybudget" jdbcType="DECIMAL" property="dailybudget" />
+    <result column="monthbudget" jdbcType="DECIMAL" property="monthbudget" />
+    <result column="dailycap" jdbcType="INTEGER" property="dailycap" />
+    <result column="monthcap" jdbcType="INTEGER" property="monthcap" />
+    <result column="clickcap" jdbcType="INTEGER" property="clickcap" />
+    <result column="payoutrate" jdbcType="INTEGER" property="payoutrate" />
+    <result column="redirect" jdbcType="INTEGER" property="redirect" />
+    <result column="postbackurl" jdbcType="VARCHAR" property="postbackurl" />
+    <result column="postbackeventurl" jdbcType="VARCHAR" property="postbackeventurl" />
+    <result column="postbackstatus" jdbcType="INTEGER" property="postbackstatus" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="lastname" jdbcType="VARCHAR" property="lastname" />
+    <result column="createuser" jdbcType="VARCHAR" property="createuser" />
+    <result column="updateuser" jdbcType="VARCHAR" property="updateuser" />
+    <result column="manageruser" jdbcType="VARCHAR" property="manageruser" />
+    <result column="refadvid" jdbcType="INTEGER" property="refadvid" />
+    <result column="innercompany" jdbcType="INTEGER" property="innercompany" />
+    <result column="subemal" jdbcType="INTEGER" property="subemal" />
+    <result column="opmanager" jdbcType="VARCHAR" property="opmanager" />
+    <result column="bdmanager" jdbcType="VARCHAR" property="bdmanager" />
+    <result column="autorun" jdbcType="INTEGER" property="autorun" />
+    <result column="autoadjust" jdbcType="INTEGER" property="autoadjust" />
+    <result column="autoclose" jdbcType="INTEGER" property="autoclose" />
+    <result column="platformlevel" jdbcType="VARCHAR" property="platformlevel" />
+    <result column="strategy1" jdbcType="VARCHAR" property="strategy1" />
+    <result column="strategy2" jdbcType="VARCHAR" property="strategy2" />
+    <result column="strategy3" jdbcType="VARCHAR" property="strategy3" />
+    <result column="autoparam1" jdbcType="VARCHAR" property="autoparam1" />
+    <result column="autoparam2" jdbcType="VARCHAR" property="autoparam2" />
+    <result column="autoparam3" jdbcType="VARCHAR" property="autoparam3" />
+    <result column="instructions" jdbcType="VARCHAR" property="instructions" />
+    <result column="contactperson" jdbcType="VARCHAR" property="contactperson" />
+    <result column="financeperson" jdbcType="VARCHAR" property="financeperson" />
+    <result column="contactemal" jdbcType="VARCHAR" property="contactemal" />
+    <result column="financeemail" jdbcType="VARCHAR" property="financeemail" />
+    <result column="invoicetpl" jdbcType="VARCHAR" property="invoicetpl" />
+    <result column="mixrate" jdbcType="INTEGER" property="mixrate" />
+    <result column="redirectrate" jdbcType="INTEGER" property="redirectrate" />
+    <result column="deductrate" jdbcType="INTEGER" property="deductrate" />
+    <result column="sysuserid" jdbcType="INTEGER" property="sysuserid" />
+    <result column="utc" jdbcType="INTEGER" property="utc" />
+    <result column="deleteflag" jdbcType="INTEGER" property="deleteflag" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, password, email, companyname, token, country, province, city, address, address2, 
+    workphone, billinginfo, applytype, dailybudget, monthbudget, dailycap, monthcap, 
+    clickcap, payoutrate, redirect, postbackurl, postbackeventurl, postbackstatus, status, 
+    createtime, updatetime, lastname, createuser, updateuser, manageruser, refadvid, 
+    innercompany, subemal, opmanager, bdmanager, autorun, autoadjust, autoclose, platformlevel, 
+    strategy1, strategy2, strategy3, autoparam1, autoparam2, autoparam3, instructions, 
+    contactperson, financeperson, contactemal, financeemail, invoicetpl, mixrate, redirectrate, 
+    deductrate, sysuserid, utc, deleteflag, state
+  </sql>
+  <select id="selectByExample" parameterType="mobi.xdsp.tracking.entity.PublisherExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from publisher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from publisher
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from publisher
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="mobi.xdsp.tracking.entity.PublisherExample">
+    delete from publisher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="mobi.xdsp.tracking.entity.Publisher">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into publisher (password, email, companyname, 
+      token, country, province, 
+      city, address, address2, 
+      workphone, billinginfo, applytype, 
+      dailybudget, monthbudget, dailycap, 
+      monthcap, clickcap, payoutrate, 
+      redirect, postbackurl, postbackeventurl, 
+      postbackstatus, status, createtime, 
+      updatetime, lastname, createuser, 
+      updateuser, manageruser, refadvid, 
+      innercompany, subemal, opmanager, 
+      bdmanager, autorun, autoadjust, 
+      autoclose, platformlevel, strategy1, 
+      strategy2, strategy3, autoparam1, 
+      autoparam2, autoparam3, instructions, 
+      contactperson, financeperson, contactemal, 
+      financeemail, invoicetpl, mixrate, 
+      redirectrate, deductrate, sysuserid, 
+      utc, deleteflag, state
+      )
+    values (#{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{companyname,jdbcType=VARCHAR}, 
+      #{token,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{address2,jdbcType=VARCHAR}, 
+      #{workphone,jdbcType=VARCHAR}, #{billinginfo,jdbcType=VARCHAR}, #{applytype,jdbcType=INTEGER}, 
+      #{dailybudget,jdbcType=DECIMAL}, #{monthbudget,jdbcType=DECIMAL}, #{dailycap,jdbcType=INTEGER}, 
+      #{monthcap,jdbcType=INTEGER}, #{clickcap,jdbcType=INTEGER}, #{payoutrate,jdbcType=INTEGER}, 
+      #{redirect,jdbcType=INTEGER}, #{postbackurl,jdbcType=VARCHAR}, #{postbackeventurl,jdbcType=VARCHAR}, 
+      #{postbackstatus,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{lastname,jdbcType=VARCHAR}, #{createuser,jdbcType=VARCHAR}, 
+      #{updateuser,jdbcType=VARCHAR}, #{manageruser,jdbcType=VARCHAR}, #{refadvid,jdbcType=INTEGER}, 
+      #{innercompany,jdbcType=INTEGER}, #{subemal,jdbcType=INTEGER}, #{opmanager,jdbcType=VARCHAR}, 
+      #{bdmanager,jdbcType=VARCHAR}, #{autorun,jdbcType=INTEGER}, #{autoadjust,jdbcType=INTEGER}, 
+      #{autoclose,jdbcType=INTEGER}, #{platformlevel,jdbcType=VARCHAR}, #{strategy1,jdbcType=VARCHAR}, 
+      #{strategy2,jdbcType=VARCHAR}, #{strategy3,jdbcType=VARCHAR}, #{autoparam1,jdbcType=VARCHAR}, 
+      #{autoparam2,jdbcType=VARCHAR}, #{autoparam3,jdbcType=VARCHAR}, #{instructions,jdbcType=VARCHAR}, 
+      #{contactperson,jdbcType=VARCHAR}, #{financeperson,jdbcType=VARCHAR}, #{contactemal,jdbcType=VARCHAR}, 
+      #{financeemail,jdbcType=VARCHAR}, #{invoicetpl,jdbcType=VARCHAR}, #{mixrate,jdbcType=INTEGER}, 
+      #{redirectrate,jdbcType=INTEGER}, #{deductrate,jdbcType=INTEGER}, #{sysuserid,jdbcType=INTEGER}, 
+      #{utc,jdbcType=INTEGER}, #{deleteflag,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.Publisher">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into publisher
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="password != null">
+        password,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="companyname != null">
+        companyname,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="address2 != null">
+        address2,
+      </if>
+      <if test="workphone != null">
+        workphone,
+      </if>
+      <if test="billinginfo != null">
+        billinginfo,
+      </if>
+      <if test="applytype != null">
+        applytype,
+      </if>
+      <if test="dailybudget != null">
+        dailybudget,
+      </if>
+      <if test="monthbudget != null">
+        monthbudget,
+      </if>
+      <if test="dailycap != null">
+        dailycap,
+      </if>
+      <if test="monthcap != null">
+        monthcap,
+      </if>
+      <if test="clickcap != null">
+        clickcap,
+      </if>
+      <if test="payoutrate != null">
+        payoutrate,
+      </if>
+      <if test="redirect != null">
+        redirect,
+      </if>
+      <if test="postbackurl != null">
+        postbackurl,
+      </if>
+      <if test="postbackeventurl != null">
+        postbackeventurl,
+      </if>
+      <if test="postbackstatus != null">
+        postbackstatus,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+      <if test="lastname != null">
+        lastname,
+      </if>
+      <if test="createuser != null">
+        createuser,
+      </if>
+      <if test="updateuser != null">
+        updateuser,
+      </if>
+      <if test="manageruser != null">
+        manageruser,
+      </if>
+      <if test="refadvid != null">
+        refadvid,
+      </if>
+      <if test="innercompany != null">
+        innercompany,
+      </if>
+      <if test="subemal != null">
+        subemal,
+      </if>
+      <if test="opmanager != null">
+        opmanager,
+      </if>
+      <if test="bdmanager != null">
+        bdmanager,
+      </if>
+      <if test="autorun != null">
+        autorun,
+      </if>
+      <if test="autoadjust != null">
+        autoadjust,
+      </if>
+      <if test="autoclose != null">
+        autoclose,
+      </if>
+      <if test="platformlevel != null">
+        platformlevel,
+      </if>
+      <if test="strategy1 != null">
+        strategy1,
+      </if>
+      <if test="strategy2 != null">
+        strategy2,
+      </if>
+      <if test="strategy3 != null">
+        strategy3,
+      </if>
+      <if test="autoparam1 != null">
+        autoparam1,
+      </if>
+      <if test="autoparam2 != null">
+        autoparam2,
+      </if>
+      <if test="autoparam3 != null">
+        autoparam3,
+      </if>
+      <if test="instructions != null">
+        instructions,
+      </if>
+      <if test="contactperson != null">
+        contactperson,
+      </if>
+      <if test="financeperson != null">
+        financeperson,
+      </if>
+      <if test="contactemal != null">
+        contactemal,
+      </if>
+      <if test="financeemail != null">
+        financeemail,
+      </if>
+      <if test="invoicetpl != null">
+        invoicetpl,
+      </if>
+      <if test="mixrate != null">
+        mixrate,
+      </if>
+      <if test="redirectrate != null">
+        redirectrate,
+      </if>
+      <if test="deductrate != null">
+        deductrate,
+      </if>
+      <if test="sysuserid != null">
+        sysuserid,
+      </if>
+      <if test="utc != null">
+        utc,
+      </if>
+      <if test="deleteflag != null">
+        deleteflag,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null">
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="address2 != null">
+        #{address2,jdbcType=VARCHAR},
+      </if>
+      <if test="workphone != null">
+        #{workphone,jdbcType=VARCHAR},
+      </if>
+      <if test="billinginfo != null">
+        #{billinginfo,jdbcType=VARCHAR},
+      </if>
+      <if test="applytype != null">
+        #{applytype,jdbcType=INTEGER},
+      </if>
+      <if test="dailybudget != null">
+        #{dailybudget,jdbcType=DECIMAL},
+      </if>
+      <if test="monthbudget != null">
+        #{monthbudget,jdbcType=DECIMAL},
+      </if>
+      <if test="dailycap != null">
+        #{dailycap,jdbcType=INTEGER},
+      </if>
+      <if test="monthcap != null">
+        #{monthcap,jdbcType=INTEGER},
+      </if>
+      <if test="clickcap != null">
+        #{clickcap,jdbcType=INTEGER},
+      </if>
+      <if test="payoutrate != null">
+        #{payoutrate,jdbcType=INTEGER},
+      </if>
+      <if test="redirect != null">
+        #{redirect,jdbcType=INTEGER},
+      </if>
+      <if test="postbackurl != null">
+        #{postbackurl,jdbcType=VARCHAR},
+      </if>
+      <if test="postbackeventurl != null">
+        #{postbackeventurl,jdbcType=VARCHAR},
+      </if>
+      <if test="postbackstatus != null">
+        #{postbackstatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastname != null">
+        #{lastname,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null">
+        #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null">
+        #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruser != null">
+        #{manageruser,jdbcType=VARCHAR},
+      </if>
+      <if test="refadvid != null">
+        #{refadvid,jdbcType=INTEGER},
+      </if>
+      <if test="innercompany != null">
+        #{innercompany,jdbcType=INTEGER},
+      </if>
+      <if test="subemal != null">
+        #{subemal,jdbcType=INTEGER},
+      </if>
+      <if test="opmanager != null">
+        #{opmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="bdmanager != null">
+        #{bdmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="autorun != null">
+        #{autorun,jdbcType=INTEGER},
+      </if>
+      <if test="autoadjust != null">
+        #{autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="autoclose != null">
+        #{autoclose,jdbcType=INTEGER},
+      </if>
+      <if test="platformlevel != null">
+        #{platformlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="strategy1 != null">
+        #{strategy1,jdbcType=VARCHAR},
+      </if>
+      <if test="strategy2 != null">
+        #{strategy2,jdbcType=VARCHAR},
+      </if>
+      <if test="strategy3 != null">
+        #{strategy3,jdbcType=VARCHAR},
+      </if>
+      <if test="autoparam1 != null">
+        #{autoparam1,jdbcType=VARCHAR},
+      </if>
+      <if test="autoparam2 != null">
+        #{autoparam2,jdbcType=VARCHAR},
+      </if>
+      <if test="autoparam3 != null">
+        #{autoparam3,jdbcType=VARCHAR},
+      </if>
+      <if test="instructions != null">
+        #{instructions,jdbcType=VARCHAR},
+      </if>
+      <if test="contactperson != null">
+        #{contactperson,jdbcType=VARCHAR},
+      </if>
+      <if test="financeperson != null">
+        #{financeperson,jdbcType=VARCHAR},
+      </if>
+      <if test="contactemal != null">
+        #{contactemal,jdbcType=VARCHAR},
+      </if>
+      <if test="financeemail != null">
+        #{financeemail,jdbcType=VARCHAR},
+      </if>
+      <if test="invoicetpl != null">
+        #{invoicetpl,jdbcType=VARCHAR},
+      </if>
+      <if test="mixrate != null">
+        #{mixrate,jdbcType=INTEGER},
+      </if>
+      <if test="redirectrate != null">
+        #{redirectrate,jdbcType=INTEGER},
+      </if>
+      <if test="deductrate != null">
+        #{deductrate,jdbcType=INTEGER},
+      </if>
+      <if test="sysuserid != null">
+        #{sysuserid,jdbcType=INTEGER},
+      </if>
+      <if test="utc != null">
+        #{utc,jdbcType=INTEGER},
+      </if>
+      <if test="deleteflag != null">
+        #{deleteflag,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="mobi.xdsp.tracking.entity.PublisherExample" resultType="java.lang.Long">
+    select count(*) from publisher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update publisher
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyname != null">
+        companyname = #{record.companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.token != null">
+        token = #{record.token,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null">
+        country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.province != null">
+        province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null">
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address2 != null">
+        address2 = #{record.address2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workphone != null">
+        workphone = #{record.workphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.billinginfo != null">
+        billinginfo = #{record.billinginfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.applytype != null">
+        applytype = #{record.applytype,jdbcType=INTEGER},
+      </if>
+      <if test="record.dailybudget != null">
+        dailybudget = #{record.dailybudget,jdbcType=DECIMAL},
+      </if>
+      <if test="record.monthbudget != null">
+        monthbudget = #{record.monthbudget,jdbcType=DECIMAL},
+      </if>
+      <if test="record.dailycap != null">
+        dailycap = #{record.dailycap,jdbcType=INTEGER},
+      </if>
+      <if test="record.monthcap != null">
+        monthcap = #{record.monthcap,jdbcType=INTEGER},
+      </if>
+      <if test="record.clickcap != null">
+        clickcap = #{record.clickcap,jdbcType=INTEGER},
+      </if>
+      <if test="record.payoutrate != null">
+        payoutrate = #{record.payoutrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.redirect != null">
+        redirect = #{record.redirect,jdbcType=INTEGER},
+      </if>
+      <if test="record.postbackurl != null">
+        postbackurl = #{record.postbackurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postbackeventurl != null">
+        postbackeventurl = #{record.postbackeventurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postbackstatus != null">
+        postbackstatus = #{record.postbackstatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null">
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null">
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastname != null">
+        lastname = #{record.lastname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createuser != null">
+        createuser = #{record.createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateuser != null">
+        updateuser = #{record.updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manageruser != null">
+        manageruser = #{record.manageruser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refadvid != null">
+        refadvid = #{record.refadvid,jdbcType=INTEGER},
+      </if>
+      <if test="record.innercompany != null">
+        innercompany = #{record.innercompany,jdbcType=INTEGER},
+      </if>
+      <if test="record.subemal != null">
+        subemal = #{record.subemal,jdbcType=INTEGER},
+      </if>
+      <if test="record.opmanager != null">
+        opmanager = #{record.opmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bdmanager != null">
+        bdmanager = #{record.bdmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="record.autorun != null">
+        autorun = #{record.autorun,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoadjust != null">
+        autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoclose != null">
+        autoclose = #{record.autoclose,jdbcType=INTEGER},
+      </if>
+      <if test="record.platformlevel != null">
+        platformlevel = #{record.platformlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.strategy1 != null">
+        strategy1 = #{record.strategy1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.strategy2 != null">
+        strategy2 = #{record.strategy2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.strategy3 != null">
+        strategy3 = #{record.strategy3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.autoparam1 != null">
+        autoparam1 = #{record.autoparam1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.autoparam2 != null">
+        autoparam2 = #{record.autoparam2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.autoparam3 != null">
+        autoparam3 = #{record.autoparam3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.instructions != null">
+        instructions = #{record.instructions,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactperson != null">
+        contactperson = #{record.contactperson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.financeperson != null">
+        financeperson = #{record.financeperson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactemal != null">
+        contactemal = #{record.contactemal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.financeemail != null">
+        financeemail = #{record.financeemail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.invoicetpl != null">
+        invoicetpl = #{record.invoicetpl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mixrate != null">
+        mixrate = #{record.mixrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.redirectrate != null">
+        redirectrate = #{record.redirectrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.deductrate != null">
+        deductrate = #{record.deductrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.sysuserid != null">
+        sysuserid = #{record.sysuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.utc != null">
+        utc = #{record.utc,jdbcType=INTEGER},
+      </if>
+      <if test="record.deleteflag != null">
+        deleteflag = #{record.deleteflag,jdbcType=INTEGER},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update publisher
+    set id = #{record.id,jdbcType=INTEGER},
+      password = #{record.password,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      companyname = #{record.companyname,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR},
+      country = #{record.country,jdbcType=VARCHAR},
+      province = #{record.province,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      address2 = #{record.address2,jdbcType=VARCHAR},
+      workphone = #{record.workphone,jdbcType=VARCHAR},
+      billinginfo = #{record.billinginfo,jdbcType=VARCHAR},
+      applytype = #{record.applytype,jdbcType=INTEGER},
+      dailybudget = #{record.dailybudget,jdbcType=DECIMAL},
+      monthbudget = #{record.monthbudget,jdbcType=DECIMAL},
+      dailycap = #{record.dailycap,jdbcType=INTEGER},
+      monthcap = #{record.monthcap,jdbcType=INTEGER},
+      clickcap = #{record.clickcap,jdbcType=INTEGER},
+      payoutrate = #{record.payoutrate,jdbcType=INTEGER},
+      redirect = #{record.redirect,jdbcType=INTEGER},
+      postbackurl = #{record.postbackurl,jdbcType=VARCHAR},
+      postbackeventurl = #{record.postbackeventurl,jdbcType=VARCHAR},
+      postbackstatus = #{record.postbackstatus,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      lastname = #{record.lastname,jdbcType=VARCHAR},
+      createuser = #{record.createuser,jdbcType=VARCHAR},
+      updateuser = #{record.updateuser,jdbcType=VARCHAR},
+      manageruser = #{record.manageruser,jdbcType=VARCHAR},
+      refadvid = #{record.refadvid,jdbcType=INTEGER},
+      innercompany = #{record.innercompany,jdbcType=INTEGER},
+      subemal = #{record.subemal,jdbcType=INTEGER},
+      opmanager = #{record.opmanager,jdbcType=VARCHAR},
+      bdmanager = #{record.bdmanager,jdbcType=VARCHAR},
+      autorun = #{record.autorun,jdbcType=INTEGER},
+      autoadjust = #{record.autoadjust,jdbcType=INTEGER},
+      autoclose = #{record.autoclose,jdbcType=INTEGER},
+      platformlevel = #{record.platformlevel,jdbcType=VARCHAR},
+      strategy1 = #{record.strategy1,jdbcType=VARCHAR},
+      strategy2 = #{record.strategy2,jdbcType=VARCHAR},
+      strategy3 = #{record.strategy3,jdbcType=VARCHAR},
+      autoparam1 = #{record.autoparam1,jdbcType=VARCHAR},
+      autoparam2 = #{record.autoparam2,jdbcType=VARCHAR},
+      autoparam3 = #{record.autoparam3,jdbcType=VARCHAR},
+      instructions = #{record.instructions,jdbcType=VARCHAR},
+      contactperson = #{record.contactperson,jdbcType=VARCHAR},
+      financeperson = #{record.financeperson,jdbcType=VARCHAR},
+      contactemal = #{record.contactemal,jdbcType=VARCHAR},
+      financeemail = #{record.financeemail,jdbcType=VARCHAR},
+      invoicetpl = #{record.invoicetpl,jdbcType=VARCHAR},
+      mixrate = #{record.mixrate,jdbcType=INTEGER},
+      redirectrate = #{record.redirectrate,jdbcType=INTEGER},
+      deductrate = #{record.deductrate,jdbcType=INTEGER},
+      sysuserid = #{record.sysuserid,jdbcType=INTEGER},
+      utc = #{record.utc,jdbcType=INTEGER},
+      deleteflag = #{record.deleteflag,jdbcType=INTEGER},
+      state = #{record.state,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.tracking.entity.Publisher">
+    update publisher
+    <set>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null">
+        companyname = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="address2 != null">
+        address2 = #{address2,jdbcType=VARCHAR},
+      </if>
+      <if test="workphone != null">
+        workphone = #{workphone,jdbcType=VARCHAR},
+      </if>
+      <if test="billinginfo != null">
+        billinginfo = #{billinginfo,jdbcType=VARCHAR},
+      </if>
+      <if test="applytype != null">
+        applytype = #{applytype,jdbcType=INTEGER},
+      </if>
+      <if test="dailybudget != null">
+        dailybudget = #{dailybudget,jdbcType=DECIMAL},
+      </if>
+      <if test="monthbudget != null">
+        monthbudget = #{monthbudget,jdbcType=DECIMAL},
+      </if>
+      <if test="dailycap != null">
+        dailycap = #{dailycap,jdbcType=INTEGER},
+      </if>
+      <if test="monthcap != null">
+        monthcap = #{monthcap,jdbcType=INTEGER},
+      </if>
+      <if test="clickcap != null">
+        clickcap = #{clickcap,jdbcType=INTEGER},
+      </if>
+      <if test="payoutrate != null">
+        payoutrate = #{payoutrate,jdbcType=INTEGER},
+      </if>
+      <if test="redirect != null">
+        redirect = #{redirect,jdbcType=INTEGER},
+      </if>
+      <if test="postbackurl != null">
+        postbackurl = #{postbackurl,jdbcType=VARCHAR},
+      </if>
+      <if test="postbackeventurl != null">
+        postbackeventurl = #{postbackeventurl,jdbcType=VARCHAR},
+      </if>
+      <if test="postbackstatus != null">
+        postbackstatus = #{postbackstatus,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastname != null">
+        lastname = #{lastname,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null">
+        createuser = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateuser != null">
+        updateuser = #{updateuser,jdbcType=VARCHAR},
+      </if>
+      <if test="manageruser != null">
+        manageruser = #{manageruser,jdbcType=VARCHAR},
+      </if>
+      <if test="refadvid != null">
+        refadvid = #{refadvid,jdbcType=INTEGER},
+      </if>
+      <if test="innercompany != null">
+        innercompany = #{innercompany,jdbcType=INTEGER},
+      </if>
+      <if test="subemal != null">
+        subemal = #{subemal,jdbcType=INTEGER},
+      </if>
+      <if test="opmanager != null">
+        opmanager = #{opmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="bdmanager != null">
+        bdmanager = #{bdmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="autorun != null">
+        autorun = #{autorun,jdbcType=INTEGER},
+      </if>
+      <if test="autoadjust != null">
+        autoadjust = #{autoadjust,jdbcType=INTEGER},
+      </if>
+      <if test="autoclose != null">
+        autoclose = #{autoclose,jdbcType=INTEGER},
+      </if>
+      <if test="platformlevel != null">
+        platformlevel = #{platformlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="strategy1 != null">
+        strategy1 = #{strategy1,jdbcType=VARCHAR},
+      </if>
+      <if test="strategy2 != null">
+        strategy2 = #{strategy2,jdbcType=VARCHAR},
+      </if>
+      <if test="strategy3 != null">
+        strategy3 = #{strategy3,jdbcType=VARCHAR},
+      </if>
+      <if test="autoparam1 != null">
+        autoparam1 = #{autoparam1,jdbcType=VARCHAR},
+      </if>
+      <if test="autoparam2 != null">
+        autoparam2 = #{autoparam2,jdbcType=VARCHAR},
+      </if>
+      <if test="autoparam3 != null">
+        autoparam3 = #{autoparam3,jdbcType=VARCHAR},
+      </if>
+      <if test="instructions != null">
+        instructions = #{instructions,jdbcType=VARCHAR},
+      </if>
+      <if test="contactperson != null">
+        contactperson = #{contactperson,jdbcType=VARCHAR},
+      </if>
+      <if test="financeperson != null">
+        financeperson = #{financeperson,jdbcType=VARCHAR},
+      </if>
+      <if test="contactemal != null">
+        contactemal = #{contactemal,jdbcType=VARCHAR},
+      </if>
+      <if test="financeemail != null">
+        financeemail = #{financeemail,jdbcType=VARCHAR},
+      </if>
+      <if test="invoicetpl != null">
+        invoicetpl = #{invoicetpl,jdbcType=VARCHAR},
+      </if>
+      <if test="mixrate != null">
+        mixrate = #{mixrate,jdbcType=INTEGER},
+      </if>
+      <if test="redirectrate != null">
+        redirectrate = #{redirectrate,jdbcType=INTEGER},
+      </if>
+      <if test="deductrate != null">
+        deductrate = #{deductrate,jdbcType=INTEGER},
+      </if>
+      <if test="sysuserid != null">
+        sysuserid = #{sysuserid,jdbcType=INTEGER},
+      </if>
+      <if test="utc != null">
+        utc = #{utc,jdbcType=INTEGER},
+      </if>
+      <if test="deleteflag != null">
+        deleteflag = #{deleteflag,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.Publisher">
+    update publisher
+    set password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      companyname = #{companyname,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      address2 = #{address2,jdbcType=VARCHAR},
+      workphone = #{workphone,jdbcType=VARCHAR},
+      billinginfo = #{billinginfo,jdbcType=VARCHAR},
+      applytype = #{applytype,jdbcType=INTEGER},
+      dailybudget = #{dailybudget,jdbcType=DECIMAL},
+      monthbudget = #{monthbudget,jdbcType=DECIMAL},
+      dailycap = #{dailycap,jdbcType=INTEGER},
+      monthcap = #{monthcap,jdbcType=INTEGER},
+      clickcap = #{clickcap,jdbcType=INTEGER},
+      payoutrate = #{payoutrate,jdbcType=INTEGER},
+      redirect = #{redirect,jdbcType=INTEGER},
+      postbackurl = #{postbackurl,jdbcType=VARCHAR},
+      postbackeventurl = #{postbackeventurl,jdbcType=VARCHAR},
+      postbackstatus = #{postbackstatus,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      lastname = #{lastname,jdbcType=VARCHAR},
+      createuser = #{createuser,jdbcType=VARCHAR},
+      updateuser = #{updateuser,jdbcType=VARCHAR},
+      manageruser = #{manageruser,jdbcType=VARCHAR},
+      refadvid = #{refadvid,jdbcType=INTEGER},
+      innercompany = #{innercompany,jdbcType=INTEGER},
+      subemal = #{subemal,jdbcType=INTEGER},
+      opmanager = #{opmanager,jdbcType=VARCHAR},
+      bdmanager = #{bdmanager,jdbcType=VARCHAR},
+      autorun = #{autorun,jdbcType=INTEGER},
+      autoadjust = #{autoadjust,jdbcType=INTEGER},
+      autoclose = #{autoclose,jdbcType=INTEGER},
+      platformlevel = #{platformlevel,jdbcType=VARCHAR},
+      strategy1 = #{strategy1,jdbcType=VARCHAR},
+      strategy2 = #{strategy2,jdbcType=VARCHAR},
+      strategy3 = #{strategy3,jdbcType=VARCHAR},
+      autoparam1 = #{autoparam1,jdbcType=VARCHAR},
+      autoparam2 = #{autoparam2,jdbcType=VARCHAR},
+      autoparam3 = #{autoparam3,jdbcType=VARCHAR},
+      instructions = #{instructions,jdbcType=VARCHAR},
+      contactperson = #{contactperson,jdbcType=VARCHAR},
+      financeperson = #{financeperson,jdbcType=VARCHAR},
+      contactemal = #{contactemal,jdbcType=VARCHAR},
+      financeemail = #{financeemail,jdbcType=VARCHAR},
+      invoicetpl = #{invoicetpl,jdbcType=VARCHAR},
+      mixrate = #{mixrate,jdbcType=INTEGER},
+      redirectrate = #{redirectrate,jdbcType=INTEGER},
+      deductrate = #{deductrate,jdbcType=INTEGER},
+      sysuserid = #{sysuserid,jdbcType=INTEGER},
+      utc = #{utc,jdbcType=INTEGER},
+      deleteflag = #{deleteflag,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into publisher (
+    password,
+    email,
+    companyname,
+    token,
+    country,
+    province,
+    city,
+    address,
+    address2,
+    workphone,
+    billinginfo,
+    applytype,
+    dailybudget,
+    monthbudget,
+    dailycap,
+    monthcap,
+    clickcap,
+    payoutrate,
+    redirect,
+    postbackurl,
+    postbackeventurl,
+    postbackstatus,
+    status,
+    createtime,
+    updatetime,
+    lastname,
+    createuser,
+    updateuser,
+    manageruser,
+    refadvid,
+    innercompany,
+    subemal,
+    opmanager,
+    bdmanager,
+    autorun,
+    autoadjust,
+    autoclose,
+    platformlevel,
+    strategy1,
+    strategy2,
+    strategy3,
+    autoparam1,
+    autoparam2,
+    autoparam3,
+    instructions,
+    contactperson,
+    financeperson,
+    contactemal,
+    financeemail,
+    invoicetpl,
+    mixrate,
+    redirectrate,
+    deductrate,
+    sysuserid,
+    utc,
+    deleteflag,
+    state
+    )
+    values
+    <foreach collection="recordList" index="index" item="item" separator=",">
+      (
+      #{item.password,jdbcType=VARCHAR},
+      #{item.email,jdbcType=VARCHAR},
+      #{item.companyname,jdbcType=VARCHAR},
+      #{item.token,jdbcType=VARCHAR},
+      #{item.country,jdbcType=VARCHAR},
+      #{item.province,jdbcType=VARCHAR},
+      #{item.city,jdbcType=VARCHAR},
+      #{item.address,jdbcType=VARCHAR},
+      #{item.address2,jdbcType=VARCHAR},
+      #{item.workphone,jdbcType=VARCHAR},
+      #{item.billinginfo,jdbcType=VARCHAR},
+      #{item.applytype,jdbcType=INTEGER},
+      #{item.dailybudget,jdbcType=DECIMAL},
+      #{item.monthbudget,jdbcType=DECIMAL},
+      #{item.dailycap,jdbcType=INTEGER},
+      #{item.monthcap,jdbcType=INTEGER},
+      #{item.clickcap,jdbcType=INTEGER},
+      #{item.payoutrate,jdbcType=INTEGER},
+      #{item.redirect,jdbcType=INTEGER},
+      #{item.postbackurl,jdbcType=VARCHAR},
+      #{item.postbackeventurl,jdbcType=VARCHAR},
+      #{item.postbackstatus,jdbcType=INTEGER},
+      #{item.status,jdbcType=INTEGER},
+      #{item.createtime,jdbcType=TIMESTAMP},
+      #{item.updatetime,jdbcType=TIMESTAMP},
+      #{item.lastname,jdbcType=VARCHAR},
+      #{item.createuser,jdbcType=VARCHAR},
+      #{item.updateuser,jdbcType=VARCHAR},
+      #{item.manageruser,jdbcType=VARCHAR},
+      #{item.refadvid,jdbcType=INTEGER},
+      #{item.innercompany,jdbcType=INTEGER},
+      #{item.subemal,jdbcType=INTEGER},
+      #{item.opmanager,jdbcType=VARCHAR},
+      #{item.bdmanager,jdbcType=VARCHAR},
+      #{item.autorun,jdbcType=INTEGER},
+      #{item.autoadjust,jdbcType=INTEGER},
+      #{item.autoclose,jdbcType=INTEGER},
+      #{item.platformlevel,jdbcType=VARCHAR},
+      #{item.strategy1,jdbcType=VARCHAR},
+      #{item.strategy2,jdbcType=VARCHAR},
+      #{item.strategy3,jdbcType=VARCHAR},
+      #{item.autoparam1,jdbcType=VARCHAR},
+      #{item.autoparam2,jdbcType=VARCHAR},
+      #{item.autoparam3,jdbcType=VARCHAR},
+      #{item.instructions,jdbcType=VARCHAR},
+      #{item.contactperson,jdbcType=VARCHAR},
+      #{item.financeperson,jdbcType=VARCHAR},
+      #{item.contactemal,jdbcType=VARCHAR},
+      #{item.financeemail,jdbcType=VARCHAR},
+      #{item.invoicetpl,jdbcType=VARCHAR},
+      #{item.mixrate,jdbcType=INTEGER},
+      #{item.redirectrate,jdbcType=INTEGER},
+      #{item.deductrate,jdbcType=INTEGER},
+      #{item.sysuserid,jdbcType=INTEGER},
+      #{item.utc,jdbcType=INTEGER},
+      #{item.deleteflag,jdbcType=INTEGER},
+      #{item.state,jdbcType=INTEGER}
+      )
+    </foreach>
+  </insert>
+</mapper>
