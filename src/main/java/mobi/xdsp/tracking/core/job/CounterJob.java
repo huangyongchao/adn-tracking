@@ -1,7 +1,9 @@
 package mobi.xdsp.tracking.core.job;
 
+import mobi.xdsp.tracking.service.TrackingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,8 @@ import java.util.Date;
 
 @Component
 public class CounterJob {
+    @Autowired
+    TrackingHandler handler;
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger logger = LoggerFactory.getLogger(CounterJob.class);
 
@@ -22,6 +26,7 @@ public class CounterJob {
     @Scheduled(cron = "*/2 * * * * ?")
     public void testjob() {
         System.out.println(new Date());
+        handler.saveClick();
 
     }
 
