@@ -9,19 +9,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrackingHandler {
     @Autowired
-    AerospikeClickRepository repository;
+    private AerospikeClickRepository repository;
     @Autowired
-    AerospikeClient client;
+    private AerospikeClient client;
     public void saveClick(){
         Click click = new Click();
         click.setId("testclick"+System.currentTimeMillis());
-        click.setPublisherid(1);
-        click.setOfferid(2);
+        click.setPid(1);
+        click.setOid(2);
         System.out.println(click.getId());
 
         repository.save(click);
 
     }
+
+
 /*
     验证参数
     验证渠道状态
@@ -33,7 +35,7 @@ public class TrackingHandler {
     加载PublisherOffer缓存
     验证Publisher状态
     验证子站
-    验证cap
+    验证cap(PB)
     是否重定向
     获取重定向Offer
     拼装点击id(本地版本和传输版本)

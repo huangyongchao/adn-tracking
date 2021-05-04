@@ -32,12 +32,12 @@ public class Click implements Serializable {
     /**
      * 渠道子站
      */
-    private String psub;
+    private String pubSub;
 
     /**
      * appid
      */
-    private String appid;
+    private String appId;
 
     /**
      * idfa
@@ -50,11 +50,11 @@ public class Click implements Serializable {
     /**
      * 混量子站 null=psub
      */
-    private String asub;
+    private String mixSub;
     /**
      * 渠道clickid
      */
-    private String pclic;
+    private String clickId;
     /**
      * 点击IP
      */
@@ -66,7 +66,12 @@ public class Click implements Serializable {
 
     private String s1;
     private String s2;
-    private String s3;
+
+    private String ip;
+    private String clientIp;
+    private String lang;
+    private String ua;
+    private String appName;
 
 
 }
