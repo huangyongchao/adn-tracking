@@ -5,6 +5,7 @@ import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.StateE;
+import mobi.xdsp.tracking.dto.enums.SychLockE;
 import mobi.xdsp.tracking.entity.Affiliate;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
@@ -62,7 +63,9 @@ public class Tracking {
         }
 
 
-        if (offerid == null || !CacheData.OFF_CACHE.containsKey(offerid)) {
+        if (offerid == null ||
+                (!CacheData.OFF_SYCN_LOCK.containsKey(offerid)||CacheData.OFF_SYCN_LOCK.get(offerid)!=SychLockE.LOCKED.code)||
+                !CacheData.OFF_CACHE.containsKey(offerid)) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
         }
         Offer offer = CacheData.OFF_CACHE.get(offerid);
@@ -76,7 +79,9 @@ public class Tracking {
         }
         String pokey = publisherid + "_" + offerid;
         PublisherOffer publisherOffer = CacheData.PUB_OFF_CACHE.get(pokey);
-        if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
+        if (publisherOffer == null ||
+                (!CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey)||CacheData.PUBOFF_SYCN_LOCK.get(pokey)!=SychLockE.LOCKED.code)||
+                OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(3)");
         }
 
