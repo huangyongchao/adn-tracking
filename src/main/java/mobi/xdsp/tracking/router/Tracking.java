@@ -10,8 +10,10 @@ import mobi.xdsp.tracking.entity.Affiliate;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
+import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class Tracking {
 
+    @Autowired
+    private DataService dataService;
     @RequestMapping(value = "/click")
     @ResponseBody
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
@@ -62,13 +66,22 @@ public class Tracking {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Publisher not activate");
         }
 
+        /**
+         * 首次装载offer
+         */
+        if (offerid == null){
+            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(-1)");
 
-        if (offerid == null ||
-                (!CacheData.OFF_SYCN_LOCK.containsKey(offerid)||CacheData.OFF_SYCN_LOCK.get(offerid)!=SychLockE.LOCKED.code)||
-                !CacheData.OFF_CACHE.containsKey(offerid)) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
         }
         Offer offer = CacheData.OFF_CACHE.get(offerid);
+
+        if (offer == null && !CacheData.OFF_SYCN_LOCK.containsKey(offerid)) {
+            dataService.cacheOfferFirst(offerid);
+        }
+        if (!CacheData.OFF_SYCN_LOCK.containsKey(offerid) || CacheData.OFF_SYCN_LOCK.get(offerid) != SychLockE.LOCKED.code) {
+            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
+        }
+
         if (StateE.INVALID.name.equals(offer.getStatus())) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(1)");
         }
@@ -77,10 +90,19 @@ public class Tracking {
         if (affiliate == null || !StateE.VALID.name.equals(affiliate.getStatus())) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(2)");
         }
+
+
+
         String pokey = publisherid + "_" + offerid;
         PublisherOffer publisherOffer = CacheData.PUB_OFF_CACHE.get(pokey);
+        /**
+         * 首次装载PublisherOffer
+         */
+        if (publisherOffer == null && !CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey)) {
+            dataService.cachePublisherOfferFirst(pokey,publisherid,offerid);
+        }
         if (publisherOffer == null ||
-                (!CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey)||CacheData.PUBOFF_SYCN_LOCK.get(pokey)!=SychLockE.LOCKED.code)||
+                (!CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey) || CacheData.PUBOFF_SYCN_LOCK.get(pokey) != SychLockE.LOCKED.code) ||
                 OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(3)");
         }

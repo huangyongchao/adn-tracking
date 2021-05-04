@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface DataService {
 
-    public List<Affiliate> cacheAffiliate();
-    public List<Publisher> cachePublisher();
-    public Offer cacheOffer(Integer id);
-    public PublisherOffer cachePublisherOffer(Integer offerid, Integer publisherid);
+    public List<Affiliate> cacheAffiliateAll();
+    public List<Publisher> cachePublisherAll();
+    public Offer cacheOfferFirst(Integer id);
+    public PublisherOffer cachePublisherOfferFirst(String key,Integer offerid, Integer publisherid);
 
 }

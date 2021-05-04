@@ -27,7 +27,7 @@ public class BaseDataLoadJob {
     public void cacheAffiliate(){
 
         try {
-            List<Affiliate> list =dataService.cacheAffiliate();
+            List<Affiliate> list =dataService.cacheAffiliateAll();
             Optional.ofNullable(list).orElse(Lists.newLinkedList()).forEach(n->{
                 CacheData.AFF_CACHE.put(n.getId(), n);
             });
@@ -41,7 +41,7 @@ public class BaseDataLoadJob {
     @Scheduled(cron = "1 1,31 * * * ?")
     public void cachePublisher(){
         try {
-            List<Publisher> list =dataService.cachePublisher();
+            List<Publisher> list =dataService.cachePublisherAll();
             Optional.ofNullable(list).orElse(Lists.newLinkedList()).forEach(n->{
                 CacheData.PUB_CACHE.put(n.getId(), n);
             });
