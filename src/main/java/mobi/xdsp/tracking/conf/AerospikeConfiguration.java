@@ -9,6 +9,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.aerospike.config.AbstractAerospikeDataConfiguration;
+import org.springframework.data.aerospike.convert.MappingAerospikeConverter;
+import org.springframework.data.aerospike.core.AerospikeExceptionTranslator;
+import org.springframework.data.aerospike.core.AerospikeTemplate;
+import org.springframework.data.aerospike.query.QueryEngine;
+import org.springframework.data.aerospike.query.cache.IndexRefresher;
 import org.springframework.data.aerospike.repository.config.EnableAerospikeRepositories;
 
 import java.util.Collection;
@@ -31,12 +36,11 @@ public class AerospikeConfiguration extends AbstractAerospikeDataConfiguration {
         return aerospikeConfigurationProperties.getNamespace();
     }
 
-
     @Bean
     public AerospikeClient aerospikeClient() {
         ClientPolicy clientPolicy = new ClientPolicy();
         clientPolicy.failIfNotConnected = true;
-
+        clientPolicy.maxConnsPerNode = 1000;
         return new AerospikeClient(clientPolicy, aerospikeConfigurationProperties.getHost(), aerospikeConfigurationProperties.getPort());
     }
 

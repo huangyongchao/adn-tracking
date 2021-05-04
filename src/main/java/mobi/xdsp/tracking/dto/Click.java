@@ -8,8 +8,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Indexed;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
+
 @Data
-@Document
+@Document(collection = "clicks", expiration = 30, expirationUnit = TimeUnit.SECONDS)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Click implements Serializable {

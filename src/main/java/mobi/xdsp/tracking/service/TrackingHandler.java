@@ -20,6 +20,7 @@ public class TrackingHandler {
         System.out.println(click.getId());
 
         repository.save(click);
+
     }
 /*
     验证参数
