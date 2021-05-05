@@ -14,4 +14,7 @@ public interface DataService {
     public Offer cacheOfferFirst(Integer id);
     public PublisherOffer cachePublisherOfferFirst(String key,Integer offerid, Integer publisherid);
 
+    public Offer cachePubliserOffer(Publisher publisher);
+
+
 }

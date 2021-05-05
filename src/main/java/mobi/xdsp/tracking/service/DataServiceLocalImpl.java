@@ -51,7 +51,7 @@ public class DataServiceLocalImpl implements DataService {
     }
 
     @Override
-    public PublisherOffer cachePublisherOfferFirst(String key ,Integer offerid, Integer publisherid) {
+    public PublisherOffer cachePublisherOfferFirst(String key, Integer offerid, Integer publisherid) {
 
         CacheData.PUBOFF_SYCN_LOCK.put(key, SychLockE.TAKING.code);
 
@@ -64,6 +64,11 @@ public class DataServiceLocalImpl implements DataService {
 
             return list.get(0);
         }
+        return null;
+    }
+
+    @Override
+    public Offer cachePubliserOffer(Publisher publisher) {
         return null;
     }
 }
