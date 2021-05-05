@@ -2,6 +2,7 @@ package mobi.xdsp.tracking.router;
 
 import mobi.xdsp.tracking.common.AddressUtils;
 import mobi.xdsp.tracking.core.CacheData;
+import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.StateE;
@@ -11,6 +12,7 @@ import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.service.DataService;
+import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +23,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 @Controller
 public class Tracking {
 
     @Autowired
     private DataService dataService;
+
+
+    @Autowired
+    private TrackingHandler handler;
+
+
     @RequestMapping(value = "/click")
     @ResponseBody
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
                             @RequestParam(value = "offer", required = true) Integer offerid,
-                            @RequestParam(value = "pub_sub", defaultValue = "") String affsub,
+                            @RequestParam(value = "pub_sub", defaultValue = "") String pubSub,
                             @RequestParam(value = "idfa", defaultValue = "") String idfa,
                             @RequestParam(value = "gaid", defaultValue = "") String gaid,
                             @RequestParam(value = "lang", defaultValue = "") String lang,
                             @RequestParam(value = "ip", defaultValue = "") String ip,
                             @RequestParam(value = "ua", defaultValue = "") String ua,
-                            @RequestParam(value = "click_id", defaultValue = "") String pubClickId1,
+                            @RequestParam(value = "click_id", defaultValue = "") String pubClickid,
                             @RequestParam(value = "deviceid", defaultValue = "") String deviceId,
-                            @RequestParam(value = "device_id", defaultValue = "") String deviceId1,
                             @RequestParam(value = "sub1", defaultValue = "") String sub1,
                             @RequestParam(value = "sub2", defaultValue = "") String sub2,
                             @RequestParam(value = "appid", defaultValue = "") String appid,
                             @RequestParam(value = "appname", defaultValue = "") String appname,
-                            String sub3, String sub4, String sub5,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 
@@ -108,7 +115,33 @@ public class Tracking {
         }
 
 
+        Click click = new Click();
 
+        click.setOid(offerid);
+        click.setPid(publisherid);
+        click.setPubSub(pubSub);
+        click.setAppId(appid);
+        click.setAppName(appname);
+        click.setIp(ip);
+        click.setLang(lang);
+        click.setCip(clientip);
+        click.setS1(sub1);
+        click.setS2(sub2);
+        Date clickDate = new Date();
+        click.setCt(clickDate);
+        click.setUa(ua);
+        /*
+        生成clickid
+         */
+        click.setId(handler.getClickId(click));
+        /*
+         * 混量
+         */
+        handler.mixSub(click, offer, publisherOffer);
+        /*
+        包装跳转链接
+         */
+        handler.makeURL(click, offer);
 
            /* //final String userAgent = request.getHeader("User-Agent");
             //子渠道ID不为空且子渠道ID长度等于64 则截取前64位,长度小于等于64位 则直接使用

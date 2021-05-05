@@ -68,7 +68,6 @@ public class Click implements Serializable {
     private String s2;
 
     private String ip;
-    private String clientIp;
     private String lang;
     private String ua;
     private String appName;

@@ -26,7 +26,6 @@ public class CounterJob {
     @Scheduled(cron = "*/2 * * * * ?")
     public void testjob() {
         System.out.println(new Date());
-        handler.saveClick();
 
     }
 

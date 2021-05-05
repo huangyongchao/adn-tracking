@@ -1,8 +1,13 @@
 package mobi.xdsp.tracking.service;
 
 import com.aerospike.client.AerospikeClient;
+import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.entity.Offer;
+import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +17,36 @@ public class TrackingHandler {
     private AerospikeClickRepository repository;
     @Autowired
     private AerospikeClient client;
-    public void saveClick(){
-        Click click = new Click();
-        click.setId("testclick"+System.currentTimeMillis());
+
+    public String getClickId(Click click) {
+
+        StringBuilder clickid = new StringBuilder("AD");
+        clickid.append(DateFormatUtils.format(click.getCt(), "MMddHHmmss"));
+        clickid.append(click.getPid());
+        clickid.append("N");
+        clickid.append(click.getOid());
+        clickid.append(RandomStringUtils.randomAlphabetic(3));
+
+        return clickid.toString();
+    }
+
+    public void saveClick(Click click) {
+        click.setId("testclick" + System.currentTimeMillis());
         click.setPid(1);
         click.setOid(2);
         System.out.println(click.getId());
+    }
 
-        repository.save(click);
+    public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
     }
+
+    public String makeURL(Click click, Offer offer) {
+        String url = AdTool.trackurl(click, offer);
+        url = AdTool.urlEncode(offer, url);
+        return url;
+    }
+
 
 
 /*
