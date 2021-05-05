@@ -14,6 +14,7 @@ public class CounterJob {
     @Autowired
     TrackingHandler handler;
     private static final Logger errorlog = LoggerFactory.getLogger("error");
+    private static final Logger clicklog = LoggerFactory.getLogger("click");
     private static final Logger logger = LoggerFactory.getLogger(CounterJob.class);
 
 
@@ -26,6 +27,7 @@ public class CounterJob {
     @Scheduled(cron = "*/2 * * * * ?")
     public void testjob() {
         System.out.println(new Date());
+        clicklog.info(new Date().toString());
 
     }
 

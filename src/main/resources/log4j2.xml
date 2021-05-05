@@ -51,8 +51,8 @@
 
 
         <!--设置级别为INFO日志输出到info.log中-->
-        <RollingFile name="CLICKLOG" filename="${logPath}/click.log"
-                     filepattern="${logPath}/click%d{yyyyMMddHH}.log">
+        <RollingFile name="CLICKLOG" filename="${logPath}/click/click.log"
+                     filepattern="${logPath}/click/click%d{yyyyMMddHH}.log">
             <Filters>
                 <!--输出级别，例：level=”info”,日志级别为info或者以上(匹配的界别)
 					onMatch:	DENY/ACCEPT 禁止或者接受（是否接受匹配）
@@ -76,6 +76,12 @@
             %l 输出语句所在的行数, 包括类名、方法名、文件名、行数
             -->
             <PatternLayout pattern="%m%n"/>
+            <Policies>
+                <!--设置每天打包日志一次 这个配置需要和filePattern的时间配置结合使用,如果单位是天,则每天打包一次-->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!--设置日志文件满200MB后打包-->
+            </Policies>
+            <DefaultRolloverStrategy max="104"/>
         </RollingFile>
 
 
