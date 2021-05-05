@@ -47,7 +47,6 @@ public class Tracking {
                             @RequestParam(value = "ip", defaultValue = "") String ip,
                             @RequestParam(value = "ua", defaultValue = "") String ua,
                             @RequestParam(value = "click_id", defaultValue = "") String pubClickid,
-                            @RequestParam(value = "deviceid", defaultValue = "") String deviceId,
                             @RequestParam(value = "sub1", defaultValue = "") String sub1,
                             @RequestParam(value = "sub2", defaultValue = "") String sub2,
                             @RequestParam(value = "appid", defaultValue = "") String appid,
@@ -121,9 +120,12 @@ public class Tracking {
         click.setPubSub(pubSub);
         click.setAppId(appid);
         click.setAppName(appname);
+        click.setClickId(pubClickid);
         click.setIp(ip);
         click.setLang(lang);
         click.setCip(clientip);
+        click.setGaid(gaid);
+        click.setIdfa(idfa);
         click.setS1(sub1);
         click.setS2(sub2);
         Date clickDate = new Date();

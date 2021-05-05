@@ -23,6 +23,8 @@ public class CacheData {
     public static Map<Integer, Affiliate> AFF_CACHE = Maps.newConcurrentMap();
     public static Map<Integer, Offer> OFF_CACHE = Maps.newConcurrentMap();
     public static Map<Integer, Publisher> PUB_CACHE = Maps.newConcurrentMap();
+    public static Map<String, Publisher> PUB_TOKEN = Maps.newConcurrentMap();
+
     public static Map<String, PublisherOffer> PUB_OFF_CACHE = Maps.newConcurrentMap();
     public static Map<Integer, PublisherOffer> SUB_CACHE = Maps.newConcurrentMap();
     /*affiliate & publisher 初始化就加载*/

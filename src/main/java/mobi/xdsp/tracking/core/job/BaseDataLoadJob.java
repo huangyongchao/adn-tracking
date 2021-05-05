@@ -44,6 +44,7 @@ public class BaseDataLoadJob {
             List<Publisher> list =dataService.cachePublisherAll();
             Optional.ofNullable(list).orElse(Lists.newLinkedList()).forEach(n->{
                 CacheData.PUB_CACHE.put(n.getId(), n);
+                CacheData.PUB_TOKEN.put(n.getToken(), n);
             });
         } catch (Exception e) {
             e.printStackTrace();
