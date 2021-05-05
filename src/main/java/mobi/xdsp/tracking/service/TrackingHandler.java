@@ -9,11 +9,15 @@ import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TrackingHandler {
+    private static final Logger clicklog = LoggerFactory.getLogger("click");
+
     @Autowired
     private AerospikeClickRepository repository;
     @Autowired
@@ -49,10 +53,7 @@ public class TrackingHandler {
     }
 
     public void writeClicks(Click click, Offer offer, PublisherOffer publisherOffer) {
-        ExecutorPool.getExecutor().execute(()->{
-
-
-        });
+        clicklog.info(click.toString());
     }
 
 /*

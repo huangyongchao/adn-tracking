@@ -12,19 +12,19 @@
     <Appenders>
         <!--设置在控制台打印日志-->
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="${pattern}" />
+            <PatternLayout pattern="${pattern}"/>
         </Console>
 
         <!--设置级别为INFO日志输出到info.log中-->
         <RollingFile name="FILE" filename="${logPath}/tracking.log"
-                     filepattern="${logPath}/sdk%d{yyyy-MM-dd}.log" >
+                     filepattern="${logPath}/sdk%d{yyyy-MM-dd}.log">
             <Filters>
                 <!--输出级别，例：level=”info”,日志级别为info或者以上(匹配的界别)
 					onMatch:	DENY/ACCEPT 禁止或者接受（是否接受匹配）
 					onMismatch:	DENY/NEUTRAL （是否接受其他高于level的级别）
 				-->
                 <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-                <ThresholdFilter level="INFO" />
+                <ThresholdFilter level="INFO"/>
             </Filters>
             <!--
             %d{HH:mm:ss.SSS} 表示输出到毫秒的时间
@@ -40,29 +40,57 @@
             %M 输出所在方法名
             %l 输出语句所在的行数, 包括类名、方法名、文件名、行数
             -->
-            <PatternLayout pattern="${pattern}" />
+            <PatternLayout pattern="${pattern}"/>
             <Policies>
                 <!--设置每天打包日志一次 这个配置需要和filePattern的时间配置结合使用,如果单位是天,则每天打包一次-->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
                 <!--设置日志文件满200MB后打包-->
             </Policies>
-            <DefaultRolloverStrategy max="4" />
+            <DefaultRolloverStrategy max="4"/>
         </RollingFile>
 
 
+        <!--设置级别为INFO日志输出到info.log中-->
+        <RollingFile name="CLICKLOG" filename="${logPath}/click.log"
+                     filepattern="${logPath}/click%d{yyyyMMddHH}.log">
+            <Filters>
+                <!--输出级别，例：level=”info”,日志级别为info或者以上(匹配的界别)
+					onMatch:	DENY/ACCEPT 禁止或者接受（是否接受匹配）
+					onMismatch:	DENY/NEUTRAL （是否接受其他高于level的级别）
+				-->
+                <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+                <ThresholdFilter level="INFO"/>
+            </Filters>
+            <!--
+            %d{HH:mm:ss.SSS} 表示输出到毫秒的时间
+            %t 输出当前线程名称
+            %-5level 输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0
+            %logger 输出logger名称，因为Root Logger没有名称，所以没有输出
+            %msg 日志文本
+            %n 换行
+
+            其他常用的占位符有：
+            %F 输出所在的类文件名，如Log4j2Test.java
+            %L 输出行号
+            %M 输出所在方法名
+            %l 输出语句所在的行数, 包括类名、方法名、文件名、行数
+            -->
+            <PatternLayout pattern="%m%n"/>
+        </RollingFile>
+
 
         <RollingFile name="SYSERROR" filename="${logPath}/error/error.log"
-                     filepattern="${logPath}/error/error%d{yyyyMMdd}.log" >
+                     filepattern="${logPath}/error/error%d{yyyyMMdd}.log">
             <Filters>
                 <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
             </Filters>
-            <PatternLayout pattern="${pattern}" />
+            <PatternLayout pattern="${pattern}"/>
             <Policies>
                 <!--设置每天打包日志一次 这个配置需要和filePattern的时间配置结合使用,如果单位是天,则每天打包一次-->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
                 <!--设置日志文件满200MB后打包-->
             </Policies>
-            <DefaultRolloverStrategy max="4" />
+            <DefaultRolloverStrategy max="4"/>
 
         </RollingFile>
 
@@ -71,21 +99,24 @@
     <Loggers>
 
         <AsyncLogger name="error" level="INFO" additivity="false">
-            <appender-ref ref="SYSERROR" />
+            <appender-ref ref="SYSERROR"/>
+        </AsyncLogger>
+        <AsyncLogger name="click" level="INFO" additivity="false">
+            <appender-ref ref="CLICKLOG"/>
         </AsyncLogger>
 
-      <!--  <logger name="org.springframework" level="INFO"></logger>
-        <logger name="org.mybatis" level="ERROR"></logger>
-        <logger name="org.apache" level="ERROR"/>
-        <logger name="org.apache.kafka" level="ERROR"/>
-        <logger name="org.springframework" level="ERROR"/>
-        <logger name="org.springframework.data.elasticsearch.client.WIRE" level="trace"/>
-        <logger name="org.elasticsearch.client" level="ERROR"/>-->
+        <!--  <logger name="org.springframework" level="INFO"></logger>
+          <logger name="org.mybatis" level="ERROR"></logger>
+          <logger name="org.apache" level="ERROR"/>
+          <logger name="org.apache.kafka" level="ERROR"/>
+          <logger name="org.springframework" level="ERROR"/>
+          <logger name="org.springframework.data.elasticsearch.client.WIRE" level="trace"/>
+          <logger name="org.elasticsearch.client" level="ERROR"/>-->
 
 
         <AsyncRoot level="info">
-            <appender-ref ref="console" />
-            <appender-ref ref="FILE" />
+            <appender-ref ref="console"/>
+            <appender-ref ref="FILE"/>
         </AsyncRoot>
     </Loggers>
 </Configuration>
