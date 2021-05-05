@@ -2,6 +2,7 @@ package mobi.xdsp.tracking.service;
 
 import com.aerospike.client.AerospikeClient;
 import mobi.xdsp.tracking.common.AdTool;
+import mobi.xdsp.tracking.common.ExecutorPool;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
@@ -47,7 +48,12 @@ public class TrackingHandler {
         return url;
     }
 
+    public void writeClicks(Click click, Offer offer, PublisherOffer publisherOffer) {
+        ExecutorPool.getExecutor().execute(()->{
 
+
+        });
+    }
 
 /*
     验证参数

@@ -1,6 +1,5 @@
 package mobi.xdsp.tracking.core;
 
-import mobi.xdsp.tracking.dto.SimpleData;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

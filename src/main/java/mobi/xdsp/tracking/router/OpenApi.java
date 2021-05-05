@@ -1,11 +1,9 @@
 package mobi.xdsp.tracking.router;
 
-import mobi.xdsp.tracking.dto.SimpleData;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.OfferExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
