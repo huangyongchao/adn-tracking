@@ -2,7 +2,11 @@ package mobi.xdsp.tracking.dto.enums;
 
 public enum OfferApplyStatusEnum {
     /*1 申请中  2  已批准  3 拒绝  4  暂停*/
-    PENDING("pending", 1), APPROVED("approved", 2), DECLINED("declined", 3);
+    PENDING("pending", 1), APPROVED("approved", 2),
+    DECLINED("declined", 3),
+    PAUSED("paused", 4),
+    CAPFULL("capfull", 5),
+    CLICKFULL("clickfull", 6);
 
     private String name;
     private int code;
