@@ -58,7 +58,7 @@ public class Tracking {
          * 目前请求的url 允许出现{} 符号的设置是在tomcat 目录 conf 下的 catalina.properties文件内部的如下参数
          * tomcat.util.http.parser.HttpParser.requestTargetAllow={}
          */
-        //http://127.0.0.1:9192/click?pid=4&offer=2176&pub_sub=xxxx*sss$&idfa=testidfa&click_id=testclick&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
+        //http://127.0.0.1:9192/click?pid=4&offer=2176&pub_sub=xxxxsss&idfa=testidfa&click_id=testclick&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
 
 
 
