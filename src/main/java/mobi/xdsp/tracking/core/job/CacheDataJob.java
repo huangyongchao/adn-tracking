@@ -37,7 +37,7 @@ public class CacheDataJob {
     private static final Logger clicklog = LoggerFactory.getLogger("click");
 
 
-    @Scheduled(cron = "* */20 * * * * ?")
+    @Scheduled(cron = "* */20 * * * ?")
     public void updateOfferCacheJob() {
         try {
             Set<Integer> setids = CacheData.OFF_SYCN_LOCK.keySet();
@@ -74,7 +74,7 @@ public class CacheDataJob {
      *
      * 更新分机ClickCap
      */
-    @Scheduled(cron = "* */25 * * * * ?")
+    @Scheduled(cron = "* */25 * * * ?")
     public void updatePublisherOfferCacheJob() {
         try {
             Set<String> setids = CacheData.PUBOFF_SYCN_LOCK.keySet();
