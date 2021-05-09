@@ -11,15 +11,14 @@ import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.entity.PublisherOfferExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
-import mobi.xdsp.tracking.service.TrackingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,13 +29,15 @@ public class CacheDataJob {
     OfferMapper offerMapper;
     @Autowired
     PublisherOfferMapper publisherOfferMapper;
+    @Value("${clickcapweight}")
+    private float clickcapweight;
     @Autowired
     Mailer mailer;
 
     private static final Logger clicklog = LoggerFactory.getLogger("click");
 
 
-    @Scheduled(cron = "*/20 * * * * ?")
+    @Scheduled(cron = "* */20 * * * * ?")
     public void updateOfferCacheJob() {
         try {
             Set<Integer> setids = CacheData.OFF_SYCN_LOCK.keySet();
@@ -68,7 +69,12 @@ public class CacheDataJob {
 
     }
 
-    @Scheduled(cron = "*/25 * * * * ?")
+    /**
+     * 更新缓存数据
+     *
+     * 更新分机ClickCap
+     */
+    @Scheduled(cron = "* */25 * * * * ?")
     public void updatePublisherOfferCacheJob() {
         try {
             Set<String> setids = CacheData.PUBOFF_SYCN_LOCK.keySet();
@@ -102,6 +108,10 @@ public class CacheDataJob {
 
                     lock.put(pokey, SychLockE.LOCKED.code);
                     cache.put(pokey, n);
+                    if(n.getClickcap()>0){
+                        Float clickCap = n.getClickcap() * clickcapweight;
+                        CacheData.PUB_OFF_CLICKCAP_CACHE.put(pokey, clickCap.intValue());
+                    }
                 });
                 CacheData.PUBOFF_SYCN_LOCK = lock;
                 CacheData.PUB_OFF_CACHE = cache;

@@ -16,6 +16,7 @@ import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,8 @@ import java.util.Date;
 
 @RestController
 public class Tracking {
-
+    @Value("${clickcapweight}")
+    private float clickcapweight;
     @Autowired
     private DataService dataService;
 
@@ -107,6 +109,9 @@ public class Tracking {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(3)");
         }
 
+        if(publisherOffer.getClickcap()>0){
+
+        }
 
         Click click = new Click();
 
