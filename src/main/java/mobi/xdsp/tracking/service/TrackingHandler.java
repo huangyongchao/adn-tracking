@@ -53,7 +53,7 @@ public class TrackingHandler {
     }
 
     public void writeClicks(Click click,String realTrackLink, Offer offer, PublisherOffer publisherOffer) {
-        click.setLang(realTrackLink);
+        click.setLink(realTrackLink);
 
         clicklog.info(click.toString());
     }
