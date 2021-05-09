@@ -26,7 +26,7 @@ public class CacheDataJob {
     private static final Logger clicklog = LoggerFactory.getLogger("click");
 
 
-    @Scheduled(cron = "*/10 * * * * ?")
+    @Scheduled(cron = "*/20 * * * * ?")
     public void checkLock() {
         try {
             List<Integer> offids = Lists.newLinkedList();
