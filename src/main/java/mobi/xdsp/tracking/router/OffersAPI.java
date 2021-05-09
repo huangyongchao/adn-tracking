@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -104,6 +105,9 @@ public class OffersAPI {
                 List<Offers> resoffs = Lists.newLinkedList();
                 offers.forEach(n -> {
                     Offers respO = new Offers();
+                    if(StringUtils.isBlank(n.getOs())||StringUtils.isBlank(n.getCountries())){
+                        return;
+                    }
                     if (puboffmap.containsKey(n.getId())) {
                         PublisherOffer publisherOffer = puboffmap.get(n.getId()).get(0);
                         respO.setAppId(n.getAppid());
@@ -120,7 +124,7 @@ public class OffersAPI {
                         respO.setIncent(false);
                         respO.setKpis(n.getKpis());
                         respO.setMinOsVersion(n.getMinos());
-                        respO.setOs(n.getOs());
+                        respO.setOs(n.getOs().toLowerCase(Locale.ROOT));
                         respO.setMonthlyCap(publisherOffer.getMonthcap());
                         respO.setPayout(publisherOffer.getPayout().floatValue());
                         respO.setName(n.getOffername());
