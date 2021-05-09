@@ -15,7 +15,7 @@ public class TomcatConf {
         factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
             @Override
             public void customize(Connector connector) {
-                connector.setProperty("relaxedQueryChars", "|{}[]()$><");
+                connector.setProperty("relaxedQueryChars", "$|{}[]()><");
             }
         });
         return factory;
