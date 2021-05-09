@@ -6,6 +6,8 @@ import mobi.xdsp.tracking.dto.OsE;
 import mobi.xdsp.tracking.entity.Offer;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Random;
 
@@ -46,10 +48,14 @@ public class AdTool {
 
     public static String trackurl(Click click, Offer offer) {
         String track = offer.getTrackurl();
-        if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
-            track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + click.getMixSub());
-        } else {
-            track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + click.getPubSub());
+        try {
+            if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
+                track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + URLEncoder.encode(click.getMixSub(),"utf-8"));
+            } else {
+                track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + URLEncoder.encode(click.getPubSub(),"utf-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
