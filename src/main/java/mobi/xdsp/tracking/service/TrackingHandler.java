@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.service;
 import com.aerospike.client.AerospikeClient;
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.ExecutorPool;
+import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class TrackingHandler {
     private static final Logger clicklog = LoggerFactory.getLogger("click");
@@ -21,7 +24,7 @@ public class TrackingHandler {
     @Autowired
     private AerospikeClickRepository repository;
     @Autowired
-    private AerospikeClient client;
+    Mailer mailer;
 
     public String getClickId(Click click) {
 
@@ -35,12 +38,6 @@ public class TrackingHandler {
         return clickid.toString();
     }
 
-    public void saveClick(Click click) {
-        click.setId("testclick" + System.currentTimeMillis());
-        click.setPid(1);
-        click.setOid(2);
-        System.out.println(click.getId());
-    }
 
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
@@ -52,10 +49,22 @@ public class TrackingHandler {
         return url;
     }
 
-    public void writeClicks(Click click,String realTrackLink, Offer offer, PublisherOffer publisherOffer) {
-        click.setLink(realTrackLink);
+    public void writeClicks(Click click, String realTrackLink, Offer offer, PublisherOffer publisherOffer) {
+        ExecutorPool.getExecutor().execute(() -> {
+            try {
+                repository.save(click);
+            } catch (Exception e) {
+                Random r = new Random();
+                int i = r.nextInt(20);
+                if (i == 0) {
+                    mailer.sendErrorMail("Tracking Error: saveClickToAerospike", e.getMessage() + "\n" + e.getLocalizedMessage());
+                }
+                e.printStackTrace();
+            }
+            click.setLink(realTrackLink);
+            clicklog.info(click.toString());
+        });
 
-        clicklog.info(click.toString());
     }
 
 
