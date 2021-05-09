@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.aerospike.mapping.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Indexed;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Document(collection = "clicks", expiration = 10, expirationUnit = TimeUnit.DAYS)
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Click implements Serializable {
     /**
      * 点击ID
@@ -70,10 +72,16 @@ public class Click implements Serializable {
     private String ip;
     private String lang;
     private String ua;
-    private String appName;
+    private String appN;
     /**
      * 自动重定向流量. 转化不下发
      */
-    private boolean isredirect;
+    private boolean isr;
+    /**
+     * 重定向offerid
+     */
+    private Integer roid;
+    private String link;
+
 
 }

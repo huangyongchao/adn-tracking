@@ -25,7 +25,7 @@ public class TrackingHandler {
 
     public String getClickId(Click click) {
 
-        StringBuilder clickid = new StringBuilder("AD");
+        StringBuilder clickid = new StringBuilder("PE");
         clickid.append(DateFormatUtils.format(click.getCt(), "MMddHHmmss"));
         clickid.append(click.getPid());
         clickid.append("N");
@@ -52,9 +52,17 @@ public class TrackingHandler {
         return url;
     }
 
-    public void writeClicks(Click click, Offer offer, PublisherOffer publisherOffer) {
+    public void writeClicks(Click click,String realTrackLink, Offer offer, PublisherOffer publisherOffer) {
+        click.setLang(realTrackLink);
+
         clicklog.info(click.toString());
     }
+
+
+    public void countClicks(Click click, Offer offer, PublisherOffer publisherOffer) {
+
+    }
+
 
 /*
     验证参数

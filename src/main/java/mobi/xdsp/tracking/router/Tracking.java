@@ -114,7 +114,7 @@ public class Tracking {
         click.setPid(publisherid);
         click.setPubSub(pubSub);
         click.setAppId(appid);
-        click.setAppName(appname);
+        click.setAppN(appname);
         click.setClickId(pubClickid);
         click.setIp(ip);
         click.setLang(lang);
@@ -141,7 +141,8 @@ public class Tracking {
         /*
        记录点击
          */
-        handler.writeClicks(click, offer, publisherOffer);
+        handler.writeClicks(click,finalTrackingUrl, offer, publisherOffer);
+        handler.countClicks(click, offer, publisherOffer);
 
         response.sendRedirect(finalTrackingUrl);
         return new ResponseModel(HttpStatus.SC_MOVED_TEMPORARILY, "success ");

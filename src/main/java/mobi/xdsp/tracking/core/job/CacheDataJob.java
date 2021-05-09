@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class CacheDataJob {
@@ -38,8 +39,12 @@ public class CacheDataJob {
     @Scheduled(cron = "*/20 * * * * ?")
     public void updateOfferCacheJob() {
         try {
+            Set<Integer> setids = CacheData.OFF_SYCN_LOCK.keySet();
+            if(setids.size()==0){
+                return;
+            }
             List<Integer> offids = Lists.newLinkedList();
-            offids.addAll(CacheData.OFF_SYCN_LOCK.keySet());
+            offids.addAll(setids);
             OfferExample example = new OfferExample();
             example.createCriteria().andIdIn(offids);
             List<Offer> list = offerMapper.selectByExample(example);
@@ -66,6 +71,11 @@ public class CacheDataJob {
     @Scheduled(cron = "*/25 * * * * ?")
     public void updatePublisherOfferCacheJob() {
         try {
+            Set<String> setids = CacheData.PUBOFF_SYCN_LOCK.keySet();
+            if(setids.size()==0){
+                return;
+            }
+
             List<Integer> offids = Lists.newLinkedList();
             List<Integer> publishers = Lists.newLinkedList();
             CacheData.PUBOFF_SYCN_LOCK.keySet().forEach(n -> {
