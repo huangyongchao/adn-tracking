@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -35,7 +36,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@EnableAutoConfiguration
 public class OffersAPI {
     private String trackDomain = "http://tracking.pubearn.com";
 

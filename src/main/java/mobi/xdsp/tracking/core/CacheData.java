@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class CacheData {
     /*key+id*/
-    public static Map<Integer, Integer> OFF_SYCN_LOCK = Maps.newHashMap();
-    public static Map<String, Integer> PUBOFF_SYCN_LOCK = Maps.newHashMap();
+    public static Map<Integer, Integer> OFF_SYCN_LOCK = Maps.newConcurrentMap();
+    public static Map<String, Integer> PUBOFF_SYCN_LOCK = Maps.newConcurrentMap();
 
     /*key 前缀*/
     public static String AFF = "aff";

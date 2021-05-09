@@ -44,14 +44,15 @@ public class DataServiceLocalImpl implements DataService {
         List<Offer> list = offerMapper.selectByExample(offerExample);
         if (list != null && list.size() > 0) {
             CacheData.OFF_SYCN_LOCK.put(id, SychLockE.LOCKED.code);
-
-            return list.get(0);
+            Offer offer = list.get(0);
+            CacheData.OFF_CACHE.put(offer.getId(), offer);
+            return offer;
         }
         return null;
     }
 
     @Override
-    public PublisherOffer cachePublisherOfferFirst(String key, Integer offerid, Integer publisherid) {
+    public PublisherOffer cachePublisherOfferFirst(String key, Integer publisherid, Integer offerid) {
 
         CacheData.PUBOFF_SYCN_LOCK.put(key, SychLockE.TAKING.code);
 
@@ -61,9 +62,11 @@ public class DataServiceLocalImpl implements DataService {
         List<PublisherOffer> list = publisherOfferMapper.selectByExample(publisherOfferExample);
         if (list != null && list.size() > 0) {
 
+            PublisherOffer offer = list.get(0);
+            CacheData.PUB_OFF_CACHE.put(key, offer);
+            CacheData.PUBOFF_SYCN_LOCK.put(key, SychLockE.LOCKED.code);
 
-
-            return list.get(0);
+            return offer;
         }
         return null;
     }

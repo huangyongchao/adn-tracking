@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.*;
 
 @RestController
-@EnableAutoConfiguration
 public class OpenApi {
     @Autowired
     WebApplicationContext applicationContext;

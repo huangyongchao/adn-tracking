@@ -12,7 +12,7 @@ public interface DataService {
     public List<Affiliate> cacheAffiliateAll();
     public List<Publisher> cachePublisherAll();
     public Offer cacheOfferFirst(Integer id);
-    public PublisherOffer cachePublisherOfferFirst(String key,Integer offerid, Integer publisherid);
+    public PublisherOffer cachePublisherOfferFirst(String key, Integer publisherid,Integer offerid);
 
     public Offer cachePubliserOffer(Publisher publisher);
 

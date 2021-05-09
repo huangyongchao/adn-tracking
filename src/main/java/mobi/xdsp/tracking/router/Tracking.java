@@ -16,16 +16,15 @@ import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-@Controller
+@RestController
 public class Tracking {
 
     @Autowired
@@ -36,8 +35,7 @@ public class Tracking {
     private TrackingHandler handler;
 
 
-    @RequestMapping(value = "/click")
-    @ResponseBody
+    @GetMapping("/click")
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
                             @RequestParam(value = "offer", required = true) Integer offerid,
                             @RequestParam(value = "pub_sub", defaultValue = "") String pubSub,
@@ -58,10 +56,7 @@ public class Tracking {
          * 目前请求的url 允许出现{} 符号的设置是在tomcat 目录 conf 下的 catalina.properties文件内部的如下参数
          * tomcat.util.http.parser.HttpParser.requestTargetAllow={}
          */
-        //long startTimes = System.currentTimeMillis();
-        //http://localhost:8081//a/c?a=1111&c=2222&device_id=sssss&click_id=ssss&affsub=aaa
-        //http://tracking.startmobi.com/a/c?a={publisher_id}&c={offer_id}&device_id={device_id}&click_id=&affsub=
-        //http://track.mobfireentertainment.com/data/click?cid=0BEuTsXMTwmMidnzq50U7A&affid=ycg0H0p-R6SVvnyqo-SXow&idfa=aaa&sub_aff=&sub_param1=iFM1V-2Bz-2Bl-ab2e0-11111111111111223123123123123123
+        //http://localhost:9192/click?pid=4&offer=2176&pub_sub={pub_sub}&idfa={idfa}&click_id={click_id}&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
         final String clientip = AddressUtils.getClientIpAddr(request);
 
         if (publisherid == null || !CacheData.PUB_CACHE.containsKey(publisherid)) {
@@ -82,7 +77,7 @@ public class Tracking {
         Offer offer = CacheData.OFF_CACHE.get(offerid);
 
         if (offer == null && !CacheData.OFF_SYCN_LOCK.containsKey(offerid)) {
-            dataService.cacheOfferFirst(offerid);
+            offer =  dataService.cacheOfferFirst(offerid);
         }
         if (!CacheData.OFF_SYCN_LOCK.containsKey(offerid) || CacheData.OFF_SYCN_LOCK.get(offerid) != SychLockE.LOCKED.code) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
@@ -104,7 +99,7 @@ public class Tracking {
          * 首次装载PublisherOffer
          */
         if (publisherOffer == null && !CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey)) {
-            dataService.cachePublisherOfferFirst(pokey, publisherid, offerid);
+            publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offerid);
         }
         if (publisherOffer == null ||
                 (!CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey) || CacheData.PUBOFF_SYCN_LOCK.get(pokey) != SychLockE.LOCKED.code) ||

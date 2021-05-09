@@ -42,6 +42,7 @@ public class BaseDataLoadJob {
     @Scheduled(cron = "1 1,31 * * * ?")
     public void cachePublisher(){
         try {
+
             List<Publisher> list =dataService.cachePublisherAll();
             Optional.ofNullable(list).orElse(Lists.newLinkedList()).forEach(n->{
                 if(StringUtils.isNotBlank(n.getToken())){
