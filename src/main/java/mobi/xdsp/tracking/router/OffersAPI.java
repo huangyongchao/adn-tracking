@@ -158,8 +158,8 @@ public class OffersAPI {
                         }
 
                         StringBuilder track = new StringBuilder(trackDomain + "/click?");
-                        track.append("pid="+publisher.getId())
-                        track.append("&offer="+respO.getId())
+                        track.append("pid=" + publisher.getId());
+                        track.append("&offer=" + respO.getId());
                         track.append("&pub_sub={pub_sub}&");
                         if ("ios".equalsIgnoreCase(n.getOs())) {
 
