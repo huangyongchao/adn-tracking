@@ -71,7 +71,7 @@ public class OffersAPI {
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
         if (StringUtils.isBlank(token) || !CacheData.PUB_TOKEN.containsKey(token)) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Invalid token");
+            return new OfferApiResponse(false, "Invalid token",null,false);
         }
         if (isCache(token)) {
             return QUERY_CACHE.get(token);
@@ -107,7 +107,7 @@ public class OffersAPI {
                     if (puboffmap.containsKey(n.getId())) {
                         PublisherOffer publisherOffer = puboffmap.get(n.getId()).get(0);
                         respO.setAppId(n.getAppid());
-                        respO.setAttParams(n.getIsattrs());
+                        respO.setIosATT(n.getIsattrs());
                         respO.setClickCap(publisherOffer.getClickcap());
                         respO.setBlacklist("");
                         respO.setWhitelist("");
@@ -192,7 +192,7 @@ public class OffersAPI {
         }
 
         if (response == null) {
-            response = new OfferApiResponse(true, Lists.newLinkedList(), false);
+            response = new OfferApiResponse(true, "No available offers",Lists.newLinkedList(), false);
         }
         return response;
     }

@@ -37,7 +37,7 @@ public class Offers {
     private int monthlyCap;
     private int dailyCap;
     private int clickCap;
-    private boolean attParams;
+    private boolean iosATT;
     private String kpis;
     private String blacklist;
     private String whitelist;
