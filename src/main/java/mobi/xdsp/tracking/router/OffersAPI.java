@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @RestController
 @EnableAutoConfiguration
 public class OffersAPI {
-    private String trackDomain = "http://tracking.pubearn.com?";
+    private String trackDomain = "http://tracking.pubearn.com";
 
     /**
      * 每20分钟查询一次 ,20分钟之内.返回缓存
@@ -99,19 +99,19 @@ public class OffersAPI {
 
             List<Offer> offers = offerMapper.selectByExample(offerExample);
             Map<Integer, List<PublisherOffer>> puboffmap = list.stream().collect(Collectors.groupingBy(PublisherOffer::getOfferid));
-            if(!CollectionUtils.isEmpty(offers)){
+            if (!CollectionUtils.isEmpty(offers)) {
                 response = new OfferApiResponse();
                 List<Offers> resoffs = Lists.newLinkedList();
-                offers.forEach(n->{
+                offers.forEach(n -> {
                     Offers respO = new Offers();
-                    if(puboffmap.containsKey(n.getId())){
+                    if (puboffmap.containsKey(n.getId())) {
                         PublisherOffer publisherOffer = puboffmap.get(n.getId()).get(0);
                         respO.setAppId(n.getAppid());
                         respO.setAttParams(n.getIsattrs());
                         respO.setClickCap(publisherOffer.getClickcap());
                         respO.setBlacklist("");
                         respO.setWhitelist("");
-                        respO.setCurrency(StringUtils.isBlank(n.getCurrency())?"USD":n.getCurrency());
+                        respO.setCurrency(StringUtils.isBlank(n.getCurrency()) ? "USD" : n.getCurrency());
                         respO.setDailyCap(publisherOffer.getDailycap());
                         respO.setDescription(n.getDescription());
                         respO.setRestrictions(n.getRestrictions());
@@ -126,49 +126,72 @@ public class OffersAPI {
                         respO.setName(n.getOffername());
                         respO.setPreviewUrl(n.getPreviewurl());
                         respO.setAppName(n.getAppname());
-                        if(respO.getPreviewUrl() ==null || "null".equalsIgnoreCase(respO.getPreviewUrl())){
-                            if("ios".equalsIgnoreCase(n.getOs())){
-                                respO.setPreviewUrl("https://apps.apple.com/app/id"+n.getAppid());
-                            }else{
-                                respO.setPreviewUrl("https://play.google.com/store/apps/details?id="+n.getAppid());
+                        if (respO.getPreviewUrl() == null || "null".equalsIgnoreCase(respO.getPreviewUrl())) {
+                            if ("ios".equalsIgnoreCase(n.getOs())) {
+                                respO.setPreviewUrl("https://apps.apple.com/app/id" + n.getAppid());
+                            } else {
+                                respO.setPreviewUrl("https://play.google.com/store/apps/details?id=" + n.getAppid());
                             }
                         }
                         respO.setPayoutType(n.getPayouttype());
                         respO.setCategory(n.getCategoryname());
-                        if(n.getOffername().indexOf(" CPA")>-1){
+                        if (n.getOffername().indexOf(" CPA") > -1) {
                             respO.setPayoutType("CPA");
                         }
-                        if(n.getOffername().indexOf(" CPI")>-1){
+                        if (n.getOffername().indexOf(" CPI") > -1) {
                             respO.setPayoutType("CPI");
                         }
-                        if(n.getOffername().indexOf(" CPR")>-1){
+                        if (n.getOffername().indexOf(" CPR") > -1) {
                             respO.setPayoutType("CPR");
                         }
-                        if(n.getOffername().indexOf(" CPE")>-1){
+                        if (n.getOffername().indexOf(" CPE") > -1) {
                             respO.setPayoutType("CPE");
                         }
-                        if(n.getOffername().indexOf(" CPO")>-1){
+                        if (n.getOffername().indexOf(" CPO") > -1) {
                             respO.setPayoutType("CPO");
                         }
-                        if(n.getOffername().indexOf(" CPS")>-1){
+                        if (n.getOffername().indexOf(" CPS") > -1) {
                             respO.setPayoutType("CPS");
                         }
-                        if(n.getOffername().indexOf(" CPL")>-1){
+                        if (n.getOffername().indexOf(" CPL") > -1) {
                             respO.setPayoutType("CPL");
                         }
-/*
-                        respO.setTrackingUrl();
-*/
 
+                        StringBuilder track = new StringBuilder(trackDomain + "/click?");
+                        track.append("pub_sub={pub_sub}&");
+                        if ("ios".equalsIgnoreCase(n.getOs())) {
+
+                            track.append("idfa={idfa}&");
+                        } else {
+
+                            track.append("gaid={gaid}&");
+                        }
+                        track.append("click_id={click_id}&");
+                        track.append("lang={lang}&");
+                        track.append("ua={ua}&");
+                        track.append("ip={ip}&");
+                        track.append("appid={appid}&");
+                        track.append("sub1={sub1}&");
+                        track.append("sub2={sub2}");
+
+                        respO.setTrackingUrl(track.toString());
+                        resoffs.add(respO);
                     }
                 });
+
+                response.setOffers(resoffs);
+                response.setSuccess(true);
+                response.setNext(false);
+
+                QUERY_CACHE.put(token, response);
+                QUERY_LOCK.put(token, new Date());
+
 
             }
 
         }
 
-        QUERY_LOCK.put(token, new Date());
-        if(response == null){
+        if (response == null) {
             response = new OfferApiResponse(true, Lists.newLinkedList(), false);
         }
         return response;
@@ -180,9 +203,9 @@ public class OffersAPI {
 */
 
         try {
-            Files.lines(Paths.get("/Users/huangyongchao/Downloads/click.log")).parallel().forEach(n->{
+            Files.lines(Paths.get("/Users/huangyongchao/Downloads/click.log")).parallel().forEach(n -> {
                 try {
-                    System.out.println(HttpClientUtil.get("http://callback.adscanal.com/mafcons?offerid=&clickid="+ URLEncoder.encode(n,"utf-8")));
+                    System.out.println(HttpClientUtil.get("http://callback.adscanal.com/mafcons?offerid=&clickid=" + URLEncoder.encode(n, "utf-8")));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
