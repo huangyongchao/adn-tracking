@@ -60,7 +60,8 @@ public class DataServiceLocalImpl implements DataService {
 
         List<PublisherOffer> list = publisherOfferMapper.selectByExample(publisherOfferExample);
         if (list != null && list.size() > 0) {
-            CacheData.PUBOFF_SYCN_LOCK.put(key, SychLockE.LOCKED.code);
+
+
 
             return list.get(0);
         }

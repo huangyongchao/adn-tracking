@@ -256,8 +256,6 @@ public class GeoMap {
         word3Map.put("CIV", "CI");
         word3Map.put("KEN", "KE");
         word3Map.put("MNG", "MN");
-
-        word3Map.put("UAE", "AE");
         word3Map.put("KSA", "SA");
 
         word2Map.put("AD", "AND");

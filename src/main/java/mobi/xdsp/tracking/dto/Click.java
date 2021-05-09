@@ -71,6 +71,9 @@ public class Click implements Serializable {
     private String lang;
     private String ua;
     private String appName;
-
+    /**
+     * 自动重定向流量. 转化不下发
+     */
+    private boolean isredirect;
 
 }

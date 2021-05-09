@@ -1,25 +1,43 @@
 package mobi.xdsp.tracking.router;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.deploy.net.HttpUtils;
+import com.sun.deploy.net.URLEncoder;
+import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.ResponseModel;
+import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
+import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.dto.offerapi.OfferApiResponse;
+import mobi.xdsp.tracking.dto.offerapi.Offers;
+import mobi.xdsp.tracking.entity.*;
+import mobi.xdsp.tracking.mapper.AffiliateMapper;
 import mobi.xdsp.tracking.mapper.OfferMapper;
+import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
 public class OffersAPI {
+    private String trackDomain = "http://tracking.pubearn.com?";
+
     /**
      * 每20分钟查询一次 ,20分钟之内.返回缓存
      */
@@ -44,7 +62,11 @@ public class OffersAPI {
     WebApplicationContext applicationContext;
     @Autowired
     OfferMapper offerMapper;
+    @Autowired
+    AffiliateMapper affiliateMapper;
 
+    @Autowired
+    PublisherOfferMapper publisherOfferMapper;
 
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
@@ -54,11 +76,119 @@ public class OffersAPI {
         if (isCache(token)) {
             return QUERY_CACHE.get(token);
         }
-        OfferApiResponse response = new OfferApiResponse();
+        OfferApiResponse response = null;
 
+        Publisher publisher = CacheData.PUB_TOKEN.get(token);
+
+        PublisherOfferExample example = new PublisherOfferExample();
+        example.createCriteria().andPublisheridEqualTo(publisher.getId()).andStateEqualTo(OfferApplyStatusEnum.APPROVED.getCode());
+
+        AffiliateExample affiliateExample = new AffiliateExample();
+        affiliateExample.createCriteria().andStatusEqualTo(StateE.VALID.name);
+
+        List<PublisherOffer> list = publisherOfferMapper.selectByExample(example);
+
+        if (!CollectionUtils.isEmpty(list)) {
+            List<Affiliate> affiliateList = affiliateMapper.selectByExample(affiliateExample);
+            List<Short> affids = affiliateList.stream().map(n -> n.getId().shortValue()).collect(Collectors.toList());
+
+            List<Integer> offerids = list.stream().map(n -> n.getOfferid()).collect(Collectors.toList());
+
+            OfferExample offerExample = new OfferExample();
+            offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusEqualTo(StateE.VALID.name);
+
+            List<Offer> offers = offerMapper.selectByExample(offerExample);
+            Map<Integer, List<PublisherOffer>> puboffmap = list.stream().collect(Collectors.groupingBy(PublisherOffer::getOfferid));
+            if(!CollectionUtils.isEmpty(offers)){
+                response = new OfferApiResponse();
+                List<Offers> resoffs = Lists.newLinkedList();
+                offers.forEach(n->{
+                    Offers respO = new Offers();
+                    if(puboffmap.containsKey(n.getId())){
+                        PublisherOffer publisherOffer = puboffmap.get(n.getId()).get(0);
+                        respO.setAppId(n.getAppid());
+                        respO.setAttParams(n.getIsattrs());
+                        respO.setClickCap(publisherOffer.getClickcap());
+                        respO.setBlacklist("");
+                        respO.setWhitelist("");
+                        respO.setCurrency(StringUtils.isBlank(n.getCurrency())?"USD":n.getCurrency());
+                        respO.setDailyCap(publisherOffer.getDailycap());
+                        respO.setDescription(n.getDescription());
+                        respO.setRestrictions(n.getRestrictions());
+                        respO.setGeo(n.getCountries());
+                        respO.setId(n.getId());
+                        respO.setIncent(false);
+                        respO.setKpis(n.getKpis());
+                        respO.setMinOsVersion(n.getMinos());
+                        respO.setOs(n.getOs());
+                        respO.setMonthlyCap(publisherOffer.getMonthcap());
+                        respO.setPayout(publisherOffer.getPayout().floatValue());
+                        respO.setName(n.getOffername());
+                        respO.setPreviewUrl(n.getPreviewurl());
+                        respO.setAppName(n.getAppname());
+                        if(respO.getPreviewUrl() ==null || "null".equalsIgnoreCase(respO.getPreviewUrl())){
+                            if("ios".equalsIgnoreCase(n.getOs())){
+                                respO.setPreviewUrl("https://apps.apple.com/app/id"+n.getAppid());
+                            }else{
+                                respO.setPreviewUrl("https://play.google.com/store/apps/details?id="+n.getAppid());
+                            }
+                        }
+                        respO.setPayoutType(n.getPayouttype());
+                        respO.setCategory(n.getCategoryname());
+                        if(n.getOffername().indexOf(" CPA")>-1){
+                            respO.setPayoutType("CPA");
+                        }
+                        if(n.getOffername().indexOf(" CPI")>-1){
+                            respO.setPayoutType("CPI");
+                        }
+                        if(n.getOffername().indexOf(" CPR")>-1){
+                            respO.setPayoutType("CPR");
+                        }
+                        if(n.getOffername().indexOf(" CPE")>-1){
+                            respO.setPayoutType("CPE");
+                        }
+                        if(n.getOffername().indexOf(" CPO")>-1){
+                            respO.setPayoutType("CPO");
+                        }
+                        if(n.getOffername().indexOf(" CPS")>-1){
+                            respO.setPayoutType("CPS");
+                        }
+                        if(n.getOffername().indexOf(" CPL")>-1){
+                            respO.setPayoutType("CPL");
+                        }
+/*
+                        respO.setTrackingUrl();
+*/
+
+                    }
+                });
+
+            }
+
+        }
 
         QUERY_LOCK.put(token, new Date());
+        if(response == null){
+            response = new OfferApiResponse(true, Lists.newLinkedList(), false);
+        }
         return response;
     }
 
+    public static void main(String[] args) {
+/*
+        &deviceid=&subid=&event=
+*/
+
+        try {
+            Files.lines(Paths.get("/Users/huangyongchao/Downloads/click.log")).parallel().forEach(n->{
+                try {
+                    System.out.println(HttpClientUtil.get("http://callback.adscanal.com/mafcons?offerid=&clickid="+ URLEncoder.encode(n,"utf-8")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
