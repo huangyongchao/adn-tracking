@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SdkApplication {
 
     public static void main(String[] args) {
-        System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow","|{}");
+        System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow","$|{}[]()><");
         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,TLSv3");
         SpringApplication.run(SdkApplication.class, args);
     }
