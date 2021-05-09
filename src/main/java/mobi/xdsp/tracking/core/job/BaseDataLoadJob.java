@@ -1,6 +1,7 @@
 package mobi.xdsp.tracking.core.job;
 
 import com.google.common.collect.Lists;
+import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.entity.Affiliate;
@@ -21,6 +22,8 @@ public class BaseDataLoadJob {
     @Autowired
     DataService dataService;
 
+    @Autowired
+    Mailer mailer;
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger logger = LoggerFactory.getLogger(BaseDataLoadJob.class);
 
@@ -33,6 +36,8 @@ public class BaseDataLoadJob {
                 CacheData.AFF_CACHE.put(n.getId(), n);
             });
         } catch (Exception e) {
+            mailer.sendErrorMail("Tracking Error: cacheAffiliate",e.getMessage()+"\n"+e.getLocalizedMessage());
+
             e.printStackTrace();
         }
 
@@ -52,6 +57,7 @@ public class BaseDataLoadJob {
 
             });
         } catch (Exception e) {
+            mailer.sendErrorMail("Tracking Error: cachePublisher",e.getMessage()+"\n"+e.getLocalizedMessage());
             e.printStackTrace();
         }
     }

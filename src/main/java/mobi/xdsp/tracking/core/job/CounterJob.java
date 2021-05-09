@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.core.job;
 
+import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.service.TrackingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +12,10 @@ import java.util.Date;
 
 @Component
 public class CounterJob {
+
     @Autowired
-    TrackingHandler handler;
+    Mailer mailer;
+
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger clicklog = LoggerFactory.getLogger("click");
     private static final Logger logger = LoggerFactory.getLogger(CounterJob.class);

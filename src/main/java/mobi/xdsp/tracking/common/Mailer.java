@@ -10,10 +10,10 @@ public class Mailer {
     @Autowired
     private JavaMailSenderImpl javaMailSender;
 
-    public void offerManyRedirect(String title, String msg, String offerid, String times, String offername) {
+    public void sendErrorMail(String title, String msg) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("SDK:跳转次数多的offer");
-        message.setText(offerid + ">" + offername + ":redirect " + times);
+        message.setSubject(title);
+        message.setText(msg);
         message.setTo("adnetwork@adscanal.com");
         message.setFrom("notice@adscanal.com");
         javaMailSender.send(message);
