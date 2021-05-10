@@ -58,8 +58,8 @@ public class AdTool {
             e.printStackTrace();
         }
 
-        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
-            track = StringUtils.replaceAll(track, "\\{click_id}", click.getClickId());
+        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getId())) {
+            track = StringUtils.replaceAll(track, "\\{click_id}", click.getId());
         }
 
         if (OsE.AOS.name.equalsIgnoreCase(offer.getOs())) {

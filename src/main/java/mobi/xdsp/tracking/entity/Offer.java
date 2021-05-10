@@ -123,7 +123,7 @@ public class Offer extends OfferKey {
 
     private Integer automonitor;
 
-    private Boolean ismanual;
+    private Integer ismanual;
 
     private Boolean isappid;
 
@@ -609,11 +609,11 @@ public class Offer extends OfferKey {
         this.automonitor = automonitor;
     }
 
-    public Boolean getIsmanual() {
+    public Integer getIsmanual() {
         return ismanual;
     }
 
-    public void setIsmanual(Boolean ismanual) {
+    public void setIsmanual(Integer ismanual) {
         this.ismanual = ismanual;
     }
 

@@ -8,6 +8,7 @@ import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
+import mobi.xdsp.tracking.dto.enums.OsE;
 import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.dto.offerapi.OfferApiResponse;
 import mobi.xdsp.tracking.dto.offerapi.Offers;
@@ -72,7 +73,7 @@ public class OffersQueryAPI {
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
         if (StringUtils.isBlank(token) || !CacheData.PUB_TOKEN.containsKey(token)) {
-            return new OfferApiResponse(false, "Invalid token",null,false);
+            return new OfferApiResponse(false, "Invalid token", null, false);
         }
         if (isCache(token)) {
             return QUERY_CACHE.get(token);
@@ -105,7 +106,7 @@ public class OffersQueryAPI {
                 List<Offers> resoffs = Lists.newLinkedList();
                 offers.forEach(n -> {
                     Offers respO = new Offers();
-                    if(StringUtils.isBlank(n.getOs())||StringUtils.isBlank(n.getCountries())){
+                    if (StringUtils.isBlank(n.getOs()) || StringUtils.isBlank(n.getCountries())) {
                         return;
                     }
                     if (puboffmap.containsKey(n.getId())) {
@@ -160,27 +161,65 @@ public class OffersQueryAPI {
                         if (n.getOffername().indexOf(" CPL") > -1) {
                             respO.setPayoutType("CPL");
                         }
+                        /*直接走上游链接*/
+                        if (n.getIsmanual() != null && n.getIsmanual() == 1) {
+                            String p = "DI" + publisher.getId() + "-" + n.getId() + "-{click_id}";
+                            String track = n.getTrackurl();
 
-                        StringBuilder track = new StringBuilder(trackDomain + "/click?");
-                        track.append("pid=" + publisher.getId());
-                        track.append("&offer=" + respO.getId());
-                        track.append("&pub_sub={pub_sub}&");
-                        if ("ios".equalsIgnoreCase(n.getOs())) {
+                            if (track.indexOf("{click_id}") > -1) {
+                                track = StringUtils.replaceAll(track, "\\{click_id}", p);
+                            }
+                            if (track.indexOf("{clickid}") > -1) {
+                                track = StringUtils.replaceAll(track, "\\{clickid}", p);
+                            }
+                            if (track.indexOf("{pub_subid}") > -1) {
+                                track = StringUtils.replaceAll(track, "\\{pub_subid}", "{pub_sub}");
+                            }
+                            if (OsE.iOS.key.equalsIgnoreCase(n.getOs())) {
+                                if (track.indexOf("{device_id}") > -1) {
+                                    track = StringUtils.replaceAll(track, "\\{device_id}", "{idfa}");
+                                }
+                            } else {
+                                if (track.indexOf("{device_id}") > -1) {
+                                    track = StringUtils.replaceAll(track, "\\{device_id}", "{gaid}");
+                                }
+                                if (track.indexOf("{advertiser_id}") > -1) {
+                                    track = StringUtils.replaceAll(track, "\\{advertiser_id}", "{gaid}");
+                                }
+                            }
+                            if (track.indexOf("{store_appid}") > -1) {
+                                track = StringUtils.replaceAll(track, "\\{store_appid}", "{appid}");
+                            }
 
-                            track.append("idfa={idfa}&");
+                            respO.setTrackingUrl(track);
+                            respO.setS2sLink(true);
+
                         } else {
+                            /*走平台链接*/
+                            StringBuilder track = new StringBuilder(trackDomain + "/click?");
 
-                            track.append("gaid={gaid}&");
+                            track.append("pid=" + publisher.getId());
+                            track.append("&offer=" + respO.getId());
+                            track.append("&pub_sub={pub_sub}&");
+                            if ("ios".equalsIgnoreCase(n.getOs())) {
+
+                                track.append("idfa={idfa}&");
+                            } else {
+
+                                track.append("gaid={gaid}&");
+                            }
+                            track.append("click_id={click_id}&");
+                            track.append("lang={lang}&");
+                            track.append("ua={ua}&");
+                            track.append("ip={ip}&");
+                            track.append("appid={appid}&");
+                            track.append("sub1={sub1}&");
+                            track.append("sub2={sub2}");
+                            respO.setTrackingUrl(track.toString());
+                            respO.setS2sLink(false);
                         }
-                        track.append("click_id={click_id}&");
-                        track.append("lang={lang}&");
-                        track.append("ua={ua}&");
-                        track.append("ip={ip}&");
-                        track.append("appid={appid}&");
-                        track.append("sub1={sub1}&");
-                        track.append("sub2={sub2}");
 
-                        respO.setTrackingUrl(track.toString());
+
                         resoffs.add(respO);
                     }
                 });
@@ -198,7 +237,7 @@ public class OffersQueryAPI {
         }
 
         if (response == null) {
-            response = new OfferApiResponse(true, "No available offers",Lists.newLinkedList(), false);
+            response = new OfferApiResponse(true, "No available offers", Lists.newLinkedList(), false);
         }
         return response;
     }
