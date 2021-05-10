@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-public class OffersAPI {
+public class OffersQueryAPI {
     private String trackDomain = "http://tracking.pubearn.com";
 
     /**

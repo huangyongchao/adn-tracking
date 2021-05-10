@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 @RestController
-public class Tracking {
+public class TrackingAPI {
     @Value("${clickcapweight}")
     private float clickcapweight;
     @Autowired
