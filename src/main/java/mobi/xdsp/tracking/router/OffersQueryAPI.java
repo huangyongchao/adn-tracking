@@ -157,7 +157,7 @@ public class OffersQueryAPI {
                             respO.setPayoutType("CPL");
                         }
                         /*直接走上游链接*/
-                        if (n.getIsmanual() != null && n.getIsmanual() == 1) {
+                        if (publisherOffer.getTrackingtype() != null && publisherOffer.getTrackingtype() == 1) {
                             String p = "DI" + publisher.getId() + "-" + n.getId() + "-{click_id}";
                             String track = n.getTrackurl();
 
