@@ -1,13 +1,16 @@
 package mobi.xdsp.tracking.core.job;
 
 import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.service.TrackingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.aerospike.repository.AerospikeRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 
 @Component
@@ -15,6 +18,8 @@ public class CounterJob {
 
     @Autowired
     Mailer mailer;
+    @Autowired
+    private AerospikeRepository repository;
 
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger clicklog = LoggerFactory.getLogger("click");
@@ -29,9 +34,21 @@ public class CounterJob {
 
     @Scheduled(cron = "*/2 * * * * ?")
     public void testjob() {
-        System.out.println(new Date());
-        clicklog.info(new Date().toString());
-
+    }
+    @PostConstruct
+    public void testAeroSpike(){
+        Click click = new Click();
+        String id = String.valueOf(System.currentTimeMillis());
+        click.setId(id);
+        click.setAppN("Test Name");
+        repository.save(click);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(repository.findById(id));
+        logger.info(repository.findById(id));
     }
 
 }
