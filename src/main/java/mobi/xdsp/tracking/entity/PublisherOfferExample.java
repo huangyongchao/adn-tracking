@@ -2095,6 +2095,136 @@ public class PublisherOfferExample {
             addCriterion("state not between", value1, value2, "state");
             return (Criteria) this;
         }
+
+        public Criteria andTrackingtypeIsNull() {
+            addCriterion("trackingtype is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeIsNotNull() {
+            addCriterion("trackingtype is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeEqualTo(Integer value) {
+            addCriterion("trackingtype =", value, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeNotEqualTo(Integer value) {
+            addCriterion("trackingtype <>", value, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeGreaterThan(Integer value) {
+            addCriterion("trackingtype >", value, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("trackingtype >=", value, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeLessThan(Integer value) {
+            addCriterion("trackingtype <", value, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeLessThanOrEqualTo(Integer value) {
+            addCriterion("trackingtype <=", value, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeIn(List<Integer> values) {
+            addCriterion("trackingtype in", values, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeNotIn(List<Integer> values) {
+            addCriterion("trackingtype not in", values, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeBetween(Integer value1, Integer value2) {
+            addCriterion("trackingtype between", value1, value2, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrackingtypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("trackingtype not between", value1, value2, "trackingtype");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyIsNull() {
+            addCriterion("ukey is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyIsNotNull() {
+            addCriterion("ukey is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyEqualTo(String value) {
+            addCriterion("ukey =", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyNotEqualTo(String value) {
+            addCriterion("ukey <>", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyGreaterThan(String value) {
+            addCriterion("ukey >", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyGreaterThanOrEqualTo(String value) {
+            addCriterion("ukey >=", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyLessThan(String value) {
+            addCriterion("ukey <", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyLessThanOrEqualTo(String value) {
+            addCriterion("ukey <=", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyLike(String value) {
+            addCriterion("ukey like", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyNotLike(String value) {
+            addCriterion("ukey not like", value, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyIn(List<String> values) {
+            addCriterion("ukey in", values, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyNotIn(List<String> values) {
+            addCriterion("ukey not in", values, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyBetween(String value1, String value2) {
+            addCriterion("ukey between", value1, value2, "ukey");
+            return (Criteria) this;
+        }
+
+        public Criteria andUkeyNotBetween(String value1, String value2) {
+            addCriterion("ukey not between", value1, value2, "ukey");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

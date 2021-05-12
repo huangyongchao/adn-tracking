@@ -68,6 +68,10 @@ public class PublisherOffer {
 
     private Integer state;
 
+    private Integer trackingtype;
+
+    private String ukey;
+
     public Integer getId() {
         return id;
     }
@@ -322,5 +326,21 @@ public class PublisherOffer {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getTrackingtype() {
+        return trackingtype;
+    }
+
+    public void setTrackingtype(Integer trackingtype) {
+        this.trackingtype = trackingtype;
+    }
+
+    public String getUkey() {
+        return ukey;
+    }
+
+    public void setUkey(String ukey) {
+        this.ukey = ukey == null ? null : ukey.trim();
     }
 }

@@ -34,6 +34,8 @@
     <result column="configflag" jdbcType="INTEGER" property="configflag" />
     <result column="deleteflag" jdbcType="INTEGER" property="deleteflag" />
     <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="trackingtype" jdbcType="INTEGER" property="trackingtype" />
+    <result column="ukey" jdbcType="VARCHAR" property="ukey" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.PublisherOfferWithBLOBs">
     <result column="whitelist" jdbcType="LONGVARCHAR" property="whitelist" />
@@ -102,7 +104,7 @@
     redirect, applytime, approvaltime, starttime, expirationtime, status, createtime, 
     updatetime, createuser, updateuser, advertiserid, payoutrate, dailydummycap, actioncode, 
     actionlog, mixrate, directrate, deductrate, oaplacements, directofferids, configflag, 
-    deleteflag, state
+    deleteflag, state, trackingtype, ukey
   </sql>
   <sql id="Blob_Column_List">
     whitelist, blacklist
@@ -177,8 +179,8 @@
       actioncode, actionlog, mixrate, 
       directrate, deductrate, oaplacements, 
       directofferids, configflag, deleteflag, 
-      state, whitelist, blacklist
-      )
+      state, trackingtype, ukey, 
+      whitelist, blacklist)
     values (#{offerid,jdbcType=INTEGER}, #{publisherid,jdbcType=INTEGER}, #{payout,jdbcType=DECIMAL}, 
       #{dailybudget,jdbcType=REAL}, #{monthbudget,jdbcType=REAL}, #{dailycap,jdbcType=INTEGER}, 
       #{monthcap,jdbcType=INTEGER}, #{clickcap,jdbcType=INTEGER}, #{redirect,jdbcType=TINYINT}, 
@@ -189,8 +191,8 @@
       #{actioncode,jdbcType=INTEGER}, #{actionlog,jdbcType=VARCHAR}, #{mixrate,jdbcType=INTEGER}, 
       #{directrate,jdbcType=INTEGER}, #{deductrate,jdbcType=INTEGER}, #{oaplacements,jdbcType=VARCHAR}, 
       #{directofferids,jdbcType=VARCHAR}, #{configflag,jdbcType=INTEGER}, #{deleteflag,jdbcType=INTEGER}, 
-      #{state,jdbcType=INTEGER}, #{whitelist,jdbcType=LONGVARCHAR}, #{blacklist,jdbcType=LONGVARCHAR}
-      )
+      #{state,jdbcType=INTEGER}, #{trackingtype,jdbcType=INTEGER}, #{ukey,jdbcType=VARCHAR}, 
+      #{whitelist,jdbcType=LONGVARCHAR}, #{blacklist,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.PublisherOfferWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -290,6 +292,12 @@
       </if>
       <if test="state != null">
         state,
+      </if>
+      <if test="trackingtype != null">
+        trackingtype,
+      </if>
+      <if test="ukey != null">
+        ukey,
       </if>
       <if test="whitelist != null">
         whitelist,
@@ -391,6 +399,12 @@
       </if>
       <if test="state != null">
         #{state,jdbcType=INTEGER},
+      </if>
+      <if test="trackingtype != null">
+        #{trackingtype,jdbcType=INTEGER},
+      </if>
+      <if test="ukey != null">
+        #{ukey,jdbcType=VARCHAR},
       </if>
       <if test="whitelist != null">
         #{whitelist,jdbcType=LONGVARCHAR},
@@ -505,6 +519,12 @@
       <if test="record.state != null">
         state = #{record.state,jdbcType=INTEGER},
       </if>
+      <if test="record.trackingtype != null">
+        trackingtype = #{record.trackingtype,jdbcType=INTEGER},
+      </if>
+      <if test="record.ukey != null">
+        ukey = #{record.ukey,jdbcType=VARCHAR},
+      </if>
       <if test="record.whitelist != null">
         whitelist = #{record.whitelist,jdbcType=LONGVARCHAR},
       </if>
@@ -550,6 +570,8 @@
       configflag = #{record.configflag,jdbcType=INTEGER},
       deleteflag = #{record.deleteflag,jdbcType=INTEGER},
       state = #{record.state,jdbcType=INTEGER},
+      trackingtype = #{record.trackingtype,jdbcType=INTEGER},
+      ukey = #{record.ukey,jdbcType=VARCHAR},
       whitelist = #{record.whitelist,jdbcType=LONGVARCHAR},
       blacklist = #{record.blacklist,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -589,7 +611,9 @@
       directofferids = #{record.directofferids,jdbcType=VARCHAR},
       configflag = #{record.configflag,jdbcType=INTEGER},
       deleteflag = #{record.deleteflag,jdbcType=INTEGER},
-      state = #{record.state,jdbcType=INTEGER}
+      state = #{record.state,jdbcType=INTEGER},
+      trackingtype = #{record.trackingtype,jdbcType=INTEGER},
+      ukey = #{record.ukey,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -690,6 +714,12 @@
       <if test="state != null">
         state = #{state,jdbcType=INTEGER},
       </if>
+      <if test="trackingtype != null">
+        trackingtype = #{trackingtype,jdbcType=INTEGER},
+      </if>
+      <if test="ukey != null">
+        ukey = #{ukey,jdbcType=VARCHAR},
+      </if>
       <if test="whitelist != null">
         whitelist = #{whitelist,jdbcType=LONGVARCHAR},
       </if>
@@ -732,6 +762,8 @@
       configflag = #{configflag,jdbcType=INTEGER},
       deleteflag = #{deleteflag,jdbcType=INTEGER},
       state = #{state,jdbcType=INTEGER},
+      trackingtype = #{trackingtype,jdbcType=INTEGER},
+      ukey = #{ukey,jdbcType=VARCHAR},
       whitelist = #{whitelist,jdbcType=LONGVARCHAR},
       blacklist = #{blacklist,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -768,7 +800,9 @@
       directofferids = #{directofferids,jdbcType=VARCHAR},
       configflag = #{configflag,jdbcType=INTEGER},
       deleteflag = #{deleteflag,jdbcType=INTEGER},
-      state = #{state,jdbcType=INTEGER}
+      state = #{state,jdbcType=INTEGER},
+      trackingtype = #{trackingtype,jdbcType=INTEGER},
+      ukey = #{ukey,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
@@ -804,6 +838,8 @@
     configflag,
     deleteflag,
     state,
+    trackingtype,
+    ukey,
     whitelist,
     blacklist
     )
@@ -841,6 +877,8 @@
       #{item.configflag,jdbcType=INTEGER},
       #{item.deleteflag,jdbcType=INTEGER},
       #{item.state,jdbcType=INTEGER},
+      #{item.trackingtype,jdbcType=INTEGER},
+      #{item.ukey,jdbcType=VARCHAR},
       #{item.whitelist,jdbcType=LONGVARCHAR},
       #{item.blacklist,jdbcType=LONGVARCHAR}
       )
