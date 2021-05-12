@@ -1,5 +1,5 @@
 #!/bin/sh
-name=sdk
+name=adntracking
 echo "start to deploy $name"
 echo "enter into workspace, " `pwd`
 git pull
@@ -17,5 +17,5 @@ echo $datetime
 
 mvn clean install -Dmaven.test.skip=true
 `mv ./target/$name*.jar  ./target/$name.jar`
-java -server  -Xmx8g -XX:MetaspaceSize=128m  -jar "target/$name.jar"  --spring.profiles.active=prod &
+java -server  -Xmx1g -XX:MetaspaceSize=128m  -jar "target/$name.jar"  --spring.profiles.active=prod &
 echo "$name service is up..."
