@@ -36,10 +36,10 @@ public class CounterJob {
 
 
     @Scheduled(cron = "*/2 * * * * ?")
-    public void testjob() {
+    public void job() {
     }
     @PostConstruct
-    public void testAeroSpike(){
+    public void AeroSpike(){
         Click click = new Click();
         String id = String.valueOf(System.currentTimeMillis());
         click.setId(id);
@@ -51,7 +51,6 @@ public class CounterJob {
             e.printStackTrace();
         }
         System.out.println(repository.findById(id).toString());
-        logger.info(repository.findById(id).toString());
         logger.info(repository.findById(id).toString());
         logger.info(JSONObject.toJSONString(CacheData.AFF_CACHE));
         logger.info(JSONObject.toJSONString(CacheData.PUB_CACHE));
