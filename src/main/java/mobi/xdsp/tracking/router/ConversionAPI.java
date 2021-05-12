@@ -34,7 +34,12 @@ public class ConversionAPI {
     public Object conversion(
             @RequestParam(value = "clickid", required = true) String clickid,
             @RequestParam(value = "click_id", defaultValue = "") String clickidbak,
-            @RequestParam(value = "advid") Integer advid) {
+            @RequestParam(value = "advid") Integer advid,
+            @RequestParam(value = "event",defaultValue = "") String event ,
+            @RequestParam(value = "isevent") Integer isevent) {
+
+        /*isevent 1 global 2 event*/
+
 
         if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
             clickid = clickidbak;
