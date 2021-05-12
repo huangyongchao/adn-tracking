@@ -54,7 +54,7 @@ public class ConversionAPI {
 
 
         } else if (clickid.startsWith("DI")) {
-            //Pubearn S2S 点击,只能获取offer以及 publisher
+            //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
 
         }
 
