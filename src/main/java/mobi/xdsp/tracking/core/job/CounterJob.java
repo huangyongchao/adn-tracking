@@ -47,8 +47,8 @@ public class CounterJob {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(repository.findById(id));
-        logger.info(repository.findById(id));
+        System.out.println(repository.findById(id).toString());
+        logger.info(repository.findById(id).toString());
     }
 
 }
