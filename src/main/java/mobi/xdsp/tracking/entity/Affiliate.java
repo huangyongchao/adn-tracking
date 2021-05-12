@@ -1,7 +1,11 @@
 package mobi.xdsp.tracking.entity;
 
-import java.util.Date;
+import lombok.Data;
+import lombok.ToString;
 
+import java.util.Date;
+@Data
+@ToString
 public class Affiliate {
     private Integer id;
 

@@ -1,8 +1,12 @@
 package mobi.xdsp.tracking.entity;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Data
+@ToString
 public class Publisher {
     private Integer id;
 

@@ -1,7 +1,10 @@
 package mobi.xdsp.tracking.core.job;
 
+import com.alibaba.fastjson.JSONObject;
 import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.TrackingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +22,7 @@ public class CounterJob {
     @Autowired
     Mailer mailer;
     @Autowired
-    private AerospikeRepository repository;
+    private AerospikeClickRepository repository;
 
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger clicklog = LoggerFactory.getLogger("click");
@@ -49,6 +52,9 @@ public class CounterJob {
         }
         System.out.println(repository.findById(id).toString());
         logger.info(repository.findById(id).toString());
+        logger.info(repository.findById(id).toString());
+        logger.info(JSONObject.toJSONString(CacheData.AFF_CACHE));
+        logger.info(JSONObject.toJSONString(CacheData.PUB_CACHE));
     }
 
 }
