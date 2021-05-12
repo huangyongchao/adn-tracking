@@ -1,5 +1,5 @@
 #!/bin/sh
-name=adntracking
+name=tracking
 echo "start to deploy $name"
 echo "enter into workspace, " `pwd`
 git pull
