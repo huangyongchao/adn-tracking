@@ -13,6 +13,7 @@ import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
+import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -56,26 +57,39 @@ public class OffersQueryAPI {
     }
 
     @Autowired
-    WebApplicationContext applicationContext;
+    private WebApplicationContext applicationContext;
     @Autowired
-    OfferMapper offerMapper;
+    private OfferMapper offerMapper;
     @Autowired
-    AffiliateMapper affiliateMapper;
+    private AffiliateMapper affiliateMapper;
 
     @Autowired
-    PublisherOfferMapper publisherOfferMapper;
+    private PublisherOfferMapper publisherOfferMapper;
 
+    @Autowired
+    private DataService dataService;
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
-        if (StringUtils.isBlank(token) || !CacheData.PUB_TOKEN.containsKey(token)) {
+        if (StringUtils.isBlank(token)) {
+            return new OfferApiResponse(false, "Invalid token", null, false);
+        }
+        Publisher publisher = null;
+        if(!CacheData.PUB_TOKEN.containsKey(token)){
+            publisher = dataService.cachePublisherByToken(token);
+            if(publisher!=null){
+
+                CacheData.PUB_TOKEN.put(token, publisher);
+            }
+        }else{
+            publisher = CacheData.PUB_TOKEN.get(token);
+        }
+        if(publisher ==null){
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
         if (isCache(token)) {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
-
-        Publisher publisher = CacheData.PUB_TOKEN.get(token);
 
         PublisherOfferExample example = new PublisherOfferExample();
         example.createCriteria().andPublisheridEqualTo(publisher.getId()).andStateEqualTo(OfferApplyStatusEnum.APPROVED.getCode());

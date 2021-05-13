@@ -9,6 +9,7 @@ import mobi.xdsp.tracking.mapper.PublisherMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -73,6 +74,18 @@ public class DataServiceLocalImpl implements DataService {
 
     @Override
     public Offer cachePubliserOffer(Publisher publisher) {
+        return null;
+    }
+
+    @Override
+    public Publisher cachePublisherByToken(String token) {
+
+        PublisherExample example = new PublisherExample();
+        example.createCriteria().andTokenEqualTo(token);
+        List<Publisher> list = publisherMapper.selectByExample(example);
+        if(!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
         return null;
     }
 }

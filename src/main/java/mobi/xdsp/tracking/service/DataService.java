@@ -13,6 +13,7 @@ public interface DataService {
     public List<Publisher> cachePublisherAll();
     public Offer cacheOfferFirst(Integer id);
     public PublisherOffer cachePublisherOfferFirst(String key, Integer publisherid,Integer offerid);
+    public Publisher cachePublisherByToken(String token);
 
     public Offer cachePubliserOffer(Publisher publisher);
 
