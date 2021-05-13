@@ -73,19 +73,17 @@ public class OffersQueryAPI {
         if (StringUtils.isBlank(token)) {
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
-        Publisher publisher = null;
-        if(!CacheData.PUB_TOKEN.containsKey(token)){
-            publisher = dataService.cachePublisherByToken(token);
-            if(publisher!=null){
-
-                CacheData.PUB_TOKEN.put(token, publisher);
+        Publisher pub = CacheData.PUB_TOKEN.get(token);
+        if(pub==null){
+            pub = dataService.cachePublisherByToken(token);
+            if(pub!=null){
+                CacheData.PUB_TOKEN.put(token, pub);
             }
-        }else{
-            publisher = CacheData.PUB_TOKEN.get(token);
         }
-        if(publisher ==null){
+        if(pub ==null){
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
+        final Publisher publisher = pub;
         if (isCache(token)) {
             return QUERY_CACHE.get(token);
         }
