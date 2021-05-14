@@ -54,7 +54,7 @@ public class ConversionAPI {
 
         /*isevent 1 global 2 event*/
 
-
+        //log
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
