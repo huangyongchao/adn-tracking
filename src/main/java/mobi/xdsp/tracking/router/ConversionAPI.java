@@ -14,6 +14,8 @@ import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,6 +45,7 @@ public class ConversionAPI {
     Mailer mailer;
     @Autowired
     DataService dataService;
+    private static final Logger convlog = LoggerFactory.getLogger("conv");
 
     @GetMapping("/conversion")
     public Object conversion(
@@ -55,6 +58,7 @@ public class ConversionAPI {
         /*isevent 1 global 2 event*/
 
         //log
+        convlog.warn("{},{},{},{},{},{}",clickid,clickidbak,advid,event,isevent);
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
