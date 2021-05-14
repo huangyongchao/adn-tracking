@@ -114,6 +114,7 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
 
                 }
+                activate.setIp(click.getCip());
                 activate.setInserttime(new Date());
                 activate.setOfferuid("" + click.getOid());
                 activate.setClickid(click.getClickId());
