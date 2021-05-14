@@ -99,17 +99,48 @@ public class AdTool {
         return clickid.toString();
     }
 
-    public static String createClickIdByMMP(Integer publisherid,Integer offerid) {
-        return  "DI" + publisherid + "-" + offerid + "-{click_id}";
+    public static String createClickIdByMMP(Integer publisherid, Integer offerid) {
+        return "DI" + publisherid + "-" + offerid + "-{click_id}";
     }
 
-    public static  Click unpackClickId(String clickid) {
+    public static Click unpackClickId(String clickid) {
         Click click = new Click();
+
+        if (clickid != null && clickid.startsWith("PE")) {
+            int idx = clickid.indexOf("N");
+            String pubid = clickid.substring(12, idx);
+            String offerid = clickid.substring(idx + 1, clickid.length() - 3);
+            click.setOid(Integer.parseInt(offerid));
+            click.setPid(Integer.parseInt(pubid));
+            click.setId(clickid);
+
+        } else if (clickid.startsWith("DI")) {
+            String[] ss = clickid.split("-");
+            if (ss.length >= 2) {
+                String pubid = ss[0].substring(2);
+                String offerid = ss[1];
+                click.setOid(Integer.parseInt(offerid));
+                click.setPid(Integer.parseInt(pubid));
+                click.setId(clickid);
+
+            }
+
+        }
 /*
+        PE05140930241005N2311784IRu
         DI1001-2311671-{click_id}
 */
 
         return click;
+    }
+
+    public static void main(String[] args) {
+
+        String clickid = "PE05140930241005N2311784IRu";
+        String clickid1 = "DI1001-2311671-{click_id}";
+        System.out.println(unpackClickId(clickid));
+        System.out.println(unpackClickId(clickid1));
+
     }
 
 }
