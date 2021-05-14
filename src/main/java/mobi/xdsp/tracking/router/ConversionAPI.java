@@ -1,6 +1,7 @@
 package mobi.xdsp.tracking.router;
 
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.entity.Activate;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
@@ -45,11 +46,21 @@ public class ConversionAPI {
             clickid = clickidbak;
         }
 
+        /**
+         * 1 计算Ctit <30秒或者>2天的都 不回发
+         * 1 获取publisher offer
+         * 2 获取cap
+         * 3 定时统计每天 publisher _offer conversion
+         * 4 计算cap
+         * 3
+         */
+        Activate activate = new Activate();
         if (clickid.startsWith("PE")) {
             //Pubearn 平台点击
             Optional<Click> clickOptional = repository.findById(clickid);
             if (clickOptional.isPresent()) {
                 Click click = clickOptional.get();
+
             }
 
 

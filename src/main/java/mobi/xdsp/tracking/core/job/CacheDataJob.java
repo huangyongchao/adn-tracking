@@ -4,13 +4,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
+import mobi.xdsp.tracking.dto.enums.PBStateE;
 import mobi.xdsp.tracking.dto.enums.SychLockE;
-import mobi.xdsp.tracking.entity.Offer;
-import mobi.xdsp.tracking.entity.OfferExample;
-import mobi.xdsp.tracking.entity.PublisherOffer;
-import mobi.xdsp.tracking.entity.PublisherOfferExample;
+import mobi.xdsp.tracking.entity.*;
+import mobi.xdsp.tracking.mapper.ActivateMapper;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,9 +27,11 @@ import java.util.Set;
 @Component
 public class CacheDataJob {
     @Autowired
-    OfferMapper offerMapper;
+    private OfferMapper offerMapper;
     @Autowired
-    PublisherOfferMapper publisherOfferMapper;
+    private ActivateMapper activateMapper;
+    @Autowired
+    private PublisherOfferMapper publisherOfferMapper;
     @Value("${clickcapweight}")
     private float clickcapweight;
     @Autowired
@@ -125,5 +128,16 @@ public class CacheDataJob {
 
     }
 
+
+    @Scheduled(cron = "* 29,59 * * * ?")
+    public void capCache() {
+        ActivateExample example = new ActivateExample();
+        Date day  = new Date();
+        example.createCriteria().andStatusEqualTo(PBStateE.VALID.code).andChannelidGreaterThan(0)
+                .andInserttimeBetween(
+                DateUtils.addDays(day, -1), DateUtils.addDays(day, 1));
+
+        List<Activate> list = activateMapper.selectByExample(example);
+    }
 
 }
