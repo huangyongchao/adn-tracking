@@ -2,6 +2,7 @@ package mobi.xdsp.tracking.router;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
@@ -170,7 +171,7 @@ public class OffersQueryAPI {
                         }
                         /*直接走上游链接*/
                         if (publisherOffer.getTrackingtype() != null && publisherOffer.getTrackingtype() == 1) {
-                            String p = "DI" + publisher.getId() + "-" + n.getId() + "-{click_id}";
+                            String p = AdTool.createClickIdByMMP(n.getId(), n.getId());
                             String track = n.getTrackurl();
 
                             if (track.indexOf("{click_id}") > -1) {

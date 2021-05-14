@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.router;
 
+import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.AddressUtils;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.Click;
@@ -137,7 +138,7 @@ public class TrackingAPI {
         /*
         生成clickid
          */
-        click.setId(handler.getClickId(click));
+        click.setId(AdTool.createClickIdByPlatform(click));
         /*
          * 混量
          */

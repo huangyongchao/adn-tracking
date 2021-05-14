@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.OsE;
 import mobi.xdsp.tracking.entity.Offer;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -86,15 +88,22 @@ public class AdTool {
 
     }
 
-    public String getClickIdByPlatform() {
-        return "";
+    public static String createClickIdByPlatform(Click click) {
+        StringBuilder clickid = new StringBuilder("PE");
+        clickid.append(DateFormatUtils.format(click.getCt(), "MMddHHmmss"));
+        clickid.append(click.getPid());
+        clickid.append("N");
+        clickid.append(click.getOid());
+        clickid.append(RandomStringUtils.randomAlphabetic(3));
+
+        return clickid.toString();
     }
 
-    public String getClickIdByMMP() {
-        return "";
+    public static String createClickIdByMMP(Integer publisherid,Integer offerid) {
+        return  "DI" + publisherid + "-" + offerid + "-{click_id}";
     }
 
-    public Click unpackClickId(String clickid) {
+    public static  Click unpackClickId(String clickid) {
         Click click = new Click();
 /*
         DI1001-2311671-{click_id}

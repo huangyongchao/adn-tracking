@@ -26,17 +26,6 @@ public class TrackingHandler {
     @Autowired
     Mailer mailer;
 
-    public String getClickId(Click click) {
-
-        StringBuilder clickid = new StringBuilder("PE");
-        clickid.append(DateFormatUtils.format(click.getCt(), "MMddHHmmss"));
-        clickid.append(click.getPid());
-        clickid.append("N");
-        clickid.append(click.getOid());
-        clickid.append(RandomStringUtils.randomAlphabetic(3));
-
-        return clickid.toString();
-    }
 
 
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
