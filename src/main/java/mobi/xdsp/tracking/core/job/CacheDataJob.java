@@ -140,4 +140,10 @@ public class CacheDataJob {
         List<Activate> list = activateMapper.selectByExample(example);
     }
 
+    public static void main(String[] args) {
+        Date day  = new Date();
+        System.out.println(DateUtils.addDays(day, -1));
+        System.out.println( DateUtils.addDays(day, 1));
+    }
+
 }

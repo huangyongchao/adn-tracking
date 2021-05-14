@@ -10,6 +10,7 @@ import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import sun.misc.Cache;
 
 import java.util.List;
 
@@ -83,9 +84,58 @@ public class DataServiceLocalImpl implements DataService {
         PublisherExample example = new PublisherExample();
         example.createCriteria().andTokenEqualTo(token);
         List<Publisher> list = publisherMapper.selectByExample(example);
-        if(!CollectionUtils.isEmpty(list)){
+        if (!CollectionUtils.isEmpty(list)) {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public Publisher getPublisherCache(Integer publisherid) {
+        Publisher publisher = CacheData.PUB_CACHE.get(publisherid);
+        if (publisher == null) {
+            publisher = publisherMapper.selectByPrimaryKey(publisherid);
+            if (publisher != null) {
+
+                CacheData.PUB_CACHE.put(publisherid, publisher);
+            }
+
+        }
+        return publisher;
+    }
+
+    @Override
+    public Offer getOfferCache(Integer id) {
+        Offer offer = CacheData.OFF_CACHE.get(id);
+        if (offer == null) {
+            OfferExample example = new OfferExample();
+            example.createCriteria().andIdEqualTo(id);
+            List<Offer> offers = offerMapper.selectByExample(example);
+            if (!CollectionUtils.isEmpty(offers)) {
+                offer = offers.get(0);
+                CacheData.OFF_CACHE.put(id, offer);
+            }
+
+        }
+        return offer;
+    }
+
+    @Override
+    public PublisherOffer getPubOfferCache(Integer pubid, Integer offid) {
+        String pokey = pubid + "_" + offid;
+
+        PublisherOffer po = CacheData.PUB_OFF_CACHE.get(pokey);
+        if (po == null) {
+            PublisherOfferExample example = new PublisherOfferExample();
+            example.createCriteria().andPublisheridEqualTo(pubid).andOfferidEqualTo(offid);
+
+            List<PublisherOffer> publisherOfferList = publisherOfferMapper.selectByExample(example);
+            if(!CollectionUtils.isEmpty(publisherOfferList)){
+                po = publisherOfferList.get(0);
+                CacheData.PUB_OFF_CACHE.put(pokey, po);
+
+            }
+        }
+        return po;
     }
 }

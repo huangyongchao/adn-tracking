@@ -27,7 +27,7 @@ public class BaseDataLoadJob {
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger logger = LoggerFactory.getLogger(BaseDataLoadJob.class);
 
-    @Scheduled(cron = "1 0,30 * * * ?")
+    @Scheduled(cron = "30 1 1,11,21,31,41,51 * * * ?")
     public void cacheAffiliate(){
 
         try {
@@ -44,7 +44,7 @@ public class BaseDataLoadJob {
 
     }
 
-    @Scheduled(cron = "1 1,31 * * * ?")
+    @Scheduled(cron = "1 1,11,21,31,41,51 * * * ?")
     public void cachePublisher(){
         try {
 

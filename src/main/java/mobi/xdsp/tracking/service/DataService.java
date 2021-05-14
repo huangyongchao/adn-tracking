@@ -18,7 +18,8 @@ public interface DataService {
     public Offer cachePubliserOffer(Publisher publisher);
 
 
-    public Offer getOfferCache(Integer id);
+    public Offer getOfferCache(Integer offerid);
+    public Publisher getPublisherCache(Integer publisherid);
 
     public PublisherOffer getPubOfferCache(Integer pubid, Integer offid);
 }
