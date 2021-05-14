@@ -2,10 +2,14 @@ package mobi.xdsp.tracking.router;
 
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Activate;
+import mobi.xdsp.tracking.entity.Offer;
+import mobi.xdsp.tracking.entity.Publisher;
+import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
+import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +34,9 @@ public class ConversionAPI {
 
     @Autowired
     PublisherOfferMapper publisherOfferMapper;
+
+    @Autowired
+    DataService dataService;
 
     @GetMapping("/conversion")
     public Object conversion(
@@ -60,7 +67,9 @@ public class ConversionAPI {
             Optional<Click> clickOptional = repository.findById(clickid);
             if (clickOptional.isPresent()) {
                 Click click = clickOptional.get();
-
+                Offer offer = dataService.getOfferCache(click.getOid());
+                Publisher publisher = dataService.getPublisherCache(click.getPid());
+                PublisherOffer  puboffer = dataService.getPubOfferCache(click.getPid(),click.getOid());
 
             }
 
