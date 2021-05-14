@@ -27,6 +27,8 @@ public class Activate {
 
     private String affiliateid;
 
+    private String ctit;
+
     private String offerid;
 
     private String offeruid;
@@ -301,5 +303,13 @@ public class Activate {
 
     public void setAppname(String appname) {
         this.appname = appname == null ? null : appname.trim();
+    }
+
+    public String getCtit() {
+        return ctit;
+    }
+
+    public void setCtit(String ctit) {
+        this.ctit = ctit;
     }
 }

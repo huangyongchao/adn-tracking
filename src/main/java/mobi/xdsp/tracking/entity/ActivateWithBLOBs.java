@@ -11,6 +11,7 @@ public class ActivateWithBLOBs extends Activate {
 
     private String affsub3;
 
+
     public String getClickid() {
         return clickid;
     }

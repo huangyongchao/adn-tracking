@@ -98,20 +98,31 @@ public class ConversionAPI {
                 activate.setActivatetime(new Date());
                 activate.setActivatedate(DateTimeUtil.getStringDate());
                 activate.setAppid(offer.getAppid());
+                activate.setOfferid(offer.getOfferid());
+                activate.setOffername(offer.getOffername());
                 activate.setAppname(offer.getAppname());
                 activate.setChannelid(click.getPid());
                 if (click.getCt() != null) {
                     activate.setClickdate(DateTimeUtil.dateToStrLong(click.getCt()));
                     activate.setClicktime(DateTimeUtil.dateToStrLong(click.getCt()));
+                    activate.setCtit(DateTimeUtil.getDatePoor(activate.getActivatetime(),click.getCt()));
+
                 } else {
                     activate.setClickdate(DateTimeUtil.getStringDate());
                     activate.setClicktime(DateTimeUtil.getStringDate());
+                    activate.setCtit("unknow");
                     activate.setStatus(PBStateE.INVALID.code);
                 }
                 activate.setEvent(event);
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
                 activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                if(StringUtils.isNotBlank(offer.getCreatives())){
+                    if(!offer.getCreatives().equals(event)){
+                        activate.setDefaultpayout(0f);
+
+                    }
+                }
                 activate.setDeviceid(click.getIdfa() == null ? click.getGaid() : click.getIdfa());
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("Error CLick");
