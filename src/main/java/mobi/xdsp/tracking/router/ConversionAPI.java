@@ -123,6 +123,12 @@ public class ConversionAPI {
 
                     }
                 }
+                if("1".equals(advid)){
+                    if(activate.getDefaultpayout()>10&&"install".equals(event)){
+                        activate.setDefaultpayout(0f);
+
+                    }
+                }
                 activate.setDeviceid(click.getIdfa() == null ? click.getGaid() : click.getIdfa());
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("Error CLick");
