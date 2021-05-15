@@ -71,7 +71,7 @@ public class TrackingAPI {
         return null;
 
     }
-
+    @CrossOrigin
     @GetMapping("/click")
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
                             @RequestParam(value = "offer", required = true) Integer offerid,
