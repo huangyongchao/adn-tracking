@@ -153,7 +153,7 @@ public class ConversionAPI {
                 activate.setClicktime(DateTimeUtil.getStringDate());
                 activate.setStatus(PBStateE.INVALID.code);
             }
-            if (activate.getStatus() != null) {
+            if (activate.getStatus() == null) {
                 activate.setStatus(PBStateE.VALID.code);
                 //发PB
             }
