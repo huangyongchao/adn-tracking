@@ -41,7 +41,7 @@ public class CounterJob {
     @PostConstruct
     public void AeroSpike(){
         Click click = new Click();
-        String id = String.valueOf(System.currentTimeMillis());
+        String id = String.valueOf("mytestclick");
         click.setId(id);
         click.setAppN("Test Name");
         repository.save(click);
@@ -52,8 +52,6 @@ public class CounterJob {
         }
         System.out.println(repository.findById(id).toString());
         logger.info(repository.findById(id).toString());
-        logger.info(JSONObject.toJSONString(CacheData.AFF_CACHE));
-        logger.info(JSONObject.toJSONString(CacheData.PUB_CACHE));
     }
 
 }
