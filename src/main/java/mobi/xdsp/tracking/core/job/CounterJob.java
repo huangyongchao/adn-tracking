@@ -44,7 +44,7 @@ public class CounterJob {
         String id = String.valueOf("mytestclick");
         click.setId(id);
         click.setAppN("Test Name");
-        repository.save(click);
+       // repository.save(click);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
