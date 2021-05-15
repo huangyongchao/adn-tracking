@@ -2,7 +2,6 @@ package mobi.xdsp.tracking.router;
 
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.AddressUtils;
-import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.ResponseModel;
@@ -15,27 +14,18 @@ import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.service.TrackingHandler;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.HttpClientUtils;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.util.Date;
+
 @CrossOrigin
 @RestController
 public class TrackingAPI {
@@ -43,34 +33,10 @@ public class TrackingAPI {
     private float clickcapweight;
     @Autowired
     private DataService dataService;
-
-
     @Autowired
     private TrackingHandler handler;
 
-    @GetMapping("/testclick")
-    public Object testclick(
-                            @RequestParam(value = "url",required = true, defaultValue = "") String testlink,
-                            HttpServletRequest request) throws Exception {
 
-
-
-
-        // 模拟（创建）一个浏览器用户
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(testlink);
-        CloseableHttpResponse response = client.execute(httpGet);
-        // 获取内容
-        HttpEntity entity = response.getEntity();
-        InputStream content = entity.getContent();
-        byte[] byteArr = new byte[content.available()];
-        content.read(byteArr);  // 将输入流写入到字节数组中
-        String result = new String(byteArr);
-        System.out.println("Successfully：" + result);
-
-        return null;
-
-    }
     @CrossOrigin
     @GetMapping("/click")
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
