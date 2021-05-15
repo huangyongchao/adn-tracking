@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.Date;
-
+@CrossOrigin
 @RestController
 public class TrackingAPI {
     @Value("${clickcapweight}")
