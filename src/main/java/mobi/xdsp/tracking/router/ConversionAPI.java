@@ -58,7 +58,7 @@ public class ConversionAPI {
         /*isevent 1 global 2 event*/
 
         //log
-        convlog.warn("{},{},{},{},{},{}",clickid,clickidbak,advid,event,isevent);
+        convlog.warn("{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent);
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
@@ -105,7 +105,7 @@ public class ConversionAPI {
                 if (click.getCt() != null) {
                     activate.setClickdate(DateTimeUtil.dateToStrLong(click.getCt()));
                     activate.setClicktime(DateTimeUtil.dateToStrLong(click.getCt()));
-                    activate.setCtit(DateTimeUtil.getDatePoor(activate.getActivatetime(),click.getCt()));
+                    activate.setCtit(DateTimeUtil.getDatePoor(activate.getActivatetime(), click.getCt()));
 
                 } else {
                     activate.setClickdate(DateTimeUtil.getStringDate());
@@ -118,8 +118,8 @@ public class ConversionAPI {
                 activate.setCountry(offer.getCountries());
                 activate.setDefaultpayout(puboffer.getPayout().floatValue());
 
-                if(AdTool.is3pt(offer.getTrackurl())){
-                    if(!(""+offer.getCreatives()).equalsIgnoreCase(event)){
+                if (AdTool.is3pt(offer.getTrackurl())) {
+                    if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
                         activate.setDefaultpayout(0f);
 
                     }
@@ -138,7 +138,10 @@ public class ConversionAPI {
                 activate.setAffsub1(click.getS1());
                 activate.setAffsub2(click.getS2());
                 activate.setSubid1(click.getMixSub());
-                if (activate.getStatus() == null){
+                if (StringUtils.isBlank(activate.getClickid())) {
+                    activate.setClickid(clickid);
+                }
+                if (activate.getStatus() == null) {
                     //计算CTIT
                     //计算CAP
 
