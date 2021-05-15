@@ -38,7 +38,6 @@ import java.io.InputStream;
 import java.util.Date;
 
 @RestController
-@CrossOrigin
 public class TrackingAPI {
     @Value("${clickcapweight}")
     private float clickcapweight;
@@ -99,8 +98,6 @@ public class TrackingAPI {
         //http://127.0.0.1:9192/click?pid=1005&offer=2311784&pub_sub=814434508&idfa=2012A207-2D15-4090-A0FB-F557DAF2BD25&click_id=270441375
 
         final String clientip = AddressUtils.getClientIpAddr(request);
-        System.out.println(clientip);
-        System.out.println(publisherid);
         if (publisherid == null || !CacheData.PUB_CACHE.containsKey(publisherid)) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Publisher not activate");
         }
