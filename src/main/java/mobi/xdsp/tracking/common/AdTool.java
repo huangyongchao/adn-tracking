@@ -1,6 +1,5 @@
 package mobi.xdsp.tracking.common;
 
-import com.google.common.collect.Lists;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.OsE;
 import mobi.xdsp.tracking.entity.Offer;
@@ -10,13 +9,26 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Random;
 
 /**
  * @author huangyongchao
  */
 public class AdTool {
+
+    public static boolean isStore(String url) {
+        if (url.indexOf("apple.com") > 0 || url.indexOf("google.com") > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean is3pt(String url) {
+        if (url.indexOf(".adjust.") > 0 || url.indexOf(".appsflyer.com") > 0 || url.indexOf(".app.link") > 0) {
+            return true;
+        }
+        return false;
+    }
+
     public static String urlEncode(Offer offer, String url) {
 
         if (url.indexOf("{") > -1) {

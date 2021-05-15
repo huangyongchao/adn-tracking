@@ -117,14 +117,9 @@ public class ConversionAPI {
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
                 activate.setDefaultpayout(puboffer.getPayout().floatValue());
-                if(StringUtils.isNotBlank(offer.getCreatives())){
-                    if(!offer.getCreatives().equals(event)){
-                        activate.setDefaultpayout(0f);
 
-                    }
-                }
-                if("1".equals(advid)){
-                    if(activate.getDefaultpayout()>10&&"install".equals(event)){
+                if(AdTool.is3pt(offer.getTrackurl())){
+                    if(!(""+offer.getCreatives()).equalsIgnoreCase(event)){
                         activate.setDefaultpayout(0f);
 
                     }
