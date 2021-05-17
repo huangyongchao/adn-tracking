@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.ProxyClient;
+import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherExample;
+import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +39,9 @@ public class TestingAPI {
     @Autowired
     private TrackingHandler handler;
     @Autowired
+    private AerospikeClickRepository repository;
+
+    @Autowired
     private DataService dataService;
 
     @GetMapping("/testpb")
@@ -54,14 +59,14 @@ public class TestingAPI {
                             @RequestParam(value = "appname", defaultValue = "") String appname,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        if(publisherid==null){
+        if (publisherid == null) {
             return "Publisher not exist";
         }
         Publisher p = dataService.getPublisherCache(publisherid);
-        if(p==null){
+        if (p == null) {
             return "Publisher not exist";
         }
-        if (StringUtils.isBlank(p.getPostbackurl())||p.getPostbackurl().indexOf("{click_id}")<0) {
+        if (StringUtils.isBlank(p.getPostbackurl()) || p.getPostbackurl().indexOf("{click_id}") < 0) {
             return "Publisher PostBack set error";
         }
 
@@ -171,7 +176,7 @@ public class TestingAPI {
             }
             resp.put("status", true);
             resp.put("params", params);
-            if(StringUtils.isNotBlank(q)){
+            if (StringUtils.isNotBlank(q)) {
                 resp.put("q", q);
             }
         } else {
@@ -181,5 +186,20 @@ public class TestingAPI {
         return resp;
 
     }
+
+    @GetMapping("/saveclick")
+    public Object saveclick(@RequestParam(name = "id") String id) {
+        Click click = new Click();
+        click.setId(id);
+        click.setAppN("Test Name");
+        repository.save(click);
+        return id;
+    }
+
+    @GetMapping("/getclick")
+    public Object getclick(@RequestParam(name = "id") String id) {
+        return repository.findById(id);
+    }
+
 
 }

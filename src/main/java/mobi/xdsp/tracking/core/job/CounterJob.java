@@ -40,18 +40,7 @@ public class CounterJob {
     }
     @PostConstruct
     public void AeroSpike(){
-        Click click = new Click();
-        String id = String.valueOf("mytestclick");
-        click.setId(id);
-        click.setAppN("Test Name");
-       // repository.save(click);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(repository.findById(id).toString());
-        logger.info(repository.findById(id).toString());
+
     }
 
 }
