@@ -189,6 +189,7 @@ public class TestingAPI {
 
     @GetMapping("/saveclick")
     public Object saveclick(@RequestParam(name = "id") String id) {
+        //http://openapi.pubearn.com/saveclick?id=hyc
         Click click = new Click();
         click.setId(id);
         click.setAppN("Test Name");
@@ -198,6 +199,7 @@ public class TestingAPI {
 
     @GetMapping("/getclick")
     public Object getclick(@RequestParam(name = "id") String id) {
+        //http://openapi.pubearn.com/getclick?id=hyc
         return repository.findById(id);
     }
 
