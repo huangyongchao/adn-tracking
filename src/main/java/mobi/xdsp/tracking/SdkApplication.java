@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableScheduling
 @EnableAutoConfiguration
 @MapperScan("mobi.xdsp.tracking.mapper")
-public class SdkApplication extends WebMvcConfigurerAdapter {
+public class SdkApplication{
 
     public static void main(String[] args) {
         System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow", "$|{}[]()><");
@@ -20,13 +20,4 @@ public class SdkApplication extends WebMvcConfigurerAdapter {
         SpringApplication.run(SdkApplication.class, args);
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowCredentials(true)
-                .allowedHeaders("*")
-                .allowedOrigins("*")
-                .allowedMethods("*");
-        super.addCorsMappings(registry);
-    }
 }
