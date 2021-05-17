@@ -155,8 +155,8 @@ public class TestingAPI {
         }
         resp.put("tracks", redirects);
         if (isourend) {
-            URL url = new URL(testlink);
-            String q = url.getQuery();
+            int i = testlink.indexOf("?");
+            String q = testlink.substring(i);
             String[] qs = q.split("&");
             List<Map> params = Lists.newArrayList();
             for (String s : qs) {
