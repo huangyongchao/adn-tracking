@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin
 @RestController
 public class TestingAPI {
 
@@ -34,7 +33,6 @@ public class TestingAPI {
     @Autowired
     private DataService dataService;
 
-    @CrossOrigin
     @GetMapping("/testpb")
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
                             @RequestParam(value = "pub_sub", defaultValue = "") String pubSub,
@@ -102,7 +100,6 @@ public class TestingAPI {
         return HttpClientUtil.get(track);
     }
 
-    @CrossOrigin
     @GetMapping("/testclick")
     public Object testclick(
             @RequestParam(value = "url", required = true, defaultValue = "") String testlink,
