@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +111,7 @@ public class TestingAPI {
         Map resp = Maps.newHashMap();
         boolean isourend = false;
         List<Map> redirects = Lists.newArrayList();
+        testlink = URLDecoder.decode(testlink, "utf-8");
         Map o = new HashMap();
         o.put("status", 200);
         o.put("url", testlink);
