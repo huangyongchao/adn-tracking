@@ -16,6 +16,8 @@ public class TomcatConf {
             @Override
             public void customize(Connector connector) {
                 connector.setProperty("relaxedQueryChars", "$|{}[]()><");
+                connector.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,TLSv3");
+
             }
         });
         return factory;

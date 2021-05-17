@@ -3,15 +3,20 @@ package mobi.xdsp.tracking.router;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.HttpClientUtil;
+import mobi.xdsp.tracking.common.ProxyClient;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherExample;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,7 +130,17 @@ public class TestingAPI {
 
                 CloseableHttpClient client = HttpClients.createDefault();
                 HttpGet httpGet = new HttpGet(testlink);
-                CloseableHttpResponse response = client.execute(httpGet);
+
+                httpGet.setProtocolVersion(HttpVersion.HTTP_1_1);
+                httpGet.setHeader(HttpHeaders.USER_AGENT, " curl/7.61.1");
+                httpGet.setHeader(HttpHeaders.ACCEPT, "*/*");
+                httpGet.setHeader(HttpHeaders.PRAGMA, "no-cache");
+                httpGet.setHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+
+                httpGet.setHeader(HttpHeaders.ACCEPT_LANGUAGE, "en-US" + ";q=0.9,en-US;q=0.8,en;q=0.7");
+                httpGet.setHeader("upgrade-insecure-requests", "1");
+
+                CloseableHttpResponse response = ProxyClient.getClient().execute(httpGet);
                 testlink = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                 Map o1 = new HashMap();
                 o1.put("status", response.getStatusLine().getStatusCode());

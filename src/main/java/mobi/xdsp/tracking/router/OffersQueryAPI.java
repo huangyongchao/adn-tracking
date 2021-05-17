@@ -85,6 +85,10 @@ public class OffersQueryAPI {
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
         final Publisher publisher = pub;
+        if(StateE.INVALID.code ==publisher.getState()){
+            return new OfferApiResponse(false, "Publisher have been stop.", null, false);
+
+        }
         if (isCache(token)) {
             return QUERY_CACHE.get(token);
         }
@@ -171,7 +175,7 @@ public class OffersQueryAPI {
                         }
                         /*直接走上游链接*/
                         if (publisherOffer.getTrackingtype() != null && publisherOffer.getTrackingtype() == 1) {
-                            String p = AdTool.createClickIdByMMP(n.getId(), n.getId());
+                            String p = AdTool.createClickIdByMMP(publisher.getId(), n.getId());
                             String track = n.getTrackurl();
 
                             if (track.indexOf("{click_id}") > -1) {
