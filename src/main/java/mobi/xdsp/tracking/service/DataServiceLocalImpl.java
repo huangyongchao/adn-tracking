@@ -105,6 +105,9 @@ public class DataServiceLocalImpl implements DataService {
 
     @Override
     public Offer getOfferCache(Integer id) {
+        if(id==null){
+            return null;
+        }
         Offer offer = CacheData.OFF_CACHE.get(id);
         if (offer == null) {
             OfferExample example = new OfferExample();
