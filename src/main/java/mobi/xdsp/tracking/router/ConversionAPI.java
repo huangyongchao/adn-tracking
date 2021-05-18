@@ -223,10 +223,10 @@ public class ConversionAPI {
         }
         try {
             pblog.warn(tid + ":" + track);
-            // String resp = HttpClientUtil.get(track);
+            String resp = HttpClientUtil.get("");
             sentstatus = true;
             pblog.warn(tid + ":" + "resp");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             pblog.warn(tid + ":" + "senderror");
         }
