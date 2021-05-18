@@ -59,7 +59,9 @@ public class AdTool {
         if (url.indexOf("<") > -1) {
             url = StringUtils.replaceAll(url, "<", "%3C");
         }
-
+        if (url.indexOf("\\") > -1) {
+            url = StringUtils.replaceAll(url, "\\", "%5C");
+        }
         return url;
     }
 
