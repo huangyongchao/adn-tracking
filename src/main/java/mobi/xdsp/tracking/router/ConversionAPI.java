@@ -149,6 +149,8 @@ public class ConversionAPI {
                 activate.setSubid1(click.getMixSub());
                 if (StringUtils.isBlank(activate.getClickid())) {
                     activate.setClickid(clickid);
+                    activate.setStatus(PBStateE.INVALID.code);
+
                 }
                 if (activate.getStatus() == null) {
                     //计算CTIT
