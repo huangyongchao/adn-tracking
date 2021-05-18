@@ -2,8 +2,10 @@ package mobi.xdsp.tracking.router;
 
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.DateTimeUtil;
+import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.dto.enums.PBNoticeStateE;
 import mobi.xdsp.tracking.dto.enums.PBStateE;
 import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.ActivateMapper;
@@ -12,6 +14,7 @@ import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -22,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 public class ConversionAPI {
@@ -46,6 +51,7 @@ public class ConversionAPI {
     @Autowired
     DataService dataService;
     private static final Logger convlog = LoggerFactory.getLogger("conv");
+    private static final Logger pblog = LoggerFactory.getLogger("pb");
 
     @GetMapping("/conversion")
     public Object conversion(
@@ -74,6 +80,7 @@ public class ConversionAPI {
              */
             ActivateWithBLOBs activate = new ActivateWithBLOBs();
             Click click = null;
+            boolean mmplink = false;
             if (clickid.startsWith("PE")) {
                 //Pubearn 平台点击
                 Optional<Click> clickOptional = repository.findById(clickid);
@@ -88,8 +95,14 @@ public class ConversionAPI {
             } else if (clickid.startsWith("DI")) {
                 //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
                 click = AdTool.unpackClickId(clickid);
+                mmplink = true;
             }
+
             if (click != null) {
+                boolean sentpb = false;
+                if (StringUtils.isNotBlank(click.getClickId())) {
+                    sentpb = true;
+                }
                 Offer offer = dataService.getOfferCache(click.getOid());
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
@@ -111,7 +124,6 @@ public class ConversionAPI {
                     activate.setClickdate(DateTimeUtil.getStringDate());
                     activate.setClicktime(DateTimeUtil.getStringDate());
                     activate.setCtit("unknow");
-                    activate.setStatus(PBStateE.INVALID.code);
                 }
                 activate.setEvent(event);
                 activate.setCosttype(offer.getPayouttype());
@@ -121,14 +133,11 @@ public class ConversionAPI {
                 if (AdTool.is3pt(offer.getTrackurl())) {
                     if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
                         activate.setDefaultpayout(0f);
-
                     }
                 }
                 activate.setDeviceid(click.getIdfa() == null ? click.getGaid() : click.getIdfa());
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("Error CLick");
-                    activate.setStatus(PBStateE.INVALID.code);
-
                 }
                 activate.setIp(click.getCip());
                 activate.setInserttime(new Date());
@@ -146,6 +155,19 @@ public class ConversionAPI {
                     //计算CAP
 
                 }
+                if (activate.getStatus() == null) {
+                    activate.setStatus(PBStateE.VALID.code);
+                }
+
+                if (activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code) {
+                    //发PB
+                    boolean res = sendPb(publisher, offer, puboffer, click);
+                    if (res) {
+                        activate.setNoticestatus(PBNoticeStateE.SENT.code);
+
+                    }
+                }
+                int r = activateMapper.insertSelective(activate);
 
 
             } else {
@@ -155,18 +177,61 @@ public class ConversionAPI {
                 activate.setClickdate(DateTimeUtil.getStringDate());
                 activate.setClicktime(DateTimeUtil.getStringDate());
                 activate.setStatus(PBStateE.INVALID.code);
+                int r = activateMapper.insertSelective(activate);
+
             }
-            if (activate.getStatus() == null) {
-                activate.setStatus(PBStateE.VALID.code);
-                //发PB
-            }
-            activateMapper.insertSelective(activate);
+
         } catch (Exception e) {
             mailer.sendErrorMail("Conversion Error: SaveConversion", e.getMessage() + "\n" + e.getLocalizedMessage());
             e.printStackTrace();
         }
 
         return "ok";
+    }
+
+    public boolean sendPb(Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click) {
+        String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
+        String track = publisher.getPostbackurl();
+        pblog.warn(tid + ":" + track);
+        boolean sentstatus = false;
+        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
+            track = StringUtils.replaceAll(track, "\\{click_id}", click.getClickId());
+        }
+        if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(click.getIdfa())) {
+            track = StringUtils.replaceAll(track, "\\{idfa}", click.getIdfa());
+        }
+
+        if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
+            track = StringUtils.replaceAll(track, "\\{gaid}", click.getGaid());
+        }
+
+        if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(click.getPubSub())) {
+            track = StringUtils.replaceAll(track, "\\{pub_sub}", click.getPubSub());
+        }
+
+        if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(offer.getAppid())) {
+            track = StringUtils.replaceAll(track, "\\{appid}", offer.getAppid());
+        }
+        if (track.indexOf("{sub1}") > -1 && StringUtils.isNotBlank(click.getS1())) {
+            track = StringUtils.replaceAll(track, "\\{sub1}", click.getS1());
+        }
+        if (track.indexOf("{sub2}") > -1 && StringUtils.isNotBlank(click.getS2())) {
+            track = StringUtils.replaceAll(track, "\\{sub2}", click.getS2());
+        }
+        if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(click.getIp())) {
+            track = StringUtils.replaceAll(track, "\\{ip}", click.getIp());
+        }
+        try {
+            pblog.warn(tid + ":" + track);
+            // String resp = HttpClientUtil.get(track);
+            sentstatus = true;
+            pblog.warn(tid + ":" + "resp");
+        } catch (IOException e) {
+            e.printStackTrace();
+            pblog.warn(tid + ":" + "senderror");
+        }
+
+        return sentstatus;
     }
 
     public static void main(String[] args) {
