@@ -4,6 +4,7 @@ import com.aerospike.client.AerospikeClient;
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.ExecutorPool;
 import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.core.job.Counter;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Random;
 
 @Service
@@ -55,10 +57,12 @@ public class TrackingHandler {
         });
 
     }
+    //http://tracking.pubearn.com/click?pid=6&offer=2157&pub_sub=testsub&gaid={gaid}&click_id={click_id}&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
 
+    //http://localhost:9192/click?pid=6&offer=2157&pub_sub=testsub&gaid={gaid}&click_id={click_id}&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
 
     public void countClicks(Click click, Offer offer, PublisherOffer publisherOffer) {
-
+        Counter.increaseClick(click.getPid(), click.getOid(), new Date().getHours(), click.getPubSub(), 1);
     }
 
 

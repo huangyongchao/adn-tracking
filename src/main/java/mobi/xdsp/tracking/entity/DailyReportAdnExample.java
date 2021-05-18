@@ -316,63 +316,133 @@ public class DailyReportAdnExample {
             return (Criteria) this;
         }
 
-        public Criteria andStateDateIsNull() {
-            addCriterion("state_date is null");
+        public Criteria andDaystrIsNull() {
+            addCriterion("daystr is null");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateIsNotNull() {
-            addCriterion("state_date is not null");
+        public Criteria andDaystrIsNotNull() {
+            addCriterion("daystr is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateEqualTo(Date value) {
-            addCriterion("state_date =", value, "stateDate");
+        public Criteria andDaystrEqualTo(String value) {
+            addCriterion("daystr =", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateNotEqualTo(Date value) {
-            addCriterion("state_date <>", value, "stateDate");
+        public Criteria andDaystrNotEqualTo(String value) {
+            addCriterion("daystr <>", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateGreaterThan(Date value) {
-            addCriterion("state_date >", value, "stateDate");
+        public Criteria andDaystrGreaterThan(String value) {
+            addCriterion("daystr >", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateGreaterThanOrEqualTo(Date value) {
-            addCriterion("state_date >=", value, "stateDate");
+        public Criteria andDaystrGreaterThanOrEqualTo(String value) {
+            addCriterion("daystr >=", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateLessThan(Date value) {
-            addCriterion("state_date <", value, "stateDate");
+        public Criteria andDaystrLessThan(String value) {
+            addCriterion("daystr <", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateLessThanOrEqualTo(Date value) {
-            addCriterion("state_date <=", value, "stateDate");
+        public Criteria andDaystrLessThanOrEqualTo(String value) {
+            addCriterion("daystr <=", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateIn(List<Date> values) {
-            addCriterion("state_date in", values, "stateDate");
+        public Criteria andDaystrLike(String value) {
+            addCriterion("daystr like", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateNotIn(List<Date> values) {
-            addCriterion("state_date not in", values, "stateDate");
+        public Criteria andDaystrNotLike(String value) {
+            addCriterion("daystr not like", value, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateBetween(Date value1, Date value2) {
-            addCriterion("state_date between", value1, value2, "stateDate");
+        public Criteria andDaystrIn(List<String> values) {
+            addCriterion("daystr in", values, "daystr");
             return (Criteria) this;
         }
 
-        public Criteria andStateDateNotBetween(Date value1, Date value2) {
-            addCriterion("state_date not between", value1, value2, "stateDate");
+        public Criteria andDaystrNotIn(List<String> values) {
+            addCriterion("daystr not in", values, "daystr");
+            return (Criteria) this;
+        }
+
+        public Criteria andDaystrBetween(String value1, String value2) {
+            addCriterion("daystr between", value1, value2, "daystr");
+            return (Criteria) this;
+        }
+
+        public Criteria andDaystrNotBetween(String value1, String value2) {
+            addCriterion("daystr not between", value1, value2, "daystr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHIsNull() {
+            addCriterion("h is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHIsNotNull() {
+            addCriterion("h is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHEqualTo(Integer value) {
+            addCriterion("h =", value, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHNotEqualTo(Integer value) {
+            addCriterion("h <>", value, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHGreaterThan(Integer value) {
+            addCriterion("h >", value, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHGreaterThanOrEqualTo(Integer value) {
+            addCriterion("h >=", value, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHLessThan(Integer value) {
+            addCriterion("h <", value, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHLessThanOrEqualTo(Integer value) {
+            addCriterion("h <=", value, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHIn(List<Integer> values) {
+            addCriterion("h in", values, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHNotIn(List<Integer> values) {
+            addCriterion("h not in", values, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHBetween(Integer value1, Integer value2) {
+            addCriterion("h between", value1, value2, "h");
+            return (Criteria) this;
+        }
+
+        public Criteria andHNotBetween(Integer value1, Integer value2) {
+            addCriterion("h not between", value1, value2, "h");
             return (Criteria) this;
         }
 
@@ -1183,6 +1253,66 @@ public class DailyReportAdnExample {
 
         public Criteria andCountryNotBetween(String value1, String value2) {
             addCriterion("country not between", value1, value2, "country");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateIsNull() {
+            addCriterion("state_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateIsNotNull() {
+            addCriterion("state_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateEqualTo(Date value) {
+            addCriterion("state_date =", value, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateNotEqualTo(Date value) {
+            addCriterion("state_date <>", value, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateGreaterThan(Date value) {
+            addCriterion("state_date >", value, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("state_date >=", value, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateLessThan(Date value) {
+            addCriterion("state_date <", value, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateLessThanOrEqualTo(Date value) {
+            addCriterion("state_date <=", value, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateIn(List<Date> values) {
+            addCriterion("state_date in", values, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateNotIn(List<Date> values) {
+            addCriterion("state_date not in", values, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateBetween(Date value1, Date value2) {
+            addCriterion("state_date between", value1, value2, "stateDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateDateNotBetween(Date value1, Date value2) {
+            addCriterion("state_date not between", value1, value2, "stateDate");
             return (Criteria) this;
         }
 

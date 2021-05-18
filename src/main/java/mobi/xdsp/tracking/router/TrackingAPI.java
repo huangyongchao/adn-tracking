@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.router;
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.AddressUtils;
 import mobi.xdsp.tracking.core.CacheData;
+import mobi.xdsp.tracking.core.ShutdownHookEvent;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
@@ -62,7 +63,10 @@ public class TrackingAPI {
         //http://127.0.0.1:9192/click?pid=4&offer=2176&pub_sub=xxxxsss&idfa=testidfa&click_id=testclick&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
 
         //http://127.0.0.1:9192/click?pid=1005&offer=2311784&pub_sub=814434508&idfa=2012A207-2D15-4090-A0FB-F557DAF2BD25&click_id=270441375
+        if (ShutdownHookEvent.SHUTDOWN) {
+            return new ResponseModel(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Shutdown Server");
 
+        }
         final String clientip = AddressUtils.getClientIpAddr(request);
         if (publisherid == null || !CacheData.PUB_CACHE.containsKey(publisherid)) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Publisher not activate");
@@ -82,7 +86,7 @@ public class TrackingAPI {
         Offer offer = CacheData.OFF_CACHE.get(offerid);
 
         if (offer == null && !CacheData.OFF_SYCN_LOCK.containsKey(offerid)) {
-            offer =  dataService.cacheOfferFirst(offerid);
+            offer = dataService.cacheOfferFirst(offerid);
         }
         if (!CacheData.OFF_SYCN_LOCK.containsKey(offerid) || CacheData.OFF_SYCN_LOCK.get(offerid) != SychLockE.LOCKED.code) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
@@ -112,7 +116,7 @@ public class TrackingAPI {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(3)");
         }
 
-        if(publisherOffer.getClickcap()>0){
+        if (publisherOffer.getClickcap() > 0) {
 
         }
 
@@ -149,7 +153,7 @@ public class TrackingAPI {
         /*
        记录点击
          */
-        handler.writeClicks(click,finalTrackingUrl, offer, publisherOffer);
+        handler.writeClicks(click, finalTrackingUrl, offer, publisherOffer);
         handler.countClicks(click, offer, publisherOffer);
 
         response.sendRedirect(finalTrackingUrl);

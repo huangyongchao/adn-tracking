@@ -5,7 +5,8 @@
     <id column="offer_uid" jdbcType="INTEGER" property="offerUid" />
     <id column="channel_id" jdbcType="SMALLINT" property="channelId" />
     <id column="sub_id" jdbcType="VARCHAR" property="subId" />
-    <id column="state_date" jdbcType="TIMESTAMP" property="stateDate" />
+    <id column="daystr" jdbcType="VARCHAR" property="daystr" />
+    <id column="h" jdbcType="INTEGER" property="h" />
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
     <result column="sub_name" jdbcType="VARCHAR" property="subName" />
@@ -18,6 +19,7 @@
     <result column="app_id" jdbcType="VARCHAR" property="appId" />
     <result column="app_name" jdbcType="VARCHAR" property="appName" />
     <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="state_date" jdbcType="TIMESTAMP" property="stateDate" />
     <result column="worker_id" jdbcType="VARCHAR" property="workerId" />
     <result column="source_campaign" jdbcType="VARCHAR" property="sourceCampaign" />
     <result column="bid_count" jdbcType="INTEGER" property="bidCount" />
@@ -95,11 +97,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    offer_uid, channel_id, sub_id, state_date, id, channel_name, sub_name, advertiser_id, 
+    offer_uid, channel_id, sub_id, daystr, h, id, channel_name, sub_name, advertiser_id, 
     advertiser_name, affiliate_id, affiliate_name, offer_id, offer_name, app_id, app_name, 
-    country, worker_id, source_campaign, bid_count, impr_count, click_count, click_invalid, 
-    cpc_budget, converion_count, converion_payout, confirm_count, confirm_payout, currency, 
-    status, create_time, update_id, update_time, source_affiliate_id
+    country, state_date, worker_id, source_campaign, bid_count, impr_count, click_count, 
+    click_invalid, cpc_budget, converion_count, converion_payout, confirm_count, confirm_payout, 
+    currency, status, create_time, update_id, update_time, source_affiliate_id
   </sql>
   <select id="selectByExample" parameterType="mobi.xdsp.tracking.entity.DailyReportAdnExample" resultMap="BaseResultMap">
     select
@@ -130,14 +132,16 @@
     where offer_uid = #{offerUid,jdbcType=INTEGER}
       and channel_id = #{channelId,jdbcType=SMALLINT}
       and sub_id = #{subId,jdbcType=VARCHAR}
-      and state_date = #{stateDate,jdbcType=TIMESTAMP}
+      and daystr = #{daystr,jdbcType=VARCHAR}
+      and h = #{h,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.DailyReportAdnKey">
     delete from daily_report_adn
     where offer_uid = #{offerUid,jdbcType=INTEGER}
       and channel_id = #{channelId,jdbcType=SMALLINT}
       and sub_id = #{subId,jdbcType=VARCHAR}
-      and state_date = #{stateDate,jdbcType=TIMESTAMP}
+      and daystr = #{daystr,jdbcType=VARCHAR}
+      and h = #{h,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="mobi.xdsp.tracking.entity.DailyReportAdnExample">
     delete from daily_report_adn
@@ -150,27 +154,29 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into daily_report_adn (offer_uid, channel_id, sub_id, 
-      state_date, channel_name, sub_name, 
-      advertiser_id, advertiser_name, affiliate_id, 
-      affiliate_name, offer_id, offer_name, 
-      app_id, app_name, country, 
-      worker_id, source_campaign, bid_count, 
-      impr_count, click_count, click_invalid, 
-      cpc_budget, converion_count, converion_payout, 
-      confirm_count, confirm_payout, currency, 
-      status, create_time, update_id, 
-      update_time, source_affiliate_id)
+      daystr, h, channel_name, 
+      sub_name, advertiser_id, advertiser_name, 
+      affiliate_id, affiliate_name, offer_id, 
+      offer_name, app_id, app_name, 
+      country, state_date, worker_id, 
+      source_campaign, bid_count, impr_count, 
+      click_count, click_invalid, cpc_budget, 
+      converion_count, converion_payout, confirm_count, 
+      confirm_payout, currency, status, 
+      create_time, update_id, update_time, 
+      source_affiliate_id)
     values (#{offerUid,jdbcType=INTEGER}, #{channelId,jdbcType=SMALLINT}, #{subId,jdbcType=VARCHAR}, 
-      #{stateDate,jdbcType=TIMESTAMP}, #{channelName,jdbcType=VARCHAR}, #{subName,jdbcType=VARCHAR}, 
-      #{advertiserId,jdbcType=SMALLINT}, #{advertiserName,jdbcType=VARCHAR}, #{affiliateId,jdbcType=SMALLINT}, 
-      #{affiliateName,jdbcType=VARCHAR}, #{offerId,jdbcType=VARCHAR}, #{offerName,jdbcType=VARCHAR}, 
-      #{appId,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
-      #{workerId,jdbcType=VARCHAR}, #{sourceCampaign,jdbcType=VARCHAR}, #{bidCount,jdbcType=INTEGER}, 
-      #{imprCount,jdbcType=INTEGER}, #{clickCount,jdbcType=INTEGER}, #{clickInvalid,jdbcType=INTEGER}, 
-      #{cpcBudget,jdbcType=INTEGER}, #{converionCount,jdbcType=INTEGER}, #{converionPayout,jdbcType=DECIMAL}, 
-      #{confirmCount,jdbcType=INTEGER}, #{confirmPayout,jdbcType=DECIMAL}, #{currency,jdbcType=VARCHAR}, 
-      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{sourceAffiliateId,jdbcType=SMALLINT})
+      #{daystr,jdbcType=VARCHAR}, #{h,jdbcType=INTEGER}, #{channelName,jdbcType=VARCHAR}, 
+      #{subName,jdbcType=VARCHAR}, #{advertiserId,jdbcType=SMALLINT}, #{advertiserName,jdbcType=VARCHAR}, 
+      #{affiliateId,jdbcType=SMALLINT}, #{affiliateName,jdbcType=VARCHAR}, #{offerId,jdbcType=VARCHAR}, 
+      #{offerName,jdbcType=VARCHAR}, #{appId,jdbcType=VARCHAR}, #{appName,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{stateDate,jdbcType=TIMESTAMP}, #{workerId,jdbcType=VARCHAR}, 
+      #{sourceCampaign,jdbcType=VARCHAR}, #{bidCount,jdbcType=INTEGER}, #{imprCount,jdbcType=INTEGER}, 
+      #{clickCount,jdbcType=INTEGER}, #{clickInvalid,jdbcType=INTEGER}, #{cpcBudget,jdbcType=INTEGER}, 
+      #{converionCount,jdbcType=INTEGER}, #{converionPayout,jdbcType=DECIMAL}, #{confirmCount,jdbcType=INTEGER}, 
+      #{confirmPayout,jdbcType=DECIMAL}, #{currency,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{sourceAffiliateId,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.DailyReportAdn">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -187,8 +193,11 @@
       <if test="subId != null">
         sub_id,
       </if>
-      <if test="stateDate != null">
-        state_date,
+      <if test="daystr != null">
+        daystr,
+      </if>
+      <if test="h != null">
+        h,
       </if>
       <if test="channelName != null">
         channel_name,
@@ -222,6 +231,9 @@
       </if>
       <if test="country != null">
         country,
+      </if>
+      <if test="stateDate != null">
+        state_date,
       </if>
       <if test="workerId != null">
         worker_id,
@@ -285,8 +297,11 @@
       <if test="subId != null">
         #{subId,jdbcType=VARCHAR},
       </if>
-      <if test="stateDate != null">
-        #{stateDate,jdbcType=TIMESTAMP},
+      <if test="daystr != null">
+        #{daystr,jdbcType=VARCHAR},
+      </if>
+      <if test="h != null">
+        #{h,jdbcType=INTEGER},
       </if>
       <if test="channelName != null">
         #{channelName,jdbcType=VARCHAR},
@@ -320,6 +335,9 @@
       </if>
       <if test="country != null">
         #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="stateDate != null">
+        #{stateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="workerId != null">
         #{workerId,jdbcType=VARCHAR},
@@ -392,8 +410,11 @@
       <if test="record.subId != null">
         sub_id = #{record.subId,jdbcType=VARCHAR},
       </if>
-      <if test="record.stateDate != null">
-        state_date = #{record.stateDate,jdbcType=TIMESTAMP},
+      <if test="record.daystr != null">
+        daystr = #{record.daystr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.h != null">
+        h = #{record.h,jdbcType=INTEGER},
       </if>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
@@ -430,6 +451,9 @@
       </if>
       <if test="record.country != null">
         country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stateDate != null">
+        state_date = #{record.stateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="record.workerId != null">
         worker_id = #{record.workerId,jdbcType=VARCHAR},
@@ -492,7 +516,8 @@
     set offer_uid = #{record.offerUid,jdbcType=INTEGER},
       channel_id = #{record.channelId,jdbcType=SMALLINT},
       sub_id = #{record.subId,jdbcType=VARCHAR},
-      state_date = #{record.stateDate,jdbcType=TIMESTAMP},
+      daystr = #{record.daystr,jdbcType=VARCHAR},
+      h = #{record.h,jdbcType=INTEGER},
       id = #{record.id,jdbcType=INTEGER},
       channel_name = #{record.channelName,jdbcType=VARCHAR},
       sub_name = #{record.subName,jdbcType=VARCHAR},
@@ -505,6 +530,7 @@
       app_id = #{record.appId,jdbcType=VARCHAR},
       app_name = #{record.appName,jdbcType=VARCHAR},
       country = #{record.country,jdbcType=VARCHAR},
+      state_date = #{record.stateDate,jdbcType=TIMESTAMP},
       worker_id = #{record.workerId,jdbcType=VARCHAR},
       source_campaign = #{record.sourceCampaign,jdbcType=VARCHAR},
       bid_count = #{record.bidCount,jdbcType=INTEGER},
@@ -565,6 +591,9 @@
       <if test="country != null">
         country = #{country,jdbcType=VARCHAR},
       </if>
+      <if test="stateDate != null">
+        state_date = #{stateDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="workerId != null">
         worker_id = #{workerId,jdbcType=VARCHAR},
       </if>
@@ -620,7 +649,8 @@
     where offer_uid = #{offerUid,jdbcType=INTEGER}
       and channel_id = #{channelId,jdbcType=SMALLINT}
       and sub_id = #{subId,jdbcType=VARCHAR}
-      and state_date = #{stateDate,jdbcType=TIMESTAMP}
+      and daystr = #{daystr,jdbcType=VARCHAR}
+      and h = #{h,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.DailyReportAdn">
     update daily_report_adn
@@ -636,6 +666,7 @@
       app_id = #{appId,jdbcType=VARCHAR},
       app_name = #{appName,jdbcType=VARCHAR},
       country = #{country,jdbcType=VARCHAR},
+      state_date = #{stateDate,jdbcType=TIMESTAMP},
       worker_id = #{workerId,jdbcType=VARCHAR},
       source_campaign = #{sourceCampaign,jdbcType=VARCHAR},
       bid_count = #{bidCount,jdbcType=INTEGER},
@@ -656,14 +687,16 @@
     where offer_uid = #{offerUid,jdbcType=INTEGER}
       and channel_id = #{channelId,jdbcType=SMALLINT}
       and sub_id = #{subId,jdbcType=VARCHAR}
-      and state_date = #{stateDate,jdbcType=TIMESTAMP}
+      and daystr = #{daystr,jdbcType=VARCHAR}
+      and h = #{h,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
     insert into daily_report_adn (
     offer_uid,
     channel_id,
     sub_id,
-    state_date,
+    daystr,
+    h,
     channel_name,
     sub_name,
     advertiser_id,
@@ -675,6 +708,7 @@
     app_id,
     app_name,
     country,
+    state_date,
     worker_id,
     source_campaign,
     bid_count,
@@ -699,7 +733,8 @@
       #{item.offerUid,jdbcType=INTEGER},
       #{item.channelId,jdbcType=SMALLINT},
       #{item.subId,jdbcType=VARCHAR},
-      #{item.stateDate,jdbcType=TIMESTAMP},
+      #{item.daystr,jdbcType=VARCHAR},
+      #{item.h,jdbcType=INTEGER},
       #{item.channelName,jdbcType=VARCHAR},
       #{item.subName,jdbcType=VARCHAR},
       #{item.advertiserId,jdbcType=SMALLINT},
@@ -711,6 +746,7 @@
       #{item.appId,jdbcType=VARCHAR},
       #{item.appName,jdbcType=VARCHAR},
       #{item.country,jdbcType=VARCHAR},
+      #{item.stateDate,jdbcType=TIMESTAMP},
       #{item.workerId,jdbcType=VARCHAR},
       #{item.sourceCampaign,jdbcType=VARCHAR},
       #{item.bidCount,jdbcType=INTEGER},

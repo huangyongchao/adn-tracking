@@ -3,21 +3,11 @@ package mobi.xdsp.tracking.core.job;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.dto.ClickCount;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Counter {
-/*
-
-    public static String SPE = "";
-    public static Map<String, ClickCount> COUNTER_HOUR_TODAY = Maps.newConcurrentMap();
-    public static Map<String, ClickCount> COUNTER_HOUR_YESTERDAY = Maps.newConcurrentMap();
-
-    public static void increaseClick(Integer publisherid, Integer offerid, Integer hour, String pub_sub, int type) {
-
-    }
-*/
-
-
     //publisherid ,offerid,hour,subid,计数器
     public static Map<Integer, Map<Integer, Map<Integer, Map<String, ClickCount>>>> COUNTER_HOUR_TODAY = Maps.newConcurrentMap();
     public static Map<Integer, Map<Integer, Map<Integer, Map<String, ClickCount>>>> COUNTER_HOUR_YESTERDAY = Maps.newConcurrentMap();
@@ -47,4 +37,18 @@ public class Counter {
         }
 
     }
+
+    public static AtomicBoolean EXCHANGE_LOCK = new AtomicBoolean(false);
+
+    /*每天凌晨初始化一次*/
+    public static synchronized boolean exchange() {
+        if (EXCHANGE_LOCK.get()) {
+            return false;
+        }
+        COUNTER_HOUR_YESTERDAY = COUNTER_HOUR_TODAY;
+        COUNTER_HOUR_TODAY = Maps.newConcurrentMap();
+        EXCHANGE_LOCK.set(true);
+        return true;
+    }
+
 }

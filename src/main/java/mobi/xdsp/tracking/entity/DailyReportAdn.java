@@ -28,6 +28,8 @@ public class DailyReportAdn extends DailyReportAdnKey {
 
     private String country;
 
+    private Date stateDate;
+
     private String workerId;
 
     private String sourceCampaign;
@@ -156,6 +158,14 @@ public class DailyReportAdn extends DailyReportAdnKey {
 
     public void setCountry(String country) {
         this.country = country == null ? null : country.trim();
+    }
+
+    public Date getStateDate() {
+        return stateDate;
+    }
+
+    public void setStateDate(Date stateDate) {
+        this.stateDate = stateDate;
     }
 
     public String getWorkerId() {

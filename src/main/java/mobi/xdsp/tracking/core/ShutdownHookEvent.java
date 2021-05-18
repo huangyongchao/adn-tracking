@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author huangyongchao
@@ -16,13 +17,17 @@ import javax.annotation.PreDestroy;
  */
 @Component
 public class ShutdownHookEvent {
+    public static boolean SHUTDOWN = false;
     private static final Logger logger = LoggerFactory.getLogger(ShutdownHookEvent.class);
     @Autowired
     CounterJob counterJob;
     @PreDestroy
     public void exeWhenShutdown() throws Exception {
+        SHUTDOWN = true;
+        logger.info("++++++++++++++++++++++++++++++Write Clicks to Report++++++++++++++++++++++++++++++");
 
+        counterJob.recordClicks();
 
-        logger.info("System  Shutdown");
+        logger.info("++++++++++++++++++++++++++++++System  Shutdown++++++++++++++++++++++++++++++");
     }
 }

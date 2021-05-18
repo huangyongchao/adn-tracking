@@ -1,7 +1,5 @@
 package mobi.xdsp.tracking.entity;
 
-import java.util.Date;
-
 public class DailyReportAdnKey {
     private Integer offerUid;
 
@@ -9,7 +7,9 @@ public class DailyReportAdnKey {
 
     private String subId;
 
-    private Date stateDate;
+    private String daystr;
+
+    private Integer h;
 
     public Integer getOfferUid() {
         return offerUid;
@@ -35,11 +35,19 @@ public class DailyReportAdnKey {
         this.subId = subId == null ? null : subId.trim();
     }
 
-    public Date getStateDate() {
-        return stateDate;
+    public String getDaystr() {
+        return daystr;
     }
 
-    public void setStateDate(Date stateDate) {
-        this.stateDate = stateDate;
+    public void setDaystr(String daystr) {
+        this.daystr = daystr == null ? null : daystr.trim();
+    }
+
+    public Integer getH() {
+        return h;
+    }
+
+    public void setH(Integer h) {
+        this.h = h;
     }
 }
