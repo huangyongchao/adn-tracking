@@ -74,7 +74,7 @@ public class CounterJob {
 
 
                             List<DailyReportAdn> list = dailyReportAdnMapper.selectByExample(example);
-
+                            // 利用状态标记 避免一次查询
 
                             if (CollectionUtils.isEmpty(list)) {
                                 DailyReportAdn dailyReportAdn = new DailyReportAdn();
@@ -101,7 +101,7 @@ public class CounterJob {
                                 dailyReportAdn.setDaystr(datestr);
 
                                 dailyReportAdnMapper.insertSelective(dailyReportAdn);
-
+                                cnt.setNewrecord(false);
                             }else {
                                 DailyReportAdn dailyReportAdn = list.get(0);
                                 dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());

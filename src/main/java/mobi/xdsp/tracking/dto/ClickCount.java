@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.LongAdder;
 @ToString
 public class ClickCount {
 
+    public boolean newrecord = true;
+
     public LongAdder success = new LongAdder();
     public long successsnp;
 
@@ -22,4 +24,11 @@ public class ClickCount {
     public LongAdder total = new LongAdder();
     public long totalsnp;
 
+    public boolean isNewrecord() {
+        return newrecord;
+    }
+
+    public void setNewrecord(boolean newrecord) {
+        this.newrecord = newrecord;
+    }
 }
