@@ -1,11 +1,14 @@
 package mobi.xdsp.tracking.common;
 
+import mobi.xdsp.tracking.core.job.CounterJob;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.OsE;
 import mobi.xdsp.tracking.entity.Offer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,6 +17,7 @@ import java.net.URLEncoder;
  * @author huangyongchao
  */
 public class AdTool {
+    private static final Logger logger = LoggerFactory.getLogger(AdTool.class);
 
     public static boolean isStore(String url) {
         if (url.indexOf("apple.com") > 0 || url.indexOf("google.com") > 0) {
@@ -118,25 +122,30 @@ public class AdTool {
     public static Click unpackClickId(String clickid) {
         Click click = new Click();
 
-        if (clickid != null && clickid.startsWith("PE")) {
-            int idx = clickid.indexOf("N");
-            String pubid = clickid.substring(12, idx);
-            String offerid = clickid.substring(idx + 1, clickid.length() - 3);
-            click.setOid(Integer.parseInt(offerid));
-            click.setPid(Integer.parseInt(pubid));
-            click.setId(clickid);
-
-        } else if (clickid.startsWith("DI")) {
-            String[] ss = clickid.split("-");
-            if (ss.length >= 2) {
-                String pubid = ss[0].substring(2);
-                String offerid = ss[1];
+        try {
+            if (clickid != null && clickid.startsWith("PE")) {
+                int idx = clickid.indexOf("N");
+                String pubid = clickid.substring(12, idx);
+                String offerid = clickid.substring(idx + 1, clickid.length() - 3);
                 click.setOid(Integer.parseInt(offerid));
                 click.setPid(Integer.parseInt(pubid));
                 click.setId(clickid);
 
-            }
+            } else if (clickid.startsWith("DI")) {
+                String[] ss = clickid.split("-");
+                if (ss.length >= 2) {
+                    String pubid = ss[0].substring(2);
+                    String offerid = ss[1];
+                    click.setOid(Integer.parseInt(offerid));
+                    click.setPid(Integer.parseInt(pubid));
+                    click.setId(clickid);
 
+                }
+
+            }
+        } catch (Exception e) {
+            logger.info(clickid);
+            e.printStackTrace();
         }
 /*
         PE05140930241005N2311784IRu
