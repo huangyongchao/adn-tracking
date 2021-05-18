@@ -56,7 +56,6 @@ public class CounterJob {
                     vsss.forEach((pubsub, cnt) -> {
 
                         try {
-                            System.out.println(pid + " " + oid + " " + hour + " " + pubsub + " " + cnt.getSuccess().intValue());
                             Long c = cnt.getSuccess().longValue();
                             Long dev = c - cnt.getSuccesssnp();
                             cnt.setSuccesssnp(c);
