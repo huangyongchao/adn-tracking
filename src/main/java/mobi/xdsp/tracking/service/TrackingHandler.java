@@ -48,7 +48,7 @@ public class TrackingHandler {
                 Random r = new Random();
                 int i = r.nextInt(20);
                 if (i == 0) {
-                    mailer.sendErrorMail("Tracking Error: saveClickToAerospike", e.getMessage() + "\n" + e.getLocalizedMessage());
+                    mailer.sendErrorMail("Tracking Error: saveClickToAerospike", Mailer.e2s(e));
                 }
                 e.printStackTrace();
             }

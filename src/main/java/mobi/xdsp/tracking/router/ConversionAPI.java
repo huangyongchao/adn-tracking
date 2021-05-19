@@ -184,7 +184,7 @@ public class ConversionAPI {
             }
 
         } catch (Exception e) {
-            mailer.sendErrorMail("Conversion Error: SaveConversion", e.getMessage() + "\n" + e.getLocalizedMessage());
+            mailer.sendErrorMail("Conversion Error: SaveConversion", Mailer.e2s(e));
             e.printStackTrace();
         }
 

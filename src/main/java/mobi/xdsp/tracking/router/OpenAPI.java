@@ -4,6 +4,7 @@ import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.OfferExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +26,16 @@ public class OpenAPI {
 
 
 
-    @GetMapping("/activeoffers")
-    public Object activeoffers() {
-        OfferExample example = new OfferExample();
-        example.createCriteria().andPriorityGreaterThan(Short.valueOf("1")).andStatusEqualTo("active");
+    @GetMapping("/refreshapicache")
+    public Object activeoffers(@RequestParam(name = "token") String token) {
+        if(StringUtils.isBlank(token)){
+            return "No tokne";
+        }else{
+            OffersQueryAPI.QUERY_CACHE.remove(token);
 
-        List<Offer> offers = offerMapper.selectByExample(example);
-        return JSONObject.toJSONString(Optional.of(offers).orElse(new ArrayList<>()));
+            return "OK";
+
+        }
 
     }
 

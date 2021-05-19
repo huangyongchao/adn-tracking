@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.HttpClientUtil;
+import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OsE;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -41,7 +43,10 @@ public class OffersQueryAPI {
      * 每20分钟查询一次 ,20分钟之内.返回缓存
      */
     private Map<String, Date> QUERY_LOCK = Maps.newHashMap();
-    private Map<String, OfferApiResponse> QUERY_CACHE = Maps.newHashMap();
+    public static Map<String, OfferApiResponse> QUERY_CACHE = Maps.newHashMap();
+
+    @Autowired
+    Mailer mailer;
 
     private boolean isCache(String token) {
         boolean returnCache = false;
@@ -273,4 +278,6 @@ public class OffersQueryAPI {
             e.printStackTrace();
         }
     }
+
+
 }
