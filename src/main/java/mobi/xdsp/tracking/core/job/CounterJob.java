@@ -81,6 +81,7 @@ public class CounterJob {
                                 dailyReportAdn.setAdvertiserId(offer.getAffiliateid());
                                 dailyReportAdn.setAppId(offer.getAppid());
                                 dailyReportAdn.setAdvertiserName(offer.getAffiliatename());
+                                dailyReportAdn.setAffiliateName(offer.getAffiliatename());
                                 dailyReportAdn.setAffiliateId(offer.getAffiliateid());
                                 dailyReportAdn.setAppName(offer.getAppname());
                                 dailyReportAdn.setClickCount(dev.intValue());
