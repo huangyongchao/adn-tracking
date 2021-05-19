@@ -220,13 +220,15 @@ public class OffersQueryAPI {
 
                                 track.append("gaid={gaid}&");
                             }
-                            track.append("click_id={click_id}&");
-                            track.append("lang={lang}&");
-                            track.append("ua={ua}&");
-                            track.append("ip={ip}&");
-                            track.append("appid={appid}&");
-                            track.append("sub1={sub1}&");
-                            track.append("sub2={sub2}");
+                            track.append("click_id={click_id}");
+                            if(n.getTrackurl().indexOf("store_appid")>0){
+                                track.append("&appid={appid}");
+                            }
+                            if(n.getIsattrs()){
+                                track.append("&lang={lang}");
+                                track.append("&ua={ua}");
+                                track.append("&ip={ip}");
+                            }
                             respO.setTrackingUrl(track.toString());
                             respO.setS2sLink(false);
                         }
