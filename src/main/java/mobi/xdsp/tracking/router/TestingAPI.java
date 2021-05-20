@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -71,46 +72,54 @@ public class TestingAPI {
         if (StringUtils.isBlank(p.getPostbackurl()) || p.getPostbackurl().indexOf("{click_id}") < 0) {
             return "Publisher PostBack set error";
         }
+        Map<String, Object> resp = Maps.newHashMap();
+        try {
+            String track = p.getPostbackurl();
+            if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(pubClickid)) {
+                track = StringUtils.replaceAll(track, "\\{click_id}", pubClickid);
+            }
+            if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(idfa)) {
+                track = StringUtils.replaceAll(track, "\\{idfa}", idfa);
+            }
 
-        String track = p.getPostbackurl();
-        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(pubClickid)) {
-            track = StringUtils.replaceAll(track, "\\{click_id}", pubClickid);
-        }
-        if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(idfa)) {
-            track = StringUtils.replaceAll(track, "\\{idfa}", idfa);
-        }
+            if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(gaid)) {
+                track = StringUtils.replaceAll(track, "\\{gaid}", gaid);
+            }
 
-        if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(gaid)) {
-            track = StringUtils.replaceAll(track, "\\{gaid}", gaid);
-        }
+            if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(pubSub)) {
+                track = StringUtils.replaceAll(track, "\\{pub_sub}", pubSub);
+            }
 
-        if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(pubSub)) {
-            track = StringUtils.replaceAll(track, "\\{pub_sub}", pubSub);
-        }
+            if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(appid)) {
+                track = StringUtils.replaceAll(track, "\\{appid}", appid);
+            }
+            if (track.indexOf("{appname}") > -1 && StringUtils.isNotBlank(appname)) {
+                track = StringUtils.replaceAll(track, "\\{appid}", appid);
+            }
+            if (track.indexOf("{sub1}") > -1 && StringUtils.isNotBlank(sub1)) {
+                track = StringUtils.replaceAll(track, "\\{sub1}", sub1);
+            }
+            if (track.indexOf("{sub2}") > -1 && StringUtils.isNotBlank(sub2)) {
+                track = StringUtils.replaceAll(track, "\\{sub2}", sub2);
+            }
+            if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(ip)) {
+                track = StringUtils.replaceAll(track, "\\{ip}", ip);
+            }
+            if (track.indexOf("{ua}") > -1 && StringUtils.isNotBlank(ua)) {
+                track = StringUtils.replaceAll(track, "\\{ua}", ua);
+            }
+            if (track.indexOf("{lang}") > -1 && StringUtils.isNotBlank(lang)) {
+                track = StringUtils.replaceAll(track, "\\{lang}", lang);
+            }
 
-        if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(appid)) {
-            track = StringUtils.replaceAll(track, "\\{appid}", appid);
-        }
-        if (track.indexOf("{appname}") > -1 && StringUtils.isNotBlank(appname)) {
-            track = StringUtils.replaceAll(track, "\\{appid}", appid);
-        }
-        if (track.indexOf("{sub1}") > -1 && StringUtils.isNotBlank(sub1)) {
-            track = StringUtils.replaceAll(track, "\\{sub1}", sub1);
-        }
-        if (track.indexOf("{sub2}") > -1 && StringUtils.isNotBlank(sub2)) {
-            track = StringUtils.replaceAll(track, "\\{sub2}", sub2);
-        }
-        if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(ip)) {
-            track = StringUtils.replaceAll(track, "\\{ip}", ip);
-        }
-        if (track.indexOf("{ua}") > -1 && StringUtils.isNotBlank(ua)) {
-            track = StringUtils.replaceAll(track, "\\{ua}", ua);
-        }
-        if (track.indexOf("{lang}") > -1 && StringUtils.isNotBlank(lang)) {
-            track = StringUtils.replaceAll(track, "\\{lang}", lang);
-        }
+            HttpClientUtil.get(track);
+            resp.put("status", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            resp.put("status", false);
 
-        return HttpClientUtil.get(track);
+        }
+        return resp ;
     }
 
     @GetMapping("/testclick")
@@ -166,7 +175,7 @@ public class TestingAPI {
         resp.put("tracks", redirects);
         if (isourend) {
             int i = testlink.indexOf("?");
-            String q = testlink.substring(i);
+            String q = testlink.substring(i+1);
             String[] qs = q.split("&");
             List<Map> params = Lists.newArrayList();
             for (String s : qs) {
