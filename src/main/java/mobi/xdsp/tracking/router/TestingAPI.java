@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.router;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.HttpClientUtil;
@@ -146,6 +147,7 @@ public class TestingAPI {
                 httpGet.setHeader("upgrade-insecure-requests", "1");
 
                 CloseableHttpResponse response = ProxyClient.getClient().execute(httpGet);
+                System.out.println(JSONObject.toJSONString(response));
                 testlink = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                 Map o1 = new HashMap();
                 o1.put("status", response.getStatusLine().getStatusCode());
