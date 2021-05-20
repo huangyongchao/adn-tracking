@@ -78,7 +78,7 @@ public class CounterJob {
 
                             if (CollectionUtils.isEmpty(list)) {
                                 DailyReportAdn dailyReportAdn = new DailyReportAdn();
-                                dailyReportAdn.setAdvertiserId(offer.getAffiliateid());
+                                dailyReportAdn.setAdvertiserId(Short.parseShort(offer.getAid()));
                                 dailyReportAdn.setAppId(offer.getAppid());
                                 dailyReportAdn.setAdvertiserName(offer.getAffiliatename());
                                 dailyReportAdn.setAffiliateName(offer.getAffiliatename());
