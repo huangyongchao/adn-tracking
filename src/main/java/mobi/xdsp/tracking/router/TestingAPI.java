@@ -21,6 +21,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -147,8 +148,9 @@ public class TestingAPI {
                 httpGet.setHeader("upgrade-insecure-requests", "1");
 
                 CloseableHttpResponse response = ProxyClient.getClient().execute(httpGet);
-                System.out.println(testlink);
-                System.out.println(JSONObject.toJSONString(response));
+                if(response==null || response.getHeaders("Location")==null ||response.getHeaders("Location").length<=0){
+                    break;
+                }
                 testlink = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                 Map o1 = new HashMap();
                 o1.put("status", response.getStatusLine().getStatusCode());
@@ -184,6 +186,7 @@ public class TestingAPI {
             }
         } else {
             resp.put("status", false);
+            resp.put("errormsg", "Testlink have some problems .Please contact tech team");
 
         }
         return resp;
