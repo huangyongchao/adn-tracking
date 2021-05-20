@@ -147,6 +147,7 @@ public class TestingAPI {
                 httpGet.setHeader("upgrade-insecure-requests", "1");
 
                 CloseableHttpResponse response = ProxyClient.getClient().execute(httpGet);
+                System.out.println(testlink);
                 System.out.println(JSONObject.toJSONString(response));
                 testlink = response.getHeaders("Location")[0].toString().replace("location: ", "").trim();
                 Map o1 = new HashMap();
