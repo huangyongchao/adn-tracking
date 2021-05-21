@@ -57,8 +57,6 @@ public class TrackingHandler {
                 }
                 e.printStackTrace();
             }
-            click.setLink(realTrackLink);
-            clicklog.info(click.toString());
         });
 
     }
