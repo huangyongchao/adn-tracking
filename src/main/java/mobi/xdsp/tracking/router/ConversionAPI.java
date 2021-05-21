@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+@CrossOrigin(origins = {"*","p.pubearn.com","localhost.com"})
 @RestController
 public class ConversionAPI {
 

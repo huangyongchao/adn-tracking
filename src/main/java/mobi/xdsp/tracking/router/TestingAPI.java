@@ -35,6 +35,7 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+@CrossOrigin(origins = {"*","p.pubearn.com","localhost.com"})
 @RestController
 public class TestingAPI {
 
