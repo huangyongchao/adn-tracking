@@ -17,11 +17,12 @@ public class CrosFilterConf {
         //是否发送 Cookie
         config.setAllowCredentials(true);
         //放行哪些请求方式
-        config.addAllowedMethod("*");
+        config.addAllowedMethod("GET,POST,PUT,DELETE,OPTIONS");
         //放行哪些原始请求头部信息
         config.addAllowedHeader("*");
         //暴露哪些头部信息
         //config.addExposedHeader("*");
+        config.addExposedHeader("access-control-allow-headers,access-control-allow-methods,access-control-allow-origin,access-control-max-age,X-Frame-Options");
         //2. 添加映射路径
         UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
         corsConfigurationSource.registerCorsConfiguration("/**", config);

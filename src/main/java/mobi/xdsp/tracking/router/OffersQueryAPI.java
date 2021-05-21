@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
-@CrossOrigin(origins = {"*","p.pubearn.com","localhost.com"})
 @RestController
 public class OffersQueryAPI {
     private String trackDomain = "http://tracking.pubearn.com";
