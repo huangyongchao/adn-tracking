@@ -43,6 +43,9 @@ public class TrackingHandler {
     public void writeClicks(Click click, String realTrackLink, Offer offer, PublisherOffer publisherOffer) {
         ExecutorPool.getExecutor().execute(() -> {
             try {
+
+                click.setLink(realTrackLink);
+                clicklog.info(click.toString());
                 click.setUa("");
                 click.setLink("");
                 repository.save(click);
