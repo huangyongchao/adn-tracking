@@ -66,6 +66,41 @@ public final class DateTimeUtil {
 		return dateString;
 	}
 
+	public static String getDayStartStr() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = formatter.format(currentTime);
+		String start = dateString + " 00:00:00";
+
+		return start;
+	}
+	public static String getDayEndStr() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = formatter.format(currentTime);
+		String end = dateString + " 23:59:59";
+
+		return end;
+	}
+
+	public static Date getDayStart() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = formatter.format(currentTime);
+		String start = dateString + " 00:00:00";
+
+		return strToDateLong(start);
+	}
+	public static Date getDayEnd() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String dateString = formatter.format(currentTime);
+		String end = dateString + " 23:59:59";
+
+		return strToDateLong(end);
+	}
+
+
 	/**
 	 * 获取现在时间
 	 * 
