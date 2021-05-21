@@ -65,6 +65,9 @@ public class AdTool {
         if (url.indexOf("\":\"") > -1) {
             url = StringUtils.replaceAll(url, "\":\"", "%22%3A%22");
         }
+        if (url.indexOf("\"") > -1) {
+            url = StringUtils.replaceAll(url, "\"", "%22");
+        }
         return url;
     }
 
