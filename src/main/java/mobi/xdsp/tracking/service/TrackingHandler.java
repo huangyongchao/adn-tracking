@@ -43,6 +43,8 @@ public class TrackingHandler {
     public void writeClicks(Click click, String realTrackLink, Offer offer, PublisherOffer publisherOffer) {
         ExecutorPool.getExecutor().execute(() -> {
             try {
+                click.setUa("");
+                click.setLink("");
                 repository.save(click);
             } catch (Exception e) {
                 Random r = new Random();
