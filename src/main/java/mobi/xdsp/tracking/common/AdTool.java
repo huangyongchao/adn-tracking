@@ -35,34 +35,47 @@ public class AdTool {
 
     public static String urlEncode(Offer offer, String url) {
 
-        if (url.indexOf("{") > -1) {
-            url = StringUtils.replaceAll(url, "\\{", "%7B");
+        int i = url.indexOf("?");
+        String host = url.substring(0, i+1);
+        String querystr = url.substring(i + 1);
+
+        if (querystr.indexOf("{") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\{", "%7B");
         }
-        if (url.indexOf("}") > -1) {
-            url = StringUtils.replaceAll(url, "\\}", "%7D");
+        if (querystr.indexOf("}") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\}", "%7D");
         }
-        if (url.indexOf("[") > -1) {
-            url = StringUtils.replaceAll(url, "\\[", "%5b");
+        if (querystr.indexOf("[") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\[", "%5b");
         }
-        if (url.indexOf("]") > -1) {
-            url = StringUtils.replaceAll(url, "\\]", "%5d");
+        if (querystr.indexOf("]") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\]", "%5d");
         }
-        if (url.indexOf("|") > -1) {
-            url = StringUtils.replaceAll(url, "\\|", "%7c");
+        if (querystr.indexOf("|") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\|", "%7c");
         }
-        if (url.indexOf("$") > -1) {
-            url = StringUtils.replaceAll(url, "$", "%24");
+        if (querystr.indexOf("$") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "$", "%24");
         }
-        if (url.indexOf(">") > -1) {
-            url = StringUtils.replaceAll(url, ">", "%3E");
+        if (querystr.indexOf(">") > -1) {
+            querystr = StringUtils.replaceAll(querystr, ">", "%3E");
         }
-        if (url.indexOf("<") > -1) {
-            url = StringUtils.replaceAll(url, "<", "%3C");
+        if (querystr.indexOf("<") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "<", "%3C");
         }
-        if (url.indexOf("\\") > -1) {
-            url = StringUtils.replaceAll(url, "\\", "%5C");
+        if (querystr.indexOf("\\") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\", "%5C");
         }
-        return url;
+        if (querystr.indexOf("\"") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\"", "%22");
+        }
+        if (querystr.indexOf(" ") > -1) {
+            querystr = StringUtils.replaceAll(querystr, " ", "");
+        }
+        if (querystr.indexOf(":") > -1) {
+            querystr = StringUtils.replaceAll(url, ":", "%3A");
+        }
+        return host+querystr;
     }
 
 
