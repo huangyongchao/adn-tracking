@@ -34,7 +34,6 @@ public class AdTool {
     }
 
     public static String urlEncode(Offer offer, String url) {
-
         int i = url.indexOf("?");
         String host = url.substring(0, i+1);
         String querystr = url.substring(i + 1);
@@ -75,6 +74,7 @@ public class AdTool {
         if (querystr.indexOf(":") > -1) {
             querystr = StringUtils.replaceAll(url, ":", "%3A");
         }
+
         return host+querystr;
     }
 
