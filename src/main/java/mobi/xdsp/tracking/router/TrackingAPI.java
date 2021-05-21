@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-@CrossOrigin(origins = {"*","p.pubearn.com","localhost.com"})
 @RestController
 public class TrackingAPI {
     @Value("${clickcapweight}")

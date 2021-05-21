@@ -17,7 +17,7 @@ public class CrosFilterConf {
         //是否发送 Cookie
         config.setAllowCredentials(true);
         //放行哪些请求方式
-        config.addAllowedMethod("GET,POST,PUT,DELETE,OPTIONS");
+        config.addAllowedMethod("*");
         //放行哪些原始请求头部信息
         config.addAllowedHeader("*");
         //暴露哪些头部信息

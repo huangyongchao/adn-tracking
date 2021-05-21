@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.*;
-@CrossOrigin(origins = {"*","p.pubearn.com","localhost.com"})
 @RestController
 public class OpenAPI {
     @Autowired
