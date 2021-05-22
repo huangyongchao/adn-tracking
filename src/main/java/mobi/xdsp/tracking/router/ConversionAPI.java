@@ -135,6 +135,9 @@ public class ConversionAPI {
                     if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
                         activate.setDefaultpayout(0f);
                     }
+                    if(puboffer.getPayout().floatValue()<0.3){
+                        activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                    }
                 }
                 activate.setDeviceid(click.getIdfa() == null ? click.getGaid() : click.getIdfa());
                 if (StringUtils.isBlank(activate.getDeviceid())) {
