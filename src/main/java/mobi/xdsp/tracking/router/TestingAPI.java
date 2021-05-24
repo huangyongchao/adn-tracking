@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.router;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.ProxyClient;
 import mobi.xdsp.tracking.dto.Click;
@@ -110,8 +111,11 @@ public class TestingAPI {
             if (track.indexOf("{lang}") > -1 && StringUtils.isNotBlank(lang)) {
                 track = StringUtils.replaceAll(track, "\\{lang}", lang);
             }
+            if (track.indexOf("{payout}") > -1) {
+                track = StringUtils.replaceAll(track, "\\{payout}", "0.0");
+            }
 
-            HttpClientUtil.get(track);
+            HttpClientUtil.get(AdTool.urlEncode(track));
             resp.put("status", true);
         } catch (IOException e) {
             e.printStackTrace();

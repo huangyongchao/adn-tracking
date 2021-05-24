@@ -33,7 +33,7 @@ public class AdTool {
         return false;
     }
 
-    public static String urlEncode(Offer offer, String url) {
+    public static String urlEncode(String url) {
 
         if (url.indexOf("{") > -1) {
             url = StringUtils.replaceAll(url, "\\{", "%7B");

@@ -36,7 +36,7 @@ public class TrackingHandler {
 
     public String makeURL(Click click, Offer offer) {
         String url = AdTool.trackurl(click, offer);
-        url = AdTool.urlEncode(offer, url);
+        url = AdTool.urlEncode(url);
         return url;
     }
 
