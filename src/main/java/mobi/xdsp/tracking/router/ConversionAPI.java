@@ -171,6 +171,9 @@ public class ConversionAPI {
                     if (res) {
                         activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
+                    }else{
+                        activate.setNoticestatus(PBNoticeStateE.NO.code);
+
                     }
                 }
                 int r = activateMapper.insertSelective(activate);
@@ -242,6 +245,8 @@ public class ConversionAPI {
             pblog.warn(tid + ":" + "resp");
         } catch (Exception e) {
             e.printStackTrace();
+            sentstatus = false;
+
             pblog.warn(tid + ":" + "senderror");
         }
 
