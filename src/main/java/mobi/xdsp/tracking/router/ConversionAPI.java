@@ -227,7 +227,11 @@ public class ConversionAPI {
         if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(click.getIp())) {
             track = StringUtils.replaceAll(track, "\\{ip}", click.getIp());
         }
+        if (track.indexOf("{payout}") > -1&& publisherOffer.getPayout()!=null) {
+            track = StringUtils.replaceAll(track, "\\{payout}", publisherOffer.getPayout().toString());
+        }
         try {
+            track = AdTool.urlEncode(track);
             pblog.warn(tid + ":" + track);
             String resp = HttpClientUtil.get(track);
             sentstatus = true;
