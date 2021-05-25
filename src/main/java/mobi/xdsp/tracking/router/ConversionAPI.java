@@ -230,6 +230,10 @@ public class ConversionAPI {
         if (track.indexOf("{payout}") > -1&& publisherOffer.getPayout()!=null) {
             track = StringUtils.replaceAll(track, "\\{payout}", publisherOffer.getPayout().toString());
         }
+        if (track.indexOf("{currency}") > -1&& offer.getCurrency()!=null) {
+            track = StringUtils.replaceAll(track, "\\{currency}", offer.getCurrency());
+        }
+
         try {
             track = AdTool.urlEncode(track);
             pblog.warn(tid + ":" + track);
