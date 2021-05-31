@@ -33,42 +33,52 @@ public class AdTool {
         return false;
     }
 
-    public static String urlEncode(String url) {
+    public static String urlEncode(String oriUrl) {
 
-        if (url.indexOf("{") > -1) {
-            url = StringUtils.replaceAll(url, "\\{", "%7B");
+
+        int i = oriUrl.indexOf("?");
+        String host = oriUrl.substring(0, i + 1);
+        String querystr = oriUrl.substring(i + 1);
+
+        if (querystr.indexOf("{") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\{", "%7B");
         }
-        if (url.indexOf("}") > -1) {
-            url = StringUtils.replaceAll(url, "\\}", "%7D");
+        if (querystr.indexOf("}") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\}", "%7D");
         }
-        if (url.indexOf("[") > -1) {
-            url = StringUtils.replaceAll(url, "\\[", "%5b");
+        if (querystr.indexOf("[") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\[", "%5b");
         }
-        if (url.indexOf("]") > -1) {
-            url = StringUtils.replaceAll(url, "\\]", "%5d");
+        if (querystr.indexOf("]") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\]", "%5d");
         }
-        if (url.indexOf("|") > -1) {
-            url = StringUtils.replaceAll(url, "\\|", "%7c");
+        if (querystr.indexOf("|") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\|", "%7c");
         }
-        if (url.indexOf("$") > -1) {
-            url = StringUtils.replaceAll(url, "$", "%24");
+        if (querystr.indexOf("$") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "$", "%24");
         }
-        if (url.indexOf(">") > -1) {
-            url = StringUtils.replaceAll(url, ">", "%3E");
+        if (querystr.indexOf(">") > -1) {
+            querystr = StringUtils.replaceAll(querystr, ">", "%3E");
         }
-        if (url.indexOf("<") > -1) {
-            url = StringUtils.replaceAll(url, "<", "%3C");
+        if (querystr.indexOf("<") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "<", "%3C");
         }
-        if (url.indexOf("\\") > -1) {
-            url = StringUtils.replaceAll(url, "\\", "%5C");
+        if (querystr.indexOf("\\") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\\", "%5C");
         }
-        if (url.indexOf("\":\"") > -1) {
-            url = StringUtils.replaceAll(url, "\":\"", "%22%3A%22");
+        if (querystr.indexOf("\"") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "\"", "%22");
         }
-        if (url.indexOf("\"") > -1) {
-            url = StringUtils.replaceAll(url, "\"", "%22");
+        if (querystr.indexOf(" ") > -1) {
+            querystr = StringUtils.replaceAll(querystr, " ", "");
         }
-        return url;
+        if (querystr.indexOf(":") > -1) {
+            querystr = StringUtils.replaceAll(querystr, ":", "%3A");
+        }
+
+        return host + querystr;
+
     }
 
 
@@ -147,7 +157,7 @@ public class AdTool {
                     click.setOid(Integer.parseInt(offerid));
                     click.setPid(Integer.parseInt(pubid));
                     click.setId(clickid);
-                    click.setClickId(clickid.substring(clickid.indexOf(offerid)+offerid.length()+1));
+                    click.setClickId(clickid.substring(clickid.indexOf(offerid) + offerid.length() + 1));
 
                 }
 
