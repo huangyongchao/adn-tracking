@@ -37,8 +37,15 @@ public class AdTool {
 
 
         int i = oriUrl.indexOf("?");
-        String host = oriUrl.substring(0, i + 1);
-        String querystr = oriUrl.substring(i + 1);
+        String host ="";
+        String querystr = "";
+        if(i>0){
+            host = oriUrl.substring(0, i + 1);
+            querystr = oriUrl.substring(i + 1);
+        }else{
+            querystr = oriUrl;
+        }
+
 
         if (querystr.indexOf("{") > -1) {
             querystr = StringUtils.replaceAll(querystr, "\\{", "%7B");
