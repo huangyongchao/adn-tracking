@@ -62,6 +62,7 @@ public class TrackingAPI {
         //http://127.0.0.1:9192/click?pid=4&offer=2176&pub_sub=xxxxsss&idfa=testidfa&click_id=testclick&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
 
         //http://127.0.0.1:9192/click?pid=1005&offer=2311784&pub_sub=814434508&idfa=2012A207-2D15-4090-A0FB-F557DAF2BD25&click_id=270441375
+
         if (ShutdownHookEvent.SHUTDOWN) {
             return new ResponseModel(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Shutdown Server");
 
@@ -118,7 +119,7 @@ public class TrackingAPI {
         if (publisherOffer.getClickcap() > 0) {
 
         }
-
+        String rua = request.getHeader("User-Agent");
         Click click = new Click();
 
         click.setOid(offerid);
@@ -132,11 +133,11 @@ public class TrackingAPI {
         click.setCip(clientip);
         click.setGaid(gaid);
         click.setIdfa(idfa);
+        click.setUa(rua);
         click.setS1(sub1);
         click.setS2(sub2);
         Date clickDate = new Date();
         click.setCt(clickDate);
-        click.setUa(ua);
         /*
         生成clickid
          */

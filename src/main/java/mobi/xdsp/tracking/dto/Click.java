@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @Data
-@Document(collection = "clicks", expiration = 10, expirationUnit = TimeUnit.DAYS)
+@Document(collection = "clicks", expiration = 8, expirationUnit = TimeUnit.DAYS)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
