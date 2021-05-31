@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mobi.xdsp.tracking.common.DateTimeUtil;
 import org.springframework.data.aerospike.mapping.Document;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Indexed;
 
 import java.io.Serializable;
@@ -71,6 +73,7 @@ public class Click implements Serializable {
 
     private String ip;
     private String lang;
+    @Transient
     private String ua;
     private String appN;
     /**
@@ -81,7 +84,32 @@ public class Click implements Serializable {
      * 重定向offerid
      */
     private Integer roid;
+    @Transient
     private String link;
 
-
+    @Override
+    public String toString() {
+        return "Click{" +
+                "id='" + id + '\'' +
+                ", pid=" + pid +
+                ", oid=" + oid +
+                ", pubSub='" + pubSub + '\'' +
+                ", appId='" + appId + '\'' +
+                ", idfa='" + idfa + '\'' +
+                ", gaid='" + gaid + '\'' +
+                ", mixSub='" + mixSub + '\'' +
+                ", clickId='" + clickId + '\'' +
+                ", cip='" + cip + '\'' +
+                ", ct=" + DateTimeUtil.getStringDate() +
+                ", s1='" + s1 + '\'' +
+                ", s2='" + s2 + '\'' +
+                ", ip='" + ip + '\'' +
+                ", lang='" + lang + '\'' +
+                ", ua='" + ua + '\'' +
+                ", appN='" + appN + '\'' +
+                ", isr=" + isr +
+                ", roid=" + roid +
+                ", link='" + link + '\'' +
+                '}';
+    }
 }
