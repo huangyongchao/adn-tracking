@@ -48,13 +48,13 @@ public class PbResentJob {
     public static void main(String[] args) {
         System.out.println(DateTimeUtil.getDateBefore(new Date(), 2));
     }
-    @Scheduled(cron = "* */20 * * * ?")
+    @Scheduled(cron = "* */40 * * * ?")
     public void resentPb() {
 
         try {
 
             ActivateExample example = new ActivateExample();
-            example.createCriteria().andInserttimeGreaterThan(DateTimeUtil.getDateBefore(new Date(), 2))
+            example.createCriteria().andInserttimeGreaterThan(DateTimeUtil.getDateBefore(new Date(), 1))
                     .andStatusEqualTo(PBStateE.VALID.code).andChannelidGreaterThan(1).andNoticestatusEqualTo(PBNoticeStateE.NO.code);
 
             List<ActivateWithBLOBs> list = activateMapper.selectByExampleWithBLOBs(example);
