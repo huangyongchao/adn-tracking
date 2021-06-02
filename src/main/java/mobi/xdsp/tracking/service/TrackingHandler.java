@@ -51,7 +51,7 @@ public class TrackingHandler {
                 repository.save(click);
             } catch (Exception e) {
                 Random r = new Random();
-                int i = r.nextInt(20);
+                int i = r.nextInt(200);
                 if (i == 0) {
                     mailer.sendErrorMail("Tracking Error: saveClickToAerospike", Mailer.e2s(e));
                 }
