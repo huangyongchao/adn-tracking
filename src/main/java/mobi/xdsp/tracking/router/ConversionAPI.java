@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -107,6 +108,12 @@ public class ConversionAPI {
                 Offer offer = dataService.getOfferCache(click.getOid());
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
+
+                int deductrate = publisher.getDeductrate();
+                if(deductrate==0){
+                    deductrate = puboffer.getDeductrate();
+                }
+
                 activate.setAid(offer.getAid());
                 activate.setAffiliateid("" + offer.getAffiliateid());
                 activate.setActivatetime(new Date());
@@ -164,6 +171,16 @@ public class ConversionAPI {
                 if (activate.getStatus() == null) {
                     activate.setStatus(PBStateE.VALID.code);
                 }
+
+                if(deductrate>0){
+                    int seed = deductrate / 5;
+                    int r = new Random().nextInt(20);
+                    if (seed == r) {
+                        activate.setStatus(PBStateE.DEDUCT.code);
+
+                    }
+                }
+
 
                 if (activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code) {
                     //发PB
