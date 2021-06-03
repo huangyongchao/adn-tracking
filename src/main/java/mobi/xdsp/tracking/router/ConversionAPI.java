@@ -109,9 +109,12 @@ public class ConversionAPI {
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
 
-                int deductrate = publisher.getDeductrate();
-                if(deductrate==0){
+                Integer deductrate = publisher.getDeductrate();
+                if(deductrate ==null ||deductrate==0){
                     deductrate = puboffer.getDeductrate();
+                }
+                if(deductrate==null){
+                    deductrate = 0;
                 }
 
                 activate.setAid(offer.getAid());
