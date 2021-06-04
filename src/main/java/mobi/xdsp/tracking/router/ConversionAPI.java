@@ -184,7 +184,7 @@ public class ConversionAPI {
                 }
 
 
-                if (activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code) {
+                if (PBStateE.VALID.code == activate.getStatus()&&( activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
                     //发PB
                     boolean res = sendPb(publisher, offer, puboffer, click);
                     if (res) {
@@ -194,6 +194,8 @@ public class ConversionAPI {
                         activate.setNoticestatus(PBNoticeStateE.NO.code);
 
                     }
+                }else{
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
                 int r = activateMapper.insertSelective(activate);
 
@@ -205,6 +207,7 @@ public class ConversionAPI {
                 activate.setClickdate(DateTimeUtil.getStringDate());
                 activate.setClicktime(DateTimeUtil.getStringDate());
                 activate.setStatus(PBStateE.INVALID.code);
+                activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 int r = activateMapper.insertSelective(activate);
 
             }
