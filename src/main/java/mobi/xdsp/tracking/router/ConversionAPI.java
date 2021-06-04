@@ -174,13 +174,12 @@ public class ConversionAPI {
                 if (activate.getStatus() == null) {
                     activate.setStatus(PBStateE.VALID.code);
                 }
-
+                //扣量比例
                 if(deductrate>0){
                     int seed = deductrate / 5;
                     int r = new Random().nextInt(20);
-                    if (seed == r) {
+                    if (r<=seed) {
                         activate.setStatus(PBStateE.DEDUCT.code);
-
                     }
                 }
 
