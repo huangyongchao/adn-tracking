@@ -65,6 +65,16 @@ public class Activate {
 
     private String appname;
 
+    private Float advpayout;
+
+    private Float pubpayout;
+
+    private Integer activecnt;
+
+    private Integer deductcnt;
+
+    private Integer inactivecnt;
+
     public Long getId() {
         return id;
     }
@@ -305,11 +315,51 @@ public class Activate {
         this.appname = appname == null ? null : appname.trim();
     }
 
-    public String getCtit() {
-        return ctit;
+    public Float getAdvpayout() {
+        return advpayout;
+    }
+
+    public void setAdvpayout(Float advpayout) {
+        this.advpayout = advpayout;
+    }
+
+    public Float getPubpayout() {
+        return pubpayout;
+    }
+
+    public void setPubpayout(Float pubpayout) {
+        this.pubpayout = pubpayout;
+    }
+
+    public Integer getActivecnt() {
+        return activecnt;
+    }
+
+    public void setActivecnt(Integer activecnt) {
+        this.activecnt = activecnt;
+    }
+
+    public Integer getDeductcnt() {
+        return deductcnt;
+    }
+
+    public void setDeductcnt(Integer deductcnt) {
+        this.deductcnt = deductcnt;
+    }
+
+    public Integer getInactivecnt() {
+        return inactivecnt;
     }
 
     public void setCtit(String ctit) {
         this.ctit = ctit;
+    }
+
+    public String getCtit() {
+        return ctit;
+    }
+
+    public void setInactivecnt(Integer inactivecnt) {
+        this.inactivecnt = inactivecnt;
     }
 }

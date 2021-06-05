@@ -140,13 +140,17 @@ public class ConversionAPI {
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
                 activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                activate.setAdvpayout(offer.getDefaultpayout());
 
                 if (AdTool.is3pt(offer.getTrackurl())) {
                     if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
                         activate.setDefaultpayout(0f);
+                        activate.setAdvpayout(0f);
+
                     }
                     if(puboffer.getPayout().floatValue()<0.3){
                         activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                        activate.setAdvpayout(puboffer.getPayout().floatValue());
                     }
                 }
                 activate.setDeviceid(click.getIdfa() == null ? click.getGaid() : click.getIdfa());
@@ -164,6 +168,7 @@ public class ConversionAPI {
                 if (StringUtils.isBlank(activate.getClickid())) {
                     activate.setClickid(clickid);
                     activate.setStatus(PBStateE.INVALID.code);
+                    activate.setInactivecnt(1);
 
                 }
                 if (activate.getStatus() == null) {
@@ -173,6 +178,10 @@ public class ConversionAPI {
                 }
                 if (activate.getStatus() == null) {
                     activate.setStatus(PBStateE.VALID.code);
+                    activate.setActivecnt(1);
+                    activate.setDeductcnt(0);
+
+
                 }
                 //扣量比例
                 if(deductrate>0){
@@ -180,6 +189,9 @@ public class ConversionAPI {
                     int r = new Random().nextInt(20);
                     if (r<=seed) {
                         activate.setStatus(PBStateE.DEDUCT.code);
+                        activate.setDeductcnt(1);
+                        activate.setActivecnt(0);
+
                     }
                 }
 

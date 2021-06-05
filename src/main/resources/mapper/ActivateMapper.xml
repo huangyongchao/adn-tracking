@@ -32,8 +32,13 @@
     <result column="offerName" jdbcType="VARCHAR" property="offername" />
     <result column="affiliateName" jdbcType="VARCHAR" property="affiliatename" />
     <result column="appName" jdbcType="VARCHAR" property="appname" />
+    <result column="advpayout" jdbcType="REAL" property="advpayout" />
+    <result column="pubpayout" jdbcType="REAL" property="pubpayout" />
+    <result column="activecnt" jdbcType="INTEGER" property="activecnt" />
+    <result column="deductcnt" jdbcType="INTEGER" property="deductcnt" />
+    <result column="inactivecnt" jdbcType="INTEGER" property="inactivecnt" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     <result column="clickId" jdbcType="LONGVARCHAR" property="clickid" />
     <result column="clickidext" jdbcType="LONGVARCHAR" property="clickidext" />
     <result column="affsub1" jdbcType="LONGVARCHAR" property="affsub1" />
@@ -102,12 +107,13 @@
     id, aId, deviceId, ip, activateDate, insertTime, sysTime, appId, country, clickServerId, 
     clickTime, affiliateId, offerId, offerUId, defaultPayout, clickDate, activateTime, 
     channelId, pubSub, subId1, extinfo, costType, event, status, noticeStatus, noticeTime, 
-    source_affiliate_id, offerName, affiliateName, appName
+    source_affiliate_id, offerName, affiliateName, appName, advpayout, pubpayout, activecnt, 
+    deductcnt, inactivecnt
   </sql>
   <sql id="Blob_Column_List">
     clickId, clickidext, affsub1, affsub2, affsub3
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -123,7 +129,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -157,13 +163,13 @@
     delete from activate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample">
+  <delete id="deleteByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample">
     delete from activate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <insert id="insert" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -176,9 +182,11 @@
       subId1, extinfo, costType, 
       event, status, noticeStatus, 
       noticeTime, source_affiliate_id, offerName, 
-      affiliateName, appName, clickId, 
-      clickidext, affsub1, affsub2, 
-      affsub3)
+      affiliateName, appName, advpayout, 
+      pubpayout, activecnt, deductcnt, 
+      inactivecnt, clickId, clickidext, 
+      affsub1, affsub2, affsub3
+      )
     values (#{aid,jdbcType=VARCHAR}, #{deviceid,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{activatedate,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP}, #{systime,jdbcType=TIMESTAMP}, 
       #{appid,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{clickserverid,jdbcType=VARCHAR}, 
@@ -188,11 +196,13 @@
       #{subid1,jdbcType=VARCHAR}, #{extinfo,jdbcType=VARCHAR}, #{costtype,jdbcType=VARCHAR}, 
       #{event,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{noticestatus,jdbcType=TINYINT}, 
       #{noticetime,jdbcType=TIMESTAMP}, #{sourceAffiliateId,jdbcType=VARCHAR}, #{offername,jdbcType=VARCHAR}, 
-      #{affiliatename,jdbcType=VARCHAR}, #{appname,jdbcType=VARCHAR}, #{clickid,jdbcType=LONGVARCHAR}, 
-      #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, #{affsub2,jdbcType=LONGVARCHAR}, 
-      #{affsub3,jdbcType=LONGVARCHAR})
+      #{affiliatename,jdbcType=VARCHAR}, #{appname,jdbcType=VARCHAR}, #{advpayout,jdbcType=REAL}, 
+      #{pubpayout,jdbcType=REAL}, #{activecnt,jdbcType=INTEGER}, #{deductcnt,jdbcType=INTEGER}, 
+      #{inactivecnt,jdbcType=INTEGER}, #{clickid,jdbcType=LONGVARCHAR}, #{clickidext,jdbcType=LONGVARCHAR}, 
+      #{affsub1,jdbcType=LONGVARCHAR}, #{affsub2,jdbcType=LONGVARCHAR}, #{affsub3,jdbcType=LONGVARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <insert id="insertSelective" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -284,6 +294,21 @@
       </if>
       <if test="appname != null">
         appName,
+      </if>
+      <if test="advpayout != null">
+        advpayout,
+      </if>
+      <if test="pubpayout != null">
+        pubpayout,
+      </if>
+      <if test="activecnt != null">
+        activecnt,
+      </if>
+      <if test="deductcnt != null">
+        deductcnt,
+      </if>
+      <if test="inactivecnt != null">
+        inactivecnt,
       </if>
       <if test="clickid != null">
         clickId,
@@ -389,6 +414,21 @@
       <if test="appname != null">
         #{appname,jdbcType=VARCHAR},
       </if>
+      <if test="advpayout != null">
+        #{advpayout,jdbcType=REAL},
+      </if>
+      <if test="pubpayout != null">
+        #{pubpayout,jdbcType=REAL},
+      </if>
+      <if test="activecnt != null">
+        #{activecnt,jdbcType=INTEGER},
+      </if>
+      <if test="deductcnt != null">
+        #{deductcnt,jdbcType=INTEGER},
+      </if>
+      <if test="inactivecnt != null">
+        #{inactivecnt,jdbcType=INTEGER},
+      </if>
       <if test="clickid != null">
         #{clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -406,7 +446,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultType="java.lang.Long">
     select count(*) from activate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -505,6 +545,21 @@
       <if test="record.appname != null">
         appName = #{record.appname,jdbcType=VARCHAR},
       </if>
+      <if test="record.advpayout != null">
+        advpayout = #{record.advpayout,jdbcType=REAL},
+      </if>
+      <if test="record.pubpayout != null">
+        pubpayout = #{record.pubpayout,jdbcType=REAL},
+      </if>
+      <if test="record.activecnt != null">
+        activecnt = #{record.activecnt,jdbcType=INTEGER},
+      </if>
+      <if test="record.deductcnt != null">
+        deductcnt = #{record.deductcnt,jdbcType=INTEGER},
+      </if>
+      <if test="record.inactivecnt != null">
+        inactivecnt = #{record.inactivecnt,jdbcType=INTEGER},
+      </if>
       <if test="record.clickid != null">
         clickId = #{record.clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -557,6 +612,11 @@
       offerName = #{record.offername,jdbcType=VARCHAR},
       affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
       appName = #{record.appname,jdbcType=VARCHAR},
+      advpayout = #{record.advpayout,jdbcType=REAL},
+      pubpayout = #{record.pubpayout,jdbcType=REAL},
+      activecnt = #{record.activecnt,jdbcType=INTEGER},
+      deductcnt = #{record.deductcnt,jdbcType=INTEGER},
+      inactivecnt = #{record.inactivecnt,jdbcType=INTEGER},
       clickId = #{record.clickid,jdbcType=LONGVARCHAR},
       clickidext = #{record.clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{record.affsub1,jdbcType=LONGVARCHAR},
@@ -597,12 +657,17 @@
       source_affiliate_id = #{record.sourceAffiliateId,jdbcType=VARCHAR},
       offerName = #{record.offername,jdbcType=VARCHAR},
       affiliateName = #{record.affiliatename,jdbcType=VARCHAR},
-      appName = #{record.appname,jdbcType=VARCHAR}
+      appName = #{record.appname,jdbcType=VARCHAR},
+      advpayout = #{record.advpayout,jdbcType=REAL},
+      pubpayout = #{record.pubpayout,jdbcType=REAL},
+      activecnt = #{record.activecnt,jdbcType=INTEGER},
+      deductcnt = #{record.deductcnt,jdbcType=INTEGER},
+      inactivecnt = #{record.inactivecnt,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     update activate
     <set>
       <if test="aid != null">
@@ -692,6 +757,21 @@
       <if test="appname != null">
         appName = #{appname,jdbcType=VARCHAR},
       </if>
+      <if test="advpayout != null">
+        advpayout = #{advpayout,jdbcType=REAL},
+      </if>
+      <if test="pubpayout != null">
+        pubpayout = #{pubpayout,jdbcType=REAL},
+      </if>
+      <if test="activecnt != null">
+        activecnt = #{activecnt,jdbcType=INTEGER},
+      </if>
+      <if test="deductcnt != null">
+        deductcnt = #{deductcnt,jdbcType=INTEGER},
+      </if>
+      <if test="inactivecnt != null">
+        inactivecnt = #{inactivecnt,jdbcType=INTEGER},
+      </if>
       <if test="clickid != null">
         clickId = #{clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -710,7 +790,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
@@ -741,6 +821,11 @@
       offerName = #{offername,jdbcType=VARCHAR},
       affiliateName = #{affiliatename,jdbcType=VARCHAR},
       appName = #{appname,jdbcType=VARCHAR},
+      advpayout = #{advpayout,jdbcType=REAL},
+      pubpayout = #{pubpayout,jdbcType=REAL},
+      activecnt = #{activecnt,jdbcType=INTEGER},
+      deductcnt = #{deductcnt,jdbcType=INTEGER},
+      inactivecnt = #{inactivecnt,jdbcType=INTEGER},
       clickId = #{clickid,jdbcType=LONGVARCHAR},
       clickidext = #{clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{affsub1,jdbcType=LONGVARCHAR},
@@ -748,7 +833,7 @@
       affsub3 = #{affsub3,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.Activate">
+  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.domain.adn.Activate">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
@@ -778,7 +863,12 @@
       source_affiliate_id = #{sourceAffiliateId,jdbcType=VARCHAR},
       offerName = #{offername,jdbcType=VARCHAR},
       affiliateName = #{affiliatename,jdbcType=VARCHAR},
-      appName = #{appname,jdbcType=VARCHAR}
+      appName = #{appname,jdbcType=VARCHAR},
+      advpayout = #{advpayout,jdbcType=REAL},
+      pubpayout = #{pubpayout,jdbcType=REAL},
+      activecnt = #{activecnt,jdbcType=INTEGER},
+      deductcnt = #{deductcnt,jdbcType=INTEGER},
+      inactivecnt = #{inactivecnt,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
@@ -812,6 +902,11 @@
     offerName,
     affiliateName,
     appName,
+    advpayout,
+    pubpayout,
+    activecnt,
+    deductcnt,
+    inactivecnt,
     clickId,
     clickidext,
     affsub1,
@@ -850,6 +945,11 @@
       #{item.offername,jdbcType=VARCHAR},
       #{item.affiliatename,jdbcType=VARCHAR},
       #{item.appname,jdbcType=VARCHAR},
+      #{item.advpayout,jdbcType=REAL},
+      #{item.pubpayout,jdbcType=REAL},
+      #{item.activecnt,jdbcType=INTEGER},
+      #{item.deductcnt,jdbcType=INTEGER},
+      #{item.inactivecnt,jdbcType=INTEGER},
       #{item.clickid,jdbcType=LONGVARCHAR},
       #{item.clickidext,jdbcType=LONGVARCHAR},
       #{item.affsub1,jdbcType=LONGVARCHAR},

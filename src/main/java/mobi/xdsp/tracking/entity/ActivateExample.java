@@ -2134,6 +2134,306 @@ public class ActivateExample {
             addCriterion("appName not between", value1, value2, "appname");
             return (Criteria) this;
         }
+
+        public Criteria andAdvpayoutIsNull() {
+            addCriterion("advpayout is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutIsNotNull() {
+            addCriterion("advpayout is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutEqualTo(Float value) {
+            addCriterion("advpayout =", value, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutNotEqualTo(Float value) {
+            addCriterion("advpayout <>", value, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutGreaterThan(Float value) {
+            addCriterion("advpayout >", value, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutGreaterThanOrEqualTo(Float value) {
+            addCriterion("advpayout >=", value, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutLessThan(Float value) {
+            addCriterion("advpayout <", value, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutLessThanOrEqualTo(Float value) {
+            addCriterion("advpayout <=", value, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutIn(List<Float> values) {
+            addCriterion("advpayout in", values, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutNotIn(List<Float> values) {
+            addCriterion("advpayout not in", values, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutBetween(Float value1, Float value2) {
+            addCriterion("advpayout between", value1, value2, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdvpayoutNotBetween(Float value1, Float value2) {
+            addCriterion("advpayout not between", value1, value2, "advpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutIsNull() {
+            addCriterion("pubpayout is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutIsNotNull() {
+            addCriterion("pubpayout is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutEqualTo(Float value) {
+            addCriterion("pubpayout =", value, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutNotEqualTo(Float value) {
+            addCriterion("pubpayout <>", value, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutGreaterThan(Float value) {
+            addCriterion("pubpayout >", value, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutGreaterThanOrEqualTo(Float value) {
+            addCriterion("pubpayout >=", value, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutLessThan(Float value) {
+            addCriterion("pubpayout <", value, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutLessThanOrEqualTo(Float value) {
+            addCriterion("pubpayout <=", value, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutIn(List<Float> values) {
+            addCriterion("pubpayout in", values, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutNotIn(List<Float> values) {
+            addCriterion("pubpayout not in", values, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutBetween(Float value1, Float value2) {
+            addCriterion("pubpayout between", value1, value2, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andPubpayoutNotBetween(Float value1, Float value2) {
+            addCriterion("pubpayout not between", value1, value2, "pubpayout");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntIsNull() {
+            addCriterion("activecnt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntIsNotNull() {
+            addCriterion("activecnt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntEqualTo(Integer value) {
+            addCriterion("activecnt =", value, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntNotEqualTo(Integer value) {
+            addCriterion("activecnt <>", value, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntGreaterThan(Integer value) {
+            addCriterion("activecnt >", value, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntGreaterThanOrEqualTo(Integer value) {
+            addCriterion("activecnt >=", value, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntLessThan(Integer value) {
+            addCriterion("activecnt <", value, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntLessThanOrEqualTo(Integer value) {
+            addCriterion("activecnt <=", value, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntIn(List<Integer> values) {
+            addCriterion("activecnt in", values, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntNotIn(List<Integer> values) {
+            addCriterion("activecnt not in", values, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntBetween(Integer value1, Integer value2) {
+            addCriterion("activecnt between", value1, value2, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActivecntNotBetween(Integer value1, Integer value2) {
+            addCriterion("activecnt not between", value1, value2, "activecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntIsNull() {
+            addCriterion("deductcnt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntIsNotNull() {
+            addCriterion("deductcnt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntEqualTo(Integer value) {
+            addCriterion("deductcnt =", value, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntNotEqualTo(Integer value) {
+            addCriterion("deductcnt <>", value, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntGreaterThan(Integer value) {
+            addCriterion("deductcnt >", value, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntGreaterThanOrEqualTo(Integer value) {
+            addCriterion("deductcnt >=", value, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntLessThan(Integer value) {
+            addCriterion("deductcnt <", value, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntLessThanOrEqualTo(Integer value) {
+            addCriterion("deductcnt <=", value, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntIn(List<Integer> values) {
+            addCriterion("deductcnt in", values, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntNotIn(List<Integer> values) {
+            addCriterion("deductcnt not in", values, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntBetween(Integer value1, Integer value2) {
+            addCriterion("deductcnt between", value1, value2, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeductcntNotBetween(Integer value1, Integer value2) {
+            addCriterion("deductcnt not between", value1, value2, "deductcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntIsNull() {
+            addCriterion("inactivecnt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntIsNotNull() {
+            addCriterion("inactivecnt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntEqualTo(Integer value) {
+            addCriterion("inactivecnt =", value, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntNotEqualTo(Integer value) {
+            addCriterion("inactivecnt <>", value, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntGreaterThan(Integer value) {
+            addCriterion("inactivecnt >", value, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntGreaterThanOrEqualTo(Integer value) {
+            addCriterion("inactivecnt >=", value, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntLessThan(Integer value) {
+            addCriterion("inactivecnt <", value, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntLessThanOrEqualTo(Integer value) {
+            addCriterion("inactivecnt <=", value, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntIn(List<Integer> values) {
+            addCriterion("inactivecnt in", values, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntNotIn(List<Integer> values) {
+            addCriterion("inactivecnt not in", values, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntBetween(Integer value1, Integer value2) {
+            addCriterion("inactivecnt between", value1, value2, "inactivecnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andInactivecntNotBetween(Integer value1, Integer value2) {
+            addCriterion("inactivecnt not between", value1, value2, "inactivecnt");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
