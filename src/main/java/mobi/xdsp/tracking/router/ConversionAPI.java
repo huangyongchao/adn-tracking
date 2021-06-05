@@ -140,16 +140,19 @@ public class ConversionAPI {
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
                 activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                activate.setPubpayout(puboffer.getPayout().floatValue());
                 activate.setAdvpayout(offer.getDefaultpayout());
 
                 if (AdTool.is3pt(offer.getTrackurl())) {
                     if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
                         activate.setDefaultpayout(0f);
+                        activate.setPubpayout(0f);
                         activate.setAdvpayout(0f);
 
                     }
                     if(puboffer.getPayout().floatValue()<0.3){
                         activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                        activate.setPubpayout(puboffer.getPayout().floatValue());
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
                     }
                 }
