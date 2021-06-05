@@ -90,10 +90,10 @@ public class PbResentJob {
                         if (track.indexOf("{sub1}") > -1 && StringUtils.isNotBlank(n.getSubid1())) {
                             track = StringUtils.replaceAll(track, "\\{sub1}", n.getSubid1());
                         }
-
+/*
                         if (track.indexOf("{payout}") > -1&& n.getDefaultpayout()!= null) {
                             track = StringUtils.replaceAll(track, "\\{payout}", n.getDefaultpayout().toString());
-                        }
+                        }*/
                         try {
                             track = AdTool.urlEncode(track);
                             pblog.warn(tid + ":" + track);
