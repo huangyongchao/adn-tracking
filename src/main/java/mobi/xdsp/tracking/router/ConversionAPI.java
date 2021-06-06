@@ -197,7 +197,7 @@ public class ConversionAPI {
 
                     }
                 }
-
+                ApiTools.packageCnt(activate);
 
                 if (PBStateE.VALID.code == activate.getStatus()&&( activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
                     //发PB
@@ -223,6 +223,7 @@ public class ConversionAPI {
                 activate.setClicktime(DateTimeUtil.getStringDate());
                 activate.setStatus(PBStateE.INVALID.code);
                 activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                ApiTools.packageCnt(activate);
                 int r = activateMapper.insertSelective(activate);
 
             }
