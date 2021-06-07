@@ -17,7 +17,7 @@
 
         <!--设置级别为INFO日志输出到info.log中-->
         <RollingFile name="FILE" filename="${logPath}/tracking.log"
-                     filepattern="${logPath}/sdk%d{yyyy-MM-dd}.log">
+                     filepattern="${logPath}/tracking%d{yyyy-MM-dd}.log">
             <Filters>
                 <!--输出级别，例：level=”info”,日志级别为info或者以上(匹配的界别)
 					onMatch:	DENY/ACCEPT 禁止或者接受（是否接受匹配）
@@ -116,6 +116,22 @@
             <DefaultRolloverStrategy max="104"/>
         </RollingFile>
 
+
+        <RollingFile name="TESTLOG" filename="${logPath}/test/test.log"
+                     filepattern="${logPath}/error/test%d{yyyyMMdd}.log">
+            <Filters>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout pattern="${patternplain}"/>
+            <Policies>
+                <!--设置每天打包日志一次 这个配置需要和filePattern的时间配置结合使用,如果单位是天,则每天打包一次-->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!--设置日志文件满200MB后打包-->
+            </Policies>
+            <DefaultRolloverStrategy max="4"/>
+
+        </RollingFile>
+
         <RollingFile name="SYSERROR" filename="${logPath}/error/error.log"
                      filepattern="${logPath}/error/error%d{yyyyMMdd}.log">
             <Filters>
@@ -164,6 +180,9 @@
             <appender-ref ref="PBLOG"/>
         </AsyncLogger>
 
+        <AsyncLogger name="test" level="INFO" additivity="false">
+            <appender-ref ref="TESTLOG"/>
+        </AsyncLogger>
         <!--  <logger name="org.springframework" level="INFO"></logger>
           <logger name="org.mybatis" level="ERROR"></logger>
           <logger name="org.apache" level="ERROR"/>
