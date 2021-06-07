@@ -56,7 +56,6 @@ public class TrackingAPI {
                             @RequestParam(value = "sub2", defaultValue = "") String sub2,
                             @RequestParam(value = "appid", defaultValue = "") String appid,
                             @RequestParam(value = "appname", defaultValue = "") String appname,
-                            @RequestParam(value = "t") Integer t,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 
@@ -68,14 +67,14 @@ public class TrackingAPI {
 
         //http://127.0.0.1:9192/click?pid=1005&offer=2311784&pub_sub=814434508&idfa=2012A207-2D15-4090-A0FB-F557DAF2BD25&click_id=270441375
 
-
-        if (t != null && t == 1) {
+        String t = request.getParameter("t");
+        if (t!=null && "1".equals(t)) {
 
             Enumeration headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String key = (String) headerNames.nextElement();
                 String value = request.getHeader(key);
-                testlog.info(key+" : "+value);
+                testlog.info(key + " : " + value);
             }
         }
         if (ShutdownHookEvent.SHUTDOWN) {
