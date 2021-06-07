@@ -16,6 +16,8 @@ import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,6 +39,7 @@ public class TrackingAPI {
     @Autowired
     private TrackingHandler handler;
 
+    private static final Logger testlog = LoggerFactory.getLogger("test");
 
     @CrossOrigin
     @GetMapping("/click")
@@ -65,13 +68,14 @@ public class TrackingAPI {
 
         //http://127.0.0.1:9192/click?pid=1005&offer=2311784&pub_sub=814434508&idfa=2012A207-2D15-4090-A0FB-F557DAF2BD25&click_id=270441375
 
+
         if (t != null && t == 1) {
 
             Enumeration headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String key = (String) headerNames.nextElement();
                 String value = request.getHeader(key);
-
+                testlog.info(key+" : "+value);
             }
         }
         if (ShutdownHookEvent.SHUTDOWN) {
