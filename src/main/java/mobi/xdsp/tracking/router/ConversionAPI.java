@@ -174,11 +174,7 @@ public class ConversionAPI {
                     activate.setInactivecnt(1);
 
                 }
-                if (activate.getStatus() == null) {
-                    //计算CTIT
-                    //计算CAP
 
-                }
                 if (activate.getStatus() == null) {
                     activate.setStatus(PBStateE.VALID.code);
                     activate.setActivecnt(1);
@@ -197,8 +193,11 @@ public class ConversionAPI {
 
                     }
                 }
+                //处理 状态
                 ApiTools.packageCnt(activate);
-
+                //检查Cap
+                dataService.capAction(publisher.getId(), offer.getId(), puboffer);
+                // Postback 下发
                 if (PBStateE.VALID.code == activate.getStatus()&&( activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
                     //发PB
                     boolean res = sendPb(publisher, offer, puboffer, click);
@@ -212,6 +211,8 @@ public class ConversionAPI {
                 }else{
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
+                //入库
+
                 int r = activateMapper.insertSelective(activate);
 
 

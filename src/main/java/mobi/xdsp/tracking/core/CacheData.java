@@ -7,6 +7,7 @@ import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CacheData {
     /*key+id*/
@@ -30,6 +31,9 @@ public class CacheData {
 
     public static Map<Integer, PublisherOffer> SUB_CACHE = Maps.newConcurrentMap();
     /*affiliate & publisher 初始化就加载*/
+
+
+    public static Map<String, AtomicInteger> DAILY_CAP_CACHE = Maps.newConcurrentMap();
 
 
 }

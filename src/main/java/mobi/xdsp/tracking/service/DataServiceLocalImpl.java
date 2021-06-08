@@ -1,6 +1,7 @@
 package mobi.xdsp.tracking.service;
 
 import mobi.xdsp.tracking.core.CacheData;
+import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.SychLockE;
 import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
@@ -105,7 +106,7 @@ public class DataServiceLocalImpl implements DataService {
 
     @Override
     public Offer getOfferCache(Integer id) {
-        if(id==null){
+        if (id == null) {
             return null;
         }
         Offer offer = CacheData.OFF_CACHE.get(id);
@@ -132,12 +133,38 @@ public class DataServiceLocalImpl implements DataService {
             example.createCriteria().andPublisheridEqualTo(pubid).andOfferidEqualTo(offid);
 
             List<PublisherOffer> publisherOfferList = publisherOfferMapper.selectByExample(example);
-            if(!CollectionUtils.isEmpty(publisherOfferList)){
+            if (!CollectionUtils.isEmpty(publisherOfferList)) {
                 po = publisherOfferList.get(0);
                 CacheData.PUB_OFF_CACHE.put(pokey, po);
 
             }
         }
         return po;
+    }
+
+    @Override
+    public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer) {
+        try {
+            String key = pubid + "-" + offid;
+            if (CacheData.DAILY_CAP_CACHE.containsKey(key)) {
+                int cap = CacheData.DAILY_CAP_CACHE.get(key).get();
+                int limit = 50;
+                if (publisherOffer != null && publisherOffer.getDailycap() != null) {
+                    limit = publisherOffer.getDailycap();
+                }
+
+                if (cap >= limit) {
+                    PublisherOffer po = publisherOfferMapper.selectByPrimaryKey(publisherOffer.getId());
+                    po.setState(OfferApplyStatusEnum.PAUSED.getCode());
+
+                    publisherOfferMapper.updateByPrimaryKey(po);
+
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

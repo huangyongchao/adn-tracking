@@ -2,6 +2,7 @@ package mobi.xdsp.tracking.core.job;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.enums.PBStateE;
@@ -19,10 +20,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class CacheDataJob {
@@ -129,16 +128,32 @@ public class CacheDataJob {
     }
 
 
-    @Scheduled(cron = "* 29,59 * * * ?")
+    //@Scheduled(cron = "* 29,59 * * * ?")
     public void capCache() {
         ActivateExample example = new ActivateExample();
-        Date day  = new Date();
+
         example.createCriteria().andStatusEqualTo(PBStateE.VALID.code).andChannelidGreaterThan(0)
                 .andInserttimeBetween(
-                DateUtils.addDays(day, -1), DateUtils.addDays(day, 1));
+                        DateTimeUtil.getDayStart(), DateTimeUtil.getDayEnd());
 
         List<Activate> list = activateMapper.selectByExample(example);
+        Map<String, AtomicInteger> capMap = Maps.newConcurrentMap();
+
+        if(!CollectionUtils.isEmpty(list)){
+            list.forEach(n->{
+                String key = n.getChannelid() + "-" + n.getOfferuid();
+                if(capMap.containsKey(key)){
+                    capMap.get(key).incrementAndGet();
+                }else{
+                    capMap.put(key, new AtomicInteger(1));
+                }
+            });
+
+            CacheData.DAILY_CAP_CACHE = capMap;
+
+        }
     }
+
 
     public static void main(String[] args) {
         Date day  = new Date();
