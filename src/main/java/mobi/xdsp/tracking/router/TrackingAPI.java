@@ -78,10 +78,13 @@ public class TrackingAPI {
                 testlog.info(key + " : " + value);
             }
             Cookie[] cookies = request.getCookies();
-            for(Cookie cookie :cookies){
-                testlog.info(cookie.getName() + " : " + cookie.getValue());
+            if(cookies!=null){
+                for(Cookie cookie :cookies){
+                    testlog.info(cookie.getName() + " : " + cookie.getValue());
 
+                }
             }
+
         }
         if (ShutdownHookEvent.SHUTDOWN) {
             return new ResponseModel(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Shutdown Server");
