@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -75,6 +76,11 @@ public class TrackingAPI {
                 String key = (String) headerNames.nextElement();
                 String value = request.getHeader(key);
                 testlog.info(key + " : " + value);
+            }
+            Cookie[] cookies = request.getCookies();
+            for(Cookie cookie :cookies){
+                testlog.info(cookie.getName() + " : " + cookie.getValue());
+
             }
         }
         if (ShutdownHookEvent.SHUTDOWN) {
