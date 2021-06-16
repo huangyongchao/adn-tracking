@@ -196,7 +196,11 @@ public class ConversionAPI {
                 //处理 状态
                 ApiTools.packageCnt(activate);
                 //检查Cap
-                dataService.capAction(publisher.getId(), offer.getId(), puboffer);
+                int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
+                if(action>0){
+                    activate.setStatus(PBStateE.INVALID.code);
+                    activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
+                }
                 // Postback 下发
                 if (PBStateE.VALID.code == activate.getStatus()&&( activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
                     //发PB

@@ -154,10 +154,12 @@ public class DataServiceLocalImpl implements DataService {
                 }
 
                 if (cap >= limit) {
-                    PublisherOffer po = publisherOfferMapper.selectByPrimaryKey(publisherOffer.getId());
-                    po.setState(OfferApplyStatusEnum.PAUSED.getCode());
+             /*       PublisherOffer po = publisherOfferMapper.selectByPrimaryKey(publisherOffer.getId());
+                    po.setState(OfferApplyStatusEnum.CAPFULL.getCode());
 
-                    publisherOfferMapper.updateByPrimaryKey(po);
+                    publisherOfferMapper.updateByPrimaryKey(po);*/
+
+                    return 1;
 
                 }
 
