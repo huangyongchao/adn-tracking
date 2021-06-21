@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Random;
 
 /**
  * @author huangyongchao
@@ -37,12 +38,12 @@ public class AdTool {
 
 
         int i = oriUrl.indexOf("?");
-        String host ="";
+        String host = "";
         String querystr = "";
-        if(i>0){
+        if (i > 0) {
             host = oriUrl.substring(0, i + 1);
             querystr = oriUrl.substring(i + 1);
-        }else{
+        } else {
             querystr = oriUrl;
         }
 
@@ -88,9 +89,20 @@ public class AdTool {
 
     }
 
+    public static String chooseTrackUrl(Click click, Offer offer) {
+        String url = offer.getTrackurl();
+        if(url.indexOf("##")>0){
+            String[] urls = url.split("##");
+            int l = urls.length;
+            Random r = new Random();
+            int seed = r.nextInt(l);
+            return urls[seed];
+        }
+        return url;
+    }
 
     public static String trackurl(Click click, Offer offer) {
-        String track = offer.getTrackurl();
+        String track = chooseTrackUrl(click, offer);
         try {
             if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
                 track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + URLEncoder.encode(click.getMixSub(), "utf-8"));
