@@ -70,7 +70,7 @@ public class TrackingAPI {
 
         String t = request.getParameter("t");
         if (t!=null && "1".equals(t)) {
-
+            testlog.info(request.getQueryString());
             Enumeration headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String key = (String) headerNames.nextElement();
