@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.router;
 
+import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.OfferExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
@@ -22,7 +23,11 @@ public class OpenAPI {
     WebApplicationContext applicationContext;
     @Autowired
     OfferMapper offerMapper;
+    @GetMapping("/cacheaff")
+    public Object cacheaff(@RequestParam(name = "token") String token) {
+        return CacheData.AFF_CACHE;
 
+    }
 
 
     @GetMapping("/refreshapicache")
