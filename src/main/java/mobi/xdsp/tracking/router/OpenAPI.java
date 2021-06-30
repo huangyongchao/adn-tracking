@@ -24,7 +24,7 @@ public class OpenAPI {
     @Autowired
     OfferMapper offerMapper;
     @GetMapping("/cacheaff")
-    public Object cacheaff(@RequestParam(name = "token") String token) {
+    public Object cacheaff() {
         return CacheData.AFF_CACHE;
 
     }
