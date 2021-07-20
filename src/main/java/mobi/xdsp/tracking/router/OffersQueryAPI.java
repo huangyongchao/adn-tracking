@@ -42,7 +42,7 @@ public class OffersQueryAPI {
     /**
      * 每20分钟查询一次 ,20分钟之内.返回缓存
      */
-    private Map<String, Date> QUERY_LOCK = Maps.newHashMap();
+    public static Map<String, Date> QUERY_LOCK = Maps.newHashMap();
     public static Map<String, OfferApiResponse> QUERY_CACHE = Maps.newHashMap();
 
     @Autowired

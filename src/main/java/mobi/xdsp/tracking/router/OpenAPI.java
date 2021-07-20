@@ -36,6 +36,7 @@ public class OpenAPI {
             return "No tokne";
         }else{
             OffersQueryAPI.QUERY_CACHE.remove(token);
+            OffersQueryAPI.QUERY_LOCK.remove(token);
 
             return "OK";
 
