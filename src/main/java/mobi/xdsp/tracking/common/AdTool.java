@@ -101,6 +101,7 @@ public class AdTool {
         return url;
     }
 
+
     public static String trackurl(Click click, Offer offer) {
         String track = chooseTrackUrl(click, offer);
         try {

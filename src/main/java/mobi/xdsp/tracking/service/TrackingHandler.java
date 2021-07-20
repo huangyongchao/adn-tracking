@@ -10,12 +10,15 @@ import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Random;
 
@@ -29,9 +32,42 @@ public class TrackingHandler {
     Mailer mailer;
 
 
-
+    public Random r = new Random();
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
+        if(offer.getOffername()!=null && offer.getOffername().endsWith("_MI")&&offer.getPlacements()!=null){
+            String pls = offer.getPlacements();
+            String[] plsa = pls.split(",");
+            if(plsa.length>0){
+                /*从offer默认子站里随机选择一个子站作为真实子站*/
+                String subid = plsa[r.nextInt(plsa.length)];
+                String track = offer.getTrackurl();
+                try {
+                    if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(subid)) {
+                        track = StringUtils.replaceAll(track, "\\{pub_subid}", subid);
+                    } else {
+                        track = StringUtils.replaceAll(track, "\\{pub_subid}", subid);
+                    }
+                    /*设置混量子站*/
+                    click.setMixSub(subid);
+                    /*原始子站放到AF额外参数,如果是AF链接*/
+                    if(track.indexOf("appsflyer.com")>0){
+                        if(track.indexOf("af_sub3")<0){
+                            track = track + "&af_sub3=" + click.getPubSub();
+                        }else if (track.indexOf("af_sub2")<0){
+                            track = track + "&af_sub2=" + click.getPubSub();
+                        }else if (track.indexOf("af_sub1")<0){
+                            track = track + "&af_sub1=" + click.getPubSub();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                offer.setTrackurl(track);
+
+            }
+
+        }
     }
 
     public String makeURL(Click click, Offer offer) {
