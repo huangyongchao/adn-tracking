@@ -39,9 +39,11 @@ public class TrackingHandler {
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
             if(plsa.length>0){
+                clicklog.info(pls);
                 /*从offer默认子站里随机选择一个子站作为真实子站*/
                 String subid = plsa[r.nextInt(plsa.length)];
                 String track = offer.getTrackurl();
+                clicklog.info(subid);
                 try {
                     if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(subid)) {
                         track = StringUtils.replaceAll(track, "\\{pub_subid}", subid);
