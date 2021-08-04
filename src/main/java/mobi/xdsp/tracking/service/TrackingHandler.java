@@ -35,7 +35,7 @@ public class TrackingHandler {
     public Random r = new Random();
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
-        if(offer.getOffername()!=null && "2".equals(""+offer.getPriority())&&offer.getPlacements()!=null){
+        if(offer.getOffername()!=null && "4".equals(""+offer.getPriority())&&offer.getPlacements()!=null){
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
             if(plsa.length>0){
