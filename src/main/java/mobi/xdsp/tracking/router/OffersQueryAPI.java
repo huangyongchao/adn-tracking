@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 @RestController
 public class OffersQueryAPI {
-    private String trackDomain = "http://tracking.pubearn.com";
 
     /**
      * 每20分钟查询一次 ,20分钟之内.返回缓存
@@ -76,6 +75,10 @@ public class OffersQueryAPI {
     private DataService dataService;
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
+
+        String trackDomain = "http://tracking.pubearn.com";
+
+
         if (StringUtils.isBlank(token)) {
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
@@ -98,7 +101,9 @@ public class OffersQueryAPI {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
-
+        if (publisher.getInnercompany() != null && publisher.getInnercompany() == 3) {
+            trackDomain = "http://tracking.snailmedia.cn";
+        }
         PublisherOfferExample example = new PublisherOfferExample();
         example.createCriteria().andPublisheridEqualTo(publisher.getId()).andStateEqualTo(OfferApplyStatusEnum.APPROVED.getCode());
 
