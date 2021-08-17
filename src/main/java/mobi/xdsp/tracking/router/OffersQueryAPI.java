@@ -76,7 +76,7 @@ public class OffersQueryAPI {
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
 
-        String trackDomain = "http://tracking.pubearn.com";
+
 
 
         if (StringUtils.isBlank(token)) {
@@ -101,9 +101,7 @@ public class OffersQueryAPI {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
-        if (publisher.getInnercompany() != null && publisher.getInnercompany() == 3) {
-            trackDomain = "http://tracking.snailmedia.cn";
-        }
+
         PublisherOfferExample example = new PublisherOfferExample();
         example.createCriteria().andPublisheridEqualTo(publisher.getId()).andStateEqualTo(OfferApplyStatusEnum.APPROVED.getCode());
 
@@ -218,6 +216,10 @@ public class OffersQueryAPI {
 
                         } else {
                             /*走平台链接*/
+                            String trackDomain = "http://tracking.pubearn.com";
+                            if (publisher.getInnercompany() != null && publisher.getInnercompany() == 3) {
+                                trackDomain = "http://tracking.snailmedia.cn";
+                            }
                             StringBuilder track = new StringBuilder(trackDomain + "/click?");
 
                             track.append("pid=" + publisher.getId());
