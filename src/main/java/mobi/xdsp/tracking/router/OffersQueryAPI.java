@@ -6,6 +6,8 @@ import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
+import mobi.xdsp.tracking.dto.affise.AffiseResponse;
+import mobi.xdsp.tracking.dto.affise.Pagination;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OsE;
 import mobi.xdsp.tracking.dto.enums.StateE;
@@ -19,10 +21,7 @@ import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
@@ -35,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 @RestController
 public class OffersQueryAPI {
 
@@ -73,27 +73,45 @@ public class OffersQueryAPI {
 
     @Autowired
     private DataService dataService;
+
+
+    @GetMapping("/offers/v2/")
+    public Object offersaffise(@RequestHeader(value = "API-Key") String apikey, @RequestParam(value = "API") String apikey1, @RequestParam(value = "token") String token) {
+        if (StringUtils.isBlank(apikey)) {
+            if (StringUtils.isBlank(apikey1)) {
+                apikey = apikey1;
+            } else if (StringUtils.isBlank(token)) {
+                apikey = token;
+            }
+
+        }
+        if (StringUtils.isBlank(apikey)) {
+            return new AffiseResponse(0, null, new Pagination(1000,0,1));
+        } else {
+            List<mobi.xdsp.tracking.dto.affise.Offers> offers = Lists.newLinkedList();
+            return new AffiseResponse(1, offers,new Pagination(1000,offers.size(),1));
+        }
+    }
+
     @GetMapping("/offers")
     public Object offers(@RequestParam(value = "token", required = true) String token) {
-
-
 
 
         if (StringUtils.isBlank(token)) {
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
         Publisher pub = CacheData.PUB_TOKEN.get(token);
-        if(pub==null){
+        if (pub == null) {
             pub = dataService.cachePublisherByToken(token);
-            if(pub!=null){
+            if (pub != null) {
                 CacheData.PUB_TOKEN.put(token, pub);
             }
         }
-        if(pub ==null){
+        if (pub == null) {
             return new OfferApiResponse(false, "Invalid token", null, false);
         }
         final Publisher publisher = pub;
-        if(StateE.INVALID.code ==publisher.getState()){
+        if (StateE.INVALID.code == publisher.getState()) {
             return new OfferApiResponse(false, "Publisher have been stop.", null, false);
 
         }
@@ -233,10 +251,10 @@ public class OffersQueryAPI {
                                 track.append("gaid={gaid}&");
                             }
                             track.append("click_id={click_id}");
-                            if(n.getTrackurl().indexOf("store_appid")>0){
+                            if (n.getTrackurl().indexOf("store_appid") > 0) {
                                 track.append("&appid={appid}");
                             }
-                            if(n.getIsattrs()){
+                            if (n.getIsattrs()) {
                                 track.append("&lang={lang}");
                                 track.append("&ua={ua}");
                                 track.append("&ip={ip}");
