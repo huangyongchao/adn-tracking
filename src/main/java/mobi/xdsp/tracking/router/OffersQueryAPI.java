@@ -79,7 +79,7 @@ public class OffersQueryAPI {
 
         if (StringUtils.isBlank(apikey)) {
             String apikey1 = request.getParameter("API-Key");
-            if (StringUtils.isBlank(apikey1)) {
+            if (StringUtils.isNotBlank(apikey1)) {
                 apikey = apikey1;
             } else {
                 apikey = request.getParameter("token");
