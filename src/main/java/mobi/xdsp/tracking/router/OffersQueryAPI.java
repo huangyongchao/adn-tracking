@@ -84,15 +84,15 @@ public class OffersQueryAPI {
 
         }
         if (StringUtils.isBlank(apikey)) {
-            return new AffiseResponse(0, null, new Pagination(1000, 0, 1));
+            return new AffiseResponse(2, "Invalid Token");
         } else {
             OfferApiResponse response = offers(apikey);
             if (!response.isSuccess()) {
-                return new AffiseResponse(0, null, new Pagination(1000, 0, 1));
+                return new AffiseResponse(2, response.getMsg());
 
             } else {
                 if (CollectionUtils.isEmpty(response.getOffers())) {
-                    return new AffiseResponse(1, null, new Pagination(1000, 0, 1));
+                    return new AffiseResponse(2, null, new Pagination(1000, 0, 1));
                 } else {
                     List<AffiseOffer> offers = Lists.newLinkedList();
                     response.getOffers().forEach(offers1 -> {
@@ -105,7 +105,7 @@ public class OffersQueryAPI {
 
                         o.setKpi(kpi);
                         Links links = new Links();
-                        links.setTitle("tracking");
+                        links.setTitle("click");
                         links.setUrl(offers1.getTrackingUrl());
                         o.setLinks(Lists.newArrayList(links));
                         o.setTitle(offers1.getName());

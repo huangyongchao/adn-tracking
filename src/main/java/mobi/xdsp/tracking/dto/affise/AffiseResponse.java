@@ -15,11 +15,18 @@ public class AffiseResponse {
     private int status;
     private List<AffiseOffer> offers;
     private Pagination pagination;
+    private String error;
+
 
     public AffiseResponse(int status, List<AffiseOffer> offers, Pagination pagination) {
         this.status = status;
         this.offers = offers;
         this.pagination = pagination;
+    }
+
+    public AffiseResponse(int status, String error) {
+        this.status = status;
+        this.error = error;
     }
 
     public AffiseResponse() {
