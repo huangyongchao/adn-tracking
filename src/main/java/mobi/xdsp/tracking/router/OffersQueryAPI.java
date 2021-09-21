@@ -72,7 +72,7 @@ public class OffersQueryAPI {
     @Autowired
     private DataService dataService;
 
-    @RequestMapping("v3/partner/offers")
+    @RequestMapping("v3/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
     public Object offersaffise(@RequestHeader(value = "API-Key") String apikey, @RequestParam(value = "API") String apikey1, @RequestParam(value = "token") String token) {
         if (StringUtils.isBlank(apikey)) {
             if (StringUtils.isBlank(apikey1)) {
@@ -97,7 +97,7 @@ public class OffersQueryAPI {
                     response.getOffers().forEach(offers1 -> {
                         AffiseOffer o = new AffiseOffer();
                         o.setId(offers1.getId());
-                        o.setOffer_id(offers1.getId()+offers1.getGeo());
+                        o.setOffer_id(offers1.getId() + offers1.getGeo());
                         o.setCategories(Lists.newArrayList(offers1.getCategory()));
                         Kpi kpi = new Kpi();
                         kpi.setEn(offers1.getKpis());
@@ -134,18 +134,18 @@ public class OffersQueryAPI {
                         o.setStrictly_country(1);
                         Strictly_os strictly_os = new Strictly_os();
                         Items items = new Items();
-                        if(OsE.iOS.name().equalsIgnoreCase( offers1.getOs())){
+                        if (OsE.iOS.name().equalsIgnoreCase(offers1.getOs())) {
 
-                            items.setIOS(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion())?"13.0":offers1.getMinOsVersion()));
-                        }else{
-                            items.setAndroid(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion())?"13.0":offers1.getMinOsVersion()));
+                            items.setIOS(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion()) ? "13.0" : offers1.getMinOsVersion()));
+                        } else {
+                            items.setAndroid(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion()) ? "13.0" : offers1.getMinOsVersion()));
 
                         }
                         strictly_os.setItems(items);
                         o.setStrictly_os(strictly_os);
-                        if("cpi".equalsIgnoreCase(offers1.getPayoutType())){
+                        if ("cpi".equalsIgnoreCase(offers1.getPayoutType())) {
                             o.setIs_cpi(true);
-                        }else{
+                        } else {
                             o.setIs_cpi(false);
                         }
                         o.setUse_http(true);
@@ -179,7 +179,7 @@ public class OffersQueryAPI {
         }
     }
 
-    @GetMapping("/offers")
+    @RequestMapping(value = "/offers", method = {RequestMethod.POST, RequestMethod.GET})
     public OfferApiResponse offers(@RequestParam(value = "token", required = true) String token) {
 
 
