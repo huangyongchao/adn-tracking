@@ -72,7 +72,7 @@ public class OffersQueryAPI {
     @Autowired
     private DataService dataService;
 
-    @RequestMapping("v3/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(path="v3/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
     public Object offersaffise(@RequestHeader(value = "API-Key") String apikey, @RequestParam(value = "API") String apikey1, @RequestParam(value = "token") String token) {
         if (StringUtils.isBlank(apikey)) {
             if (StringUtils.isBlank(apikey1)) {
@@ -179,7 +179,7 @@ public class OffersQueryAPI {
         }
     }
 
-    @RequestMapping(value = "/offers", method = {RequestMethod.POST, RequestMethod.GET})
+    @RequestMapping(path = "/offers", method = {RequestMethod.POST, RequestMethod.GET})
     public OfferApiResponse offers(@RequestParam(value = "token", required = true) String token) {
 
 
