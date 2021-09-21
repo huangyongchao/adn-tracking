@@ -5,7 +5,7 @@ package mobi.xdsp.tracking.dto.affise;
 import java.util.List;
 
 /**
- * Auto-generated: 2021-09-20 22:52:27
+ * Auto-generated: 2021-09-21 13:47:23
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
@@ -24,6 +24,7 @@ public class Targeting {
     private List<String> connection;
     private String id;
     private List<String> sub_regexps;
+    private boolean block_proxy;
     public void setCountry(Country country) {
          this.country = country;
      }
@@ -106,6 +107,13 @@ public class Targeting {
      }
      public List<String> getSub_regexps() {
          return sub_regexps;
+     }
+
+    public void setBlock_proxy(boolean block_proxy) {
+         this.block_proxy = block_proxy;
+     }
+     public boolean getBlock_proxy() {
+         return block_proxy;
      }
 
 }

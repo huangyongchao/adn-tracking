@@ -5,20 +5,18 @@ package mobi.xdsp.tracking.dto.affise;
 import java.util.List;
 
 /**
- * Auto-generated: 2021-09-20 22:52:27
+ * Auto-generated: 2021-09-21 13:47:23
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
- *
- * status =1 成功  0 失败
  */
 public class AffiseResponse {
 
     private int status;
-    private List<Offers> offers;
+    private List<AffiseOffer> offers;
     private Pagination pagination;
 
-    public AffiseResponse(int status, List<Offers> offers, Pagination pagination) {
+    public AffiseResponse(int status, List<AffiseOffer> offers, Pagination pagination) {
         this.status = status;
         this.offers = offers;
         this.pagination = pagination;
@@ -34,10 +32,10 @@ public class AffiseResponse {
          return status;
      }
 
-    public void setOffers(List<Offers> offers) {
+    public void setOffers(List<AffiseOffer> offers) {
          this.offers = offers;
      }
-     public List<Offers> getOffers() {
+     public List<AffiseOffer> getOffers() {
          return offers;
      }
 

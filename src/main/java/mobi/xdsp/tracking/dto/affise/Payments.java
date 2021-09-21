@@ -5,7 +5,7 @@ package mobi.xdsp.tracking.dto.affise;
 import java.util.List;
 
 /**
- * Auto-generated: 2021-09-20 22:52:27
+ * Auto-generated: 2021-09-21 13:47:23
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
@@ -17,7 +17,7 @@ public class Payments {
     private List<String> devices;
     private List<String> os;
     private String goal;
-    private int revenue;
+    private double revenue;
     private String currency;
     private String title;
     private String type;
@@ -57,10 +57,10 @@ public class Payments {
          return goal;
      }
 
-    public void setRevenue(int revenue) {
+    public void setRevenue(double revenue) {
          this.revenue = revenue;
      }
-     public int getRevenue() {
+     public double getRevenue() {
          return revenue;
      }
 

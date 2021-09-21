@@ -9,14 +9,14 @@ package mobi.xdsp.tracking.dto.affise;
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class Kpi {
+public class Strictly_os {
 
-    private String en;
-    public void setEn(String en) {
-         this.en = en;
+    private Items items;
+    public void setItems(Items items) {
+         this.items = items;
      }
-     public String getEn() {
-         return en;
+     public Items getItems() {
+         return items;
      }
 
 }

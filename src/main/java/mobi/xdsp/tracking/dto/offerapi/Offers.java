@@ -24,6 +24,7 @@ public class Offers {
     private String description;
     private String restrictions;
     private String payoutType;
+    private String payEvent;
     private String appId;
     private String appName;
     private String category;

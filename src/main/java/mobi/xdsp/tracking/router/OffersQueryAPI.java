@@ -6,8 +6,7 @@ import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
-import mobi.xdsp.tracking.dto.affise.AffiseResponse;
-import mobi.xdsp.tracking.dto.affise.Pagination;
+import mobi.xdsp.tracking.dto.affise.*;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OsE;
 import mobi.xdsp.tracking.dto.enums.StateE;
@@ -24,7 +23,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -86,15 +84,104 @@ public class OffersQueryAPI {
 
         }
         if (StringUtils.isBlank(apikey)) {
-            return new AffiseResponse(0, null, new Pagination(1000,0,1));
+            return new AffiseResponse(0, null, new Pagination(1000, 0, 1));
         } else {
-            List<mobi.xdsp.tracking.dto.affise.Offers> offers = Lists.newLinkedList();
-            return new AffiseResponse(1, offers,new Pagination(1000,offers.size(),1));
+            OfferApiResponse response = offers(apikey);
+            if (!response.isSuccess()) {
+                return new AffiseResponse(0, null, new Pagination(1000, 0, 1));
+
+            } else {
+                if (CollectionUtils.isEmpty(response.getOffers())) {
+                    return new AffiseResponse(1, null, new Pagination(1000, 0, 1));
+                } else {
+                    List<AffiseOffer> offers = Lists.newLinkedList();
+                    response.getOffers().forEach(offers1 -> {
+                        AffiseOffer o = new AffiseOffer();
+                        o.setId(offers1.getId());
+                        o.setOffer_id(offers1.getId()+offers1.getGeo());
+                        o.setCategories(Lists.newArrayList(offers1.getCategory()));
+                        Kpi kpi = new Kpi();
+                        kpi.setEn(offers1.getKpis());
+
+                        o.setKpi(kpi);
+                        Links links = new Links();
+                        links.setTitle("tracking");
+                        links.setUrl(offers1.getTrackingUrl());
+                        o.setLinks(Lists.newArrayList(links));
+                        o.setTitle(offers1.getName());
+                        Description_lang description_lang = new Description_lang();
+                        description_lang.setEn(offers1.getDescription());
+                        o.setDescription_lang(description_lang);
+
+                        o.setPreview_url(offers1.getPreviewUrl());
+                        Caps cap = new Caps();
+                        cap.setPeriod("day");
+                        cap.setGoal_type("all");
+                        cap.setValue(offers1.getDailyCap());
+                        cap.setCountry_type(offers1.getGeo());
+                        cap.setType("2");
+                        o.setCaps(Lists.newArrayList(cap));
+                        Payments payments = new Payments();
+                        payments.setOs(Lists.newArrayList(offers1.getOs()));
+                        payments.setRevenue(offers1.getPayout());
+                        payments.setCurrency(offers1.getCurrency());
+                        payments.setCountries(Lists.newArrayList(offers1.getGeo()));
+                        payments.setDevices(Lists.newArrayList("Mobile"));
+                        payments.setGoal(offers1.getPayEvent());
+                        payments.setType("fixed");
+                        payments.setTitle(offers1.getPayoutType());
+
+                        o.setPayments(Lists.newArrayList(payments));
+                        o.setStrictly_country(1);
+                        Strictly_os strictly_os = new Strictly_os();
+                        Items items = new Items();
+                        if(OsE.iOS.name().equalsIgnoreCase( offers1.getOs())){
+
+                            items.setIOS(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion())?"13.0":offers1.getMinOsVersion()));
+                        }else{
+                            items.setAndroid(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion())?"13.0":offers1.getMinOsVersion()));
+
+                        }
+                        strictly_os.setItems(items);
+                        o.setStrictly_os(strictly_os);
+                        if("cpi".equalsIgnoreCase(offers1.getPayoutType())){
+                            o.setIs_cpi(true);
+                        }else{
+                            o.setIs_cpi(false);
+                        }
+                        o.setUse_http(true);
+                        o.setUse_https(false);
+                        Targeting targeting = new Targeting();
+                        Os os = new Os();
+                        Allow allow = new Allow();
+                        allow.setName(offers1.getOs());
+                        allow.setComparison("GTE");
+                        allow.setVersion(offers1.getMinOsVersion());
+                        os.setAllow(Lists.newArrayList(allow));
+                        targeting.setOs(os);
+                        Country country = new Country();
+                        country.setAllow(Lists.newArrayList(offers1.getGeo()));
+
+                        targeting.setCountry(country);
+                        o.setTargeting(Lists.newArrayList(targeting));
+                        o.setConsider_personal_targeting_only(false);
+                        o.setCountries(Lists.newArrayList(offers1.getGeo()));
+                        o.setHosts_only(false);
+                        o.setUniq_ip_only(true);
+                        o.setReject_not_uniq_ip(1);
+                        offers.add(o);
+
+                    });
+                    return new AffiseResponse(1, offers, new Pagination(1000, offers.size(), 1));
+
+                }
+
+            }
         }
     }
 
     @GetMapping("/offers")
-    public Object offers(@RequestParam(value = "token", required = true) String token) {
+    public OfferApiResponse offers(@RequestParam(value = "token", required = true) String token) {
 
 
         if (StringUtils.isBlank(token)) {
@@ -160,6 +247,7 @@ public class OffersQueryAPI {
                         respO.setRestrictions(n.getRestrictions());
                         respO.setGeo(n.getCountries());
                         respO.setId(n.getId());
+                        respO.setPayEvent(n.getCreatives());
                         respO.setIncent(false);
                         respO.setKpis(n.getKpis());
                         respO.setMinOsVersion(n.getMinos());

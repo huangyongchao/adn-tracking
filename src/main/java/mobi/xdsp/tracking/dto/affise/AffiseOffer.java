@@ -5,31 +5,31 @@ package mobi.xdsp.tracking.dto.affise;
 import java.util.List;
 
 /**
- * Auto-generated: 2021-09-20 22:52:27
+ * Auto-generated: 2021-09-21 13:47:23
  *
  * @author bejson.com (i@bejson.com)
  * @website http://www.bejson.com/java2pojo/
  */
-public class Offers {
+public class AffiseOffer {
 
-    private int id;
+    private long id;
     private String offer_id;
     private String title;
     private String preview_url;
     private Description_lang description_lang;
-    private double cr;
+    private int cr;
     private int epc;
     private String logo;
     private String logo_source;
     private String stop_at;
-    private List<Sources> sources;
+    private List<String> sources;
     private List<String> categories;
     private List<Full_categories> full_categories;
     private List<Payments> payments;
-    private List<String> caps;
+    private List<Caps> caps;
     private boolean required_approval;
     private int strictly_country;
-    private List<String> strictly_os;
+    private Strictly_os strictly_os;
     private List<String> strictly_brands;
     private boolean is_cpi;
     private List<String> creatives;
@@ -50,13 +50,15 @@ public class Offers {
     private List<Targeting> targeting;
     private boolean consider_personal_targeting_only;
     private boolean hosts_only;
+    private List<String> countries;
+    private List<String> strictly_devices;
     private boolean uniq_ip_only;
     private int reject_not_uniq_ip;
     private boolean sign_clicks_appsflyer_key;
-    public void setId(int id) {
+    public void setId(long id) {
          this.id = id;
      }
-     public int getId() {
+     public long getId() {
          return id;
      }
 
@@ -88,10 +90,10 @@ public class Offers {
          return description_lang;
      }
 
-    public void setCr(double cr) {
+    public void setCr(int cr) {
          this.cr = cr;
      }
-     public double getCr() {
+     public int getCr() {
          return cr;
      }
 
@@ -123,10 +125,10 @@ public class Offers {
          return stop_at;
      }
 
-    public void setSources(List<Sources> sources) {
+    public void setSources(List<String> sources) {
          this.sources = sources;
      }
-     public List<Sources> getSources() {
+     public List<String> getSources() {
          return sources;
      }
 
@@ -151,10 +153,10 @@ public class Offers {
          return payments;
      }
 
-    public void setCaps(List<String> caps) {
+    public void setCaps(List<Caps> caps) {
          this.caps = caps;
      }
-     public List<String> getCaps() {
+     public List<Caps> getCaps() {
          return caps;
      }
 
@@ -172,10 +174,10 @@ public class Offers {
          return strictly_country;
      }
 
-    public void setStrictly_os(List<String> strictly_os) {
+    public void setStrictly_os(Strictly_os strictly_os) {
          this.strictly_os = strictly_os;
      }
-     public List<String> getStrictly_os() {
+     public Strictly_os getStrictly_os() {
          return strictly_os;
      }
 
@@ -317,6 +319,20 @@ public class Offers {
      }
      public boolean getHosts_only() {
          return hosts_only;
+     }
+
+    public void setCountries(List<String> countries) {
+         this.countries = countries;
+     }
+     public List<String> getCountries() {
+         return countries;
+     }
+
+    public void setStrictly_devices(List<String> strictly_devices) {
+         this.strictly_devices = strictly_devices;
+     }
+     public List<String> getStrictly_devices() {
+         return strictly_devices;
      }
 
     public void setUniq_ip_only(boolean uniq_ip_only) {
