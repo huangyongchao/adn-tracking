@@ -17,6 +17,13 @@ public class AffiseResponse {
     private Pagination pagination;
     private String error;
 
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 
     public AffiseResponse(int status, List<AffiseOffer> offers, Pagination pagination) {
         this.status = status;
