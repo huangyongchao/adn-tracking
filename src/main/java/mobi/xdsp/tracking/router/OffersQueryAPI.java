@@ -121,7 +121,7 @@ public class OffersQueryAPI {
                         cap.setPeriod("day");
                         cap.setGoal_type("all");
                         cap.setValue(offers1.getDailyCap());
-                        cap.setCountry_type(offers1.getGeo());
+                        cap.setCountry(Lists.newArrayList(offers1.getGeo()));
                         cap.setType("2");
                         o.setCaps(Lists.newArrayList(cap));
                         Payments payments = new Payments();
