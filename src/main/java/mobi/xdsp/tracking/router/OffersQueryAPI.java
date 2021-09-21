@@ -72,7 +72,10 @@ public class OffersQueryAPI {
 
     @Autowired
     private DataService dataService;
-
+    @RequestMapping(path = "3.0/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
+    public Object offersaffise1(HttpServletRequest request) {
+        return offersaffise1(request);
+    }
     @RequestMapping(path = "affiseoffers", method = {RequestMethod.POST, RequestMethod.GET})
     public Object offersaffise(HttpServletRequest request) {
         String apikey = request.getHeader("API-Key");
