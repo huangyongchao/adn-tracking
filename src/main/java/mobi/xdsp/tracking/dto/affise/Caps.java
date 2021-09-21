@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class Caps {
 
-    private String 2;
     private Goals goals;
     private String period;
     private String type;
@@ -22,13 +21,6 @@ public class Caps {
     private List<String> country;
     private String sub_number;
     private List<String> sub_value;
-    public void set2(String 2) {
-         this.2 = 2;
-     }
-     public String get2() {
-         return 2;
-     }
-
     public void setGoals(Goals goals) {
          this.goals = goals;
      }
