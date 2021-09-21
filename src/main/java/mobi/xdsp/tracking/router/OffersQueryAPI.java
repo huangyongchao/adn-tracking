@@ -72,7 +72,7 @@ public class OffersQueryAPI {
     @Autowired
     private DataService dataService;
 
-    @GetMapping("/3.0/partner/offers")
+    @RequestMapping("v3/partner/offers")
     public Object offersaffise(@RequestHeader(value = "API-Key") String apikey, @RequestParam(value = "API") String apikey1, @RequestParam(value = "token") String token) {
         if (StringUtils.isBlank(apikey)) {
             if (StringUtils.isBlank(apikey1)) {
