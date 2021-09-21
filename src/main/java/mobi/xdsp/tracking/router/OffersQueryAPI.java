@@ -23,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -72,13 +73,16 @@ public class OffersQueryAPI {
     @Autowired
     private DataService dataService;
 
-    @RequestMapping(path="affiseoffers", method = {RequestMethod.POST, RequestMethod.GET})
-    public Object offersaffise(@RequestHeader(value = "API-Key") String apikey, @RequestParam(value = "API") String apikey1, @RequestParam(value = "token") String token) {
+    @RequestMapping(path = "affiseoffers", method = {RequestMethod.POST, RequestMethod.GET})
+    public Object offersaffise(HttpServletRequest request) {
+        String apikey = request.getHeader("API-Key");
+
         if (StringUtils.isBlank(apikey)) {
+            String apikey1 = request.getParameter("API-Key");
             if (StringUtils.isBlank(apikey1)) {
                 apikey = apikey1;
-            } else if (StringUtils.isBlank(token)) {
-                apikey = token;
+            } else {
+                apikey = request.getParameter("token");
             }
 
         }
