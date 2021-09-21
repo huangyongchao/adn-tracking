@@ -95,7 +95,7 @@ public class OffersQueryAPI {
 
             } else {
                 if (CollectionUtils.isEmpty(response.getOffers())) {
-                    return new AffiseResponse(2, null, new Pagination(1000, 0, 1));
+                    return new AffiseResponse(2, Lists.newLinkedList(), new Pagination(1000, 0, 1));
                 } else {
                     List<AffiseOffer> offers = Lists.newLinkedList();
                     response.getOffers().forEach(offers1 -> {
