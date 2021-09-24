@@ -84,7 +84,7 @@ public class EmailRevJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(),1));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(),0));
 
             Message[] messages = folder.search(term);
             // 获得收件箱的邮件列表
@@ -100,7 +100,8 @@ public class EmailRevJob {
 
             Arrays.stream(messages).forEach(msg -> {
                 try {
-                    if(msg.getSubject().indexOf("荣耀大天使")>0){
+                    //System.out.println(msg.getSubject());
+                    if(msg.getSubject().indexOf("七猫小说")>0){
                         try {
                             String cont = parseMultipart((Multipart) msg.getContent());
                             int i = cont.indexOf("服务端上报链接");

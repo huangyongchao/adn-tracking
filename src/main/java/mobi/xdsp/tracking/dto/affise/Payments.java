@@ -17,7 +17,7 @@ public class Payments {
     private List<String> devices;
     private List<String> os;
     private String goal;
-    private double revenue;
+    private Float revenue;
     private String currency;
     private String title;
     private String type;
@@ -57,10 +57,10 @@ public class Payments {
          return goal;
      }
 
-    public void setRevenue(double revenue) {
+    public void setRevenue(Float revenue) {
          this.revenue = revenue;
      }
-     public double getRevenue() {
+     public Float getRevenue() {
          return revenue;
      }
 
