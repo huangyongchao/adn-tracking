@@ -4,11 +4,13 @@
 package mobi.xdsp.tracking.dto.offerapi;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -43,6 +45,9 @@ public class Offers {
     private String blacklist;
     private String whitelist;
     private boolean s2sLink;
+    private Integer subtype;
+    private String suggestSubs;
+    private String targetSchedule;
     private List<String> targetCities = Lists.newLinkedList();
     private List<String> targetCarries = Lists.newLinkedList();
     private List<String> targetDeviceModels = Lists.newLinkedList();

@@ -72,6 +72,9 @@ public class PublisherOffer {
 
     private String ukey;
 
+
+
+
     public Integer getId() {
         return id;
     }
