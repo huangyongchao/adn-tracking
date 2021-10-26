@@ -265,7 +265,7 @@ public class OffersQueryAPI {
                         respO.setAppName(n.getAppname());
                         respO.setSubtype(n.getAutosubid());
                         respO.setSuggestSubs(n.getPlacements());
-                        respO.setTargetSchedule(n.getSchedule());
+                        respO.setTargetScheduleUTC(n.getSchedule());
                         if (respO.getPreviewUrl() == null || "null".equalsIgnoreCase(respO.getPreviewUrl())) {
                             if ("ios".equalsIgnoreCase(n.getOs())) {
                                 respO.setPreviewUrl("https://apps.apple.com/app/id" + n.getAppid());

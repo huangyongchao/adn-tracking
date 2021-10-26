@@ -47,7 +47,7 @@ public class Offers {
     private boolean s2sLink;
     private Integer subtype;
     private String suggestSubs;
-    private String targetSchedule;
+    private String targetScheduleUTC;
     private List<String> targetCities = Lists.newLinkedList();
     private List<String> targetCarries = Lists.newLinkedList();
     private List<String> targetDeviceModels = Lists.newLinkedList();
