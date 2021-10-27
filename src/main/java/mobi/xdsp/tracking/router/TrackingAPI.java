@@ -15,6 +15,7 @@ import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.service.TrackingHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,10 @@ public class TrackingAPI {
                             @RequestParam(value = "click_id", defaultValue = "") String pubClickid,
                             @RequestParam(value = "sub1", defaultValue = "") String sub1,
                             @RequestParam(value = "sub2", defaultValue = "") String sub2,
+                            @RequestParam(value = "sub3", defaultValue = "") String sub3,
+                            @RequestParam(value = "sub4", defaultValue = "") String sub4,
+                            @RequestParam(value = "sub5", defaultValue = "") String sub5,
+                            @RequestParam(value = "sub6", defaultValue = "") String sub6,
                             @RequestParam(value = "appid", defaultValue = "") String appid,
                             @RequestParam(value = "appname", defaultValue = "") String appname,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -69,7 +74,7 @@ public class TrackingAPI {
         //http://127.0.0.1:9192/click?pid=1005&offer=2311784&pub_sub=814434508&idfa=2012A207-2D15-4090-A0FB-F557DAF2BD25&click_id=270441375
 
         String t = request.getParameter("t");
-        if (t!=null && "1".equals(t)) {
+        if (t != null && "1".equals(t)) {
             testlog.info(request.getQueryString());
             Enumeration headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
@@ -78,8 +83,8 @@ public class TrackingAPI {
                 testlog.info(key + " : " + value);
             }
             Cookie[] cookies = request.getCookies();
-            if(cookies!=null){
-                for(Cookie cookie :cookies){
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
                     testlog.info(cookie.getName() + " : " + cookie.getValue());
 
                 }
@@ -142,6 +147,20 @@ public class TrackingAPI {
         if (publisherOffer.getClickcap() > 0) {
 
         }
+
+        if (StringUtils.isBlank(pubClickid) && StringUtils.isNotBlank(sub3)) {
+            pubClickid = sub3;
+        }
+        if (StringUtils.isBlank(pubSub) && StringUtils.isNotBlank(sub4)) {
+            pubSub = sub4;
+        }
+        if (StringUtils.isBlank(idfa) && StringUtils.isNotBlank(sub5)) {
+            idfa = sub5;
+        }
+        if (StringUtils.isBlank(gaid) && StringUtils.isNotBlank(sub6)) {
+            gaid = sub6;
+        }
+
         String rua = request.getHeader("User-Agent");
         Click click = new Click();
 
