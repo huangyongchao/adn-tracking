@@ -136,7 +136,7 @@ public class OffersQueryAPI {
                         payments.setGoal(offers1.getPayEvent());
                         payments.setType("fixed");
                         payments.setTitle(offers1.getPayoutType());
-
+                        o.setTrackUrl(offers1.getTrackingUrl());
                         o.setPayments(Lists.newArrayList(payments));
                         o.setStrictly_country(1);
                         Strictly_os strictly_os = new Strictly_os();

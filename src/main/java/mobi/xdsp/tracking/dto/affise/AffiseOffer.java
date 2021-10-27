@@ -44,6 +44,7 @@ public class AffiseOffer {
     private int hold_period;
     private Kpi kpi;
     private String click_session;
+    private String trackUrl;
     private String minimal_click_session;
     private List<String> strictly_isp;
     private List<String> restriction_isp;
@@ -356,4 +357,43 @@ public class AffiseOffer {
          return sign_clicks_appsflyer_key;
      }
 
+    public boolean isRequired_approval() {
+        return required_approval;
+    }
+
+    public boolean isIs_cpi() {
+        return is_cpi;
+    }
+
+    public boolean isUse_https() {
+        return use_https;
+    }
+
+    public boolean isUse_http() {
+        return use_http;
+    }
+
+    public String getTrackUrl() {
+        return trackUrl;
+    }
+
+    public void setTrackUrl(String trackUrl) {
+        this.trackUrl = trackUrl;
+    }
+
+    public boolean isConsider_personal_targeting_only() {
+        return consider_personal_targeting_only;
+    }
+
+    public boolean isHosts_only() {
+        return hosts_only;
+    }
+
+    public boolean isUniq_ip_only() {
+        return uniq_ip_only;
+    }
+
+    public boolean isSign_clicks_appsflyer_key() {
+        return sign_clicks_appsflyer_key;
+    }
 }
