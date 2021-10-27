@@ -137,11 +137,15 @@ public class OffersQueryAPI {
                         payments.setType("fixed");
                         payments.setTitle(offers1.getPayoutType());
                         o.setTrackUrl(offers1.getTrackingUrl());
-                        o.setLink(offers1.getTrackingUrl());
+                        int i= offers1.getTrackingUrl().indexOf("pub_sub");
+                        if(i>0){
+                            o.setLink(offers1.getTrackingUrl().substring(0,i-1));
+                        }
                         o.setPayments(Lists.newArrayList(payments));
                         o.setStrictly_country(1);
                         Strictly_os strictly_os = new Strictly_os();
                         Items items = new Items();
+
                         if (OsE.iOS.name().equalsIgnoreCase(offers1.getOs())) {
 
                             items.setIOS(Lists.newArrayList(StringUtils.isBlank(offers1.getMinOsVersion()) ? "13.0" : offers1.getMinOsVersion()));
