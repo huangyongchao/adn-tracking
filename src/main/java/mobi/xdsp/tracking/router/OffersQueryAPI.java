@@ -136,10 +136,10 @@ public class OffersQueryAPI {
                         payments.setGoal(offers1.getPayEvent());
                         payments.setType("fixed");
                         payments.setTitle(offers1.getPayoutType());
-                        o.setTrackUrl(offers1.getTrackingUrl());
                         int i= offers1.getTrackingUrl().indexOf("pub_sub");
                         if(i>0){
                             o.setLink(offers1.getTrackingUrl().substring(0,i-1));
+                            o.setTrackUrl(offers1.getTrackingUrl().substring(0,i-1));
                         }
                         o.setPayments(Lists.newArrayList(payments));
                         o.setStrictly_country(1);
