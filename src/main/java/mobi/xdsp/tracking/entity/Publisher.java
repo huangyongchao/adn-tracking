@@ -587,4 +587,10 @@ public class Publisher {
     public void setState(Integer state) {
         this.state = state;
     }
+
+    public Publisher(Integer id, String email, String companyname) {
+        this.id = id;
+        this.email = email;
+        this.companyname = companyname;
+    }
 }

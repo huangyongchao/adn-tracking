@@ -12,7 +12,7 @@ public class Counter {
     public static Map<Integer, Map<Integer, Map<Integer, Map<String, ClickCount>>>> COUNTER_HOUR_TODAY = Maps.newConcurrentMap();
     public static Map<Integer, Map<Integer, Map<Integer, Map<String, ClickCount>>>> COUNTER_HOUR_YESTERDAY = Maps.newConcurrentMap();
 
-    public static void increaseClick(Integer publisherid, Integer offerid, Integer hour, String pub_sub, int type) {
+    public static void increaseClick(Integer publisherid, Integer offerid, Integer hour, String pub_sub, int type, int amount) {
 
         if (!COUNTER_HOUR_TODAY.containsKey(publisherid)) {
             COUNTER_HOUR_TODAY.put(publisherid, Maps.newConcurrentMap());
@@ -27,13 +27,21 @@ public class Counter {
             COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).put(pub_sub, new ClickCount());
         }
         if (type == 0) {
-            COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).total.increment();
-        }
-        if (type == 1) {
-            COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).success.increment();
-        }
-        if (type == 2) {
-            COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).error.increment();
+            for (int i = 0; i < amount; i++) {
+
+                COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).total.increment();
+            }
+
+        } else if (type == 1) {
+            for (int i = 0; i < amount; i++) {
+
+                COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).success.increment();
+            }
+        } else if (type == 2) {
+            for (int i = 0; i < amount; i++) {
+
+                COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).error.increment();
+            }
         }
 
     }

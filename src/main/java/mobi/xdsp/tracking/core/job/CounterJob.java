@@ -64,7 +64,18 @@ public class CounterJob {
                             }
 
                             Offer offer = dataService.getOfferCache(oid);
-                            Publisher publisher = dataService.getPublisherCache(pid);
+                            Publisher publisher = null;
+                            if (pid == 0) {
+                                publisher = new Publisher(0, "SDK", "SDK");
+                            } else if (pid == 1) {
+                                publisher = new Publisher(1, "DSP", "DSP");
+
+                            } else if (pid == 2) {
+                                publisher = new Publisher(2, "MAF", "MAF");
+
+                            } else {
+                                dataService.getPublisherCache(pid);
+                            }
                             String cdatestr = datestr + " " + hour + ":00:00";
                             Date cdate = DateUtils.parseDate(cdatestr, "yyyy-MM-dd HH:mm:ss");
 
@@ -103,7 +114,7 @@ public class CounterJob {
 
                                 dailyReportAdnMapper.insertSelective(dailyReportAdn);
                                 cnt.setNewrecord(false);
-                            }else {
+                            } else {
                                 DailyReportAdn dailyReportAdn = list.get(0);
                                 dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());
                                 dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
