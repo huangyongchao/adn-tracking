@@ -1,5 +1,7 @@
 package mobi.xdsp.tracking.dto;
 
+import mobi.xdsp.tracking.core.job.ClickCount;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

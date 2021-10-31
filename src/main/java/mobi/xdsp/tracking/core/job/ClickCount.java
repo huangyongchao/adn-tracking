@@ -1,4 +1,4 @@
-package mobi.xdsp.tracking.dto;
+package mobi.xdsp.tracking.core.job;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,7 @@
 package mobi.xdsp.tracking.core.job;
 
 import com.google.common.collect.Maps;
-import mobi.xdsp.tracking.dto.ClickCount;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
