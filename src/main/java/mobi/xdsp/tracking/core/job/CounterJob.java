@@ -74,7 +74,7 @@ public class CounterJob {
                                 publisher = new Publisher(2, "MAF", "MAF");
 
                             } else {
-                                dataService.getPublisherCache(pid);
+                                publisher = dataService.getPublisherCache(pid);
                             }
                             String cdatestr = datestr + " " + hour + ":00:00";
                             Date cdate = DateUtils.parseDate(cdatestr, "yyyy-MM-dd HH:mm:ss");
@@ -119,8 +119,9 @@ public class CounterJob {
                                 dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());
                                 dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
                             }
-                        } catch (ParseException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            logger.error(pid + "");
                         }
 
 
