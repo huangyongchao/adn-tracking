@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.router;
 
+import com.alibaba.fastjson.JSONObject;
 import mobi.xdsp.tracking.core.job.Counter;
 import mobi.xdsp.tracking.core.job.CounterClickDto;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,16 @@ public class ClicksAmountAPI {
     public Object clksdto(@RequestBody CounterClickDto clickDto) {
         Counter.increaseClick(clickDto.getPid(), clickDto.getOid(), clickDto.getUtchour(), clickDto.getPubsub(), 1, clickDto.getAmount());
         return "ok";
+    }
+
+    @RequestMapping(path = "getclks", method = {RequestMethod.POST, RequestMethod.GET})
+    public Object getclks() {
+        return Counter.COUNTER_HOUR_TODAY;
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(JSONObject.toJSONString(new CounterClickDto()));
     }
 
 }
