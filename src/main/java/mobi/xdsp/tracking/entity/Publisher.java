@@ -593,4 +593,7 @@ public class Publisher {
         this.email = email;
         this.companyname = companyname;
     }
+
+    public Publisher() {
+    }
 }
