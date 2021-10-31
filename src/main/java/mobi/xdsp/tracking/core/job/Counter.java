@@ -24,13 +24,12 @@ public class Counter {
         if (!COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).containsKey(pub_sub)) {
             COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).put(pub_sub, new ClickCount());
         }
-        if (type == 0) {
-            for (int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
 
-                COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).total.increment();
-            }
+            COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).total.increment();
+        }
 
-        } else if (type == 1) {
+        if (type == 1) {
             for (int i = 0; i < amount; i++) {
 
                 COUNTER_HOUR_TODAY.get(publisherid).get(offerid).get(hour).get(pub_sub).success.increment();
