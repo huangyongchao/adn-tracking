@@ -5,6 +5,8 @@ import mobi.xdsp.tracking.core.job.Counter;
 import mobi.xdsp.tracking.core.job.CounterClickDto;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ClicksAmountAPI {
 
@@ -23,8 +25,15 @@ public class ClicksAmountAPI {
 
 
     @RequestMapping(path = "clks", method = {RequestMethod.POST, RequestMethod.GET})
-    public Object clksdto(@RequestBody CounterClickDto clickDto) {
-        Counter.increaseClick(clickDto.getPid(), clickDto.getOid(), clickDto.getUtchour(), clickDto.getPubsub(), 1, clickDto.getAmount());
+    public Object clksdto(@RequestBody List<CounterClickDto> clickDtos) {
+
+        if (clickDtos != null) {
+            System.out.println(JSONObject.toJSONString(clickDtos));
+            clickDtos.forEach(clickDto -> {
+
+                Counter.increaseClick(clickDto.getPid(), clickDto.getOid(), clickDto.getUtchour(), clickDto.getPubsub(), 1, clickDto.getAmount());
+            });
+        }
         return "ok";
     }
 
