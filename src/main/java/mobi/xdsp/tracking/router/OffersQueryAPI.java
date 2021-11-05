@@ -273,7 +273,15 @@ public class OffersQueryAPI {
                         respO.setTargetScheduleUTC(n.getSchedule());
                         if (respO.getPreviewUrl() == null || "null".equalsIgnoreCase(respO.getPreviewUrl())) {
                             if ("ios".equalsIgnoreCase(n.getOs())) {
-                                respO.setPreviewUrl("https://apps.apple.com/app/id" + n.getAppid());
+                                if(n.getAppid()!=null){
+                                    if(n.getAppid().startsWith("id")){
+                                        respO.setPreviewUrl("https://apps.apple.com/app/" + n.getAppid());
+
+                                    }else{
+
+                                        respO.setPreviewUrl("https://apps.apple.com/app/id" +n.getAppid() );
+                                    }
+                                }
                             } else {
                                 respO.setPreviewUrl("https://play.google.com/store/apps/details?id=" + n.getAppid());
                             }
