@@ -1,6 +1,5 @@
 package mobi.xdsp.tracking.core.job;
 
-import afu.org.checkerframework.checker.oigj.qual.O;
 import com.google.common.collect.Lists;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
@@ -36,6 +35,57 @@ public class PidMonitorJob {
     @Autowired
     private OfferMapper offerMapper;
 
+
+    @Scheduled(cron = "0 1,31 * * * ?")
+    public void pidActiveChecker() {
+        OfferExample example = new OfferExample();
+        List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
+
+
+        example.createCriteria().andStatusEqualTo(StateE.PIDBLOCK.name);
+
+
+        List<Offer> offers = offerMapper.selectByExample(example);
+
+        if (!CollectionUtils.isEmpty(offers)) {
+            List<Integer> offeruids = Lists.newLinkedList();
+            offers.forEach(n -> {
+                if (needActive(n, pidMonitors)) {
+                    offeruids.add(n.getId());
+                }
+            });
+
+            if (offeruids.size() > 0) {
+                OfferExample offerExample = new OfferExample();
+                offerExample.createCriteria().andIdIn(offeruids);
+                Offer offer = new Offer();
+
+                offer.setStatus(StateE.VALID.name);
+                offerMapper.updateByExampleSelective(offer, offerExample);
+
+            }
+
+        }
+
+
+    }
+
+    public boolean needActive(Offer offer, List<PidMonitor> list) {
+        if (list != null) {
+            Date date = new Date();
+            for (PidMonitor pidMonitor : list) {
+                if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
+                    if (pidMonitor.getBlockst() != null && pidMonitor.getBlocket() != null) {
+                        if (pidMonitor.getBlocket().before(date)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean needBlock(Offer offer, List<PidMonitor> list) {
         if (list != null) {
             Date date = new Date();
@@ -52,8 +102,7 @@ public class PidMonitorJob {
         return false;
     }
 
-    @Scheduled(cron = "0 */10 * * * ?")
-    public void checkOffer() {
+    public void offerBlockByPidChecker() {
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
         OfferExample example = new OfferExample();
 
@@ -82,8 +131,7 @@ public class PidMonitorJob {
         }
     }
 
-    @Scheduled(cron = "0 */10 * * * ?")
-    public void exchange() {
+    public void pidBlockChecker() {
         checkAfBlock("shirley@adscanal.com", "Jason2020#", "adscanal_int");
         checkAfBlock("kevin@rainbowmobi.com", "Rain2020#", "rainbowmobi_int");
         checkAfBlock("russell@mobicoca.com", "Jason2020#", "mobicoca_int");
@@ -120,7 +168,8 @@ public class PidMonitorJob {
         }
         return bodyText.toString();
     }
-    public void updatePidState(String pid,String st,String et){
+
+    public void updatePidState(String pid, String st, String et) {
         PidMonitor pidMonitor = new PidMonitor();
         pidMonitor.setPid(pid);
         pidMonitor.setBlocking(1);
@@ -164,13 +213,13 @@ public class PidMonitorJob {
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
                 try {
-                    if ((msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0)||(msg.getSubject().indexOf("流量已全部拦截")>0)) {
+                    if ((msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0) || (msg.getSubject().indexOf("流量已全部拦截") > 0)) {
                         try {
                             String cont = msg.getContent().toString();
                             int i = cont.indexOf(" at ");
                             int offerset = 4;
                             int offerset1 = 9;
-                            if(i==-1){
+                            if (i == -1) {
                                 i = cont.indexOf("将于");
                                 offerset = 2;
                                 offerset1 = 7;
@@ -211,9 +260,10 @@ public class PidMonitorJob {
     }
 
     @PostConstruct
+    @Scheduled(cron = "0 */10 * * * ?")
     public void auto() {
-        exchange();
-        checkOffer();
+        pidBlockChecker();
+        offerBlockByPidChecker();
     }
 
     public static void main(String[] args) {
