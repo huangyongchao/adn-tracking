@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.search.ComparisonTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -40,8 +41,8 @@ public class PidMonitorJob {
             Date date = new Date();
             for (PidMonitor pidMonitor : list) {
                 if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
-                    if(pidMonitor.getBlockst()!=null&&pidMonitor.getBlocket()!=null){
-                        if(pidMonitor.getBlockst().before(date)&&pidMonitor.getBlocket().after(date)){
+                    if (pidMonitor.getBlockst() != null && pidMonitor.getBlocket() != null) {
+                        if (pidMonitor.getBlockst().before(date) && pidMonitor.getBlocket().after(date)) {
                             System.out.println(offer.getTrackurl());
 
                             return true;
@@ -199,6 +200,12 @@ public class PidMonitorJob {
         }
 
         return result;
+    }
+
+    @PostConstruct
+    public void auto() {
+        exchange();
+        checkOffer();
     }
 
     public static void main(String[] args) {
