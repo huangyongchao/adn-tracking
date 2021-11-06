@@ -13,11 +13,14 @@ import java.util.Date;
 import java.util.Properties;
 
 @Component
-public class EmailRevJob {
+public class PidMonitorJob {
 
-    @Scheduled(cron = "0 20,40,59 * * * ?")
+    @Scheduled(cron = "0 */2 * * * ?")
     public void exchange() {
-
+        checkAfBlock("shirley@adscanal.com", "Jason2020#","adscanal_int");
+        checkAfBlock("kevin@rainbowmobi.com", "Rain2020#","rainbowmobi_int");
+        checkAfBlock("russell@mobicoca.com", "Jason2020#","mobicoca_int");
+        checkAfBlock("frank@oceanmob.net", "Grid2020#","oceanmob_int");
     }
 
     public static String parseMultipart(Multipart multipart) throws MessagingException, IOException {
@@ -52,7 +55,7 @@ public class EmailRevJob {
     }
 
 
-    public static boolean checkAfBlock(String user, String pass) {
+    public static boolean checkAfBlock(String user, String pass,String pid) {
         boolean result = false;
         // 准备连接服务器的会话信息
         try {
@@ -82,36 +85,23 @@ public class EmailRevJob {
             ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(),0));
 
             Message[] messages = folder.search(term);
-            // 获得收件箱的邮件列表
-
-
-            // 打印不同状态的邮件数量
-            System.out.println("收件箱中共" + messages.length + "封邮件!");
-            System.out.println("收件箱中共" + folder.getUnreadMessageCount() + "封未读邮件!");
-            System.out.println("收件箱中共" + folder.getNewMessageCount() + "封新邮件!");
-            System.out.println("收件箱中共" + folder.getDeletedMessageCount() + "封已删除邮件!");
-
-            System.out.println("------------------------开始解析邮件----------------------------------");
-
             Arrays.stream(messages).forEach(msg -> {
                 try {
-                    //System.out.println(msg.getSubject());
-                    if(msg.getSubject().indexOf("七猫小说")>0){
+                    if(msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ")>=0){
                         try {
-                            String cont = parseMultipart((Multipart) msg.getContent());
-                            int i = cont.indexOf("服务端上报链接");
-                            int j = cont.indexOf("上报方式");
-
-                            int f = msg.getSubject().indexOf("【");
-                            int ff = msg.getSubject().indexOf("】");
-                            String link = cont.substring(i + 8, j);
-                            int k = link.indexOf("</div>");
-                            System.out.println(msg.getSubject().substring(f+1,ff)+"@"+link.substring(0,k).trim());
-
+                            String cont = msg.getContent().toString();
+                            int i = cont.indexOf(" at ");
+                            String blockEnd = null;
+                            if(i>0){
+                                blockEnd = cont.substring(i + 4, i + 9);
+                            }
+                            System.out.println(pid);
+                            System.out.println(DateTimeUtil.dateToStrLong(msg.getSentDate()));
+                            System.out.println(DateTimeUtil.dateToStrLong(msg.getReceivedDate()));
+                            System.out.println(DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), 1))+ " "+blockEnd+":00");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
 
                     }
                 } catch (MessagingException e) {
@@ -131,10 +121,9 @@ public class EmailRevJob {
     }
 
     public static void main(String[] args) {
-   /*     checkAfBlock("tim.x@pubearn.com", "Jason2020#");
-        checkAfBlock("shirley@adscanal.com", "Jason2020#");
-        checkAfBlock("kevin@rainbowmobi.com", "Rain2020#");
-        checkAfBlock("russell@mobicoca.com", "Jason2020#");*/
-        checkAfBlock("frank@oceanmob.net", "Grid2020#");
+        checkAfBlock("shirley@adscanal.com", "Jason2020#","adscanal_int");
+        checkAfBlock("kevin@rainbowmobi.com", "Rain2020#","rainbowmobi_int");
+        checkAfBlock("russell@mobicoca.com", "Jason2020#","mobicoca_int");
+        checkAfBlock("frank@oceanmob.net", "Grid2020#","oceanmob_int");
     }
 }
