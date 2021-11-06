@@ -1,6 +1,11 @@
 package mobi.xdsp.tracking.core.job;
 
 import mobi.xdsp.tracking.common.DateTimeUtil;
+import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.entity.PidMonitor;
+import mobi.xdsp.tracking.entity.PidMonitorExample;
+import mobi.xdsp.tracking.mapper.PidMonitorMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +19,17 @@ import java.util.Properties;
 
 @Component
 public class PidMonitorJob {
+    @Autowired
+    Mailer mailer;
+    @Autowired
+    private PidMonitorMapper pidMonitorMapper;
 
     @Scheduled(cron = "0 */2 * * * ?")
     public void exchange() {
-        checkAfBlock("shirley@adscanal.com", "Jason2020#","adscanal_int");
-        checkAfBlock("kevin@rainbowmobi.com", "Rain2020#","rainbowmobi_int");
-        checkAfBlock("russell@mobicoca.com", "Jason2020#","mobicoca_int");
-        checkAfBlock("frank@oceanmob.net", "Grid2020#","oceanmob_int");
+        checkAfBlock("shirley@adscanal.com", "Jason2020#", "adscanal_int");
+        checkAfBlock("kevin@rainbowmobi.com", "Rain2020#", "rainbowmobi_int");
+        checkAfBlock("russell@mobicoca.com", "Jason2020#", "mobicoca_int");
+        checkAfBlock("frank@oceanmob.net", "Grid2020#", "oceanmob_int");
     }
 
     public static String parseMultipart(Multipart multipart) throws MessagingException, IOException {
@@ -55,7 +64,7 @@ public class PidMonitorJob {
     }
 
 
-    public static boolean checkAfBlock(String user, String pass,String pid) {
+    public boolean checkAfBlock(String user, String pass, String pid) {
         boolean result = false;
         // 准备连接服务器的会话信息
         try {
@@ -82,29 +91,41 @@ public class PidMonitorJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(),0));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(), 0));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
                 try {
-                    if(msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ")>=0){
+                    if (msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0) {
                         try {
                             String cont = msg.getContent().toString();
                             int i = cont.indexOf(" at ");
                             String blockEnd = null;
-                            if(i>0){
+                            if (i > 0) {
                                 blockEnd = cont.substring(i + 4, i + 9);
                             }
+                            String st = DateTimeUtil.dateToStrLong(msg.getSentDate());
+                            String et = DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), 1)) + " " + blockEnd + ":00";
+                            PidMonitor pidMonitor = new PidMonitor();
+                            pidMonitor.setPid(pid);
+                            pidMonitor.setBlocking(1);
+                            pidMonitor.setBlockst(DateTimeUtil.strToDateLong(st));
+                            pidMonitor.setBlocket(DateTimeUtil.strToDateLong(et));
+                            PidMonitorExample example = new PidMonitorExample();
+                            example.createCriteria().andPidEqualTo(pid);
+                            pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
                             System.out.println(pid);
-                            System.out.println(DateTimeUtil.dateToStrLong(msg.getSentDate()));
-                            System.out.println(DateTimeUtil.dateToStrLong(msg.getReceivedDate()));
-                            System.out.println(DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), 1))+ " "+blockEnd+":00");
-                        } catch (IOException e) {
+                            System.out.println(st);
+                            System.out.println(et);
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            mailer.sendErrorMail("Tracking Error: cacheAffiliate", e.getMessage() + "\n" + e.getLocalizedMessage());
+
                         }
 
                     }
-                } catch (MessagingException e) {
+                } catch (Exception e) {
+                    mailer.sendErrorMail("Tracking Error: cacheAffiliate", e.getMessage() + "\n" + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
 
@@ -117,13 +138,14 @@ public class PidMonitorJob {
             e.printStackTrace();
         }
 
-        return  result;
+        return result;
     }
 
     public static void main(String[] args) {
-        checkAfBlock("shirley@adscanal.com", "Jason2020#","adscanal_int");
-        checkAfBlock("kevin@rainbowmobi.com", "Rain2020#","rainbowmobi_int");
-        checkAfBlock("russell@mobicoca.com", "Jason2020#","mobicoca_int");
-        checkAfBlock("frank@oceanmob.net", "Grid2020#","oceanmob_int");
+        PidMonitorJob pidMonitorJob = new PidMonitorJob();
+        pidMonitorJob.checkAfBlock("shirley@adscanal.com", "Jason2020#", "adscanal_int");
+        pidMonitorJob.checkAfBlock("kevin@rainbowmobi.com", "Rain2020#", "rainbowmobi_int");
+        pidMonitorJob.checkAfBlock("russell@mobicoca.com", "Jason2020#", "mobicoca_int");
+        pidMonitorJob.checkAfBlock("frank@oceanmob.net", "Grid2020#", "oceanmob_int");
     }
 }
