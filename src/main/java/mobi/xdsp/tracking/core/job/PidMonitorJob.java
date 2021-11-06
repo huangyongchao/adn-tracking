@@ -43,13 +43,10 @@ public class PidMonitorJob {
                 if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
                     if (pidMonitor.getBlockst() != null && pidMonitor.getBlocket() != null) {
                         if (pidMonitor.getBlockst().before(date) && pidMonitor.getBlocket().after(date)) {
-                            System.out.println(offer.getTrackurl());
-
                             return true;
                         }
                     }
                 }
-                return true;
             }
         }
         return false;
@@ -78,7 +75,7 @@ public class PidMonitorJob {
 
                 offer.setStatus(StateE.PIDBLOCK.name);
                 System.out.println(offeruids);
-                //offerMapper.updateByExampleSelective(offer, offerExample);
+                offerMapper.updateByExampleSelective(offer, offerExample);
 
             }
 
