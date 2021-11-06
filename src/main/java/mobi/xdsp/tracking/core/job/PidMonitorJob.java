@@ -264,6 +264,8 @@ public class PidMonitorJob {
     public void auto() {
         pidBlockChecker();
         offerBlockByPidChecker();
+        pidActiveChecker();
+
     }
 
     public static void main(String[] args) {
