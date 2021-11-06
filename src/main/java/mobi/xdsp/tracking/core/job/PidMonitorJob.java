@@ -123,7 +123,17 @@ public class PidMonitorJob {
         }
         return bodyText.toString();
     }
+    public void updatePidState(String pid,String st,String et){
+        PidMonitor pidMonitor = new PidMonitor();
+        pidMonitor.setPid(pid);
+        pidMonitor.setBlocking(1);
+        pidMonitor.setBlockst(DateTimeUtil.strToDateLong(st));
+        pidMonitor.setBlocket(DateTimeUtil.strToDateLong(et));
+        PidMonitorExample example = new PidMonitorExample();
+        example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
+        pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
 
+    }
 
     public boolean checkAfBlock(String user, String pass, String pid) {
         boolean result = false;
@@ -152,7 +162,7 @@ public class PidMonitorJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(), 3));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 3));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
@@ -161,20 +171,21 @@ public class PidMonitorJob {
                         try {
                             String cont = msg.getContent().toString();
                             int i = cont.indexOf(" at ");
+                            int offerset = 4;
+                            int offerset1 = 9;
+                            if(i==-1){
+                                i = cont.indexOf("将于");
+                                offerset = 2;
+                                offerset1 = 7;
+                            }
                             String blockEnd = null;
                             if (i > 0) {
-                                blockEnd = cont.substring(i + 4, i + 9);
+                                blockEnd = cont.substring(i + offerset, i + offerset1);
                             }
                             String st = DateTimeUtil.dateToStrLong(msg.getSentDate());
                             String et = DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), 1)) + " " + blockEnd + ":00";
-                            PidMonitor pidMonitor = new PidMonitor();
-                            pidMonitor.setPid(pid);
-                            pidMonitor.setBlocking(1);
-                            pidMonitor.setBlockst(DateTimeUtil.strToDateLong(st));
-                            pidMonitor.setBlocket(DateTimeUtil.strToDateLong(et));
-                            PidMonitorExample example = new PidMonitorExample();
-                            example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
-                            pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
+                            updatePidState(pid, st, et);
+
                             System.out.println(pid);
                             System.out.println(st);
                             System.out.println(et);
@@ -210,9 +221,6 @@ public class PidMonitorJob {
 
     public static void main(String[] args) {
         PidMonitorJob pidMonitorJob = new PidMonitorJob();
-        pidMonitorJob.checkAfBlock("shirley@adscanal.com", "Jason2020#", "adscanal_int");
-        pidMonitorJob.checkAfBlock("kevin@rainbowmobi.com", "Rain2020#", "rainbowmobi_int");
-        pidMonitorJob.checkAfBlock("russell@mobicoca.com", "Jason2020#", "mobicoca_int");
         pidMonitorJob.checkAfBlock("frank@oceanmob.net", "Grid2020#", "oceanmob_int");
     }
 }
