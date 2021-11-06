@@ -1,13 +1,20 @@
 package mobi.xdsp.tracking.core.job;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
+import com.google.common.collect.Lists;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.dto.enums.StateE;
+import mobi.xdsp.tracking.entity.Offer;
+import mobi.xdsp.tracking.entity.OfferExample;
 import mobi.xdsp.tracking.entity.PidMonitor;
 import mobi.xdsp.tracking.entity.PidMonitorExample;
+import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PidMonitorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.mail.*;
 import javax.mail.search.ComparisonTerm;
@@ -15,6 +22,7 @@ import javax.mail.search.ReceivedDateTerm;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 @Component
@@ -24,7 +32,59 @@ public class PidMonitorJob {
     @Autowired
     private PidMonitorMapper pidMonitorMapper;
 
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Autowired
+    private OfferMapper offerMapper;
+
+    public boolean needBlock(Offer offer, List<PidMonitor> list) {
+        if (list != null) {
+            Date date = new Date();
+            for (PidMonitor pidMonitor : list) {
+                if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
+                    if(pidMonitor.getBlockst()!=null&&pidMonitor.getBlocket()!=null){
+                        if(pidMonitor.getBlockst().before(date)&&pidMonitor.getBlocket().after(date)){
+                            System.out.println(offer.getTrackurl());
+
+                            return true;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Scheduled(cron = "0 */10 * * * ?")
+    public void checkOffer() {
+        List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
+        OfferExample example = new OfferExample();
+
+        example.createCriteria().andStatusEqualTo(StateE.VALID.name).andTrackurlLike("%.appsflyer.%");
+        List<Offer> offers = offerMapper.selectByExample(example);
+
+        if (!CollectionUtils.isEmpty(offers)) {
+            List<Integer> offeruids = Lists.newLinkedList();
+            offers.forEach(n -> {
+                if (needBlock(n, pidMonitors)) {
+                    offeruids.add(n.getId());
+                }
+            });
+
+            if (offeruids.size() > 0) {
+                OfferExample offerExample = new OfferExample();
+                offerExample.createCriteria().andIdIn(offeruids);
+                Offer offer = new Offer();
+
+                offer.setStatus(StateE.PIDBLOCK.name);
+                System.out.println(offeruids);
+                //offerMapper.updateByExampleSelective(offer, offerExample);
+
+            }
+
+        }
+    }
+
+    @Scheduled(cron = "0 */10 * * * ?")
     public void exchange() {
         checkAfBlock("shirley@adscanal.com", "Jason2020#", "adscanal_int");
         checkAfBlock("kevin@rainbowmobi.com", "Rain2020#", "rainbowmobi_int");
