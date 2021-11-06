@@ -157,7 +157,7 @@ public class PidMonitorJob {
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
                 try {
-                    if (msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0) {
+                    if ((msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0)||(msg.getSubject().indexOf("流量已全部拦截")>0)) {
                         try {
                             String cont = msg.getContent().toString();
                             int i = cont.indexOf(" at ");
