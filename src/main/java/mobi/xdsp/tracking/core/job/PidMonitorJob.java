@@ -152,7 +152,7 @@ public class PidMonitorJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(), 0));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.EQ, DateTimeUtil.getDateBefore(new Date(), 3));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
@@ -173,7 +173,7 @@ public class PidMonitorJob {
                             pidMonitor.setBlockst(DateTimeUtil.strToDateLong(st));
                             pidMonitor.setBlocket(DateTimeUtil.strToDateLong(et));
                             PidMonitorExample example = new PidMonitorExample();
-                            example.createCriteria().andPidEqualTo(pid);
+                            example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
                             pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
                             System.out.println(pid);
                             System.out.println(st);
