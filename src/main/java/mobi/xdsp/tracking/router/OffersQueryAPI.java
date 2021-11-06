@@ -52,7 +52,7 @@ public class OffersQueryAPI {
             Date queryDate = new Date();
             Date oldDate = QUERY_LOCK.get(token);
             int minutes = (int) ((queryDate.getTime() - oldDate.getTime()) / (1000 * 60));
-            if (minutes < 20) {
+            if (minutes < 5) {
                 returnCache = true;
             }
         }
