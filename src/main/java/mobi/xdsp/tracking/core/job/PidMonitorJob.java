@@ -119,13 +119,13 @@ public class PidMonitorJob {
                             System.out.println(et);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            mailer.sendErrorMail("Tracking Error: cacheAffiliate", e.getMessage() + "\n" + e.getLocalizedMessage());
+                            mailer.sendErrorMail("Pid Monitor Error: update date", e.getMessage() + "\n" + e.getLocalizedMessage());
 
                         }
 
                     }
                 } catch (Exception e) {
-                    mailer.sendErrorMail("Tracking Error: cacheAffiliate", e.getMessage() + "\n" + e.getLocalizedMessage());
+                    mailer.sendErrorMail("Pid Monitor Error: receive pid alter", e.getMessage() + "\n" + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
 
