@@ -14,6 +14,15 @@ public class Mailer {
     @Autowired
     private JavaMailSenderImpl javaMailSender;
 
+    public void sendFrankMail(String title, String msg) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setSubject(title);
+        message.setText(msg);
+        message.setTo("frank@adscanal.com");
+        message.setFrom("notice@adscanal.com");
+        javaMailSender.send(message);
+    }
+
     public void sendErrorMail(String title, String msg) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject(title);

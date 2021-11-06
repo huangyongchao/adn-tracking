@@ -38,9 +38,15 @@ public class PidMonitorJob {
 
     @Scheduled(cron = "0 1,31 * * * ?")
     public void pidActiveChecker() {
+        Date cdate = new Date();
+
         OfferExample example = new OfferExample();
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
-
+        pidMonitors.forEach(pidMonitor -> {
+            if (pidMonitor.getBlocket().before(cdate)) {
+                mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
+            }
+        });
 
         example.createCriteria().andStatusEqualTo(StateE.PIDBLOCK.name);
 
@@ -170,13 +176,19 @@ public class PidMonitorJob {
     }
 
     public void updatePidState(String pid, String st, String et) {
+        Date date = new Date();
+
         PidMonitor pidMonitor = new PidMonitor();
         pidMonitor.setPid(pid);
         pidMonitor.setBlocking(1);
         pidMonitor.setBlockst(DateTimeUtil.strToDateLong(st));
         pidMonitor.setBlocket(DateTimeUtil.strToDateLong(et));
+        if (pidMonitor.getBlocket().before(date)) {
+            pidMonitor.setBlocking(0);
+        }
         PidMonitorExample example = new PidMonitorExample();
         example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
+
         pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
 
     }
@@ -208,7 +220,7 @@ public class PidMonitorJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 3));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 1));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
