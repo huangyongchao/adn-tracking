@@ -10,6 +10,8 @@ import mobi.xdsp.tracking.entity.PidMonitor;
 import mobi.xdsp.tracking.entity.PidMonitorExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PidMonitorMapper;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -95,6 +97,12 @@ public class PidMonitorJob {
     public boolean needBlock(Offer offer, List<PidMonitor> list) {
         if (list != null) {
             Date date = new Date();
+            /* If the blocking time is less than the current time plus 15 minutes,
+             * then the offer is activated,
+             * because the publishers requests the interface to pull the offers according to a fixed period
+             * so the offers is activated 15 minutes in advance */
+            date = DateUtils.addMinutes(date, 15);
+
             for (PidMonitor pidMonitor : list) {
                 if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
                     if (pidMonitor.getBlockst() != null && pidMonitor.getBlocket() != null) {
@@ -281,7 +289,14 @@ public class PidMonitorJob {
     }
 
     public static void main(String[] args) {
-        PidMonitorJob pidMonitorJob = new PidMonitorJob();
-        pidMonitorJob.checkAfBlock("frank@oceanmob.net", "Grid2020#", "oceanmob_int");
+      /*  PidMonitorJob pidMonitorJob = new PidMonitorJob();
+        pidMonitorJob.checkAfBlock("frank@oceanmob.net", "Grid2020#", "oceanmob_int");*/
+
+        Date date = new Date();
+        System.out.println(DateFormatUtils.format(date, "yyyyMMddHHmmss"));
+
+        date = DateUtils.addMinutes(date, -20);
+        System.out.println(DateFormatUtils.format(date, "yyyyMMddHHmmss"));
+
     }
 }
