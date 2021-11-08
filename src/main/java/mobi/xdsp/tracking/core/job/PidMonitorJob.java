@@ -81,6 +81,11 @@ public class PidMonitorJob {
     public boolean needActive(Offer offer, List<PidMonitor> list) {
         if (list != null) {
             Date date = new Date();
+            /* If the blocking time is less than the current time plus 15 minutes,
+             * then the offer is activated,
+             * because the publishers requests the interface to pull the offers according to a fixed period
+             * so the offers is activated 15 minutes in advance */
+            date = DateUtils.addMinutes(date, 15);
             for (PidMonitor pidMonitor : list) {
                 if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
                     if (pidMonitor.getBlockst() != null && pidMonitor.getBlocket() != null) {
@@ -97,11 +102,7 @@ public class PidMonitorJob {
     public boolean needBlock(Offer offer, List<PidMonitor> list) {
         if (list != null) {
             Date date = new Date();
-            /* If the blocking time is less than the current time plus 15 minutes,
-             * then the offer is activated,
-             * because the publishers requests the interface to pull the offers according to a fixed period
-             * so the offers is activated 15 minutes in advance */
-            date = DateUtils.addMinutes(date, 15);
+
 
             for (PidMonitor pidMonitor : list) {
                 if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
