@@ -60,7 +60,7 @@ public class ConversionAPI {
     public Object conversion(
             @RequestParam(value = "clickid", required = true) String clickid,
             @RequestParam(value = "click_id", defaultValue = "") String clickidbak,
-            @RequestParam(value = "rej") Integer rej,
+            @RequestParam(value = "rej",defaultValue = "") String rej,
             @RequestParam(value = "advid") Integer advid,
             @RequestParam(value = "event", defaultValue = "") String event,
             @RequestParam(value = "isevent") Integer isevent) {
@@ -69,7 +69,7 @@ public class ConversionAPI {
 
         //log
         boolean isRej = false;
-        if (rej != null && rej == 1) {
+        if ("1".equals(rej)) {
 
             isRej = true;
         } else {
