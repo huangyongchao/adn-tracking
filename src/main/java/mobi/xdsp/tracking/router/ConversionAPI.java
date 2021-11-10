@@ -53,12 +53,14 @@ public class ConversionAPI {
     @Autowired
     DataService dataService;
     private static final Logger convlog = LoggerFactory.getLogger("conv");
+    private static final Logger rejlog = LoggerFactory.getLogger("rej");
     private static final Logger pblog = LoggerFactory.getLogger("pb");
 
     @GetMapping("/conversion")
     public Object conversion(
             @RequestParam(value = "clickid", required = true) String clickid,
             @RequestParam(value = "click_id", defaultValue = "") String clickidbak,
+            @RequestParam(value = "rej") Integer rej,
             @RequestParam(value = "advid") Integer advid,
             @RequestParam(value = "event", defaultValue = "") String event,
             @RequestParam(value = "isevent") Integer isevent) {
@@ -66,7 +68,14 @@ public class ConversionAPI {
         /*isevent 1 global 2 event*/
 
         //log
-        convlog.warn("{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent);
+        boolean isRej = false;
+        if (rej != null && rej == 1) {
+
+            isRej = true;
+        } else {
+
+            convlog.warn("{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent);
+        }
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
@@ -110,10 +119,10 @@ public class ConversionAPI {
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
 
                 Integer deductrate = publisher.getDeductrate();
-                if(deductrate ==null ||deductrate==0){
+                if (deductrate == null || deductrate == 0) {
                     deductrate = puboffer.getDeductrate();
                 }
-                if(deductrate==null){
+                if (deductrate == null) {
                     deductrate = 0;
                 }
 
@@ -150,7 +159,7 @@ public class ConversionAPI {
                         activate.setAdvpayout(0f);
 
                     }
-                    if(puboffer.getPayout().floatValue()<0.3){
+                    if (puboffer.getPayout().floatValue() < 0.3) {
                         activate.setDefaultpayout(puboffer.getPayout().floatValue());
                         activate.setPubpayout(puboffer.getPayout().floatValue());
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
@@ -183,10 +192,10 @@ public class ConversionAPI {
 
                 }
                 //扣量比例
-                if(deductrate>0){
+                if (deductrate > 0) {
                     int seed = deductrate / 5;
                     int r = new Random().nextInt(20);
-                    if (r<=seed) {
+                    if (r <= seed) {
                         activate.setStatus(PBStateE.DEDUCT.code);
                         activate.setDeductcnt(1);
                         activate.setActivecnt(0);
@@ -197,27 +206,32 @@ public class ConversionAPI {
                 ApiTools.packageCnt(activate);
                 //检查Cap
                 int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
-                if(action>0){
+                if (action > 0) {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
                 }
-                // Postback 下发
-                if (PBStateE.VALID.code == activate.getStatus()&&( activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
-                    //发PB
-                    boolean res = sendPb(publisher, offer, puboffer, click);
-                    if (res) {
-                        activate.setNoticestatus(PBNoticeStateE.SENT.code);
+                if (!isRej) {
+                    // Postback 下发
+                    if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
+                        //发PB
+                        boolean res = sendPb(publisher, offer, puboffer, click);
+                        if (res) {
+                            activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
-                    }else{
-                        activate.setNoticestatus(PBNoticeStateE.NO.code);
+                        } else {
+                            activate.setNoticestatus(PBNoticeStateE.NO.code);
 
+                        }
+                    } else {
+                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     }
-                }else{
-                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                }
-                //入库
+                    //入库
 
-                int r = activateMapper.insertSelective(activate);
+                    int r = activateMapper.insertSelective(activate);
+                } else {
+                    rejlog.warn("{},{},{},{},{},{}", clickid, puboffer.getId(), click.getPubSub(), click.getPubSub(), event);
+
+                }
 
 
             } else {
@@ -273,10 +287,10 @@ public class ConversionAPI {
         if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(click.getIp())) {
             track = StringUtils.replaceAll(track, "\\{ip}", click.getIp());
         }
-        if (track.indexOf("{payout}") > -1&& publisherOffer.getPayout()!=null) {
+        if (track.indexOf("{payout}") > -1 && publisherOffer.getPayout() != null) {
             track = StringUtils.replaceAll(track, "\\{payout}", publisherOffer.getPayout().toString());
         }
-        if (track.indexOf("{currency}") > -1&& offer.getCurrency()!=null) {
+        if (track.indexOf("{currency}") > -1 && offer.getCurrency() != null) {
             track = StringUtils.replaceAll(track, "\\{currency}", offer.getCurrency());
         }
 

@@ -163,6 +163,21 @@
         </RollingFile>
 
 
+
+
+        <RollingFile name="REJLOG" filename="${logPath}/convs/conv.log"
+                     filepattern="${logPath}/convs/rej%d{yyyyMMdd}.log">
+            <Filters>
+                <ThresholdFilter level="INFO"/>
+            </Filters>
+
+            <PatternLayout pattern="%m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="104"/>
+        </RollingFile>
+
     </Appenders>
 
     <Loggers>
@@ -176,6 +191,10 @@
         <AsyncLogger name="conv" level="INFO" additivity="false">
             <appender-ref ref="CONVLOG"/>
         </AsyncLogger>
+        <AsyncLogger name="rej" level="INFO" additivity="false">
+            <appender-ref ref="REJLOG"/>
+        </AsyncLogger>
+
         <AsyncLogger name="pb" level="INFO" additivity="false">
             <appender-ref ref="PBLOG"/>
         </AsyncLogger>
