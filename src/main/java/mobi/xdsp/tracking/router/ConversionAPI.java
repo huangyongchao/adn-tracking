@@ -7,6 +7,7 @@ import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.enums.PBNoticeStateE;
 import mobi.xdsp.tracking.dto.enums.PBStateE;
+import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.ActivateMapper;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
@@ -209,6 +210,10 @@ public class ConversionAPI {
                 if (action > 0) {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
+                }
+                if(StateE.PIDBLOCK.name.equalsIgnoreCase(offer.getStatus())){
+                    activate.setStatus(PBStateE.INVALID.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
                 if (!isRej) {
                     // Postback 下发
