@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.router;
 
+import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.HttpClientUtil;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,10 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 public class ConversionAPI {
@@ -57,6 +56,30 @@ public class ConversionAPI {
     private static final Logger convlog = LoggerFactory.getLogger("conv");
     private static final Logger rejlog = LoggerFactory.getLogger("rej");
     private static final Logger pblog = LoggerFactory.getLogger("pb");
+
+    Map<String, Offer> SOURCEID_OFFER_CACHE = Maps.newHashMap();
+
+    private Offer getOfferBySourceId(String sourceOfferId) {
+        if (StringUtils.isBlank(sourceOfferId)) {
+            return null;
+        }
+        if (SOURCEID_OFFER_CACHE.containsKey(sourceOfferId)) {
+            return SOURCEID_OFFER_CACHE.get(sourceOfferId);
+        } else {
+            OfferExample example = new OfferExample();
+            example.createCriteria().andSourceofferidEqualTo(sourceOfferId);
+            List<Offer> offers = offerMapper.selectByExample(example);
+            if (CollectionUtils.isEmpty(offers)) {
+                return null;
+            } else {
+
+                SOURCEID_OFFER_CACHE.put(sourceOfferId, offers.get(0));
+                return offers.get(0);
+            }
+
+        }
+    }
+
 
     @GetMapping("/conversion")
     public Object conversion(
@@ -150,7 +173,7 @@ public class ConversionAPI {
             }
             activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
-            if(mafclick){
+            if (mafclick) {
 
                 activate.setAid("" + advid);
                 activate.setClickid(clickid);
@@ -159,18 +182,18 @@ public class ConversionAPI {
                 activate.setPubsub(click.getPubSub());
                 activate.setClickdate(DateTimeUtil.getStringDate());
                 activate.setClicktime(DateTimeUtil.getStringDate());
-                if(isRej){
+                if (isRej) {
                     activate.setStatus(PBStateE.REJECT.code);
-                    activate.setAffsub3(rejr+rejrv);
-                }else{
+                    activate.setAffsub3(rejr + rejrv);
+                } else {
 
                     activate.setStatus(PBStateE.INVALID.code);
                 }
+                activate.setAffsub2(click.getSoid());
                 activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 ApiTools.packageCnt(activate);
                 int r = activateMapper.insertSelective(activate);
-            }
-            else if (click != null) {
+            } else if (click != null) {
                 boolean sentpb = false;
                 if (StringUtils.isNotBlank(click.getClickId())) {
                     sentpb = true;
@@ -210,7 +233,7 @@ public class ConversionAPI {
 
 
                 activate.setAdvpayout(offer.getDefaultpayout());
-                if(puboffer!=null){
+                if (puboffer != null) {
                     if (deductrate == null || deductrate == 0) {
                         deductrate = puboffer.getDeductrate();
                     }
@@ -224,7 +247,7 @@ public class ConversionAPI {
                         activate.setAdvpayout(0f);
 
                     }
-                    if (puboffer!=null && puboffer.getPayout().floatValue() < 0.2) {
+                    if (puboffer != null && puboffer.getPayout().floatValue() < 0.2) {
                         activate.setDefaultpayout(puboffer.getPayout().floatValue());
                         activate.setPubpayout(puboffer.getPayout().floatValue());
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
@@ -269,13 +292,13 @@ public class ConversionAPI {
                 //处理 状态
                 ApiTools.packageCnt(activate);
                 //检查Cap
-                if(puboffer!=null){
+                if (puboffer != null) {
                     int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
                     if (action > 0) {
                         activate.setStatus(PBStateE.INVALID.code);
                         activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
                     }
-                }else{
+                } else {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
