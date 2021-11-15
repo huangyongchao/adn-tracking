@@ -179,12 +179,11 @@ public class ConversionAPI {
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
 
                 Integer deductrate = publisher.getDeductrate();
-                if (deductrate == null || deductrate == 0) {
-                    deductrate = puboffer.getDeductrate();
-                }
+
                 if (deductrate == null) {
                     deductrate = 0;
                 }
+
                 activate.setAid(offer.getAid());
                 activate.setAffiliateid("" + offer.getAffiliateid());
                 activate.setActivatetime(new Date());
@@ -208,10 +207,15 @@ public class ConversionAPI {
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
 
-                activate.setDefaultpayout(puboffer.getPayout().floatValue());
-                activate.setPubpayout(puboffer.getPayout().floatValue());
-                activate.setAdvpayout(offer.getDefaultpayout());
 
+                activate.setAdvpayout(offer.getDefaultpayout());
+                if(puboffer!=null){
+                    if (deductrate == null || deductrate == 0) {
+                        deductrate = puboffer.getDeductrate();
+                    }
+                    activate.setDefaultpayout(puboffer.getPayout().floatValue());
+                    activate.setPubpayout(puboffer.getPayout().floatValue());
+                }
                 if (AdTool.is3pt(offer.getTrackurl())) {
                     if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
                         activate.setDefaultpayout(0f);
@@ -219,7 +223,7 @@ public class ConversionAPI {
                         activate.setAdvpayout(0f);
 
                     }
-                    if (puboffer.getPayout().floatValue() < 0.2) {
+                    if (puboffer!=null && puboffer.getPayout().floatValue() < 0.2) {
                         activate.setDefaultpayout(puboffer.getPayout().floatValue());
                         activate.setPubpayout(puboffer.getPayout().floatValue());
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
@@ -264,15 +268,21 @@ public class ConversionAPI {
                 //处理 状态
                 ApiTools.packageCnt(activate);
                 //检查Cap
-                int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
-                if (action > 0) {
+                if(puboffer!=null){
+                    int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
+                    if (action > 0) {
+                        activate.setStatus(PBStateE.INVALID.code);
+                        activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
+                    }
+                }else{
                     activate.setStatus(PBStateE.INVALID.code);
-                    activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
                 if (StateE.PIDBLOCK.name.equalsIgnoreCase(offer.getStatus())) {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
+
                 if (!isRej) {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
