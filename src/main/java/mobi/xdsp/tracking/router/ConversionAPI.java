@@ -149,6 +149,7 @@ public class ConversionAPI {
                 activate.setEvent(event);
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
+
                 activate.setDefaultpayout(puboffer.getPayout().floatValue());
                 activate.setPubpayout(puboffer.getPayout().floatValue());
                 activate.setAdvpayout(offer.getDefaultpayout());
@@ -234,6 +235,10 @@ public class ConversionAPI {
 
                     int r = activateMapper.insertSelective(activate);
                 } else {
+
+                    activate.setStatus(PBStateE.REJECT.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                    int r = activateMapper.insertSelective(activate);
                     rejlog.warn("{},{},{},{},{},{}", clickid, puboffer.getId(), click.getPubSub(), click.getPubSub(), event);
 
                 }
