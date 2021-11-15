@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
@@ -61,10 +62,15 @@ public class ConversionAPI {
     public Object conversion(
             @RequestParam(value = "clickid", required = true) String clickid,
             @RequestParam(value = "click_id", defaultValue = "") String clickidbak,
-            @RequestParam(value = "rej",defaultValue = "") String rej,
-            @RequestParam(value = "advid") Integer advid,
+            @RequestParam(value = "rej", defaultValue = "") String rej,
+            @RequestParam(value = "advid", defaultValue = "-1") Integer advid,
             @RequestParam(value = "event", defaultValue = "") String event,
-            @RequestParam(value = "isevent") Integer isevent) {
+            @RequestParam(value = "isevent", defaultValue = "0") Integer isevent,
+            @RequestParam(value = "rejr", defaultValue = "") String rejr,
+            @RequestParam(value = "idfa", defaultValue = "") String idfa,
+            @RequestParam(value = "gaid", defaultValue = "") String gaid,
+            @RequestParam(value = "subid", defaultValue = "") String subid,
+            @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {
 
         /*isevent 1 global 2 event*/
 
@@ -73,6 +79,7 @@ public class ConversionAPI {
         if ("1".equals(rej)) {
 
             isRej = true;
+
         } else {
 
             convlog.warn("{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent);
@@ -81,6 +88,7 @@ public class ConversionAPI {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
             }
+            clickid = URLDecoder.decode(clickid, "utf-8");
 
             /**
              * 1 计算Ctit <30秒或者>2天的都 不回发
@@ -93,6 +101,7 @@ public class ConversionAPI {
             ActivateWithBLOBs activate = new ActivateWithBLOBs();
             Click click = null;
             boolean mmplink = false;
+            boolean mafclick = false;
             if (clickid.startsWith("PE")) {
                 //Pubearn 平台点击
                 Optional<Click> clickOptional = repository.findById(clickid);
@@ -107,10 +116,60 @@ public class ConversionAPI {
             } else if (clickid.startsWith("DI")) {
                 //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
                 click = AdTool.unpackClickId(clickid);
-                mmplink = true;
-            }
+                if (StringUtils.isBlank(click.getGaid())) {
+                    click.setGaid(gaid);
+                }
+                if (StringUtils.isBlank(click.getIdfa())) {
+                    click.setIdfa(idfa);
+                }
+                click.setPubSub(subid);
 
-            if (click != null) {
+                mmplink = true;
+            } else {
+                /*判断是MAF click*/
+                if (clickid.indexOf("|") > 0 && clickid.split("\\|").length > 1) {
+                    mafclick = true;
+                    click = new Click();
+                    click.setPid(2);
+                    String[] ms = clickid.split("\\|");
+                    if (ms.length > 2) {
+
+                        click.setSoid(ms[2]);
+                    }
+                    click.setId(clickid);
+                    click.setClickId(clickid);
+                    click.setPubSub(subid);
+                    if (StringUtils.isBlank(click.getGaid())) {
+                        click.setGaid(gaid);
+                    }
+                    if (StringUtils.isBlank(click.getIdfa())) {
+                        click.setIdfa(idfa);
+                    }
+
+                }
+            }
+            activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
+
+            if(mafclick){
+
+                activate.setAid("" + advid);
+                activate.setClickid(clickid);
+                activate.setEvent(event);
+                activate.setPubsub(click.getPubSub());
+                activate.setClickdate(DateTimeUtil.getStringDate());
+                activate.setClicktime(DateTimeUtil.getStringDate());
+                if(isRej){
+                    activate.setStatus(PBStateE.REJECT.code);
+                    activate.setAffsub3(rejr+rejrv);
+                }else{
+
+                    activate.setStatus(PBStateE.INVALID.code);
+                }
+                activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                ApiTools.packageCnt(activate);
+                int r = activateMapper.insertSelective(activate);
+            }
+            else if (click != null) {
                 boolean sentpb = false;
                 if (StringUtils.isNotBlank(click.getClickId())) {
                     sentpb = true;
@@ -126,7 +185,6 @@ public class ConversionAPI {
                 if (deductrate == null) {
                     deductrate = 0;
                 }
-
                 activate.setAid(offer.getAid());
                 activate.setAffiliateid("" + offer.getAffiliateid());
                 activate.setActivatetime(new Date());
@@ -161,15 +219,14 @@ public class ConversionAPI {
                         activate.setAdvpayout(0f);
 
                     }
-                    if (puboffer.getPayout().floatValue() < 0.3) {
+                    if (puboffer.getPayout().floatValue() < 0.2) {
                         activate.setDefaultpayout(puboffer.getPayout().floatValue());
                         activate.setPubpayout(puboffer.getPayout().floatValue());
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
                     }
                 }
-                activate.setDeviceid(click.getIdfa() == null ? click.getGaid() : click.getIdfa());
                 if (StringUtils.isBlank(activate.getDeviceid())) {
-                    activate.setDeviceid("Error CLick");
+                    activate.setDeviceid("NO CLICK");
                 }
                 activate.setIp(click.getCip());
                 activate.setInserttime(new Date());
@@ -212,7 +269,7 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
                 }
-                if(StateE.PIDBLOCK.name.equalsIgnoreCase(offer.getStatus())){
+                if (StateE.PIDBLOCK.name.equalsIgnoreCase(offer.getStatus())) {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
@@ -258,8 +315,8 @@ public class ConversionAPI {
             }
 
         } catch (Exception e) {
-            mailer.sendErrorMail("Conversion Error: SaveConversion", Mailer.e2s(e));
             e.printStackTrace();
+            mailer.sendErrorMail("Conversion Error: SaveConversion", Mailer.e2s(e));
         }
 
         return "ok";
@@ -321,6 +378,10 @@ public class ConversionAPI {
     }
 
     public static void main(String[] args) {
+        String clickid = "8061|Y29tLmlsaWtlLmNhcnRvb24oMTkp|30309303|788197|D360244F-9B51-4003-9DC3-EF7B88972CCA||1636290757|1.760|VN|Android|2|Vietnam";
 
+
+        System.out.println(clickid.indexOf("|"));
+        System.out.println(clickid.split("\\|").length);
     }
 }

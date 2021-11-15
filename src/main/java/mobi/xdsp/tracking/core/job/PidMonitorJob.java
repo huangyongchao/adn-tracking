@@ -45,8 +45,15 @@ public class PidMonitorJob {
         OfferExample example = new OfferExample();
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
         pidMonitors.forEach(pidMonitor -> {
-            if (pidMonitor.getBlocket().before(cdate)) {
-                mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
+            try {
+                if(pidMonitor.getBlocket()==null){
+                    pidMonitor.setBlocket(new Date());
+                }
+                if (pidMonitor.getBlocket().before(cdate)) {
+                    mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 

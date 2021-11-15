@@ -19,6 +19,10 @@ public class ApiTools {
             activate.setInactivecnt(1);
             activate.setActivecnt(0);
             activate.setDeductcnt(0);
+        }else if(PBStateE.REJECT.code == activate.getStatus()){
+            activate.setInactivecnt(1);
+            activate.setActivecnt(0);
+            activate.setDeductcnt(0);
         }else if(PBStateE.DEDUCT.code == activate.getStatus()){
             activate.setInactivecnt(0);
             activate.setActivecnt(0);

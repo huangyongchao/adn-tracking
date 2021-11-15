@@ -86,6 +86,10 @@ public class Click implements Serializable {
     private Integer roid;
     @Transient
     private String link;
+    /**
+     * source off id
+     */
+    private String soid;
 
     @Override
     public String toString() {
