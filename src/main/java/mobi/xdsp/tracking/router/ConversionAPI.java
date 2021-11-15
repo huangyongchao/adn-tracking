@@ -155,6 +155,7 @@ public class ConversionAPI {
                 activate.setAid("" + advid);
                 activate.setClickid(clickid);
                 activate.setEvent(event);
+                activate.setChannelid(2);
                 activate.setPubsub(click.getPubSub());
                 activate.setClickdate(DateTimeUtil.getStringDate());
                 activate.setClicktime(DateTimeUtil.getStringDate());
