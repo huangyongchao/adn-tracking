@@ -302,14 +302,18 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
-                if (StateE.PIDBLOCK.name.equalsIgnoreCase(offer.getStatus())) {
+                if (offer.getStatus()!=null && offer.getStatus().equalsIgnoreCase(StateE.VALID.name)) {
+                    activate.setStatus(PBStateE.VALID.code);
+                }if (offer.getStatus()!=null && offer.getStatus().equalsIgnoreCase(StateE.PIDBLOCK.name)) {
+                    activate.setStatus(PBStateE.DEDUCT.code);
+                }if (offer.getStatus()!=null && offer.getStatus().equalsIgnoreCase(StateE.INVALID.name)) {
                     activate.setStatus(PBStateE.INVALID.code);
-                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                }else{
+                    activate.setStatus(PBStateE.INVALID.code);
                 }
-
                 if (!isRej) {
                     // Postback 下发
-                    if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null || activate.getNoticestatus() == PBNoticeStateE.NO.code)) {
+                    if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null )) {
                         //发PB
                         boolean res = sendPb(publisher, offer, puboffer, click);
                         if (res) {
@@ -326,7 +330,7 @@ public class ConversionAPI {
 
                     int r = activateMapper.insertSelective(activate);
                 } else {
-
+                    /*被拒入库*/
                     activate.setStatus(PBStateE.REJECT.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     int r = activateMapper.insertSelective(activate);
