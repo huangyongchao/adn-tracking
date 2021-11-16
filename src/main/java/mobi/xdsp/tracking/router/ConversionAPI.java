@@ -302,18 +302,21 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
-                if (offer.getStatus()!=null && offer.getStatus().equalsIgnoreCase(StateE.VALID.name)) {
+                if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.VALID.name)) {
                     activate.setStatus(PBStateE.VALID.code);
-                }if (offer.getStatus()!=null && offer.getStatus().equalsIgnoreCase(StateE.PIDBLOCK.name)) {
+                }
+                if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.PIDBLOCK.name)) {
                     activate.setStatus(PBStateE.DEDUCT.code);
-                }if (offer.getStatus()!=null && offer.getStatus().equalsIgnoreCase(StateE.INVALID.name)) {
+                }
+                if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.INVALID.name)) {
                     activate.setStatus(PBStateE.INVALID.code);
-                }else{
+                } else {
                     activate.setStatus(PBStateE.INVALID.code);
                 }
-                if (!isRej) {
+                /*符合条件发PB*/
+                if (!isRej && publisher.getId() != null && publisher.getId() > 10) {
                     // Postback 下发
-                    if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null )) {
+                    if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                         //发PB
                         boolean res = sendPb(publisher, offer, puboffer, click);
                         if (res) {
@@ -330,11 +333,24 @@ public class ConversionAPI {
 
                     int r = activateMapper.insertSelective(activate);
                 } else {
-                    /*被拒入库*/
-                    activate.setStatus(PBStateE.REJECT.code);
-                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                    int r = activateMapper.insertSelective(activate);
-                    rejlog.warn("{},{},{},{},{},{}", clickid, puboffer.getId(), click.getPubSub(), click.getPubSub(), event);
+                    if (isRej) {
+                        /*被拒入库*/
+                        activate.setStatus(PBStateE.REJECT.code);
+                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        int r = activateMapper.insertSelective(activate);
+                        rejlog.warn("{},{},{},{},{},{}", clickid, puboffer.getId(), click.getPubSub(), click.getPubSub(), event);
+
+                    } else {
+                        if (publisher.getId() != null && (publisher.getId() == 0 || publisher.getId() == 1)) {
+                            /*被拒入库*/
+                            activate.setStatus(PBStateE.VALID.code);
+                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                            int r = activateMapper.insertSelective(activate);
+                        } else {
+                            /*非 SDK DSP 被拒 以及 需要的PB渠道的最终入库,依然遵照上诉状态判定*/
+                            int r = activateMapper.insertSelective(activate);
+                        }
+                    }
 
                 }
 
