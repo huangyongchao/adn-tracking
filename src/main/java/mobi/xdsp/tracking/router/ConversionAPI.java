@@ -302,7 +302,7 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 }
-                if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.VALID.name)) {
+               /* if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.VALID.name)) {
                     activate.setStatus(PBStateE.VALID.code);
                 }
                 if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.PIDBLOCK.name)) {
@@ -312,7 +312,7 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
                 } else {
                     activate.setStatus(PBStateE.INVALID.code);
-                }
+                }*/
                 /*符合条件发PB*/
                 if (!isRej && publisher.getId() != null && publisher.getId() > 10) {
                     // Postback 下发
