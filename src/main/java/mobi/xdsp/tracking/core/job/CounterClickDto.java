@@ -15,6 +15,7 @@ public class CounterClickDto {
     private Integer oid;
     private Integer utchour;
     private Integer amount;
+    private Integer erramount;
     private String pubsub;
     private int type;
 

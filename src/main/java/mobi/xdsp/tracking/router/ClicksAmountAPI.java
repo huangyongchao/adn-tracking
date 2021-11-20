@@ -11,27 +11,20 @@ import java.util.List;
 public class ClicksAmountAPI {
 
 
-    @RequestMapping(path = "recordclks", method = {RequestMethod.POST, RequestMethod.GET})
-    public Object recordclks(@RequestParam(value = "pid", required = true) Integer pid,
-                             @RequestParam(value = "oid", required = true) Integer oid,
-                             @RequestParam(value = "utchour", required = true) Integer utchour,
-                             @RequestParam(value = "amount", required = true) Integer amount,
-                             @RequestParam(value = "pubsub", required = true) String pubsub) {
-
-        Counter.increaseClick(pid, oid, utchour, pubsub, 1, amount);
-
-        return "ok";
-    }
-
-
     @RequestMapping(path = "clks", method = {RequestMethod.POST, RequestMethod.GET})
     public Object clksdto(@RequestBody List<CounterClickDto> clickDtos) {
 
         if (clickDtos != null) {
             System.out.println(JSONObject.toJSONString(clickDtos));
             clickDtos.forEach(clickDto -> {
+                if (clickDto.getAmount() != null && clickDto.getAmount() > 0) {
 
-                Counter.increaseClick(clickDto.getPid(), clickDto.getOid(), clickDto.getUtchour(), clickDto.getPubsub(), 1, clickDto.getAmount());
+                    Counter.increaseClick(clickDto.getPid(), clickDto.getOid(), clickDto.getUtchour(), clickDto.getPubsub(), 1, clickDto.getAmount());
+                }
+                if (clickDto.getErramount() != null && clickDto.getErramount() > 0) {
+                    Counter.increaseClick(clickDto.getPid(), clickDto.getOid(), clickDto.getUtchour(), clickDto.getPubsub(), 2, clickDto.getErramount());
+
+                }
             });
         }
         return "ok";
