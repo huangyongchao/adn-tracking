@@ -72,10 +72,12 @@ public class OffersQueryAPI {
 
     @Autowired
     private DataService dataService;
+
     @RequestMapping(path = "3.0/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
     public Object offersaffise1(HttpServletRequest request) {
         return offersaffise1(request);
     }
+
     @RequestMapping(path = "affiseoffers", method = {RequestMethod.POST, RequestMethod.GET})
     public Object offersaffise(HttpServletRequest request) {
         String apikey = request.getHeader("API-Key");
@@ -136,10 +138,10 @@ public class OffersQueryAPI {
                         payments.setGoal(offers1.getPayEvent());
                         payments.setType("fixed");
                         payments.setTitle(offers1.getPayoutType());
-                        int i= offers1.getTrackingUrl().indexOf("pub_sub");
-                        if(i>0){
-                            o.setLink(offers1.getTrackingUrl().substring(0,i-1));
-                            o.setTrackUrl(offers1.getTrackingUrl().substring(0,i-1));
+                        int i = offers1.getTrackingUrl().indexOf("pub_sub");
+                        if (i > 0) {
+                            o.setLink(offers1.getTrackingUrl().substring(0, i - 1));
+                            o.setTrackUrl(offers1.getTrackingUrl().substring(0, i - 1));
                         }
                         o.setPayments(Lists.newArrayList(payments));
                         o.setStrictly_country(1);
@@ -270,16 +272,20 @@ public class OffersQueryAPI {
                         respO.setAppName(n.getAppname());
                         respO.setSubtype(n.getAutosubid());
                         respO.setSuggestSubs(n.getPlacements());
-                        respO.setTargetScheduleUTC(n.getSchedule());
+                        if (n.getSchedule() != null) {
+
+                            respO.setTargetScheduleUTC(n.getSchedule().replaceAll("null", ""));
+
+                        }
                         if (respO.getPreviewUrl() == null || "null".equalsIgnoreCase(respO.getPreviewUrl())) {
                             if ("ios".equalsIgnoreCase(n.getOs())) {
-                                if(n.getAppid()!=null){
-                                    if(n.getAppid().startsWith("id")){
+                                if (n.getAppid() != null) {
+                                    if (n.getAppid().startsWith("id")) {
                                         respO.setPreviewUrl("https://apps.apple.com/app/" + n.getAppid());
 
-                                    }else{
+                                    } else {
 
-                                        respO.setPreviewUrl("https://apps.apple.com/app/id" +n.getAppid() );
+                                        respO.setPreviewUrl("https://apps.apple.com/app/id" + n.getAppid());
                                     }
                                 }
                             } else {
