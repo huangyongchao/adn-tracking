@@ -338,7 +338,7 @@ public class ConversionAPI {
                         activate.setStatus(PBStateE.REJECT.code);
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         int r = activateMapper.insertSelective(activate);
-                        rejlog.warn("{},{},{},{},{},{}", clickid, puboffer.getId(), click.getPubSub(), click.getPubSub(), event);
+                        rejlog.warn("{},{},{}", clickid, click.getPubSub(), event);
 
                     } else {
                         if (publisher.getId() != null && (publisher.getId() == 0 || publisher.getId() == 1)) {
