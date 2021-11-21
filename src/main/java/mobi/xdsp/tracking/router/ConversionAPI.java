@@ -369,8 +369,11 @@ public class ConversionAPI {
             }
 
         } catch (Exception e) {
+            System.out.println(clickid);
+            System.out.println(rej);
+            System.out.println(rejrv);
+            System.out.println(rejr);
             e.printStackTrace();
-            mailer.sendErrorMail("Conversion Error: SaveConversion", Mailer.e2s(e));
         }
 
         return "ok";
