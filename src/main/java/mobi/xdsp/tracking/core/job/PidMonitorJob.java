@@ -22,6 +22,8 @@ import javax.mail.*;
 import javax.mail.search.ComparisonTerm;
 import javax.mail.search.ReceivedDateTerm;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +48,7 @@ public class PidMonitorJob {
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
         pidMonitors.forEach(pidMonitor -> {
             try {
-                if(pidMonitor.getBlocket()==null){
+                if (pidMonitor.getBlocket() == null) {
                     pidMonitor.setBlocket(new Date());
                 }
                 if (pidMonitor.getBlocket().before(cdate)) {
@@ -236,7 +238,7 @@ public class PidMonitorJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            int h = new Date().getHours();
+            int h = LocalDateTime.now(ZoneOffset.UTC).getHour();
 
             ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 0));
 
@@ -255,11 +257,16 @@ public class PidMonitorJob {
                                 offerset1 = 7;
                             }
                             String blockEnd = null;
+                            int dayoffet = 0;
                             if (i > 0) {
                                 blockEnd = cont.substring(i + offerset, i + offerset1);
                             }
+                            int blockh = Integer.parseInt(blockEnd);
+                            if (h > blockh) {
+                                dayoffet = 1;
+                            }
                             String st = DateTimeUtil.dateToStrLong(msg.getSentDate());
-                            String et = DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), 1)) + " " + blockEnd + ":00";
+                            String et = DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), dayoffet)) + " " + blockEnd + ":00";
                             updatePidState(pid, st, et);
 
                             System.out.println(pid);
