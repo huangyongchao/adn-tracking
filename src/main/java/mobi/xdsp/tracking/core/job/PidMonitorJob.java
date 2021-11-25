@@ -236,7 +236,9 @@ public class PidMonitorJob {
             Folder folder = store.getFolder("INBOX");
             // 以读写模式打开收件箱
             folder.open(Folder.READ_ONLY);
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 1));
+            int h = new Date().getHours();
+
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 0));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
