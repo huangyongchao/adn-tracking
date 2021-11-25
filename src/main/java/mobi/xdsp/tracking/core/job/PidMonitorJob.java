@@ -261,7 +261,7 @@ public class PidMonitorJob {
                             if (i > 0) {
                                 blockEnd = cont.substring(i + offerset, i + offerset1);
                             }
-                            int blockh = Integer.parseInt(blockEnd);
+                            int blockh = Integer.parseInt(blockEnd.split(":")[0]);
                             if (h > blockh) {
                                 dayoffet = 1;
                             }
