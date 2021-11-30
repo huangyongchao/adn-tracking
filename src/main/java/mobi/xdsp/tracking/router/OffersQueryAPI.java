@@ -10,7 +10,9 @@ import mobi.xdsp.tracking.dto.affise.*;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OsE;
 import mobi.xdsp.tracking.dto.enums.StateE;
+import mobi.xdsp.tracking.dto.offerapi.MafOffer;
 import mobi.xdsp.tracking.dto.offerapi.OfferApiResponse;
+import mobi.xdsp.tracking.dto.offerapi.OfferApiResponseMaf;
 import mobi.xdsp.tracking.dto.offerapi.Offers;
 import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
@@ -193,6 +195,36 @@ public class OffersQueryAPI {
         }
     }
 
+    @RequestMapping(path = "mafoffers", method = {RequestMethod.POST, RequestMethod.GET})
+    public OfferApiResponseMaf mafoffers(@RequestParam(value = "token", required = true) String token) {
+        OfferApiResponse offerApiResponse = offers(token);
+        OfferApiResponseMaf response = new OfferApiResponseMaf();
+
+        if (offerApiResponse.isSuccess()) {
+            List<Offers> offers = offerApiResponse.getOffers();
+            List<MafOffer> mafOffers = Lists.newArrayList();
+            offers.forEach(offers1 -> {
+                MafOffer mafOffer = new MafOffer();
+                mafOffer.setMafid(offers1.getMafid());
+                mafOffer.setClickUrl(offers1.getTrackingUrl());
+                mafOffer.setTargetScheduleUTC(offers1.getTargetScheduleUTC());
+                mafOffer.setSuggestSubs(offers1.getSuggestSubs());
+                mafOffer.setGeo(offers1.getGeo());
+                mafOffer.setOs(offers1.getOs());
+                mafOffers.add(mafOffer);
+            });
+            response.setSuccess(true);
+            response.setOffers(mafOffers);
+            return response;
+
+        } else {
+            response.setSuccess(false);
+
+            return response;
+        }
+
+    }
+
     @RequestMapping(path = "offers", method = {RequestMethod.POST, RequestMethod.GET})
     public OfferApiResponse offers(@RequestParam(value = "token", required = true) String token) {
 
@@ -215,7 +247,7 @@ public class OffersQueryAPI {
             return new OfferApiResponse(false, "Publisher have been stop.", null, false);
 
         }
-        if (isCache(token)) {
+        if (isCache(token) && pub.getId() != 2) {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
@@ -260,7 +292,7 @@ public class OffersQueryAPI {
                         respO.setRestrictions(n.getRestrictions());
                         respO.setGeo(n.getCountries());
                         respO.setId(n.getId());
-                        if(publisher!=null& publisher.getId()==2){
+                        if (publisher != null & publisher.getId() == 2) {
                             respO.setMafid(n.getSourceofferid());
                         }
                         respO.setPayEvent(n.getCreatives());
