@@ -22,6 +22,7 @@ public class Offers {
 
     private int id;
     private String name;
+    private String mafid;
     private boolean incent;
     private String description;
     private String restrictions;

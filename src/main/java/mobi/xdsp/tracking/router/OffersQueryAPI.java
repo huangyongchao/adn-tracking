@@ -260,6 +260,9 @@ public class OffersQueryAPI {
                         respO.setRestrictions(n.getRestrictions());
                         respO.setGeo(n.getCountries());
                         respO.setId(n.getId());
+                        if(publisher!=null& publisher.getId()==2){
+                            respO.setMafid(n.getSourceofferid());
+                        }
                         respO.setPayEvent(n.getCreatives());
                         respO.setIncent(false);
                         respO.setKpis(n.getKpis());
