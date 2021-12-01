@@ -267,7 +267,14 @@ public class OffersQueryAPI {
             List<Integer> offerids = list.stream().map(n -> n.getOfferid()).collect(Collectors.toList());
 
             OfferExample offerExample = new OfferExample();
-            offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusEqualTo(StateE.VALID.name);
+            if(publisher.getId()==2){
+
+                offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusNotEqualTo(StateE.INVALID.name);
+
+            }else {
+
+                offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusEqualTo(StateE.VALID.name);
+            }
 
             List<Offer> offers = offerMapper.selectByExample(offerExample);
             Map<Integer, List<PublisherOffer>> puboffmap = list.stream().collect(Collectors.groupingBy(PublisherOffer::getOfferid));
