@@ -375,7 +375,11 @@ public class ConversionAPI {
             System.out.println(rej);
             System.out.println(rejrv);
             System.out.println(rejr);
+
             logger.error(clickid,e);
+            Click click = AdTool.unpackClickId(clickid);
+            logger.error(click.getOid()+":"+click.getPid());
+
             e.printStackTrace();
         }
 
