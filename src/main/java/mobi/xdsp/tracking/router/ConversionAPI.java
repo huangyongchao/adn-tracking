@@ -56,6 +56,7 @@ public class ConversionAPI {
     private static final Logger convlog = LoggerFactory.getLogger("conv");
     private static final Logger rejlog = LoggerFactory.getLogger("rej");
     private static final Logger pblog = LoggerFactory.getLogger("pb");
+    private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
     Map<String, Offer> SOURCEID_OFFER_CACHE = Maps.newHashMap();
 
@@ -199,6 +200,7 @@ public class ConversionAPI {
                     sentpb = true;
                 }
                 Offer offer = dataService.getOfferCache(click.getOid());
+
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
 
@@ -373,6 +375,7 @@ public class ConversionAPI {
             System.out.println(rej);
             System.out.println(rejrv);
             System.out.println(rejr);
+            logger.error(clickid,e);
             e.printStackTrace();
         }
 
