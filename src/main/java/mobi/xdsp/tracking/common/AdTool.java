@@ -117,6 +117,9 @@ public class AdTool {
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getId())) {
             track = StringUtils.replaceAll(track, "\\{click_id}", click.getId());
         }
+        if (track.indexOf("{clickid}") > -1 && StringUtils.isNotBlank(click.getId())) {
+            track = StringUtils.replaceAll(track, "\\{clickid}", click.getId());
+        }
 
         if (OsE.AOS.name.equalsIgnoreCase(offer.getOs())) {
             if (track.indexOf("{device_id}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
