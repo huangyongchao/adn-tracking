@@ -91,18 +91,21 @@ public class ConversionAPI {
             @RequestParam(value = "event", defaultValue = "") String event,
             @RequestParam(value = "isevent", defaultValue = "0") Integer isevent,
             @RequestParam(value = "rejr", defaultValue = "") String rejr,
+            @RequestParam(value = "rejected_reason", defaultValue = "") String rejected_reason,
+            @RequestParam(value = "rejected_sub_reason", defaultValue = "") String rejected_sub_reason,
+            @RequestParam(value = "rejected_reason_value", defaultValue = "") String rejected_reason_value,
+            @RequestParam(value = "isrejected", defaultValue = "") String isrejected,
             @RequestParam(value = "idfa", defaultValue = "") String idfa,
             @RequestParam(value = "gaid", defaultValue = "") String gaid,
             @RequestParam(value = "subid", defaultValue = "") String subid,
             @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {
-
         /*isevent 1 global 2 event*/
 
         //log
         boolean isRej = false;
-        if ("1".equals(rej)) {
-
+        if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
+            rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event,rejected_reason,rejected_sub_reason);
 
         } else {
 
@@ -340,7 +343,6 @@ public class ConversionAPI {
                         activate.setStatus(PBStateE.REJECT.code);
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         int r = activateMapper.insertSelective(activate);
-                        rejlog.warn("{},{},{}", clickid, click.getPubSub(), event);
 
                     } else {
                         if (publisher.getId() != null && (publisher.getId() == 0 || publisher.getId() == 1)) {
