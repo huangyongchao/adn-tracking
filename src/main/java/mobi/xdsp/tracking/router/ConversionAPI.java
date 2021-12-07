@@ -105,7 +105,7 @@ public class ConversionAPI {
         boolean isRej = false;
         if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
-            rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event,rejected_reason,rejected_sub_reason);
+            rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason);
 
         } else {
 
@@ -342,6 +342,8 @@ public class ConversionAPI {
                         /*被拒入库*/
                         activate.setStatus(PBStateE.REJECT.code);
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+
                         int r = activateMapper.insertSelective(activate);
 
                     } else {
@@ -378,9 +380,9 @@ public class ConversionAPI {
             System.out.println(rejrv);
             System.out.println(rejr);
 
-            logger.error(clickid,e);
+            logger.error(clickid, e);
             Click click = AdTool.unpackClickId(clickid);
-            logger.error(click.getOid()+":"+click.getPid());
+            logger.error(click.getOid() + ":" + click.getPid());
 
             e.printStackTrace();
         }
