@@ -106,6 +106,7 @@ public class ConversionAPI {
         if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
             rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason);
+            logger.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason);
 
         } else {
 
