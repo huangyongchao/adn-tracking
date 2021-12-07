@@ -187,15 +187,19 @@ public class ConversionAPI {
                 activate.setPubsub(click.getPubSub());
                 activate.setClickdate(DateTimeUtil.getStringDate());
                 activate.setClicktime(DateTimeUtil.getStringDate());
-                if (isRej) {
-                    activate.setStatus(PBStateE.REJECT.code);
-                } else {
 
-                    activate.setStatus(PBStateE.INVALID.code);
-                }
+
+                activate.setStatus(PBStateE.INVALID.code);
                 activate.setAffsub2(click.getSoid());
                 activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 ApiTools.packageCnt(activate);
+                if (isRej) {
+                    /*被拒入库*/
+                    activate.setStatus(PBStateE.REJECT.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                    activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+                    activate.setStatus(PBStateE.REJECT.code);
+                }
                 int r = activateMapper.insertSelective(activate);
             } else if (click != null) {
                 boolean sentpb = false;
