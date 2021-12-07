@@ -189,7 +189,6 @@ public class ConversionAPI {
                 activate.setClicktime(DateTimeUtil.getStringDate());
                 if (isRej) {
                     activate.setStatus(PBStateE.REJECT.code);
-                    activate.setAffsub3(rejr + rejrv);
                 } else {
 
                     activate.setStatus(PBStateE.INVALID.code);
@@ -371,6 +370,12 @@ public class ConversionAPI {
                 activate.setStatus(PBStateE.INVALID.code);
                 activate.setNoticestatus(PBNoticeStateE.STOP.code);
                 ApiTools.packageCnt(activate);
+                if (isRej) {
+                    /*被拒入库*/
+                    activate.setStatus(PBStateE.REJECT.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                    activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+                }
                 int r = activateMapper.insertSelective(activate);
 
             }
