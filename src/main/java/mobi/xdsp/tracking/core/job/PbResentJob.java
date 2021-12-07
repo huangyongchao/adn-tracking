@@ -6,6 +6,7 @@ import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.dto.enums.PBNoticeStateE;
 import mobi.xdsp.tracking.dto.enums.PBStateE;
+import mobi.xdsp.tracking.entity.Activate;
 import mobi.xdsp.tracking.entity.ActivateExample;
 import mobi.xdsp.tracking.entity.ActivateWithBLOBs;
 import mobi.xdsp.tracking.entity.Publisher;
@@ -102,10 +103,16 @@ public class PbResentJob {
                             track = AdTool.urlEncode(track);
                             pblog.warn(tid + ":" + track);
                             String resp = HttpClientUtil.get(track);
+                            n.setNoticestatus(PBNoticeStateE.SENT.code);
                             pblog.warn(tid + ":" + "resp");
                         } catch (Exception e) {
-                            e.printStackTrace();
-                            pblog.warn(tid + ":" + "senderror");
+                            n.setNoticestatus(PBNoticeStateE.SENT.code);
+                            pblog.warn(tid + ":" + "senderror",e);
+                        }finally {
+                            ActivateWithBLOBs activate = new ActivateWithBLOBs();
+                            activate.setId(n.getId());
+                            activate.setNoticestatus(PBNoticeStateE.SENT.code);
+                            activateMapper.updateByPrimaryKeySelective(activate);
                         }
 
 
