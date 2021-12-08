@@ -327,7 +327,7 @@ public class ConversionAPI {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                         //发PB
-                        boolean res = sendPb(publisher, offer, puboffer, click);
+                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, null, null);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -347,7 +347,15 @@ public class ConversionAPI {
                         activate.setStatus(PBStateE.REJECT.code);
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+                        //发PB
+                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason);
+                        if (res) {
+                            activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
+                        } else {
+                            activate.setNoticestatus(PBNoticeStateE.NO.code);
+
+                        }
                         int r = activateMapper.insertSelective(activate);
 
                     } else {
@@ -379,6 +387,7 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.REJECT.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+
                 }
                 int r = activateMapper.insertSelective(activate);
 
@@ -400,7 +409,7 @@ public class ConversionAPI {
         return "ok";
     }
 
-    public boolean sendPb(Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click) {
+    public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
         pblog.warn(tid + ":" + track);
@@ -408,43 +417,55 @@ public class ConversionAPI {
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
             track = StringUtils.replaceAll(track, "\\{click_id}", click.getClickId());
         }
-        if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(click.getIdfa())) {
-            track = StringUtils.replaceAll(track, "\\{idfa}", click.getIdfa());
-        }
+        if (!isrej) {
+            if (track.indexOf("{idfa}") > -1 && StringUtils.isNotBlank(click.getIdfa())) {
+                track = StringUtils.replaceAll(track, "\\{idfa}", click.getIdfa());
+            }
 
-        if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
-            track = StringUtils.replaceAll(track, "\\{gaid}", click.getGaid());
-        }
+            if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
+                track = StringUtils.replaceAll(track, "\\{gaid}", click.getGaid());
+            }
 
-        if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(click.getPubSub())) {
-            track = StringUtils.replaceAll(track, "\\{pub_sub}", click.getPubSub());
-        }
+            if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(click.getPubSub())) {
+                track = StringUtils.replaceAll(track, "\\{pub_sub}", click.getPubSub());
+            }
 
-        if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(offer.getAppid())) {
-            track = StringUtils.replaceAll(track, "\\{appid}", offer.getAppid());
-        }
-        if (track.indexOf("{sub1}") > -1 && StringUtils.isNotBlank(click.getS1())) {
-            track = StringUtils.replaceAll(track, "\\{sub1}", click.getS1());
-        }
-        if (track.indexOf("{sub2}") > -1 && StringUtils.isNotBlank(click.getS2())) {
-            track = StringUtils.replaceAll(track, "\\{sub2}", click.getS2());
-        }
-        if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(click.getIp())) {
-            track = StringUtils.replaceAll(track, "\\{ip}", click.getIp());
-        }
-        if (track.indexOf("{payout}") > -1 && publisherOffer.getPayout() != null) {
-            track = StringUtils.replaceAll(track, "\\{payout}", publisherOffer.getPayout().toString());
-        }
-        if (track.indexOf("{currency}") > -1 && offer.getCurrency() != null) {
-            track = StringUtils.replaceAll(track, "\\{currency}", offer.getCurrency());
+            if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(offer.getAppid())) {
+                track = StringUtils.replaceAll(track, "\\{appid}", offer.getAppid());
+            }
+            if (track.indexOf("{sub1}") > -1 && StringUtils.isNotBlank(click.getS1())) {
+                track = StringUtils.replaceAll(track, "\\{sub1}", click.getS1());
+            }
+            if (track.indexOf("{sub2}") > -1 && StringUtils.isNotBlank(click.getS2())) {
+                track = StringUtils.replaceAll(track, "\\{sub2}", click.getS2());
+            }
+            if (track.indexOf("{ip}") > -1 && StringUtils.isNotBlank(click.getIp())) {
+                track = StringUtils.replaceAll(track, "\\{ip}", click.getIp());
+            }
+            if (track.indexOf("{payout}") > -1 && publisherOffer.getPayout() != null) {
+                track = StringUtils.replaceAll(track, "\\{payout}", publisherOffer.getPayout().toString());
+            }
+            if (track.indexOf("{currency}") > -1 && offer.getCurrency() != null) {
+                track = StringUtils.replaceAll(track, "\\{currency}", offer.getCurrency());
+            }
+
+        } else {
+
+            if (track.indexOf("{rejected_reason}") > -1) {
+                track = StringUtils.replaceAll(track, "\\{rejected_reason}", block_reason);
+            }
+            if (track.indexOf("{rejected_sub_reason}") > -1) {
+                track = StringUtils.replaceAll(track, "\\{rejected_sub_reason}", block_sub_reason);
+            }
+
         }
 
         try {
             track = AdTool.urlEncode(track);
-            pblog.warn(tid + ":" + track);
+            pblog.warn(tid + ":" + isrej + ":" + track);
             String resp = HttpClientUtil.get(track);
             sentstatus = true;
-            pblog.warn(tid + ":" + "resp");
+            pblog.warn(tid + ":" + isrej + ":resp");
         } catch (Exception e) {
             e.printStackTrace();
             sentstatus = false;
