@@ -409,9 +409,28 @@ public class ConversionAPI {
         return "ok";
     }
 
+    public String getRejPb(String url) {
+        if (StringUtils.isNotBlank(url) && url.indexOf("##") > 0) {
+            return url.split("##")[0];
+        }
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        } else {
+            return null;
+        }
+    }
+
     public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
+        if (isrej) {
+            track = getRejPb(publisher.getPostbackeventurl());
+
+        }
+        if (StringUtils.isBlank(track)) {
+            pblog.warn(tid + ":" + isrej + ":track null");
+            return false;
+        }
         pblog.warn(tid + ":" + track);
         boolean sentstatus = false;
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
