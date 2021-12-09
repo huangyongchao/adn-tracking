@@ -247,7 +247,7 @@ public class OffersQueryAPI {
             return new OfferApiResponse(false, "Publisher have been stop.", null, false);
 
         }
-        if (isCache(token) && pub.getId() != 2) {
+        if (isCache(token) && pub.getId() != 2 && pub.getId() != 1015) {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
@@ -267,11 +267,11 @@ public class OffersQueryAPI {
             List<Integer> offerids = list.stream().map(n -> n.getOfferid()).collect(Collectors.toList());
 
             OfferExample offerExample = new OfferExample();
-            if(publisher.getId()==2){
+            if (publisher.getId() == 2) {
 
                 offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusNotEqualTo(StateE.INVALID.name);
 
-            }else {
+            } else {
 
                 offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusEqualTo(StateE.VALID.name);
             }
