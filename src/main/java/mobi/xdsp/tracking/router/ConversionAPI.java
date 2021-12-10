@@ -1,10 +1,7 @@
 package mobi.xdsp.tracking.router;
 
 import com.google.common.collect.Maps;
-import mobi.xdsp.tracking.common.AdTool;
-import mobi.xdsp.tracking.common.DateTimeUtil;
-import mobi.xdsp.tracking.common.HttpClientUtil;
-import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.common.*;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.enums.PBNoticeStateE;
 import mobi.xdsp.tracking.dto.enums.PBStateE;
@@ -210,7 +207,7 @@ public class ConversionAPI {
 
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
-
+                noticeAddClicks(publisher, offer);
                 Integer deductrate = publisher.getDeductrate();
 
                 if (deductrate == null) {
@@ -418,6 +415,20 @@ public class ConversionAPI {
         } else {
             return null;
         }
+    }
+
+    public void noticeAddClicks(Publisher publisher, Offer offer) {
+        ExecutorPool.getExecutor().execute(()->{
+            if (publisher != null && offer != null && publisher.getId() > 10 && StringUtils.isNotBlank(offer.getImprurl())&&StateE.VALID.name.equalsIgnoreCase(offer.getStatus())) {
+                try {
+                    HttpClientUtil.get(offer.getImprurl());
+                    logger.warn("NOTICE ADD CLICKS :"+offer.getImprurl());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason) {
