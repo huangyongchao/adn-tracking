@@ -40,7 +40,7 @@ public class PidMonitorJob {
     private OfferMapper offerMapper;
 
 
-    @Scheduled(cron = "0 1,31 * * * ?")
+    @Scheduled(cron = "0 */3 * * * ?")
     public void pidActiveChecker() {
         Date cdate = new Date();
 
@@ -48,10 +48,8 @@ public class PidMonitorJob {
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
         pidMonitors.forEach(pidMonitor -> {
             try {
-                if (pidMonitor.getBlocket() == null) {
-                    pidMonitor.setBlocket(new Date());
-                }
-                if (pidMonitor.getBlocket().before(cdate)) {
+
+                if (pidMonitor.getBlocket()!=null && pidMonitor.getBlocket().before(cdate)) {
                     mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
                 }
             } catch (Exception e) {
@@ -297,12 +295,10 @@ public class PidMonitorJob {
     }
 
     @PostConstruct
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "0 */5 * * * ?")
     public void auto() {
         pidBlockChecker();
         offerBlockByPidChecker();
-        pidActiveChecker();
-
     }
 
     public static void main(String[] args) {
