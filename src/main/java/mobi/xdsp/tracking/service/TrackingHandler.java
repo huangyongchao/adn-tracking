@@ -35,7 +35,7 @@ public class TrackingHandler {
     public Random r = new Random();
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
-        if(( offer.getAutosubid()==3) ||(offer.getOffername()!=null &&offer.getOffername().endsWith("_MI"))|| "4".equals(""+offer.getPriority())&&offer.getPlacements()!=null){
+        if(( offer.getRunning()==20) ||( offer.getRtbrunning()==20) ||( offer.getAutosubid()==3) ||(offer.getOffername()!=null &&offer.getOffername().endsWith("_MI"))|| "4".equals(""+offer.getPriority())&&offer.getPlacements()!=null){
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
             if(plsa.length>0){
