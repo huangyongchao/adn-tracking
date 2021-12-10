@@ -418,11 +418,17 @@ public class ConversionAPI {
     }
 
     public void noticeAddClicks(Publisher publisher, Offer offer) {
-        ExecutorPool.getExecutor().execute(()->{
-            if (publisher != null && offer != null && publisher.getId() > 10 && StringUtils.isNotBlank(offer.getImprurl())&&StateE.VALID.name.equalsIgnoreCase(offer.getStatus())) {
+        ExecutorPool.getExecutor().execute(() -> {
+            if (publisher != null
+                    && offer != null
+                    && publisher.getId() > 10
+                    && StringUtils.isNotBlank(offer.getImprurl())
+                    && StateE.VALID.name.equalsIgnoreCase(offer.getStatus())
+                    && offer.getTrackurl() != null
+                    && offer.getTrackurl().indexOf("appsflyer") > 0) {
                 try {
                     HttpClientUtil.get(offer.getImprurl());
-                    logger.warn("NOTICE ADD CLICKS :"+offer.getImprurl());
+                    logger.warn("NOTICE ADD CLICKS :" + offer.getImprurl());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
