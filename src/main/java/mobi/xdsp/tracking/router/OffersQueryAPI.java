@@ -207,6 +207,10 @@ public class OffersQueryAPI {
                 MafOffer mafOffer = new MafOffer();
                 mafOffer.setMafid(offers1.getMafid());
                 mafOffer.setClickUrl(offers1.getTrackingUrl());
+                if (offers1.getClickCap() > 0) {
+
+                    mafOffer.setClickcap(offers1.getClickCap());
+                }
                 mafOffer.setTargetScheduleUTC(offers1.getTargetScheduleUTC());
                 mafOffer.setSuggestSubs(offers1.getSuggestSubs());
                 mafOffer.setGeo(offers1.getGeo());

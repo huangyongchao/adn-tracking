@@ -20,6 +20,7 @@ public class MafOffer {
 
     private String mafid;
     private String clickUrl;
+    private int clickcap = 1000000;
     private String geo;
     private String os;
     private String suggestSubs;
