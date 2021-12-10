@@ -313,6 +313,9 @@ public class OffersQueryAPI {
                         respO.setPreviewUrl(n.getPreviewurl());
                         respO.setAppName(n.getAppname());
                         respO.setSubtype(n.getAutosubid());
+                        if ((n.getRtbrunning() != null && n.getRtbrunning().intValue() == 20) || (n.getRunning() != null && n.getRunning().intValue() == 20)) {
+                            respO.setSubtype(3);
+                        }
                         respO.setSuggestSubs(n.getPlacements());
                         if (n.getSchedule() != null) {
 
