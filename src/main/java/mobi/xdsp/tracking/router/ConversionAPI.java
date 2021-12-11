@@ -207,7 +207,6 @@ public class ConversionAPI {
 
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
-                noticeAddClicks(publisher, offer, click);
                 Integer deductrate = publisher.getDeductrate();
 
                 if (deductrate == null) {
@@ -297,6 +296,12 @@ public class ConversionAPI {
                 }
                 //处理 状态
                 ApiTools.packageCnt(activate);
+
+
+                //处理点击通知
+                noticeAddClicks(publisher, offer, activate);
+
+
                 //检查Cap
                 if (puboffer != null) {
                     int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
@@ -417,7 +422,7 @@ public class ConversionAPI {
         }
     }
 
-    public void noticeAddClicks(Publisher publisher, Offer offer, Click click) {
+    public void noticeAddClicks(Publisher publisher, Offer offer, Activate activate) {
         ExecutorPool.getExecutor().execute(() -> {
             if (publisher != null
                     && offer != null
@@ -427,14 +432,16 @@ public class ConversionAPI {
                     && offer.getTrackurl() != null
                     && offer.getTrackurl().indexOf("appsflyer") > 0) {
                 try {
-                    if (click != null && StringUtils.isNotBlank(click.getMixSub())) {
-                        HttpClientUtil.get(offer.getImprurl() + "/" + click.getMixSub());
+                    String url = null;
+                    if (activate != null && StringUtils.isNotBlank(activate.getSubid1())) {
+                        url = offer.getImprurl() + "/" + activate.getSubid1();
+                        HttpClientUtil.get(url);
 
                     } else {
-
-                        HttpClientUtil.get(offer.getImprurl() + "/");
+                        url = offer.getImprurl();
+                        HttpClientUtil.get(url);
                     }
-                    logger.warn("NOTICE ADD CLICKS :" + offer.getImprurl());
+                    logger.warn("NOTICE ADD CLICKS :" + url);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
