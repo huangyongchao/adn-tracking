@@ -43,6 +43,7 @@ public class TrackingAPI {
     private TrackingHandler handler;
 
     private static final Logger testlog = LoggerFactory.getLogger("test");
+
     @CrossOrigin
     @GetMapping("/clicktest")
     public Object clicktest(@RequestParam(value = "pid", required = true) Integer publisherid,
@@ -53,21 +54,22 @@ public class TrackingAPI {
                             @RequestParam(value = "click_id", defaultValue = "") String pubClickid,
                             @RequestParam(value = "postback_url", defaultValue = "") String postback_url,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Enumeration pNames=request.getParameterNames();
-        while(pNames.hasMoreElements()){
-            String name=(String)pNames.nextElement();
-            String value=request.getParameter(name);
+        Enumeration pNames = request.getParameterNames();
+        while (pNames.hasMoreElements()) {
+            String name = (String) pNames.nextElement();
+            String value = request.getParameter(name);
             System.out.println(name + "=" + value);
         }
-        String postback = "http://vapinteg.prod.sift.co/install?provider=PUBEARN+LIMITED1&provider_id=700&payout=0.01&mapped_params="+pubClickid;
-        if(StringUtils.isNotBlank(postback_url)){
-            postback = postback_url;
-            HttpClientUtil.get(postback_url);
-        }
+        String postback = "http://vapinteg.prod.sift.co/install?provider=PUBEARN+LIMITED1&provider_id=700&payout=0.01&mapped_params=" + pubClickid;
+        System.out.println(postback);
+        System.out.println(AdTool.urlEncode(postback));
+        System.out.println(HttpClientUtil.get(AdTool.urlEncode(postback)));
+        System.out.println(1);
         return "ok";
 
 
     }
+
     @CrossOrigin
     @GetMapping("/click")
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
