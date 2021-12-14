@@ -33,12 +33,13 @@ public class TrackingHandler {
 
 
     public Random r = new Random();
+
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
-        if((offer.getRtbrunning() != null && offer.getRtbrunning().intValue() == 20) || (offer.getRunning() != null && offer.getRunning().intValue() == 20) ||( offer.getAutosubid()==3) ||(offer.getOffername()!=null &&offer.getOffername().endsWith("_MI"))|| "4".equals(""+offer.getPriority())&&offer.getPlacements()!=null){
+        if (offer.getPriority() != null && offer.getPriority().intValue() == 4) {
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
-            if(plsa.length>0){
+            if (plsa.length > 0) {
                 /*从offer默认子站里随机选择一个子站作为真实子站*/
                 String subid = plsa[r.nextInt(plsa.length)];
                 String track = offer.getTrackurl();
@@ -51,12 +52,12 @@ public class TrackingHandler {
                     /*设置混量子站*/
                     click.setMixSub(subid);
                     /*原始子站放到AF额外参数,如果是AF链接*/
-                    if(track.indexOf("appsflyer.com")>0){
-                        if(track.indexOf("af_sub3")<0){
+                    if (track.indexOf("appsflyer.com") > 0) {
+                        if (track.indexOf("af_sub3") < 0) {
                             track = track + "&af_sub3=" + click.getPubSub();
-                        }else if (track.indexOf("af_sub2")<0){
+                        } else if (track.indexOf("af_sub2") < 0) {
                             track = track + "&af_sub2=" + click.getPubSub();
-                        }else if (track.indexOf("af_sub1")<0){
+                        } else if (track.indexOf("af_sub1") < 0) {
                             track = track + "&af_sub1=" + click.getPubSub();
                         }
                     }
@@ -101,7 +102,7 @@ public class TrackingHandler {
     //http://localhost:9192/click?pid=6&offer=2157&pub_sub=testsub&gaid={gaid}&click_id={click_id}&lang={lang}&ua={ua}&ip={ip}&appid={appid}&sub1={sub1}&sub2={sub2}
 
     public void countClicks(Click click, Offer offer, PublisherOffer publisherOffer) {
-        Counter.increaseClick(click.getPid(), click.getOid(), new Date().getHours(), click.getPubSub(), 1,1);
+        Counter.increaseClick(click.getPid(), click.getOid(), new Date().getHours(), click.getPubSub(), 1, 1);
     }
 
 
