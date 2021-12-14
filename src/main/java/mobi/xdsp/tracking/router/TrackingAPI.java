@@ -53,7 +53,12 @@ public class TrackingAPI {
                             @RequestParam(value = "click_id", defaultValue = "") String pubClickid,
                             @RequestParam(value = "postback_url", defaultValue = "") String postback_url,
                             HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+        Enumeration pNames=request.getParameterNames();
+        while(pNames.hasMoreElements()){
+            String name=(String)pNames.nextElement();
+            String value=request.getParameter(name);
+            System.out.println(name + "=" + value);
+        }
         String postback = "http://vapinteg.prod.sift.co/install?provider=PUBEARN+LIMITED1&provider_id=700&payout=0.01&mapped_params="+pubClickid;
         if(StringUtils.isNotBlank(postback_url)){
             postback = postback_url;
