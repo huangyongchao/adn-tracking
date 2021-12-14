@@ -299,7 +299,7 @@ public class ConversionAPI {
 
 
                 //处理点击通知
-                noticeAddClicks(publisher, offer, activate);
+                noticeAddClicks(isRej,publisher, offer, activate);
 
 
                 //检查Cap
@@ -422,7 +422,7 @@ public class ConversionAPI {
         }
     }
 
-    public void noticeAddClicks(Publisher publisher, Offer offer, Activate activate) {
+    public void noticeAddClicks(boolean isRej ,Publisher publisher, Offer offer, Activate activate) {
         ExecutorPool.getExecutor().execute(() -> {
             if (publisher != null
                     && offer != null
@@ -433,12 +433,20 @@ public class ConversionAPI {
                     && offer.getTrackurl().indexOf("appsflyer") > 0) {
                 try {
                     String url = null;
-                    if (activate != null && StringUtils.isNotBlank(activate.getSubid1())) {
-                        url = offer.getImprurl() + "/" + activate.getSubid1();
-                        HttpClientUtil.get(url);
 
+                    if (activate != null && StringUtils.isNotBlank(activate.getPubsub())) {
+                        url = offer.getImprurl() + "/" + activate.getPubsub();
+                        if(isRej){
+                            url = url+"/"+1;
+
+                        }
+                        HttpClientUtil.get(url);
                     } else {
                         url = offer.getImprurl();
+                        if(isRej){
+                            url = url+"/"+1;
+
+                        }
                         HttpClientUtil.get(url);
                     }
                     logger.warn("NOTICE ADD CLICKS :" + url);
