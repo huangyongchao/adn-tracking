@@ -50,7 +50,7 @@ public class PidMonitorJob {
             try {
 
                 if (pidMonitor.getBlocket()!=null && pidMonitor.getBlocket().before(cdate)) {
-                    mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
+                   // mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
