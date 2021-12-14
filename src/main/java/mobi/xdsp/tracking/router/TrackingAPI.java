@@ -2,6 +2,7 @@ package mobi.xdsp.tracking.router;
 
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.AddressUtils;
+import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.ShutdownHookEvent;
 import mobi.xdsp.tracking.dto.Click;
@@ -42,7 +43,26 @@ public class TrackingAPI {
     private TrackingHandler handler;
 
     private static final Logger testlog = LoggerFactory.getLogger("test");
+    @CrossOrigin
+    @GetMapping("/clicktest")
+    public Object clicktest(@RequestParam(value = "pid", required = true) Integer publisherid,
+                            @RequestParam(value = "offer", required = true) Integer offerid,
+                            @RequestParam(value = "pub_sub", defaultValue = "") String pubSub,
+                            @RequestParam(value = "idfa", defaultValue = "") String idfa,
+                            @RequestParam(value = "gaid", defaultValue = "") String gaid,
+                            @RequestParam(value = "click_id", defaultValue = "") String pubClickid,
+                            @RequestParam(value = "postback_url", defaultValue = "") String postback_url,
+                            HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        String postback = "http://vapinteg.prod.sift.co/install?provider=PUBEARN+LIMITED1&provider_id=700&payout=0.01&mapped_params="+pubClickid;
+        if(StringUtils.isNotBlank(postback_url)){
+            postback = postback_url;
+            HttpClientUtil.get(postback_url);
+        }
+        return "ok";
+
+
+    }
     @CrossOrigin
     @GetMapping("/click")
     public Object tracklist(@RequestParam(value = "pid", required = true) Integer publisherid,
