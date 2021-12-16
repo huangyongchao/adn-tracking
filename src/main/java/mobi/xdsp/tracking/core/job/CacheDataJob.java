@@ -39,7 +39,7 @@ public class CacheDataJob {
     private static final Logger clicklog = LoggerFactory.getLogger("click");
 
 
-    @Scheduled(cron = "* */20 * * * ?")
+    @Scheduled(cron = "* */3 * * * ?")
     public void updateOfferCacheJob() {
         try {
             Set<Integer> setids = CacheData.OFF_SYCN_LOCK.keySet();

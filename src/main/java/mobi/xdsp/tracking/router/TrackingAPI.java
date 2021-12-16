@@ -140,13 +140,12 @@ public class TrackingAPI {
         }
         Offer offer = CacheData.OFF_CACHE.get(offerid);
 
-        if (offer == null && !CacheData.OFF_SYCN_LOCK.containsKey(offerid)) {
+        if (offer == null) {
             offer = dataService.cacheOfferFirst(offerid);
         }
-        if (!CacheData.OFF_SYCN_LOCK.containsKey(offerid) || CacheData.OFF_SYCN_LOCK.get(offerid) != SychLockE.LOCKED.code) {
+        if (offer == null) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
         }
-
         if (StateE.INVALID.name.equals(offer.getStatus())) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(1)");
         }
