@@ -102,12 +102,12 @@ public class ConversionAPI {
         boolean isRej = false;
         if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
-            rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason);
-            logger.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason);
+            rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
+            logger.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
 
         } else {
 
-            convlog.warn("{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent);
+            convlog.warn("{},{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent, subid);
         }
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
@@ -299,7 +299,7 @@ public class ConversionAPI {
 
 
                 //处理点击通知
-                noticeAddClicks(isRej,publisher, offer, activate);
+                noticeAddClicks(isRej, publisher, offer, activate, subid);
 
 
                 //检查Cap
@@ -422,7 +422,9 @@ public class ConversionAPI {
         }
     }
 
-    public void noticeAddClicks(boolean isRej ,Publisher publisher, Offer offer, Activate activate) {
+    public void noticeAddClicks(boolean isRej, Publisher publisher, Offer offer, Activate activate, String subid) {
+        final String pubsub = subid;
+
         ExecutorPool.getExecutor().execute(() -> {
             if (publisher != null
                     && offer != null
@@ -434,23 +436,26 @@ public class ConversionAPI {
                 try {
                     String url = null;
 
-                    if (activate != null && StringUtils.isNotBlank(activate.getPubsub())) {
-                        url = offer.getImprurl() + "/" + activate.getPubsub();
-                        if(isRej){
-                            url = url+"/"+1;
+                    if (activate != null) {
+                        url = offer.getImprurl() + "/" + (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub());
+                        if (StringUtils.isBlank(pubsub) && StringUtils.isBlank(activate.getPubsub())) {
+                            url = offer.getImprurl();
+                        }
+                        if (isRej) {
+                            url = url + "/" + 1;
 
-                        }else{
-                            url = url+"/"+20;
+                        } else {
+                            url = url + "/" + 20;
 
                         }
                         HttpClientUtil.get(url);
                     } else {
                         url = offer.getImprurl();
-                        if(isRej){
-                            url = url+"/"+1;
+                        if (isRej) {
+                            url = url + "/" + 1;
 
-                        }else{
-                            url = url+"/"+20;
+                        } else {
+                            url = url + "/" + 20;
 
                         }
                         HttpClientUtil.get(url);
