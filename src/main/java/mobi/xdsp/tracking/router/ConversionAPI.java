@@ -439,12 +439,18 @@ public class ConversionAPI {
                         if(isRej){
                             url = url+"/"+1;
 
+                        }else{
+                            url = url+"/"+20;
+
                         }
                         HttpClientUtil.get(url);
                     } else {
                         url = offer.getImprurl();
                         if(isRej){
                             url = url+"/"+1;
+
+                        }else{
+                            url = url+"/"+20;
 
                         }
                         HttpClientUtil.get(url);
