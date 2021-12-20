@@ -36,7 +36,10 @@ public class TrackingHandler {
 
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
-        if (offer.getPriority() != null && offer.getPriority().intValue() == 4) {
+        if ((offer.getPriority() != null && offer.getPriority().intValue() == 4)
+                ||(offer.getRunning()!=null && offer.getRunning()==20)
+                ||(offer.getRtbrunning()!=null && offer.getRtbrunning()==20)
+        ) {
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
             if (plsa.length > 0) {
