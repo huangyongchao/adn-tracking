@@ -442,23 +442,24 @@ public class ConversionAPI {
                             url = offer.getImprurl();
                         }
                         if (isRej) {
-                            url = url + "/" + 1;
+                          //  url = url + "/" + 1;
 
                         } else {
                             url = url + "/" + 20;
+                            HttpClientUtil.get(url);
+
 
                         }
-                        HttpClientUtil.get(url);
                     } else {
                         url = offer.getImprurl();
                         if (isRej) {
-                            url = url + "/" + 1;
+                           // url = url + "/" + 1;
 
                         } else {
                             url = url + "/" + 20;
+                            HttpClientUtil.get(url);
 
                         }
-                        HttpClientUtil.get(url);
                     }
                     logger.warn("NOTICE ADD CLICKS :" + url);
                 } catch (IOException e) {
