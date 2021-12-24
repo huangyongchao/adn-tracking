@@ -434,24 +434,25 @@ public class ConversionAPI {
                     && offer.getTrackurl() != null
                     && offer.getTrackurl().indexOf("appsflyer") > 0) {
                 try {
-                    String url = null;
-
-                    if (activate.getPubsub() == null) {
-                        activate.setPubsub("");
-                    }
-                    String[] ss = offer.getImprurl().split("##");
-                    url = ss[0];
-                    url = StringUtils.replaceAll(url, "\\{sub_id}", (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub()));
-                    url = StringUtils.replaceAll(url, "\\{id}", "" + offer.getId());
-                    if (ss.length > 1) {
-                        int cnt = Integer.parseInt(ss[1]);
-                        url = StringUtils.replaceAll(url, "\\{cnt}", "" + cnt);
-                    }
                     if (!isRej) {
+                        String url = null;
+
+                        if (activate.getPubsub() == null) {
+                            activate.setPubsub("");
+                        }
+                        String[] ss = offer.getImprurl().split("##");
+                        url = ss[0];
+                        url = StringUtils.replaceAll(url, "\\{sub_id}", (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub()));
+                        url = StringUtils.replaceAll(url, "\\{id}", "" + offer.getId());
+                        if (ss.length > 1) {
+                            int cnt = Integer.parseInt(ss[1]);
+                            url = StringUtils.replaceAll(url, "\\{cnt}", "" + cnt);
+                        }
+
                         HttpClientUtil.get(url);
+                        logger.warn("NOTICE ADD CLICKS :" + url);
 
                     }
-                    logger.warn("NOTICE ADD CLICKS :" + url);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
