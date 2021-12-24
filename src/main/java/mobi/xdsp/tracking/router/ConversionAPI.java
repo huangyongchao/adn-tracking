@@ -439,8 +439,14 @@ public class ConversionAPI {
                     if (activate.getPubsub() == null) {
                         activate.setPubsub("");
                     }
-                    url = StringUtils.replaceAll(offer.getImprurl(), "\\{sub_id}", (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub()));
-
+                    String[] ss = offer.getImprurl().split("##");
+                    url = ss[0];
+                    url = StringUtils.replaceAll(url, "\\{sub_id}", (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub()));
+                    url = StringUtils.replaceAll(url, "\\{id}", "" + offer.getId());
+                    if (ss.length > 1) {
+                        int cnt = Integer.parseInt(ss[1]);
+                        url = StringUtils.replaceAll(url, "\\{cnt}", "" + cnt);
+                    }
                     if (!isRej) {
                         HttpClientUtil.get(url);
 
