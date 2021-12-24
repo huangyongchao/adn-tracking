@@ -436,30 +436,14 @@ public class ConversionAPI {
                 try {
                     String url = null;
 
-                    if (activate != null) {
-                        url = offer.getImprurl() + "/" + (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub());
-                        if (StringUtils.isBlank(pubsub) && StringUtils.isBlank(activate.getPubsub())) {
-                            url = offer.getImprurl();
-                        }
-                        if (isRej) {
-                          //  url = url + "/" + 1;
+                    if (activate.getPubsub() == null) {
+                        activate.setPubsub("");
+                    }
+                    url = StringUtils.replaceAll(offer.getImprurl(), "\\{sub_id}", (StringUtils.isNotBlank(pubsub) ? pubsub : activate.getPubsub()));
 
-                        } else {
-                            url = url + "/" + 20;
-                            HttpClientUtil.get(url);
+                    if (!isRej) {
+                        HttpClientUtil.get(url);
 
-
-                        }
-                    } else {
-                        url = offer.getImprurl();
-                        if (isRej) {
-                           // url = url + "/" + 1;
-
-                        } else {
-                            url = url + "/" + 20;
-                            HttpClientUtil.get(url);
-
-                        }
                     }
                     logger.warn("NOTICE ADD CLICKS :" + url);
                 } catch (IOException e) {
