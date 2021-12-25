@@ -42,24 +42,21 @@ public class CacheDataJob {
     @Scheduled(cron = "* */3 * * * ?")
     public void updateOfferCacheJob() {
         try {
-            Set<Integer> setids = CacheData.OFF_SYCN_LOCK.keySet();
-            if(setids.size()==0){
+            if (CollectionUtils.isEmpty(CacheData.OFF_CACHE.keySet())) {
                 return;
             }
             List<Integer> offids = Lists.newLinkedList();
-            offids.addAll(setids);
+            offids.addAll(CacheData.OFF_CACHE.keySet());
             OfferExample example = new OfferExample();
             example.createCriteria().andIdIn(offids);
             List<Offer> list = offerMapper.selectByExample(example);
             if (!CollectionUtils.isEmpty(list)) {
-                Map<Integer, Integer> lock = Maps.newConcurrentMap();
+                
                 Map<Integer, Offer> cache = Maps.newConcurrentMap();
 
                 list.forEach(n -> {
-                    lock.put(n.getId(), SychLockE.LOCKED.code);
                     cache.put(n.getId(), n);
                 });
-                CacheData.OFF_SYCN_LOCK = lock;
                 CacheData.OFF_CACHE = cache;
             }
         } catch (Exception e) {
@@ -73,14 +70,14 @@ public class CacheDataJob {
 
     /**
      * 更新缓存数据
-     *
+     * <p>
      * 更新分机ClickCap
      */
     @Scheduled(cron = "* */25 * * * ?")
     public void updatePublisherOfferCacheJob() {
         try {
             Set<String> setids = CacheData.PUBOFF_SYCN_LOCK.keySet();
-            if(setids.size()==0){
+            if (setids.size() == 0) {
                 return;
             }
 
@@ -110,7 +107,7 @@ public class CacheDataJob {
 
                     lock.put(pokey, SychLockE.LOCKED.code);
                     cache.put(pokey, n);
-                    if(n.getClickcap()>0){
+                    if (n.getClickcap() > 0) {
                         Float clickCap = n.getClickcap() * clickcapweight;
                         CacheData.PUB_OFF_CLICKCAP_CACHE.put(pokey, clickCap.intValue());
                     }
@@ -139,12 +136,12 @@ public class CacheDataJob {
         List<Activate> list = activateMapper.selectByExample(example);
         Map<String, AtomicInteger> capMap = Maps.newConcurrentMap();
 
-        if(!CollectionUtils.isEmpty(list)){
-            list.forEach(n->{
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(n -> {
                 String key = n.getChannelid() + "-" + n.getOfferuid();
-                if(capMap.containsKey(key)){
+                if (capMap.containsKey(key)) {
                     capMap.get(key).incrementAndGet();
-                }else{
+                } else {
                     capMap.put(key, new AtomicInteger(1));
                 }
             });
@@ -156,9 +153,9 @@ public class CacheDataJob {
 
 
     public static void main(String[] args) {
-        Date day  = new Date();
+        Date day = new Date();
         System.out.println(DateUtils.addDays(day, -1));
-        System.out.println( DateUtils.addDays(day, 1));
+        System.out.println(DateUtils.addDays(day, 1));
     }
 
 }
