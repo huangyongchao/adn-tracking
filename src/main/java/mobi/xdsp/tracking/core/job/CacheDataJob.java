@@ -39,7 +39,7 @@ public class CacheDataJob {
     private static final Logger clicklog = LoggerFactory.getLogger("click");
 
 
-    @Scheduled(cron = "* */3 * * * ?")
+    @Scheduled(cron = "* */2 * * * ?")
     public void updateOfferCacheJob() {
         try {
             if (CollectionUtils.isEmpty(CacheData.OFF_CACHE.keySet())) {
@@ -51,7 +51,7 @@ public class CacheDataJob {
             example.createCriteria().andIdIn(offids);
             List<Offer> list = offerMapper.selectByExample(example);
             if (!CollectionUtils.isEmpty(list)) {
-                
+
                 Map<Integer, Offer> cache = Maps.newConcurrentMap();
 
                 list.forEach(n -> {
