@@ -37,6 +37,7 @@ public class TrackingHandler {
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
         if ((offer.getPriority() != null && offer.getPriority().intValue() == 4)
+                || (offer.getAutomonitor() != null && offer.getAutomonitor() == 1)
                 || (offer.getRunning() != null && offer.getRunning() == 20)
                 || (offer.getRtbrunning() != null && offer.getRtbrunning() == 20
                 || (offer.getRunning() != null && offer.getRunning() == 10)
