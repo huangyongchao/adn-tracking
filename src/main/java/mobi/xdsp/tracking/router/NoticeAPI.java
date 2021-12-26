@@ -24,7 +24,7 @@ public class NoticeAPI {
 
     @GetMapping("/recorddata")
     public Object error(@RequestParam(value = "token", required = true) String token
-            , @RequestParam(value = "data", required = true) Map data) {
+            , @RequestParam(value = "data", required = true) String data) {
 
         return token + data;
     }
