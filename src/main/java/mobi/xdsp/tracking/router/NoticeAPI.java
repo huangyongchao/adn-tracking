@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class NoticeAPI {
     @Autowired
@@ -18,6 +20,13 @@ public class NoticeAPI {
     ) {
 
         return token + msg + code;
+    }
+
+    @GetMapping("/recorddata")
+    public Object error(@RequestParam(value = "token", required = true) String token
+            , @RequestParam(value = "data", required = true) Map data) {
+
+        return token + data;
     }
 
 }
