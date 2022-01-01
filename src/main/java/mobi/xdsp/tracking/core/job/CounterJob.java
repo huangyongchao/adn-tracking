@@ -183,7 +183,7 @@ public class CounterJob {
                                 dailyReportAdn.setCountry(offer.getCountries());
                                 dailyReportAdn.setOfferId(offer.getOfferid());
                                 dailyReportAdn.setOfferName(offer.getOffername());
-                                dailyReportAdn.setSubId(pubsub);
+                                dailyReportAdn.setSubId("0");
                                 dailyReportAdn.setOfferUid(oid);
                                 dailyReportAdn.setChannelId(pid.shortValue());
                                 dailyReportAdn.setSourceCampaign(offer.getSourceofferid());
