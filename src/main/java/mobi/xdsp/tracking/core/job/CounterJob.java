@@ -119,17 +119,33 @@ public class CounterJob {
                                 dailyReportAdn.setH(hour);
                                 dailyReportAdn.setDaystr(datestr);
 
-                                dailyReportAdnMapper.insertSelective(dailyReportAdn);
-                                dailyReportAdn.setSubId("0");
-                                dailyReportOVMapper.insertSelective(dailyReportAdn);
+                                try {
+                                    dailyReportAdnMapper.insertSelective(dailyReportAdn);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    dailyReportAdn.setSubId("0");
+                                    dailyReportOVMapper.insertSelective(dailyReportAdn);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 cnt.setNewrecord(false);
                             } else {
                                 DailyReportAdn dailyReportAdn = list.get(0);
                                 dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());
 
-                                dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
-                                dailyReportAdn.setSubId("0");
-                                dailyReportOVMapper.updateByPrimaryKey(dailyReportAdn);
+                                try {
+                                    dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    dailyReportAdn.setSubId("0");
+                                    dailyReportOVMapper.updateByPrimaryKey(dailyReportAdn);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
