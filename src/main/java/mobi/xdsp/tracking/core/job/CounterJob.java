@@ -119,33 +119,88 @@ public class CounterJob {
                                 dailyReportAdn.setH(hour);
                                 dailyReportAdn.setDaystr(datestr);
 
-                                try {
-                                    dailyReportAdnMapper.insertSelective(dailyReportAdn);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    dailyReportAdn.setSubId("0");
-                                    dailyReportOVMapper.insertSelective(dailyReportAdn);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                dailyReportAdnMapper.insertSelective(dailyReportAdn);
+
                                 cnt.setNewrecord(false);
                             } else {
                                 DailyReportAdn dailyReportAdn = list.get(0);
                                 dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());
 
-                                try {
-                                    dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                try {
-                                    dailyReportAdn.setSubId("0");
-                                    dailyReportOVMapper.updateByPrimaryKey(dailyReportAdn);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            logger.error(pid + "");
+                        }
+
+
+                        try {
+                            Long c = cnt.getSuccess().longValue();
+                            Long dev = c - cnt.getSuccesssnp();
+                            cnt.setSuccesssnp(c);
+                            if (dev == 0) {
+                                return;
+                            }
+
+                            Offer offer = dataService.getOfferCache(oid);
+                            Publisher publisher = null;
+                            if (pid == 0) {
+                                publisher = new Publisher(0, "SDK", "SDK");
+                            } else if (pid == 1) {
+                                publisher = new Publisher(1, "DSP", "DSP");
+
+                            } else if (pid == 2) {
+                                publisher = new Publisher(2, "MAF", "MAF");
+
+                            } else {
+                                publisher = dataService.getPublisherCache(pid);
+                            }
+                            String cdatestr = datestr + " " + hour + ":00:00";
+                            Date cdate = DateUtils.parseDate(cdatestr, "yyyy-MM-dd HH:mm:ss");
+
+                            DailyReportAdnExample example = new DailyReportAdnExample();
+                            example.createCriteria().andChannelIdEqualTo(pid.shortValue()).andOfferUidEqualTo(oid)
+                                    .andDaystrEqualTo(datestr).andHEqualTo(hour);
+
+
+                            List<DailyReportAdn> list = dailyReportOVMapper.selectByExample(example);
+                            // 利用状态标记 避免一次查询
+
+                            if (CollectionUtils.isEmpty(list)) {
+                                DailyReportAdn dailyReportAdn = new DailyReportAdn();
+                                dailyReportAdn.setAdvertiserId(Short.parseShort(offer.getAid()));
+                                dailyReportAdn.setAppId(offer.getAppid());
+                                dailyReportAdn.setAdvertiserName(offer.getAffiliatename());
+                                dailyReportAdn.setAffiliateName(offer.getAffiliatename());
+                                dailyReportAdn.setAffiliateId(offer.getAffiliateid());
+                                dailyReportAdn.setAppName(offer.getAppname());
+                                dailyReportAdn.setClickCount(dev.intValue());
+                                dailyReportAdn.setClickInvalid(0);
+                                dailyReportAdn.setConverionCount(0);
+                                dailyReportAdn.setChannelName(publisher.getCompanyname());
+                                dailyReportAdn.setCurrency(offer.getCurrency());
+                                dailyReportAdn.setCountry(offer.getCountries());
+                                dailyReportAdn.setOfferId(offer.getOfferid());
+                                dailyReportAdn.setOfferName(offer.getOffername());
+                                dailyReportAdn.setSubId(pubsub);
+                                dailyReportAdn.setOfferUid(oid);
+                                dailyReportAdn.setChannelId(pid.shortValue());
+                                dailyReportAdn.setSourceCampaign(offer.getSourceofferid());
+                                dailyReportAdn.setSourceAffiliateId(offer.getSourceaffiliateid());
+                                dailyReportAdn.setStateDate(cdate);
+                                dailyReportAdn.setH(hour);
+                                dailyReportAdn.setDaystr(datestr);
+
+                                dailyReportOVMapper.insertSelective(dailyReportAdn);
+
+                                cnt.setNewrecord(false);
+                            } else {
+                                DailyReportAdn dailyReportAdn = list.get(0);
+                                dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());
+
+                                dailyReportOVMapper.updateByPrimaryKey(dailyReportAdn);
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
