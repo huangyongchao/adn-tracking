@@ -41,6 +41,7 @@ public class CounterJob {
 
     @Autowired
     private DailyReportAdnMapper dailyReportAdnMapper;
+    @Autowired
     private DailyReportOVMapper dailyReportOVMapper;
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger clicklog = LoggerFactory.getLogger("click");
