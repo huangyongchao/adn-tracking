@@ -10,6 +10,7 @@ import mobi.xdsp.tracking.entity.DailyReportAdnExample;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.mapper.DailyReportAdnMapper;
+import mobi.xdsp.tracking.mapper.DailyReportOVMapper;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
 import mobi.xdsp.tracking.service.TrackingHandler;
@@ -24,6 +25,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +41,7 @@ public class CounterJob {
 
     @Autowired
     private DailyReportAdnMapper dailyReportAdnMapper;
+    private DailyReportOVMapper dailyReportOVMapper;
     private static final Logger errorlog = LoggerFactory.getLogger("error");
     private static final Logger clicklog = LoggerFactory.getLogger("click");
     private static final Logger logger = LoggerFactory.getLogger(CounterJob.class);
@@ -49,7 +54,8 @@ public class CounterJob {
 
     @Scheduled(cron = "55 9,19,29,39,49,55,59 * * * ?")
     public void recordClicks() {
-        String datestr = DateTimeUtil.getStringDateShort();
+        String datestr = LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String monthstr = LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM"));
         Counter.COUNTER_HOUR_TODAY.forEach((pid, vs) -> {
             vs.forEach((oid, vss) -> {
                 vss.forEach((hour, vsss) -> {
@@ -113,11 +119,16 @@ public class CounterJob {
                                 dailyReportAdn.setDaystr(datestr);
 
                                 dailyReportAdnMapper.insertSelective(dailyReportAdn);
+                                dailyReportAdn.setSubId("0");
+                                dailyReportOVMapper.insertSelective(dailyReportAdn);
                                 cnt.setNewrecord(false);
                             } else {
                                 DailyReportAdn dailyReportAdn = list.get(0);
                                 dailyReportAdn.setClickCount(dailyReportAdn.getClickCount() + dev.intValue());
+
                                 dailyReportAdnMapper.updateByPrimaryKey(dailyReportAdn);
+                                dailyReportAdn.setSubId("0");
+                                dailyReportOVMapper.updateByPrimaryKey(dailyReportAdn);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
