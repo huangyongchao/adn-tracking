@@ -1,29 +1,21 @@
 package mobi.xdsp.tracking.core.job;
 
-import com.alibaba.fastjson.JSONObject;
-import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
-import mobi.xdsp.tracking.core.CacheData;
-import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.DailyReportAdn;
 import mobi.xdsp.tracking.entity.DailyReportAdnExample;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.mapper.DailyReportAdnMapper;
 import mobi.xdsp.tracking.mapper.DailyReportOVMapper;
-import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
-import mobi.xdsp.tracking.service.TrackingHandler;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.aerospike.repository.AerospikeRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -135,7 +127,7 @@ public class CounterJob {
                         }
 
 
-                        try {
+                        /*try {
                             Long c = cnt.getSuccess().longValue();
                             Long dev = c - cnt.getSuccesssnp();
                             cnt.setSuccesssnp(c);
@@ -205,7 +197,7 @@ public class CounterJob {
                         } catch (Exception e) {
                             e.printStackTrace();
                             logger.error(pid + "");
-                        }
+                        }*/
 
 
                     });
