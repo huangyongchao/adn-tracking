@@ -127,7 +127,14 @@ public class ConversionAPI {
             Click click = null;
             boolean mmplink = false;
             boolean mafclick = false;
-            if (clickid.startsWith("PE")) {
+            boolean sdkclick = false;
+            if(clickid.startsWith("DI0")||clickid.startsWith("DI1")){
+                sdkclick = true;
+                click = AdTool.unpackClickId(clickid);
+                mmplink = true;
+
+            }
+            else if (clickid.startsWith("PE")) {
                 //Pubearn 平台点击
                 Optional<Click> clickOptional = repository.findById(clickid);
 
@@ -152,7 +159,7 @@ public class ConversionAPI {
                 mmplink = true;
             } else {
                 /*判断是MAF click*/
-                if (clickid.indexOf("|") > 0 && clickid.split("\\|").length > 1) {
+                if (clickid.startsWith("DI2")||(clickid.indexOf("|") > 0 && clickid.split("\\|").length > 1)) {
                     mafclick = true;
                     click = new Click();
                     click.setPid(2);
@@ -236,7 +243,6 @@ public class ConversionAPI {
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
 
-
                 activate.setAdvpayout(offer.getDefaultpayout());
                 if (puboffer != null) {
                     if (deductrate == null || deductrate == 0) {
@@ -257,6 +263,15 @@ public class ConversionAPI {
                         activate.setPubpayout(puboffer.getPayout().floatValue());
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
                     }
+                }
+                if(sdkclick){
+                    if(offer.getDefaultpayout()==null){
+                        offer.setDefaultpayout(0f);
+
+                    }
+                    activate.setDefaultpayout(offer.getDefaultpayout());
+                    activate.setPubpayout(offer.getDefaultpayout());
+                    activate.setAdvpayout(offer.getDefaultpayout());
                 }
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("NO CLICK");
