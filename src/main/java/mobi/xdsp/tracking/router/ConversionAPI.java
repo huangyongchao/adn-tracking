@@ -128,13 +128,12 @@ public class ConversionAPI {
             boolean mmplink = false;
             boolean mafclick = false;
             boolean sdkclick = false;
-            if(clickid.startsWith("DI0")||clickid.startsWith("DI1")){
+            if (clickid.startsWith("DI0") || clickid.startsWith("DI1")) {
                 sdkclick = true;
                 click = AdTool.unpackClickId(clickid);
                 mmplink = true;
 
-            }
-            else if (clickid.startsWith("PE")) {
+            } else if (clickid.startsWith("PE")) {
                 //Pubearn 平台点击
                 Optional<Click> clickOptional = repository.findById(clickid);
 
@@ -159,7 +158,7 @@ public class ConversionAPI {
                 mmplink = true;
             } else {
                 /*判断是MAF click*/
-                if (clickid.startsWith("DI2")||(clickid.indexOf("|") > 0 && clickid.split("\\|").length > 1)) {
+                if (clickid.startsWith("DI2") || (clickid.indexOf("|") > 0 && clickid.split("\\|").length > 1)) {
                     mafclick = true;
                     click = new Click();
                     click.setPid(2);
@@ -203,6 +202,7 @@ public class ConversionAPI {
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                     activate.setStatus(PBStateE.REJECT.code);
+                    replaceSubid(activate.getOfferuid(), subid);
                 }
                 int r = activateMapper.insertSelective(activate);
             } else if (click != null) {
@@ -264,8 +264,8 @@ public class ConversionAPI {
                         activate.setAdvpayout(puboffer.getPayout().floatValue());
                     }
                 }
-                if(sdkclick){
-                    if(offer.getDefaultpayout()==null){
+                if (sdkclick) {
+                    if (offer.getDefaultpayout() == null) {
                         offer.setDefaultpayout(0f);
 
                     }
@@ -365,6 +365,7 @@ public class ConversionAPI {
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
+                        replaceSubid(activate.getOfferuid(), subid);
                         boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
@@ -404,6 +405,7 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.REJECT.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+                    replaceSubid(activate.getOfferuid(), subid);
 
                 }
                 int r = activateMapper.insertSelective(activate);
@@ -436,6 +438,27 @@ public class ConversionAPI {
             return null;
         }
     }
+
+
+    public void replaceSubid(String offerid, String subid) {
+        final String pubsub = subid;
+
+        ExecutorPool.getExecutor().execute(() -> {
+            if (StringUtils.isNotBlank(offerid) && StringUtils.isNotBlank(subid)) {
+
+                try {
+                    String url = "http://p.pubearn.com/api/open/replacesubid?id=" + offerid + "&oldsub=" + subid;
+                    HttpClientUtil.get(url);
+                    logger.warn("REPLACE SUBID :" + url);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
 
     public void noticeAddClicks(boolean isRej, Publisher publisher, Offer offer, Activate activate, String subid) {
         final String pubsub = subid;
