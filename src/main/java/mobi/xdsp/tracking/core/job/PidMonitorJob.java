@@ -92,7 +92,7 @@ public class PidMonitorJob {
              * then the offer is activated,
              * because the publishers requests the interface to pull the offers according to a fixed period
              * so the offers is activated 15 minutes in advance */
-            date = DateUtils.addMinutes(date, 15);
+            date = DateUtils.addMinutes(date, 1);
             for (PidMonitor pidMonitor : list) {
                 if (offer.getTrackurl().indexOf(pidMonitor.getPid()) > 0) {
                     if (pidMonitor.getBlockst() != null && pidMonitor.getBlocket() != null) {
