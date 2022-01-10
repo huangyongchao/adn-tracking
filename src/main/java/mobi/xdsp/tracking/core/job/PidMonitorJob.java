@@ -246,7 +246,7 @@ public class PidMonitorJob {
             folder.open(Folder.READ_ONLY);
             int h = LocalDateTime.now(ZoneOffset.UTC).getHour();
 
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 3));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 0));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
