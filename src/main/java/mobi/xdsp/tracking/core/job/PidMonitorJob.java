@@ -49,8 +49,8 @@ public class PidMonitorJob {
         pidMonitors.forEach(pidMonitor -> {
             try {
 
-                if (pidMonitor.getBlocket()!=null && pidMonitor.getBlocket().before(cdate)) {
-                   // mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
+                if (pidMonitor.getBlocket() != null && pidMonitor.getBlocket().before(cdate)) {
+                    // mailer.sendFrankMail("Pid Monitor Active" + pidMonitor.getPid(), pidMonitor.getPid() + DateTimeUtil.dateToStrLong(cdate));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -191,7 +191,7 @@ public class PidMonitorJob {
         return bodyText.toString();
     }
 
-    public void updatePidState(String pid, String st, String et) {
+    public void updatePidState(String pid, String st, String et, String[] appids) {
         Date date = new Date();
 
         PidMonitor pidMonitor = new PidMonitor();
@@ -202,6 +202,11 @@ public class PidMonitorJob {
         if (pidMonitor.getBlocket().before(date)) {
             pidMonitor.setBlocking(0);
         }
+        if (appids != null) {
+
+            pidMonitor.setCookie1(appids.toString());
+        }
+
         PidMonitorExample example = new PidMonitorExample();
         example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
 
@@ -246,6 +251,16 @@ public class PidMonitorJob {
                     if ((msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0) || (msg.getSubject().indexOf("流量已全部拦截") > 0)) {
                         try {
                             String cont = msg.getContent().toString();
+
+
+                            int apps = cont.indexOf("Apps:");
+                            int sites = cont.indexOf("Sites:");
+
+                            String[] appids = null;
+                            if (apps > 0 && sites > 0) {
+                                String appstr = cont.substring(apps + 4, sites);
+                                appids = appstr.split("[\\t\\n]");
+                            }
                             int i = cont.indexOf(" at ");
                             int offerset = 4;
                             int offerset1 = 9;
@@ -265,7 +280,7 @@ public class PidMonitorJob {
                             }
                             String st = DateTimeUtil.dateToStrLong(msg.getSentDate());
                             String et = DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), dayoffet)) + " " + blockEnd + ":00";
-                            updatePidState(pid, st, et);
+                            updatePidState(pid, st, et, appids);
 
                             System.out.println(pid);
                             System.out.println(st);
