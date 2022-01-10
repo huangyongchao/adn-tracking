@@ -211,7 +211,7 @@ public class PidMonitorJob {
         }
 
         PidMonitorExample example = new PidMonitorExample();
-        example.createCriteria().andPidEqualTo(pid);
+        example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
 
         pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
 
