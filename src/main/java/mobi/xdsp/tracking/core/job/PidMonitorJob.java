@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.core.job;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
@@ -260,6 +261,7 @@ public class PidMonitorJob {
                             if (apps > 0 && sites > 0) {
                                 String appstr = cont.substring(apps + 4, sites);
                                 appids = appstr.split("[\\t\\n]");
+                                System.out.println(JSONObject.toJSONString(appids));
                             }
                             int i = cont.indexOf(" at ");
                             int offerset = 4;
