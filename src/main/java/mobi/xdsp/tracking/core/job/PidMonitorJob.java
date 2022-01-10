@@ -11,6 +11,7 @@ import mobi.xdsp.tracking.entity.PidMonitor;
 import mobi.xdsp.tracking.entity.PidMonitorExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PidMonitorMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 @Component
 public class PidMonitorJob {
@@ -204,12 +206,12 @@ public class PidMonitorJob {
             pidMonitor.setBlocking(0);
         }
         if (appids != null) {
-
-            pidMonitor.setCookie1(appids.toString());
+            List<String> appsss = Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).collect(Collectors.toList());
+            pidMonitor.setCookie1(JSONObject.toJSONString(appsss));
         }
 
         PidMonitorExample example = new PidMonitorExample();
-        example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
+        example.createCriteria().andPidEqualTo(pid);
 
         pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
 
