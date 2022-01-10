@@ -259,8 +259,8 @@ public class PidMonitorJob {
 
                             String[] appids = null;
                             if (apps > 0 && sites > 0) {
-                                String appstr = cont.substring(apps + 4, sites);
-                                appids = appstr.split("[\\t\\n]");
+                                String appstr = cont.substring(apps + 5, sites);
+                                appids = appstr.split("[\\t\\n\\r]");
                                 System.out.println(JSONObject.toJSONString(appids));
                             }
                             int i = cont.indexOf(" at ");
