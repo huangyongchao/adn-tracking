@@ -206,7 +206,7 @@ public class PidMonitorJob {
             pidMonitor.setBlocking(0);
         }
         if (appids != null) {
-            List<String> appsss = Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).collect(Collectors.toList());
+            List<String> appsss = Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).map(n->n.trim()).collect(Collectors.toList());
             pidMonitor.setCookie1(JSONObject.toJSONString(appsss));
         }
 
@@ -329,6 +329,29 @@ public class PidMonitorJob {
 
         date = DateUtils.addMinutes(date, -20);
         System.out.println(DateFormatUtils.format(date, "yyyyMMddHHmmss"));
+
+
+        String cont =" Apps:\n" +
+                "        cn.com.vau\n" +
+                "                id1166619854\n" +
+                "        com.myntra.android\n" +
+                "        com.rapido.passenger\n" +
+                "        com.nordvpn.android\n" +
+                "        com.ss.android.ugc.trill\n" +
+                "        com.compass.rewards\n" +
+                "        Sites:";
+
+
+        int apps = cont.indexOf("Apps:");
+        int sites = cont.indexOf("Sites:");
+
+        String[] appids = null;
+        if (apps > 0 && sites > 0) {
+            String appstr = cont.substring(apps + 5, sites);
+            appids = appstr.split("[\\t\\n\\r]");
+            System.out.println(JSONObject.toJSONString(Arrays.stream(appids).filter(n->StringUtils.isNotBlank(n)).map(n->n.trim()).collect(Collectors.toList())));
+        }
+
 
     }
 }

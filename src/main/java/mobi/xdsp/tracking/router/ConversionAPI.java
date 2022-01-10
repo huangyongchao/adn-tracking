@@ -100,6 +100,7 @@ public class ConversionAPI {
 
         //log
         boolean isRej = false;
+        boolean isEEvent = false;
         if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
             rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
@@ -211,6 +212,15 @@ public class ConversionAPI {
                     sentpb = true;
                 }
                 Offer offer = dataService.getOfferCache(click.getOid());
+
+
+                if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0) && StringUtils.isNotBlank(offer.getCreatives())) {
+                    if (offer.getCreatives().equalsIgnoreCase(event)) {
+
+                        isEEvent = true;
+                    }
+                }
+
 
                 Publisher publisher = dataService.getPublisherCache(click.getPid());
                 PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
@@ -340,6 +350,16 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.INVALID.code);
                 }*/
                 /*符合条件发PB*/
+                /*Event PB*/
+                if (isEEvent) {
+                    activate.setStatus(PBStateE.INVALID.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                    activate.setDefaultpayout(0f);
+                    activate.setPubpayout(0f);
+                    activate.setAdvpayout(0f);
+
+                }
+
                 if (!isRej && publisher.getId() != null && publisher.getId() > 10) {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
