@@ -206,14 +206,23 @@ public class PidMonitorJob {
             pidMonitor.setBlocking(0);
         }
         if (appids != null) {
-            List<String> appsss = Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).map(n->n.trim()).collect(Collectors.toList());
+            List<String> appsss = Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).map(n -> n.trim()).collect(Collectors.toList());
             pidMonitor.setCookie1(JSONObject.toJSONString(appsss));
         }
 
         PidMonitorExample example = new PidMonitorExample();
         example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
+        List<PidMonitor> pids = pidMonitorMapper.selectByExample(example);
 
-        pidMonitorMapper.updateByExampleSelective(pidMonitor, example);
+        if (!CollectionUtils.isEmpty(pids)) {
+            PidMonitor pidMonitor1 = pids.get(0);
+            if ("frank".equalsIgnoreCase(pidMonitor1.getAm())) {
+                pidMonitor.setCookie1(null);
+            }
+            pidMonitor.setId(pidMonitor1.getId());
+            pidMonitorMapper.updateByPrimaryKeySelective(pidMonitor);
+
+        }
 
     }
 
@@ -331,7 +340,7 @@ public class PidMonitorJob {
         System.out.println(DateFormatUtils.format(date, "yyyyMMddHHmmss"));
 
 
-        String cont =" Apps:\n" +
+        String cont = " Apps:\n" +
                 "        cn.com.vau\n" +
                 "                id1166619854\n" +
                 "        com.myntra.android\n" +
@@ -349,7 +358,7 @@ public class PidMonitorJob {
         if (apps > 0 && sites > 0) {
             String appstr = cont.substring(apps + 5, sites);
             appids = appstr.split("[\\t\\n\\r]");
-            System.out.println(JSONObject.toJSONString(Arrays.stream(appids).filter(n->StringUtils.isNotBlank(n)).map(n->n.trim()).collect(Collectors.toList())));
+            System.out.println(JSONObject.toJSONString(Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).map(n -> n.trim()).collect(Collectors.toList())));
         }
 
 
