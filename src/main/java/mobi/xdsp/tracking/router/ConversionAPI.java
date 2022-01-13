@@ -364,7 +364,7 @@ public class ConversionAPI {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                         //发PB
-                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, null, null);
+                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, null, null,null);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -386,7 +386,7 @@ public class ConversionAPI {
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
                         replaceSubid(activate.getOfferuid(), subid);
-                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason);
+                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason,rejected_reason_value);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -519,7 +519,7 @@ public class ConversionAPI {
 
     }
 
-    public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason) {
+    public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason ,String rejected_reason_value) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
         if (isrej) {
@@ -574,6 +574,9 @@ public class ConversionAPI {
             }
             if (track.indexOf("{rejected_sub_reason}") > -1) {
                 track = StringUtils.replaceAll(track, "\\{rejected_sub_reason}", block_sub_reason);
+            }
+            if (track.indexOf("{rejected_reason_value}") > -1) {
+                track = StringUtils.replaceAll(track, "\\{rejected_reason_value}", rejected_reason_value);
             }
 
         }
