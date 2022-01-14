@@ -36,7 +36,8 @@ public class TrackingHandler {
 
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
-        if ((offer.getAutomonitor() != null && offer.getAutomonitor() == 1)||(offer.getAutoadjust() != null && offer.getAutoadjust() == 1)) {
+
+        if (publisherOffer.getPublisherid() == 1015 || publisherOffer.getPublisherid() == 1030 || (offer.getAutomonitor() != null && offer.getAutomonitor() == 1) || (offer.getAutoadjust() != null && offer.getAutoadjust() == 1)) {
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
             if (plsa.length > 0) {
