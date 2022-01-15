@@ -251,7 +251,7 @@ public class OffersQueryAPI {
             return new OfferApiResponse(false, "Publisher have been stop.", null, false);
 
         }
-        if (isCache(token) && pub.getId() != 2 && pub.getId() != 1015) {
+        if (isCache(token) && pub.getId() != 2 && pub.getId() != 1015&& pub.getId() != 1030) {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
