@@ -215,7 +215,7 @@ public class ConversionAPI {
 
 
                 if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0) && StringUtils.isNotBlank(offer.getCreatives())) {
-                    if (offer.getCreatives().equalsIgnoreCase(event)) {
+                    if (!offer.getCreatives().equalsIgnoreCase(event)) {
 
                         isEEvent = true;
                     }

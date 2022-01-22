@@ -96,7 +96,7 @@ public class EmailRevJob {
             Arrays.stream(messages).forEach(msg -> {
                 try {
                     //System.out.println(msg.getSubject());
-                    if(msg.getSubject().indexOf("七猫小说")>0){
+                    if(msg.getSubject().indexOf("开箱啰")>0){
                         try {
                             String cont = parseMultipart((Multipart) msg.getContent());
                             int i = cont.indexOf("服务端上报链接");
