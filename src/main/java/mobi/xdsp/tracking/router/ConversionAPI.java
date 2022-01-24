@@ -212,18 +212,21 @@ public class ConversionAPI {
                     sentpb = true;
                 }
                 Offer offer = dataService.getOfferCache(click.getOid());
-
+                Publisher publisher = dataService.getPublisherCache(click.getPid());
+                PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
 
                 if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0) && StringUtils.isNotBlank(offer.getCreatives())) {
                     if (!offer.getCreatives().equalsIgnoreCase(event)) {
 
                         isEEvent = true;
                     }
+                    if("install".equals(event)&&(publisher!=null && "9".equals(publisher.getPlatformlevel()))){
+                        isEEvent = false;
+                    }
                 }
 
 
-                Publisher publisher = dataService.getPublisherCache(click.getPid());
-                PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
+
                 Integer deductrate = publisher.getDeductrate();
 
                 if (deductrate == null) {
