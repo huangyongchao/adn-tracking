@@ -427,7 +427,9 @@ public class OffersQueryAPI {
                             respO.setTrackingUrl(track.toString());
                             respO.setS2sLink(false);
                         }
-
+                        if(respO.getTrackingUrl().indexOf("@@")>0){
+                            respO.setTrackingUrl(respO.getTrackingUrl().split("@@")[0]);
+                        }
 
                         resoffs.add(respO);
                     }
