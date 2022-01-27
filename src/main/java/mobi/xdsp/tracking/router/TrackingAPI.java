@@ -139,13 +139,15 @@ public class TrackingAPI {
 
         }
         Offer offer = CacheData.OFF_CACHE.get(offerid);
-
         if (offer == null) {
             offer = dataService.cacheOfferFirst(offerid);
         }
         if (offer == null) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
         }
+        offer = handler.checkRedictOffer(offer);
+
+
         if (StateE.INVALID.name.equals(offer.getStatus())) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(1)");
         }

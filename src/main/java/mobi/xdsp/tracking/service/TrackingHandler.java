@@ -1,9 +1,11 @@
 package mobi.xdsp.tracking.service;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
 import com.aerospike.client.AerospikeClient;
 import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.ExecutorPool;
 import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.job.Counter;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Offer;
@@ -19,8 +21,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class TrackingHandler {
@@ -31,8 +36,36 @@ public class TrackingHandler {
     @Autowired
     Mailer mailer;
 
-
+    @Autowired
+    private DataService dataService;
     public Random r = new Random();
+
+    public Offer checkRedictOffer(Offer oriOffer) {
+        if (oriOffer.getTrackurl().indexOf("@@") > 0) {
+            String[] ids = oriOffer.getTrackurl().split("@@");
+            ids[0] = "";
+            List<Integer> idds = Arrays.stream(ids).filter(n -> StringUtils.isNotBlank(n)).map(n -> Integer.parseInt(n.trim())).collect(Collectors.toList());
+            Integer newOid = null;
+            int s = idds.size();
+            if (s == 0) {
+                newOid = idds.get(0);
+            } else {
+                int i = r.nextInt(s);
+                newOid = idds.get(i);
+            }
+            System.out.println(newOid);
+            Offer offer = CacheData.OFF_CACHE.get(newOid);
+            if (offer == null) {
+                offer = dataService.cacheOfferFirst(newOid);
+            }
+            if (offer == null) {
+                offer = oriOffer;
+            }
+            return offer;
+        }
+        return oriOffer;
+
+    }
 
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
