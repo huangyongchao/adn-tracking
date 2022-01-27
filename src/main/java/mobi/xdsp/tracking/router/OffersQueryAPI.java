@@ -431,7 +431,7 @@ public class OffersQueryAPI {
                             respO.setTrackingUrl(respO.getTrackingUrl().split("@@")[0]);
                         }
                         if(publisher.getId()==1015){
-                            respO.setDailyCap(respO.getDailyCap() * 2);
+                           // respO.setDailyCap(respO.getDailyCap() * 2);
                         }
 
                         resoffs.add(respO);
