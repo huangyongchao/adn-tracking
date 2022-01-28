@@ -55,7 +55,7 @@ public class TrackingHandler {
                 int i = r.nextInt(s);
                 newOid = idds.get(i);
             }
-            logger.info(""+newOid);
+            logger.error(""+newOid);
             Offer offer = CacheData.OFF_CACHE.get(newOid);
             if (offer == null) {
                 offer = dataService.cacheOfferFirst(newOid);
