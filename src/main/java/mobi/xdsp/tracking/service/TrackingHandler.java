@@ -11,6 +11,7 @@ import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
+import mobi.xdsp.tracking.router.ConversionAPI;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -39,6 +40,7 @@ public class TrackingHandler {
     @Autowired
     private DataService dataService;
     public Random r = new Random();
+    private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
     public Offer checkRedictOffer(Offer oriOffer) {
         if (oriOffer.getTrackurl().indexOf("@@") > 0) {
@@ -53,7 +55,7 @@ public class TrackingHandler {
                 int i = r.nextInt(s);
                 newOid = idds.get(i);
             }
-            System.out.println(newOid);
+            logger.info(""+newOid);
             Offer offer = CacheData.OFF_CACHE.get(newOid);
             if (offer == null) {
                 offer = dataService.cacheOfferFirst(newOid);

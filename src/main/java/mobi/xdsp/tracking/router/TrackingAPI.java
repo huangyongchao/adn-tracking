@@ -69,6 +69,7 @@ public class TrackingAPI {
 
 
     }
+    private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
     @CrossOrigin
     @GetMapping("/click")
