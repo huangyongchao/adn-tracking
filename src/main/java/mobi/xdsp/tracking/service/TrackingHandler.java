@@ -45,7 +45,7 @@ public class TrackingHandler {
     public Offer checkRedictOffer(Offer oriOffer) {
         if (oriOffer.getTrackurl().indexOf("@@") > 0) {
             String[] ids = oriOffer.getTrackurl().split("@@");
-            ids[0] = "";
+            ids[0] = oriOffer.getId().toString();
             List<Integer> idds = Arrays.stream(ids).filter(n -> StringUtils.isNotBlank(n)).map(n -> Integer.parseInt(n.trim())).collect(Collectors.toList());
             Integer newOid = null;
             int s = idds.size();
