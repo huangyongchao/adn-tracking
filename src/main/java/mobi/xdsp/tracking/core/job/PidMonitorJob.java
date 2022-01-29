@@ -366,7 +366,6 @@ public class PidMonitorJob {
 
         return result;
     }
-    @PostConstruct
     @Scheduled(cron = "0 */5 * * * ?")
     public void auto() {
         pidBlockChecker();
