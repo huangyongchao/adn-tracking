@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.search.ComparisonTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -214,8 +215,10 @@ public class PidMonitorJob {
             jsonArray.forEach(n -> {
                 uApps.add(n.toString().trim());
             });
+            Set<String>  finaluApps = uApps.stream().filter(n -> StringUtils.isNotBlank(n)).collect(Collectors.toSet());
+
             PidMonitor pidMonitor = new PidMonitor();
-            pidMonitor.setCookie1(JSONArray.toJSONString(uApps));
+            pidMonitor.setCookie1(JSONArray.toJSONString(finaluApps));
             pidMonitor.setId(pidMonitor1.getId());
             logger.warn(pidMonitor.getCookie1());
             pidMonitorMapper.updateByPrimaryKeySelective(pidMonitor);
@@ -296,7 +299,7 @@ public class PidMonitorJob {
             folder.open(Folder.READ_ONLY);
             int h = LocalDateTime.now(ZoneOffset.UTC).getHour();
 
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 5));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 0));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
@@ -363,7 +366,7 @@ public class PidMonitorJob {
 
         return result;
     }
-
+    @PostConstruct
     @Scheduled(cron = "0 */5 * * * ?")
     public void auto() {
         pidBlockChecker();
