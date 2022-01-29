@@ -45,24 +45,30 @@ public class TrackingHandler {
     public Offer checkRedictOffer(Offer oriOffer) {
         if (oriOffer.getTrackurl().indexOf("@@") > 0) {
             String[] ids = oriOffer.getTrackurl().split("@@");
+            String oriTrack = ids[0];
             ids[0] = oriOffer.getId().toString();
             List<Integer> idds = Arrays.stream(ids).filter(n -> StringUtils.isNotBlank(n)).map(n -> Integer.parseInt(n.trim())).collect(Collectors.toList());
-            Integer newOid = null;
+            int newOid = 0;
+
             int s = idds.size();
             if (s == 0) {
                 newOid = idds.get(0);
             } else {
                 int i = r.nextInt(s);
                 newOid = idds.get(i);
+
             }
-            logger.error(""+newOid);
+
             Offer offer = CacheData.OFF_CACHE.get(newOid);
+
             if (offer == null) {
                 offer = dataService.cacheOfferFirst(newOid);
             }
+
             if (offer == null) {
                 offer = oriOffer;
             }
+
             return offer;
         }
         return oriOffer;

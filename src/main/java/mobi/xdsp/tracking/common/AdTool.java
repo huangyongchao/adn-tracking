@@ -91,7 +91,12 @@ public class AdTool {
 
     public static String chooseTrackUrl(Click click, Offer offer) {
         String url = offer.getTrackurl();
-        if(url.indexOf("##")>0){
+        if (url.indexOf("@@") > 0) {
+            String[] urls = url.split("@@");
+            return urls[0];
+        }
+
+        if (url.indexOf("##") > 0) {
             String[] urls = url.split("##");
             int l = urls.length;
             Random r = new Random();
