@@ -13,7 +13,6 @@ import mobi.xdsp.tracking.entity.PidMonitor;
 import mobi.xdsp.tracking.entity.PidMonitorExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PidMonitorMapper;
-import mobi.xdsp.tracking.router.ConversionAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -24,7 +23,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.search.ComparisonTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -198,6 +196,35 @@ public class PidMonitorJob {
 
     private static final Logger logger = LoggerFactory.getLogger(PidMonitorJob.class);
 
+    public void updatePidApps(String pid, String[] appids) {
+
+        PidMonitorExample example = new PidMonitorExample();
+        example.createCriteria().andPidEqualTo(pid);
+        List<PidMonitor> pids = pidMonitorMapper.selectByExample(example);
+
+        if (!CollectionUtils.isEmpty(pids)) {
+            PidMonitor pidMonitor1 = pids.get(0);
+            JSONArray jsonArray = new JSONArray();
+            if (StringUtils.isNotBlank(pidMonitor1.getCookie1())) {
+                jsonArray.addAll(JSONArray.parseArray(pidMonitor1.getCookie1()));
+            }
+            jsonArray.addAll(Arrays.stream(appids).collect(Collectors.toList()));
+
+            Set<String> uApps = Sets.newHashSet();
+            jsonArray.forEach(n -> {
+                uApps.add(n.toString().trim());
+            });
+            PidMonitor pidMonitor = new PidMonitor();
+            pidMonitor.setCookie1(JSONArray.toJSONString(uApps));
+            pidMonitor.setId(pidMonitor1.getId());
+            logger.warn(pidMonitor.getCookie1());
+            pidMonitorMapper.updateByPrimaryKeySelective(pidMonitor);
+
+        }
+
+    }
+
+
     public void updatePidState(String pid, String st, String et, String[] appids) {
         Date date = new Date();
 
@@ -287,6 +314,7 @@ public class PidMonitorJob {
                                 String appstr = cont.substring(apps + 5, sites);
                                 appids = appstr.split("[\\t\\n\\r]");
                                 System.out.println(JSONObject.toJSONString(appids));
+                                updatePidApps(pid, appids);
                             }
                             int i = cont.indexOf(" at ");
                             int offerset = 4;
@@ -336,7 +364,6 @@ public class PidMonitorJob {
         return result;
     }
 
-    @PostConstruct
     @Scheduled(cron = "0 */5 * * * ?")
     public void auto() {
         pidBlockChecker();
