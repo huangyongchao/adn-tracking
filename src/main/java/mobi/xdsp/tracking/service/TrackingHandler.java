@@ -47,6 +47,7 @@ public class TrackingHandler {
             String[] ids = oriOffer.getTrackurl().split("@@");
             String oriTrack = ids[0];
             ids[0] = oriOffer.getId().toString();
+
             List<Integer> idds = Arrays.stream(ids).filter(n -> StringUtils.isNotBlank(n)).map(n -> Integer.parseInt(n.trim())).collect(Collectors.toList());
             int newOid = 0;
 
