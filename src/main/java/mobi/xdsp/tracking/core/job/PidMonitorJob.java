@@ -1,7 +1,9 @@
 package mobi.xdsp.tracking.core.job;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.dto.enums.StateE;
@@ -26,10 +28,7 @@ import javax.mail.search.ReceivedDateTerm;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -214,11 +213,20 @@ public class PidMonitorJob {
         example.createCriteria().andPidEqualTo(pid).andBlockstLessThan(DateTimeUtil.strToDateLong(st));
         List<PidMonitor> pids = pidMonitorMapper.selectByExample(example);
 
+
         if (!CollectionUtils.isEmpty(pids)) {
             PidMonitor pidMonitor1 = pids.get(0);
-            if ("frank".equalsIgnoreCase(pidMonitor1.getAm())) {
-                pidMonitor.setCookie1(null);
+            JSONArray jsonArray = new JSONArray();
+            if (StringUtils.isNotBlank(pidMonitor1.getCookie1())) {
+                jsonArray.addAll(JSONArray.parseArray(pidMonitor1.getCookie1()));
             }
+            jsonArray.addAll(Arrays.stream(appids).collect(Collectors.toList()));
+
+            Set<String> uApps = Sets.newHashSet();
+            jsonArray.forEach(n -> {
+                uApps.add(n.toString().trim());
+            });
+            pidMonitor.setCookie1(JSONArray.toJSONString(uApps));
             pidMonitor.setId(pidMonitor1.getId());
             pidMonitorMapper.updateByPrimaryKeySelective(pidMonitor);
 
@@ -255,7 +263,7 @@ public class PidMonitorJob {
             folder.open(Folder.READ_ONLY);
             int h = LocalDateTime.now(ZoneOffset.UTC).getHour();
 
-            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 0));
+            ReceivedDateTerm term = new ReceivedDateTerm(ComparisonTerm.GE, DateTimeUtil.getDateBefore(new Date(), 5));
 
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
@@ -360,6 +368,9 @@ public class PidMonitorJob {
             appids = appstr.split("[\\t\\n\\r]");
             System.out.println(JSONObject.toJSONString(Arrays.stream(appids).filter(n -> StringUtils.isNotBlank(n)).map(n -> n.trim()).collect(Collectors.toList())));
         }
+
+
+        JSONArray array = JSONArray.parseArray("[\"ru.bkfon\",\"com.r888.rl\",\"com.poker888.GP\",\"com.rl888sport.rl\"]");
 
 
     }
