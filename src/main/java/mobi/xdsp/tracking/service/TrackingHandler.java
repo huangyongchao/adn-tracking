@@ -59,7 +59,7 @@ public class TrackingHandler {
                 newOid = idds.get(i);
 
             }
-
+            logger.warn(newOid+"");
             Offer offer = CacheData.OFF_CACHE.get(newOid);
 
             if (offer == null) {
