@@ -60,11 +60,11 @@ public class TrackingHandler {
 
             }
             Offer offer = CacheData.OFF_CACHE.get(newOid);
-            logger.warn(newOid+""+offer==null?"":offer.getOffername());
 
             if (offer == null) {
                 offer = dataService.cacheOfferFirst(newOid);
             }
+            logger.warn(newOid + ":" + offer.getOffername());
 
             if (offer == null) {
                 offer = oriOffer;
