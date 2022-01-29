@@ -13,9 +13,12 @@ import mobi.xdsp.tracking.entity.PidMonitor;
 import mobi.xdsp.tracking.entity.PidMonitorExample;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PidMonitorMapper;
+import mobi.xdsp.tracking.router.ConversionAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -193,6 +196,8 @@ public class PidMonitorJob {
         return bodyText.toString();
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(PidMonitorJob.class);
+
     public void updatePidState(String pid, String st, String et, String[] appids) {
         Date date = new Date();
 
@@ -228,6 +233,7 @@ public class PidMonitorJob {
             });
             pidMonitor.setCookie1(JSONArray.toJSONString(uApps));
             pidMonitor.setId(pidMonitor1.getId());
+            logger.warn(pidMonitor.getCookie1());
             pidMonitorMapper.updateByPrimaryKeySelective(pidMonitor);
 
         }
