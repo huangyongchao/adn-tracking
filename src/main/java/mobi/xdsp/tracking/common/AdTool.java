@@ -182,15 +182,17 @@ public class AdTool {
                 String[] ss = clickid.split("-");
                 if (ss.length >= 2) {
                     String pubid = ss[0].substring(2);
-                    if(pubid.endsWith("==")){
-                        pubid = Base64Utils.encodeToString(pubid.getBytes());
-                    }
                     String offerid = ss[1];
                     click.setOid(Integer.parseInt(offerid));
                     click.setPid(Integer.parseInt(pubid));
                     click.setId(clickid);
-                    click.setClickId(pubid);
-                    click.setS1(clickid);
+                    String encode = ss[2];
+                    if(encode.endsWith("==")){
+                        encode = Base64Utils.encodeToString(encode.getBytes());
+                    }
+                    click.setClickId(clickid);
+
+                    click.setS1(encode);
 
                 }
 

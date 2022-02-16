@@ -297,7 +297,7 @@ public class ConversionAPI {
                 activate.setOfferuid("" + click.getOid());
                 activate.setClickid(click.getClickId());
                 activate.setPubsub(click.getPubSub());
-                activate.setAffsub1(click.getS1());
+                activate.setAffsub3(click.getS1());
                 activate.setAffsub2(click.getS2());
                 activate.setSubid1(click.getMixSub());
                 if (StringUtils.isBlank(activate.getClickid())) {
