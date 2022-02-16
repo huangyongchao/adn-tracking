@@ -7,12 +7,15 @@ import mobi.xdsp.tracking.entity.Offer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Base64Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -188,7 +191,8 @@ public class AdTool {
                     click.setId(clickid);
                     String encode = ss[2];
                     if(encode.endsWith("==")){
-                        encode = Base64Utils.encodeToString(encode.getBytes());
+                        encode = new String(Base64Utils.decodeFromString(encode), Charset.forName("utf-8")).replace("H��","2022");
+                        click.setCt(DateUtils.parseDate(encode.split("\\|")[0],"yyyyMMddHHmmss"));
                     }
                     click.setClickId(clickid);
 
@@ -211,10 +215,8 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        String clickid = "PE05140930241005N2311784IRu";
-        String clickid1 = "DI1001-2311671-{click_id}";
+        String clickid = "DI0-2973944-SKuDMDIxNjE0MDIyMXwyOTczOTQ0fDB8MHwwfDB8MA==";
         System.out.println(unpackClickId(clickid));
-        System.out.println(unpackClickId(clickid1));
 
     }
 
