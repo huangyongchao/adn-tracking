@@ -189,7 +189,8 @@ public class AdTool {
                     click.setOid(Integer.parseInt(offerid));
                     click.setPid(Integer.parseInt(pubid));
                     click.setId(clickid);
-                    click.setClickId(clickid.substring(clickid.indexOf(offerid) + offerid.length() + 1));
+                    click.setClickId(pubid);
+                    click.setS1(clickid);
 
                 }
 
