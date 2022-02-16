@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Base64Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -181,6 +182,9 @@ public class AdTool {
                 String[] ss = clickid.split("-");
                 if (ss.length >= 2) {
                     String pubid = ss[0].substring(2);
+                    if(pubid.endsWith("==")){
+                        pubid = Base64Utils.encodeToString(pubid.getBytes());
+                    }
                     String offerid = ss[1];
                     click.setOid(Integer.parseInt(offerid));
                     click.setPid(Integer.parseInt(pubid));
