@@ -190,9 +190,14 @@ public class AdTool {
                     click.setPid(Integer.parseInt(pubid));
                     click.setId(clickid);
                     String encode = ss[2];
-                    if(encode.endsWith("==")){
-                        encode = new String(Base64Utils.decodeFromString(encode), Charset.forName("utf-8")).replace("H��","2022");
-                        click.setCt(DateUtils.parseDate(encode.split("\\|")[0],"yyyyMMddHHmmss"));
+                    if (encode.startsWith("FK") || encode.startsWith("DK") || encode.startsWith("SK")) {
+                        encode = new String(Base64Utils.decodeFromString(encode), Charset.forName("utf-8")).replace("H��", "2022");
+                        String[] infos = encode.split("\\|");
+                        click.setCt(DateUtils.parseDate(infos[0], "yyyyMMddHHmmss"));
+                        if (infos.length > 7) {
+
+                            click.setIdfa(infos[7]);
+                        }
                     }
                     click.setClickId(clickid);
 
