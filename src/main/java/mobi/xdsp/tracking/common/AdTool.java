@@ -193,9 +193,12 @@ public class AdTool {
                     if (encode.startsWith("FK") || encode.startsWith("DK") || encode.startsWith("SK")) {
                         encode = new String(Base64Utils.decodeFromString(encode), Charset.forName("utf-8")).replace("H��", "2022");
                         String[] infos = encode.split("\\|");
-                        click.setCt(DateUtils.parseDate(infos[0], "yyyyMMddHHmmss"));
+                        String clickdate = infos[0];
+                        if (!clickdate.startsWith("2022")) {
+                            clickdate = "2022" + infos[0];
+                        }
+                        click.setCt(DateUtils.parseDate(clickdate, "yyyyMMddHHmmss"));
                         if (infos.length > 7) {
-
                             click.setIdfa(infos[7]);
                         }
                     }
