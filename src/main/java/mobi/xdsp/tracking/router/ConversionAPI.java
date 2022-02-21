@@ -95,6 +95,7 @@ public class ConversionAPI {
             @RequestParam(value = "idfa", defaultValue = "") String idfa,
             @RequestParam(value = "gaid", defaultValue = "") String gaid,
             @RequestParam(value = "subid", defaultValue = "") String subid,
+            @RequestParam(value = "payout", defaultValue = "") String payout,
             @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {
         /*isevent 1 global 2 event*/
 
@@ -109,6 +110,13 @@ public class ConversionAPI {
         } else {
 
             convlog.warn("{},{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent, subid);
+        }
+
+        Float pbpayout = null;
+        try {
+            pbpayout = Float.parseFloat(payout);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
@@ -284,6 +292,9 @@ public class ConversionAPI {
                     if (offer.getDefaultpayout() == null) {
                         offer.setDefaultpayout(0f);
 
+                    }
+                    if (pbpayout !=null ) {
+                        offer.setDefaultpayout(pbpayout);
                     }
                     activate.setDefaultpayout(offer.getDefaultpayout());
                     activate.setPubpayout(offer.getDefaultpayout());
