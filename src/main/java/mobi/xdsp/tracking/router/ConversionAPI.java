@@ -102,7 +102,7 @@ public class ConversionAPI {
             @RequestParam(value = "appid", defaultValue = "") String appid,
             @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {
         /*isevent 1 global 2 event*/
-        convlog.warn("affid={},clickid={},clickidbak={},advid={},event={},isevent={},subid={},idfa={},gaid={},payout={},device={},ip={},appid={},rejrv={}",affid, clickid, clickidbak, advid, event, isevent, subid, idfa, gaid,  payout, device, ip, appid, rejrv);
+        convlog.warn("affid={},clickid={},clickidbak={},advid={},event={},isevent={},subid={},idfa={},gaid={},payout={},device={},ip={},appid={},rejrv={}", affid, clickid, clickidbak, advid, event, isevent, subid, idfa, gaid, payout, device, ip, appid, rejrv);
 
         //log
         boolean isRej = false;
@@ -113,12 +113,15 @@ public class ConversionAPI {
 
         }
         Float pbpayout = null;
-        try {
-            pbpayout = Float.parseFloat(payout);
-        } catch (NumberFormatException e) {
-            System.out.println(payout);
-            e.printStackTrace();
+        if (StringUtils.isNotBlank(payout) && !"null".equalsIgnoreCase(payout)) {
+            try {
+                pbpayout = Float.parseFloat(payout);
+            } catch (NumberFormatException e) {
+                System.out.println(payout);
+                e.printStackTrace();
+            }
         }
+
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
