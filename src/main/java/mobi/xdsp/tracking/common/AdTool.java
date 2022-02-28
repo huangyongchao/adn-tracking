@@ -15,6 +15,8 @@ import org.springframework.util.Base64Utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Random;
 
@@ -191,12 +193,10 @@ public class AdTool {
                     click.setId(clickid);
                     String encode = ss[2];
                     if (encode.startsWith("FK") || encode.startsWith("DK") || encode.startsWith("SK")|| encode.startsWith("SS")) {
-                        encode = new String(Base64Utils.decodeFromString(encode), Charset.forName("utf-8")).replace("H��", "2022");
+                        encode = new String(Base64Utils.decodeFromString(encode.substring(4)), Charset.defaultCharset());
+                        encode = LocalDateTime.now(ZoneOffset.UTC).getYear() + encode;
                         String[] infos = encode.split("\\|");
                         String clickdate = infos[0];
-                        if (!clickdate.startsWith("2022")) {
-                            clickdate = "2022" + infos[0];
-                        }
                         click.setCt(DateUtils.parseDate(clickdate, "yyyyMMddHHmmss"));
                         if (infos.length > 7) {
                             click.setIdfa(infos[7]);
@@ -223,7 +223,7 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        String clickid = "DI0-2973944-SKuDMDIxNjE0MDIyMXwyOTczOTQ0fDB8MHwwfDB8MA==";
+        String clickid = "DI0-10195564-SSJDMDIyODE0NDQwMnwxMDE5NTU2NHw5MzA1NzQ1NzN8Mnw1NDYxNnxJTkR8MXw3NzQ2QzBGQy1GNkRDLTQyRDctQTZDMi05NDMyM0U4NUQ2NEM=";
         System.out.println(unpackClickId(clickid));
 
     }
