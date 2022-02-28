@@ -85,6 +85,7 @@ public class ConversionAPI {
             @RequestParam(value = "click_id", defaultValue = "") String clickidbak,
             @RequestParam(value = "rej", defaultValue = "") String rej,
             @RequestParam(value = "advid", defaultValue = "-1") Integer advid,
+            @RequestParam(value = "affid", defaultValue = "0") Integer affid,
             @RequestParam(value = "event", defaultValue = "") String event,
             @RequestParam(value = "isevent", defaultValue = "0") Integer isevent,
             @RequestParam(value = "rejr", defaultValue = "") String rejr,
@@ -96,26 +97,26 @@ public class ConversionAPI {
             @RequestParam(value = "gaid", defaultValue = "") String gaid,
             @RequestParam(value = "subid", defaultValue = "") String subid,
             @RequestParam(value = "payout", defaultValue = "") String payout,
+            @RequestParam(value = "device", defaultValue = "") String device,
+            @RequestParam(value = "ip", defaultValue = "") String ip,
+            @RequestParam(value = "appid", defaultValue = "") String appid,
             @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {
         /*isevent 1 global 2 event*/
+        convlog.warn("affid={},clickid={},clickidbak={},advid={},event={},isevent={},subid={},idfa={},gaid={},payout={},device={},ip={},appid={},rejrv={}",affid, clickid, clickidbak, advid, event, isevent, subid, idfa, gaid,  payout, device, ip, appid, rejrv);
 
         //log
         boolean isRej = false;
         boolean isEEvent = false;
         if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
-            rejlog.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
-            logger.warn("clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
+            rejlog.warn("Appsflyer={},clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", affid, clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
 
-        } else {
-
-            convlog.warn("{},{},{},{},{},{},{}", clickid, clickidbak, advid, event, isevent, subid);
         }
-
         Float pbpayout = null;
         try {
             pbpayout = Float.parseFloat(payout);
         } catch (NumberFormatException e) {
+            System.out.println(payout);
             e.printStackTrace();
         }
         try {
@@ -293,7 +294,7 @@ public class ConversionAPI {
                         offer.setDefaultpayout(0f);
 
                     }
-                    if (pbpayout !=null ) {
+                    if (pbpayout != null) {
                         offer.setDefaultpayout(pbpayout);
                     }
                     activate.setDefaultpayout(offer.getDefaultpayout());
