@@ -211,7 +211,6 @@ public class OffersQueryAPI {
 
                     mafOffer.setClickcap(offers1.getClickCap());
                 }
-                mafOffer.setClickcap(0);
                 mafOffer.setTargetScheduleUTC(offers1.getTargetScheduleUTC());
                 mafOffer.setSuggestSubs(offers1.getSuggestSubs());
                 mafOffer.setGeo(offers1.getGeo());
