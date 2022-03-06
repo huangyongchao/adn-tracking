@@ -186,7 +186,6 @@ public class ConversionAPI {
                     click.setIdfa(idfa);
                 }
                 click.setPubSub(subid);
-                logger.error("++++++++++++"+JSONObject.toJSONString(click));
                 try {
                     activate.setSsp(click.getDeviceInfo().getSsp());
                     activate.setSspname(ExchangesE.getKey(activate.getSsp()));
