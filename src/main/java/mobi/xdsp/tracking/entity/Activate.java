@@ -27,8 +27,6 @@ public class Activate {
 
     private String affiliateid;
 
-    private String ctit;
-
     private String offerid;
 
     private String offeruid;
@@ -74,6 +72,22 @@ public class Activate {
     private Integer deductcnt;
 
     private Integer inactivecnt;
+
+    private String ctit;
+
+    private Integer ssp;
+
+    private String sspapp;
+
+    private String ssppub;
+
+    private String sspmake;
+
+    private String sspmodel;
+
+    private String ssposv;
+
+    private String ssplang;
 
     public Long getId() {
         return id;
@@ -351,15 +365,71 @@ public class Activate {
         return inactivecnt;
     }
 
-    public void setCtit(String ctit) {
-        this.ctit = ctit;
+    public void setInactivecnt(Integer inactivecnt) {
+        this.inactivecnt = inactivecnt;
     }
 
     public String getCtit() {
         return ctit;
     }
 
-    public void setInactivecnt(Integer inactivecnt) {
-        this.inactivecnt = inactivecnt;
+    public void setCtit(String ctit) {
+        this.ctit = ctit == null ? null : ctit.trim();
+    }
+
+    public Integer getSsp() {
+        return ssp;
+    }
+
+    public void setSsp(Integer ssp) {
+        this.ssp = ssp;
+    }
+
+    public String getSspapp() {
+        return sspapp;
+    }
+
+    public void setSspapp(String sspapp) {
+        this.sspapp = sspapp == null ? null : sspapp.trim();
+    }
+
+    public String getSsppub() {
+        return ssppub;
+    }
+
+    public void setSsppub(String ssppub) {
+        this.ssppub = ssppub == null ? null : ssppub.trim();
+    }
+
+    public String getSspmake() {
+        return sspmake;
+    }
+
+    public void setSspmake(String sspmake) {
+        this.sspmake = sspmake == null ? null : sspmake.trim();
+    }
+
+    public String getSspmodel() {
+        return sspmodel;
+    }
+
+    public void setSspmodel(String sspmodel) {
+        this.sspmodel = sspmodel == null ? null : sspmodel.trim();
+    }
+
+    public String getSsposv() {
+        return ssposv;
+    }
+
+    public void setSsposv(String ssposv) {
+        this.ssposv = ssposv == null ? null : ssposv.trim();
+    }
+
+    public String getSsplang() {
+        return ssplang;
+    }
+
+    public void setSsplang(String ssplang) {
+        this.ssplang = ssplang == null ? null : ssplang.trim();
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mobi.xdsp.tracking.mapper.ActivateMapper">
-  <resultMap id="BaseResultMap" type="mobi.xdsp.tracking.entity.Activate">
+<mapper namespace="mobi.xdsp.dao.mapper.adn.ActivateMapper">
+  <resultMap id="BaseResultMap" type="mobi.xdsp.domain.adn.Activate">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="aId" jdbcType="VARCHAR" property="aid" />
     <result column="deviceId" jdbcType="VARCHAR" property="deviceid" />
@@ -37,8 +37,16 @@
     <result column="activecnt" jdbcType="INTEGER" property="activecnt" />
     <result column="deductcnt" jdbcType="INTEGER" property="deductcnt" />
     <result column="inactivecnt" jdbcType="INTEGER" property="inactivecnt" />
+    <result column="ctit" jdbcType="VARCHAR" property="ctit" />
+    <result column="ssp" jdbcType="INTEGER" property="ssp" />
+    <result column="sspapp" jdbcType="VARCHAR" property="sspapp" />
+    <result column="ssppub" jdbcType="VARCHAR" property="ssppub" />
+    <result column="sspmake" jdbcType="VARCHAR" property="sspmake" />
+    <result column="sspmodel" jdbcType="VARCHAR" property="sspmodel" />
+    <result column="ssposv" jdbcType="VARCHAR" property="ssposv" />
+    <result column="ssplang" jdbcType="VARCHAR" property="ssplang" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     <result column="clickId" jdbcType="LONGVARCHAR" property="clickid" />
     <result column="clickidext" jdbcType="LONGVARCHAR" property="clickidext" />
     <result column="affsub1" jdbcType="LONGVARCHAR" property="affsub1" />
@@ -108,12 +116,12 @@
     clickTime, affiliateId, offerId, offerUId, defaultPayout, clickDate, activateTime, 
     channelId, pubSub, subId1, extinfo, costType, event, status, noticeStatus, noticeTime, 
     source_affiliate_id, offerName, affiliateName, appName, advpayout, pubpayout, activecnt, 
-    deductcnt, inactivecnt
+    deductcnt, inactivecnt, ctit, ssp, sspapp, ssppub, sspmake, sspmodel, ssposv, ssplang
   </sql>
   <sql id="Blob_Column_List">
     clickId, clickidext, affsub1, affsub2, affsub3
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -129,7 +137,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -163,13 +171,13 @@
     delete from activate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample">
+  <delete id="deleteByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample">
     delete from activate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <insert id="insert" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -184,9 +192,11 @@
       noticeTime, source_affiliate_id, offerName, 
       affiliateName, appName, advpayout, 
       pubpayout, activecnt, deductcnt, 
-      inactivecnt, clickId, clickidext, 
-      affsub1, affsub2, affsub3
-      )
+      inactivecnt, ctit, ssp, 
+      sspapp, ssppub, sspmake, 
+      sspmodel, ssposv, ssplang, 
+      clickId, clickidext, affsub1, 
+      affsub2, affsub3)
     values (#{aid,jdbcType=VARCHAR}, #{deviceid,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{activatedate,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP}, #{systime,jdbcType=TIMESTAMP}, 
       #{appid,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{clickserverid,jdbcType=VARCHAR}, 
@@ -198,11 +208,13 @@
       #{noticetime,jdbcType=TIMESTAMP}, #{sourceAffiliateId,jdbcType=VARCHAR}, #{offername,jdbcType=VARCHAR}, 
       #{affiliatename,jdbcType=VARCHAR}, #{appname,jdbcType=VARCHAR}, #{advpayout,jdbcType=REAL}, 
       #{pubpayout,jdbcType=REAL}, #{activecnt,jdbcType=INTEGER}, #{deductcnt,jdbcType=INTEGER}, 
-      #{inactivecnt,jdbcType=INTEGER}, #{clickid,jdbcType=LONGVARCHAR}, #{clickidext,jdbcType=LONGVARCHAR}, 
-      #{affsub1,jdbcType=LONGVARCHAR}, #{affsub2,jdbcType=LONGVARCHAR}, #{affsub3,jdbcType=LONGVARCHAR}
-      )
+      #{inactivecnt,jdbcType=INTEGER}, #{ctit,jdbcType=VARCHAR}, #{ssp,jdbcType=INTEGER}, 
+      #{sspapp,jdbcType=VARCHAR}, #{ssppub,jdbcType=VARCHAR}, #{sspmake,jdbcType=VARCHAR}, 
+      #{sspmodel,jdbcType=VARCHAR}, #{ssposv,jdbcType=VARCHAR}, #{ssplang,jdbcType=VARCHAR}, 
+      #{clickid,jdbcType=LONGVARCHAR}, #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, 
+      #{affsub2,jdbcType=LONGVARCHAR}, #{affsub3,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <insert id="insertSelective" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -309,6 +321,30 @@
       </if>
       <if test="inactivecnt != null">
         inactivecnt,
+      </if>
+      <if test="ctit != null">
+        ctit,
+      </if>
+      <if test="ssp != null">
+        ssp,
+      </if>
+      <if test="sspapp != null">
+        sspapp,
+      </if>
+      <if test="ssppub != null">
+        ssppub,
+      </if>
+      <if test="sspmake != null">
+        sspmake,
+      </if>
+      <if test="sspmodel != null">
+        sspmodel,
+      </if>
+      <if test="ssposv != null">
+        ssposv,
+      </if>
+      <if test="ssplang != null">
+        ssplang,
       </if>
       <if test="clickid != null">
         clickId,
@@ -429,6 +465,30 @@
       <if test="inactivecnt != null">
         #{inactivecnt,jdbcType=INTEGER},
       </if>
+      <if test="ctit != null">
+        #{ctit,jdbcType=VARCHAR},
+      </if>
+      <if test="ssp != null">
+        #{ssp,jdbcType=INTEGER},
+      </if>
+      <if test="sspapp != null">
+        #{sspapp,jdbcType=VARCHAR},
+      </if>
+      <if test="ssppub != null">
+        #{ssppub,jdbcType=VARCHAR},
+      </if>
+      <if test="sspmake != null">
+        #{sspmake,jdbcType=VARCHAR},
+      </if>
+      <if test="sspmodel != null">
+        #{sspmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="ssposv != null">
+        #{ssposv,jdbcType=VARCHAR},
+      </if>
+      <if test="ssplang != null">
+        #{ssplang,jdbcType=VARCHAR},
+      </if>
       <if test="clickid != null">
         #{clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -446,7 +506,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultType="java.lang.Long">
     select count(*) from activate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -560,6 +620,30 @@
       <if test="record.inactivecnt != null">
         inactivecnt = #{record.inactivecnt,jdbcType=INTEGER},
       </if>
+      <if test="record.ctit != null">
+        ctit = #{record.ctit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ssp != null">
+        ssp = #{record.ssp,jdbcType=INTEGER},
+      </if>
+      <if test="record.sspapp != null">
+        sspapp = #{record.sspapp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ssppub != null">
+        ssppub = #{record.ssppub,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sspmake != null">
+        sspmake = #{record.sspmake,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sspmodel != null">
+        sspmodel = #{record.sspmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ssposv != null">
+        ssposv = #{record.ssposv,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ssplang != null">
+        ssplang = #{record.ssplang,jdbcType=VARCHAR},
+      </if>
       <if test="record.clickid != null">
         clickId = #{record.clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -617,6 +701,14 @@
       activecnt = #{record.activecnt,jdbcType=INTEGER},
       deductcnt = #{record.deductcnt,jdbcType=INTEGER},
       inactivecnt = #{record.inactivecnt,jdbcType=INTEGER},
+      ctit = #{record.ctit,jdbcType=VARCHAR},
+      ssp = #{record.ssp,jdbcType=INTEGER},
+      sspapp = #{record.sspapp,jdbcType=VARCHAR},
+      ssppub = #{record.ssppub,jdbcType=VARCHAR},
+      sspmake = #{record.sspmake,jdbcType=VARCHAR},
+      sspmodel = #{record.sspmodel,jdbcType=VARCHAR},
+      ssposv = #{record.ssposv,jdbcType=VARCHAR},
+      ssplang = #{record.ssplang,jdbcType=VARCHAR},
       clickId = #{record.clickid,jdbcType=LONGVARCHAR},
       clickidext = #{record.clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{record.affsub1,jdbcType=LONGVARCHAR},
@@ -662,12 +754,20 @@
       pubpayout = #{record.pubpayout,jdbcType=REAL},
       activecnt = #{record.activecnt,jdbcType=INTEGER},
       deductcnt = #{record.deductcnt,jdbcType=INTEGER},
-      inactivecnt = #{record.inactivecnt,jdbcType=INTEGER}
+      inactivecnt = #{record.inactivecnt,jdbcType=INTEGER},
+      ctit = #{record.ctit,jdbcType=VARCHAR},
+      ssp = #{record.ssp,jdbcType=INTEGER},
+      sspapp = #{record.sspapp,jdbcType=VARCHAR},
+      ssppub = #{record.ssppub,jdbcType=VARCHAR},
+      sspmake = #{record.sspmake,jdbcType=VARCHAR},
+      sspmodel = #{record.sspmodel,jdbcType=VARCHAR},
+      ssposv = #{record.ssposv,jdbcType=VARCHAR},
+      ssplang = #{record.ssplang,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     update activate
     <set>
       <if test="aid != null">
@@ -772,6 +872,30 @@
       <if test="inactivecnt != null">
         inactivecnt = #{inactivecnt,jdbcType=INTEGER},
       </if>
+      <if test="ctit != null">
+        ctit = #{ctit,jdbcType=VARCHAR},
+      </if>
+      <if test="ssp != null">
+        ssp = #{ssp,jdbcType=INTEGER},
+      </if>
+      <if test="sspapp != null">
+        sspapp = #{sspapp,jdbcType=VARCHAR},
+      </if>
+      <if test="ssppub != null">
+        ssppub = #{ssppub,jdbcType=VARCHAR},
+      </if>
+      <if test="sspmake != null">
+        sspmake = #{sspmake,jdbcType=VARCHAR},
+      </if>
+      <if test="sspmodel != null">
+        sspmodel = #{sspmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="ssposv != null">
+        ssposv = #{ssposv,jdbcType=VARCHAR},
+      </if>
+      <if test="ssplang != null">
+        ssplang = #{ssplang,jdbcType=VARCHAR},
+      </if>
       <if test="clickid != null">
         clickId = #{clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -790,7 +914,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
@@ -826,6 +950,14 @@
       activecnt = #{activecnt,jdbcType=INTEGER},
       deductcnt = #{deductcnt,jdbcType=INTEGER},
       inactivecnt = #{inactivecnt,jdbcType=INTEGER},
+      ctit = #{ctit,jdbcType=VARCHAR},
+      ssp = #{ssp,jdbcType=INTEGER},
+      sspapp = #{sspapp,jdbcType=VARCHAR},
+      ssppub = #{ssppub,jdbcType=VARCHAR},
+      sspmake = #{sspmake,jdbcType=VARCHAR},
+      sspmodel = #{sspmodel,jdbcType=VARCHAR},
+      ssposv = #{ssposv,jdbcType=VARCHAR},
+      ssplang = #{ssplang,jdbcType=VARCHAR},
       clickId = #{clickid,jdbcType=LONGVARCHAR},
       clickidext = #{clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{affsub1,jdbcType=LONGVARCHAR},
@@ -833,7 +965,7 @@
       affsub3 = #{affsub3,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.Activate">
+  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.domain.adn.Activate">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
@@ -868,7 +1000,15 @@
       pubpayout = #{pubpayout,jdbcType=REAL},
       activecnt = #{activecnt,jdbcType=INTEGER},
       deductcnt = #{deductcnt,jdbcType=INTEGER},
-      inactivecnt = #{inactivecnt,jdbcType=INTEGER}
+      inactivecnt = #{inactivecnt,jdbcType=INTEGER},
+      ctit = #{ctit,jdbcType=VARCHAR},
+      ssp = #{ssp,jdbcType=INTEGER},
+      sspapp = #{sspapp,jdbcType=VARCHAR},
+      ssppub = #{ssppub,jdbcType=VARCHAR},
+      sspmake = #{sspmake,jdbcType=VARCHAR},
+      sspmodel = #{sspmodel,jdbcType=VARCHAR},
+      ssposv = #{ssposv,jdbcType=VARCHAR},
+      ssplang = #{ssplang,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
@@ -907,6 +1047,14 @@
     activecnt,
     deductcnt,
     inactivecnt,
+    ctit,
+    ssp,
+    sspapp,
+    ssppub,
+    sspmake,
+    sspmodel,
+    ssposv,
+    ssplang,
     clickId,
     clickidext,
     affsub1,
@@ -950,6 +1098,14 @@
       #{item.activecnt,jdbcType=INTEGER},
       #{item.deductcnt,jdbcType=INTEGER},
       #{item.inactivecnt,jdbcType=INTEGER},
+      #{item.ctit,jdbcType=VARCHAR},
+      #{item.ssp,jdbcType=INTEGER},
+      #{item.sspapp,jdbcType=VARCHAR},
+      #{item.ssppub,jdbcType=VARCHAR},
+      #{item.sspmake,jdbcType=VARCHAR},
+      #{item.sspmodel,jdbcType=VARCHAR},
+      #{item.ssposv,jdbcType=VARCHAR},
+      #{item.ssplang,jdbcType=VARCHAR},
       #{item.clickid,jdbcType=LONGVARCHAR},
       #{item.clickidext,jdbcType=LONGVARCHAR},
       #{item.affsub1,jdbcType=LONGVARCHAR},

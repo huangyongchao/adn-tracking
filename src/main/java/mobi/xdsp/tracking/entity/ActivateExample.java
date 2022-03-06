@@ -2434,6 +2434,556 @@ public class ActivateExample {
             addCriterion("inactivecnt not between", value1, value2, "inactivecnt");
             return (Criteria) this;
         }
+
+        public Criteria andCtitIsNull() {
+            addCriterion("ctit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitIsNotNull() {
+            addCriterion("ctit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitEqualTo(String value) {
+            addCriterion("ctit =", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitNotEqualTo(String value) {
+            addCriterion("ctit <>", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitGreaterThan(String value) {
+            addCriterion("ctit >", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitGreaterThanOrEqualTo(String value) {
+            addCriterion("ctit >=", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitLessThan(String value) {
+            addCriterion("ctit <", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitLessThanOrEqualTo(String value) {
+            addCriterion("ctit <=", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitLike(String value) {
+            addCriterion("ctit like", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitNotLike(String value) {
+            addCriterion("ctit not like", value, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitIn(List<String> values) {
+            addCriterion("ctit in", values, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitNotIn(List<String> values) {
+            addCriterion("ctit not in", values, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitBetween(String value1, String value2) {
+            addCriterion("ctit between", value1, value2, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCtitNotBetween(String value1, String value2) {
+            addCriterion("ctit not between", value1, value2, "ctit");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspIsNull() {
+            addCriterion("ssp is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspIsNotNull() {
+            addCriterion("ssp is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspEqualTo(Integer value) {
+            addCriterion("ssp =", value, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspNotEqualTo(Integer value) {
+            addCriterion("ssp <>", value, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspGreaterThan(Integer value) {
+            addCriterion("ssp >", value, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspGreaterThanOrEqualTo(Integer value) {
+            addCriterion("ssp >=", value, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspLessThan(Integer value) {
+            addCriterion("ssp <", value, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspLessThanOrEqualTo(Integer value) {
+            addCriterion("ssp <=", value, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspIn(List<Integer> values) {
+            addCriterion("ssp in", values, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspNotIn(List<Integer> values) {
+            addCriterion("ssp not in", values, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspBetween(Integer value1, Integer value2) {
+            addCriterion("ssp between", value1, value2, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspNotBetween(Integer value1, Integer value2) {
+            addCriterion("ssp not between", value1, value2, "ssp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappIsNull() {
+            addCriterion("sspapp is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappIsNotNull() {
+            addCriterion("sspapp is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappEqualTo(String value) {
+            addCriterion("sspapp =", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappNotEqualTo(String value) {
+            addCriterion("sspapp <>", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappGreaterThan(String value) {
+            addCriterion("sspapp >", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappGreaterThanOrEqualTo(String value) {
+            addCriterion("sspapp >=", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappLessThan(String value) {
+            addCriterion("sspapp <", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappLessThanOrEqualTo(String value) {
+            addCriterion("sspapp <=", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappLike(String value) {
+            addCriterion("sspapp like", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappNotLike(String value) {
+            addCriterion("sspapp not like", value, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappIn(List<String> values) {
+            addCriterion("sspapp in", values, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappNotIn(List<String> values) {
+            addCriterion("sspapp not in", values, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappBetween(String value1, String value2) {
+            addCriterion("sspapp between", value1, value2, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspappNotBetween(String value1, String value2) {
+            addCriterion("sspapp not between", value1, value2, "sspapp");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubIsNull() {
+            addCriterion("ssppub is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubIsNotNull() {
+            addCriterion("ssppub is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubEqualTo(String value) {
+            addCriterion("ssppub =", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubNotEqualTo(String value) {
+            addCriterion("ssppub <>", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubGreaterThan(String value) {
+            addCriterion("ssppub >", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubGreaterThanOrEqualTo(String value) {
+            addCriterion("ssppub >=", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubLessThan(String value) {
+            addCriterion("ssppub <", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubLessThanOrEqualTo(String value) {
+            addCriterion("ssppub <=", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubLike(String value) {
+            addCriterion("ssppub like", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubNotLike(String value) {
+            addCriterion("ssppub not like", value, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubIn(List<String> values) {
+            addCriterion("ssppub in", values, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubNotIn(List<String> values) {
+            addCriterion("ssppub not in", values, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubBetween(String value1, String value2) {
+            addCriterion("ssppub between", value1, value2, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsppubNotBetween(String value1, String value2) {
+            addCriterion("ssppub not between", value1, value2, "ssppub");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeIsNull() {
+            addCriterion("sspmake is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeIsNotNull() {
+            addCriterion("sspmake is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeEqualTo(String value) {
+            addCriterion("sspmake =", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeNotEqualTo(String value) {
+            addCriterion("sspmake <>", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeGreaterThan(String value) {
+            addCriterion("sspmake >", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeGreaterThanOrEqualTo(String value) {
+            addCriterion("sspmake >=", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeLessThan(String value) {
+            addCriterion("sspmake <", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeLessThanOrEqualTo(String value) {
+            addCriterion("sspmake <=", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeLike(String value) {
+            addCriterion("sspmake like", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeNotLike(String value) {
+            addCriterion("sspmake not like", value, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeIn(List<String> values) {
+            addCriterion("sspmake in", values, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeNotIn(List<String> values) {
+            addCriterion("sspmake not in", values, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeBetween(String value1, String value2) {
+            addCriterion("sspmake between", value1, value2, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmakeNotBetween(String value1, String value2) {
+            addCriterion("sspmake not between", value1, value2, "sspmake");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelIsNull() {
+            addCriterion("sspmodel is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelIsNotNull() {
+            addCriterion("sspmodel is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelEqualTo(String value) {
+            addCriterion("sspmodel =", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelNotEqualTo(String value) {
+            addCriterion("sspmodel <>", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelGreaterThan(String value) {
+            addCriterion("sspmodel >", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelGreaterThanOrEqualTo(String value) {
+            addCriterion("sspmodel >=", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelLessThan(String value) {
+            addCriterion("sspmodel <", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelLessThanOrEqualTo(String value) {
+            addCriterion("sspmodel <=", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelLike(String value) {
+            addCriterion("sspmodel like", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelNotLike(String value) {
+            addCriterion("sspmodel not like", value, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelIn(List<String> values) {
+            addCriterion("sspmodel in", values, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelNotIn(List<String> values) {
+            addCriterion("sspmodel not in", values, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelBetween(String value1, String value2) {
+            addCriterion("sspmodel between", value1, value2, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspmodelNotBetween(String value1, String value2) {
+            addCriterion("sspmodel not between", value1, value2, "sspmodel");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvIsNull() {
+            addCriterion("ssposv is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvIsNotNull() {
+            addCriterion("ssposv is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvEqualTo(String value) {
+            addCriterion("ssposv =", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvNotEqualTo(String value) {
+            addCriterion("ssposv <>", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvGreaterThan(String value) {
+            addCriterion("ssposv >", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvGreaterThanOrEqualTo(String value) {
+            addCriterion("ssposv >=", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvLessThan(String value) {
+            addCriterion("ssposv <", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvLessThanOrEqualTo(String value) {
+            addCriterion("ssposv <=", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvLike(String value) {
+            addCriterion("ssposv like", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvNotLike(String value) {
+            addCriterion("ssposv not like", value, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvIn(List<String> values) {
+            addCriterion("ssposv in", values, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvNotIn(List<String> values) {
+            addCriterion("ssposv not in", values, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvBetween(String value1, String value2) {
+            addCriterion("ssposv between", value1, value2, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsposvNotBetween(String value1, String value2) {
+            addCriterion("ssposv not between", value1, value2, "ssposv");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangIsNull() {
+            addCriterion("ssplang is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangIsNotNull() {
+            addCriterion("ssplang is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangEqualTo(String value) {
+            addCriterion("ssplang =", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangNotEqualTo(String value) {
+            addCriterion("ssplang <>", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangGreaterThan(String value) {
+            addCriterion("ssplang >", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangGreaterThanOrEqualTo(String value) {
+            addCriterion("ssplang >=", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangLessThan(String value) {
+            addCriterion("ssplang <", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangLessThanOrEqualTo(String value) {
+            addCriterion("ssplang <=", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangLike(String value) {
+            addCriterion("ssplang like", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangNotLike(String value) {
+            addCriterion("ssplang not like", value, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangIn(List<String> values) {
+            addCriterion("ssplang in", values, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangNotIn(List<String> values) {
+            addCriterion("ssplang not in", values, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangBetween(String value1, String value2) {
+            addCriterion("ssplang between", value1, value2, "ssplang");
+            return (Criteria) this;
+        }
+
+        public Criteria andSsplangNotBetween(String value1, String value2) {
+            addCriterion("ssplang not between", value1, value2, "ssplang");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

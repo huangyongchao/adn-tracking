@@ -91,6 +91,23 @@ public class Click implements Serializable {
      */
     private String soid;
 
+
+
+    private Integer ssp;
+
+    private String sspapp;
+
+    private String ssppub;
+
+    private String sspmake;
+
+    private String sspmodel;
+
+    private String ssposv;
+
+    private String ssplang;
+
+
     @Override
     public String toString() {
         return "Click{" +
