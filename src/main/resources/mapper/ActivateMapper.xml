@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mobi.xdsp.dao.mapper.adn.ActivateMapper">
-  <resultMap id="BaseResultMap" type="mobi.xdsp.domain.adn.Activate">
+<mapper namespace="mobi.xdsp.tracking.mapper.ActivateMapper">
+  <resultMap id="BaseResultMap" type="mobi.xdsp.tracking.entity.Activate">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="aId" jdbcType="VARCHAR" property="aid" />
     <result column="deviceId" jdbcType="VARCHAR" property="deviceid" />
@@ -46,7 +46,7 @@
     <result column="ssposv" jdbcType="VARCHAR" property="ssposv" />
     <result column="ssplang" jdbcType="VARCHAR" property="ssplang" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.domain.adn.ActivateWithBLOBs">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     <result column="clickId" jdbcType="LONGVARCHAR" property="clickid" />
     <result column="clickidext" jdbcType="LONGVARCHAR" property="clickidext" />
     <result column="affsub1" jdbcType="LONGVARCHAR" property="affsub1" />
@@ -121,7 +121,7 @@
   <sql id="Blob_Column_List">
     clickId, clickidext, affsub1, affsub2, affsub3
   </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultMap="ResultMapWithBLOBs">
+  <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
@@ -137,7 +137,7 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -171,13 +171,13 @@
     delete from activate
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample">
+  <delete id="deleteByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample">
     delete from activate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
+  <insert id="insert" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -214,7 +214,7 @@
       #{clickid,jdbcType=LONGVARCHAR}, #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, 
       #{affsub2,jdbcType=LONGVARCHAR}, #{affsub3,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
+  <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -506,7 +506,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="mobi.xdsp.domain.adn.ActivateExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultType="java.lang.Long">
     select count(*) from activate
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -767,7 +767,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
+  <update id="updateByPrimaryKeySelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     update activate
     <set>
       <if test="aid != null">
@@ -914,7 +914,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.domain.adn.ActivateWithBLOBs">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
@@ -965,7 +965,7 @@
       affsub3 = #{affsub3,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.domain.adn.Activate">
+  <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.Activate">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
