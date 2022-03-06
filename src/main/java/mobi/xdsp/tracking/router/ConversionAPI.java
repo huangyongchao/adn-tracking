@@ -186,7 +186,7 @@ public class ConversionAPI {
                     click.setIdfa(idfa);
                 }
                 click.setPubSub(subid);
-                System.out.println(JSONObject.toJSONString(click));
+                logger.error("++++++++++++"+JSONObject.toJSONString(click));
                 try {
                     activate.setSsp(click.getDeviceInfo().getSsp());
                     activate.setSspname(ExchangesE.getKey(activate.getSsp()));
@@ -209,6 +209,8 @@ public class ConversionAPI {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                logger.error("++++++++++++"+JSONObject.toJSONString(activate));
+
                 mmplink = true;
             }
             activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
