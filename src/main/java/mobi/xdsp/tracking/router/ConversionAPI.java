@@ -155,6 +155,26 @@ public class ConversionAPI {
                     click = AdTool.unpackClickId(clickid);
                 }
 
+            } else if ((clickid.indexOf("|") > 0 && clickid.split("\\|").length > 4)) {
+                /*判断是MAF click*/
+                mafclick = true;
+                click = new Click();
+                click.setPid(2);
+                String[] ms = clickid.split("\\|");
+                if (ms.length > 2) {
+
+                    click.setSoid(ms[2]);
+                }
+                click.setId(clickid);
+                click.setClickId(clickid);
+                click.setPubSub(subid);
+                if (StringUtils.isBlank(click.getGaid())) {
+                    click.setGaid(gaid);
+                }
+                if (StringUtils.isBlank(click.getIdfa())) {
+                    click.setIdfa(idfa);
+                }
+
 
             } else if (clickid.startsWith("DI")) {
                 //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
@@ -190,28 +210,6 @@ public class ConversionAPI {
                     e.printStackTrace();
                 }
                 mmplink = true;
-            } else {
-                /*判断是MAF click*/
-                if (clickid.startsWith("DI2") || (clickid.indexOf("|") > 0 && clickid.split("\\|").length > 1)) {
-                    mafclick = true;
-                    click = new Click();
-                    click.setPid(2);
-                    String[] ms = clickid.split("\\|");
-                    if (ms.length > 2) {
-
-                        click.setSoid(ms[2]);
-                    }
-                    click.setId(clickid);
-                    click.setClickId(clickid);
-                    click.setPubSub(subid);
-                    if (StringUtils.isBlank(click.getGaid())) {
-                        click.setGaid(gaid);
-                    }
-                    if (StringUtils.isBlank(click.getIdfa())) {
-                        click.setIdfa(idfa);
-                    }
-
-                }
             }
             activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
