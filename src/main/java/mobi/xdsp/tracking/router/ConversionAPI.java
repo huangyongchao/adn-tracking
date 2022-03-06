@@ -140,7 +140,7 @@ public class ConversionAPI {
             boolean mmplink = false;
             boolean mafclick = false;
             boolean sdkclick = false;
-            if (clickid.startsWith("DI0") || clickid.startsWith("DI1")) {
+            if ( clickid.startsWith("DI1")) {
                 sdkclick = true;
                 click = AdTool.unpackClickId(clickid);
                 mmplink = true;
@@ -176,7 +176,7 @@ public class ConversionAPI {
                 }
 
 
-            } else if (clickid.startsWith("DI")) {
+            } else if (clickid.startsWith("DI0")) {
                 //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
                 click = AdTool.unpackClickId(clickid);
                 if (StringUtils.isBlank(click.getGaid())) {
