@@ -3,9 +3,7 @@ package mobi.xdsp.tracking.router;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.*;
 import mobi.xdsp.tracking.dto.Click;
-import mobi.xdsp.tracking.dto.enums.PBNoticeStateE;
-import mobi.xdsp.tracking.dto.enums.PBStateE;
-import mobi.xdsp.tracking.dto.enums.StateE;
+import mobi.xdsp.tracking.dto.enums.*;
 import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.ActivateMapper;
 import mobi.xdsp.tracking.mapper.AffiliateMapper;
@@ -168,6 +166,28 @@ public class ConversionAPI {
                 }
                 click.setPubSub(subid);
 
+                try {
+                    activate.setSsp(click.getDeviceInfo().getSsp());
+                    activate.setSspname(ExchangesE.getKey(activate.getSsp()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    activate.setSsppub(click.getDeviceInfo().getPub());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    activate.setSspapp(click.getAppId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    String code = click.getDeviceInfo().getOs();
+                    activate.setOs(OsE.getKeyByV(code));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 mmplink = true;
             } else {
                 /*判断是MAF click*/

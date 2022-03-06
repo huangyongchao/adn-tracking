@@ -7,11 +7,11 @@ public enum ExchangesE {
     /**
      *
      */
-    SMAATO("smaato",1),MOBFOX("mobfox",2), ADCOLONY("adcolony",3);
+    SMAATO("smaato",1),ALGORIX("algorix",2), YEAHMOBI("yeahmobi",3);
 
     public String key;
     public Integer code;
-    private ExchangesE(String key,Integer code) {
+    private ExchangesE(String key, Integer code) {
         this.key = key;
         this.code = code;
     }
@@ -25,6 +25,14 @@ public enum ExchangesE {
         return null;
     }
 
+    public static String getKey(Integer code) {
+        for (ExchangesE exchangesE : ExchangesE.values()) {
+            if (exchangesE.code.equals(code)) {
+                return exchangesE.key;
+            }
+        }
+        return null;
+    }
 
 
     public static boolean existKey(String key) {

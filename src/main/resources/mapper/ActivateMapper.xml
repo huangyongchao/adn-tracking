@@ -45,6 +45,8 @@
     <result column="sspmodel" jdbcType="VARCHAR" property="sspmodel" />
     <result column="ssposv" jdbcType="VARCHAR" property="ssposv" />
     <result column="ssplang" jdbcType="VARCHAR" property="ssplang" />
+    <result column="os" jdbcType="VARCHAR" property="os" />
+    <result column="sspname" jdbcType="VARCHAR" property="sspname" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     <result column="clickId" jdbcType="LONGVARCHAR" property="clickid" />
@@ -116,7 +118,8 @@
     clickTime, affiliateId, offerId, offerUId, defaultPayout, clickDate, activateTime, 
     channelId, pubSub, subId1, extinfo, costType, event, status, noticeStatus, noticeTime, 
     source_affiliate_id, offerName, affiliateName, appName, advpayout, pubpayout, activecnt, 
-    deductcnt, inactivecnt, ctit, ssp, sspapp, ssppub, sspmake, sspmodel, ssposv, ssplang
+    deductcnt, inactivecnt, ctit, ssp, sspapp, ssppub, sspmake, sspmodel, ssposv, ssplang, 
+    os, sspname
   </sql>
   <sql id="Blob_Column_List">
     clickId, clickidext, affsub1, affsub2, affsub3
@@ -195,8 +198,9 @@
       inactivecnt, ctit, ssp, 
       sspapp, ssppub, sspmake, 
       sspmodel, ssposv, ssplang, 
-      clickId, clickidext, affsub1, 
-      affsub2, affsub3)
+      os, sspname, clickId, 
+      clickidext, affsub1, affsub2, 
+      affsub3)
     values (#{aid,jdbcType=VARCHAR}, #{deviceid,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{activatedate,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP}, #{systime,jdbcType=TIMESTAMP}, 
       #{appid,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{clickserverid,jdbcType=VARCHAR}, 
@@ -211,8 +215,9 @@
       #{inactivecnt,jdbcType=INTEGER}, #{ctit,jdbcType=VARCHAR}, #{ssp,jdbcType=INTEGER}, 
       #{sspapp,jdbcType=VARCHAR}, #{ssppub,jdbcType=VARCHAR}, #{sspmake,jdbcType=VARCHAR}, 
       #{sspmodel,jdbcType=VARCHAR}, #{ssposv,jdbcType=VARCHAR}, #{ssplang,jdbcType=VARCHAR}, 
-      #{clickid,jdbcType=LONGVARCHAR}, #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, 
-      #{affsub2,jdbcType=LONGVARCHAR}, #{affsub3,jdbcType=LONGVARCHAR})
+      #{os,jdbcType=VARCHAR}, #{sspname,jdbcType=VARCHAR}, #{clickid,jdbcType=LONGVARCHAR}, 
+      #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, #{affsub2,jdbcType=LONGVARCHAR}, 
+      #{affsub3,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -345,6 +350,12 @@
       </if>
       <if test="ssplang != null">
         ssplang,
+      </if>
+      <if test="os != null">
+        os,
+      </if>
+      <if test="sspname != null">
+        sspname,
       </if>
       <if test="clickid != null">
         clickId,
@@ -488,6 +499,12 @@
       </if>
       <if test="ssplang != null">
         #{ssplang,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null">
+        #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="sspname != null">
+        #{sspname,jdbcType=VARCHAR},
       </if>
       <if test="clickid != null">
         #{clickid,jdbcType=LONGVARCHAR},
@@ -644,6 +661,12 @@
       <if test="record.ssplang != null">
         ssplang = #{record.ssplang,jdbcType=VARCHAR},
       </if>
+      <if test="record.os != null">
+        os = #{record.os,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sspname != null">
+        sspname = #{record.sspname,jdbcType=VARCHAR},
+      </if>
       <if test="record.clickid != null">
         clickId = #{record.clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -709,6 +732,8 @@
       sspmodel = #{record.sspmodel,jdbcType=VARCHAR},
       ssposv = #{record.ssposv,jdbcType=VARCHAR},
       ssplang = #{record.ssplang,jdbcType=VARCHAR},
+      os = #{record.os,jdbcType=VARCHAR},
+      sspname = #{record.sspname,jdbcType=VARCHAR},
       clickId = #{record.clickid,jdbcType=LONGVARCHAR},
       clickidext = #{record.clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{record.affsub1,jdbcType=LONGVARCHAR},
@@ -762,7 +787,9 @@
       sspmake = #{record.sspmake,jdbcType=VARCHAR},
       sspmodel = #{record.sspmodel,jdbcType=VARCHAR},
       ssposv = #{record.ssposv,jdbcType=VARCHAR},
-      ssplang = #{record.ssplang,jdbcType=VARCHAR}
+      ssplang = #{record.ssplang,jdbcType=VARCHAR},
+      os = #{record.os,jdbcType=VARCHAR},
+      sspname = #{record.sspname,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -896,6 +923,12 @@
       <if test="ssplang != null">
         ssplang = #{ssplang,jdbcType=VARCHAR},
       </if>
+      <if test="os != null">
+        os = #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="sspname != null">
+        sspname = #{sspname,jdbcType=VARCHAR},
+      </if>
       <if test="clickid != null">
         clickId = #{clickid,jdbcType=LONGVARCHAR},
       </if>
@@ -958,6 +991,8 @@
       sspmodel = #{sspmodel,jdbcType=VARCHAR},
       ssposv = #{ssposv,jdbcType=VARCHAR},
       ssplang = #{ssplang,jdbcType=VARCHAR},
+      os = #{os,jdbcType=VARCHAR},
+      sspname = #{sspname,jdbcType=VARCHAR},
       clickId = #{clickid,jdbcType=LONGVARCHAR},
       clickidext = #{clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{affsub1,jdbcType=LONGVARCHAR},
@@ -1008,7 +1043,9 @@
       sspmake = #{sspmake,jdbcType=VARCHAR},
       sspmodel = #{sspmodel,jdbcType=VARCHAR},
       ssposv = #{ssposv,jdbcType=VARCHAR},
-      ssplang = #{ssplang,jdbcType=VARCHAR}
+      ssplang = #{ssplang,jdbcType=VARCHAR},
+      os = #{os,jdbcType=VARCHAR},
+      sspname = #{sspname,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
@@ -1055,6 +1092,8 @@
     sspmodel,
     ssposv,
     ssplang,
+    os,
+    sspname,
     clickId,
     clickidext,
     affsub1,
@@ -1106,6 +1145,8 @@
       #{item.sspmodel,jdbcType=VARCHAR},
       #{item.ssposv,jdbcType=VARCHAR},
       #{item.ssplang,jdbcType=VARCHAR},
+      #{item.os,jdbcType=VARCHAR},
+      #{item.sspname,jdbcType=VARCHAR},
       #{item.clickid,jdbcType=LONGVARCHAR},
       #{item.clickidext,jdbcType=LONGVARCHAR},
       #{item.affsub1,jdbcType=LONGVARCHAR},

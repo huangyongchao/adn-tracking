@@ -89,6 +89,10 @@ public class Activate {
 
     private String ssplang;
 
+    private String os;
+
+    private String sspname;
+
     public Long getId() {
         return id;
     }
@@ -431,5 +435,21 @@ public class Activate {
 
     public void setSsplang(String ssplang) {
         this.ssplang = ssplang == null ? null : ssplang.trim();
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public void setOs(String os) {
+        this.os = os == null ? null : os.trim();
+    }
+
+    public String getSspname() {
+        return sspname;
+    }
+
+    public void setSspname(String sspname) {
+        this.sspname = sspname == null ? null : sspname.trim();
     }
 }

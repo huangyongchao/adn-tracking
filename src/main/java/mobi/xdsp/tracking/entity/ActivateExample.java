@@ -2984,6 +2984,146 @@ public class ActivateExample {
             addCriterion("ssplang not between", value1, value2, "ssplang");
             return (Criteria) this;
         }
+
+        public Criteria andOsIsNull() {
+            addCriterion("os is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsIsNotNull() {
+            addCriterion("os is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsEqualTo(String value) {
+            addCriterion("os =", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsNotEqualTo(String value) {
+            addCriterion("os <>", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsGreaterThan(String value) {
+            addCriterion("os >", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsGreaterThanOrEqualTo(String value) {
+            addCriterion("os >=", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsLessThan(String value) {
+            addCriterion("os <", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsLessThanOrEqualTo(String value) {
+            addCriterion("os <=", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsLike(String value) {
+            addCriterion("os like", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsNotLike(String value) {
+            addCriterion("os not like", value, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsIn(List<String> values) {
+            addCriterion("os in", values, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsNotIn(List<String> values) {
+            addCriterion("os not in", values, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsBetween(String value1, String value2) {
+            addCriterion("os between", value1, value2, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andOsNotBetween(String value1, String value2) {
+            addCriterion("os not between", value1, value2, "os");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameIsNull() {
+            addCriterion("sspname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameIsNotNull() {
+            addCriterion("sspname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameEqualTo(String value) {
+            addCriterion("sspname =", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameNotEqualTo(String value) {
+            addCriterion("sspname <>", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameGreaterThan(String value) {
+            addCriterion("sspname >", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameGreaterThanOrEqualTo(String value) {
+            addCriterion("sspname >=", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameLessThan(String value) {
+            addCriterion("sspname <", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameLessThanOrEqualTo(String value) {
+            addCriterion("sspname <=", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameLike(String value) {
+            addCriterion("sspname like", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameNotLike(String value) {
+            addCriterion("sspname not like", value, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameIn(List<String> values) {
+            addCriterion("sspname in", values, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameNotIn(List<String> values) {
+            addCriterion("sspname not in", values, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameBetween(String value1, String value2) {
+            addCriterion("sspname between", value1, value2, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andSspnameNotBetween(String value1, String value2) {
+            addCriterion("sspname not between", value1, value2, "sspname");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

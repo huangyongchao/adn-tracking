@@ -9,7 +9,7 @@ public enum OsE {
     /**
      *
      */
-    iOS("ios", "1"), Android("android", "2"), Other("other", "3");
+    iOS("ios", "1"), Android("android", "2"), Other("other", "0");
 
     public String key;
 
@@ -38,7 +38,7 @@ public enum OsE {
         return v;
     }
 
-    public static String getKeyByV(Integer v) {
+    public static String getKeyByV(String v) {
         for (OsE cfgKeyE : OsE.values()) {
             if (cfgKeyE.v.equals(v)) {
                 return cfgKeyE.key;

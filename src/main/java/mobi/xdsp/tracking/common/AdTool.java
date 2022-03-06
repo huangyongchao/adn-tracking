@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.common;
 import mobi.xdsp.tracking.core.job.CounterJob;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.OsE;
+import mobi.xdsp.tracking.dto.enums.ExchangesE;
 import mobi.xdsp.tracking.entity.Offer;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -192,7 +193,7 @@ public class AdTool {
                     click.setPid(Integer.parseInt(pubid));
                     click.setId(clickid);
                     String encode = ss[2];
-                    if (encode.startsWith("FK") || encode.startsWith("DK") || encode.startsWith("SK")|| encode.startsWith("SS")) {
+                    if (encode.startsWith("FK") || encode.startsWith("DK") || encode.startsWith("SK") || encode.startsWith("SS")) {
                         encode = new String(Base64Utils.decodeFromString(encode.substring(4)), Charset.defaultCharset());
                         encode = LocalDateTime.now(ZoneOffset.UTC).getYear() + encode;
                         String[] infos = encode.split("\\|");
@@ -200,7 +201,18 @@ public class AdTool {
                         click.setCt(DateUtils.parseDate(clickdate, "yyyyMMddHHmmss"));
                         if (infos.length > 7) {
                             click.setIdfa(infos[7]);
+                            click.getDeviceInfo().setDevid(infos[7]);
+                            click.getDeviceInfo().setAppid(infos[2]);
+                            try {
+                                click.getDeviceInfo().setSsp(Integer.parseInt(infos[3]));
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                            click.getDeviceInfo().setPub(infos[4]);
+                            click.getDeviceInfo().setGeo(infos[5]);
+                            click.getDeviceInfo().setOs(infos[6]);
                         }
+
                     }
                     click.setClickId(clickid);
 
