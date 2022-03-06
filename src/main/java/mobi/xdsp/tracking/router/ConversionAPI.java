@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.router;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.*;
 import mobi.xdsp.tracking.dto.Click;
@@ -165,7 +166,7 @@ public class ConversionAPI {
                     click.setIdfa(idfa);
                 }
                 click.setPubSub(subid);
-
+                System.out.println(JSONObject.toJSONString(click));
                 try {
                     activate.setSsp(click.getDeviceInfo().getSsp());
                     activate.setSspname(ExchangesE.getKey(activate.getSsp()));
