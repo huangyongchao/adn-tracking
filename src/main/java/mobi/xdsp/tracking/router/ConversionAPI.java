@@ -140,7 +140,7 @@ public class ConversionAPI {
             boolean mmplink = false;
             boolean mafclick = false;
             boolean sdkclick = false;
-            if ( clickid.startsWith("DI1")) {
+            if (clickid.startsWith("DI1")) {
                 sdkclick = true;
                 click = AdTool.unpackClickId(clickid);
                 mmplink = true;
@@ -198,7 +198,12 @@ public class ConversionAPI {
                     e.printStackTrace();
                 }
                 try {
-                    activate.setSspapp(click.getAppId());
+                    if (OsE.iOS.v.equals(click.getDeviceInfo().getOs()) && !click.getAppId().startsWith("id")) {
+                        activate.setSspapp("id" + click.getAppId());
+                    } else {
+                        activate.setSspapp(click.getAppId());
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -208,7 +213,7 @@ public class ConversionAPI {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                logger.error("++++++++++++"+JSONObject.toJSONString(activate));
+                logger.error("++++++++++++" + JSONObject.toJSONString(activate));
 
                 mmplink = true;
             }
@@ -335,7 +340,7 @@ public class ConversionAPI {
                 activate.setAffsub3(click.getS1());
                 activate.setAffsub2(click.getS2());
                 activate.setSubid1(click.getMixSub());
-                if(StringUtils.isBlank(activate.getOs())){
+                if (StringUtils.isBlank(activate.getOs())) {
                     activate.setOs(offer.getOs().toLowerCase());
                 }
                 if (StringUtils.isBlank(activate.getClickid())) {
