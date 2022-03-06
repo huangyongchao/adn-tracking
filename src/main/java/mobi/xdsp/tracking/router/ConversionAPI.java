@@ -336,6 +336,9 @@ public class ConversionAPI {
                 activate.setAffsub3(click.getS1());
                 activate.setAffsub2(click.getS2());
                 activate.setSubid1(click.getMixSub());
+                if(StringUtils.isBlank(activate.getOs())){
+                    activate.setOs(offer.getOs().toLowerCase());
+                }
                 if (StringUtils.isBlank(activate.getClickid())) {
                     activate.setClickid(clickid);
                     activate.setStatus(PBStateE.INVALID.code);
