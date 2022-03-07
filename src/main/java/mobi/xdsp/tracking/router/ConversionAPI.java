@@ -198,12 +198,7 @@ public class ConversionAPI {
                     e.printStackTrace();
                 }
                 try {
-                    if (OsE.iOS.v.equals(click.getDeviceInfo().getOs()) && !click.getAppId().startsWith("id")) {
-                        activate.setSspapp("id" + click.getAppId());
-                    } else {
-                        activate.setSspapp(click.getAppId());
-
-                    }
+                    activate.setSspapp(click.getAppId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
