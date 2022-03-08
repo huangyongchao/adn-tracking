@@ -215,7 +215,7 @@ public class AdTool {
                             click.getDeviceInfo().setGeo(infos[5]);
                             click.getDeviceInfo().setOs(infos[6]);
                         }
-                        if (OsE.IOS.name.equalsIgnoreCase(click.getDeviceInfo().getOs())) {
+                        if (OsE.IOS.v.equalsIgnoreCase(click.getDeviceInfo().getOs())) {
                             if (click.getDeviceInfo().getAppid() != null && !click.getDeviceInfo().getAppid().startsWith("id")) {
                                 click.getDeviceInfo().setAppid("id" + click.getDeviceInfo().getAppid());
                             }
