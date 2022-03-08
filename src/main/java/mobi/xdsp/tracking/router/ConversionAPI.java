@@ -198,7 +198,7 @@ public class ConversionAPI {
                     e.printStackTrace();
                 }
                 try {
-                    activate.setSspapp(click.getAppId());
+                    activate.setSspapp(click.getDeviceInfo().getAppid());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

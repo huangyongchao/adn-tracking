@@ -206,6 +206,7 @@ public class AdTool {
                                 e.printStackTrace();
                             }
                             click.getDeviceInfo().setAppid(infos[2]);
+
                         }
                         if (infos.length > 7) {
                             click.setIdfa(infos[7]);
@@ -213,6 +214,12 @@ public class AdTool {
                             click.getDeviceInfo().setPub(infos[4]);
                             click.getDeviceInfo().setGeo(infos[5]);
                             click.getDeviceInfo().setOs(infos[6]);
+                        }
+                        if (OsE.IOS.name.equalsIgnoreCase(click.getDeviceInfo().getOs())) {
+                            if (click.getDeviceInfo().getAppid() != null && !click.getDeviceInfo().getAppid().startsWith("id")) {
+                                click.getDeviceInfo().setAppid("id" + click.getDeviceInfo().getAppid());
+                            }
+
                         }
 
                     }
@@ -237,7 +244,7 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        String clickid = "DI0-10195564-SSJDMDIyODE0NDQwMnwxMDE5NTU2NHw5MzA1NzQ1NzN8Mnw1NDYxNnxJTkR8MXw3NzQ2QzBGQy1GNkRDLTQyRDctQTZDMi05NDMyM0U4NUQ2NEM=";
+        String clickid = "DI0-10195664-SSOlMDMwNTA2NDc0MnwxMDE5NTY2NHwxNDgxNDYzNDEzfDJ8NTQyMzZ8VEhBfDF8QjRDRTI3MTMtNjA4Ri00RTYzLUJDRTUtMDJGMjdDNEVDRkEy";
         System.out.println(unpackClickId(clickid));
 
     }
