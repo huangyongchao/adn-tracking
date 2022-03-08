@@ -208,8 +208,6 @@ public class ConversionAPI {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                logger.error("++++++++++++" + JSONObject.toJSONString(activate));
-
                 mmplink = true;
             }
             activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
