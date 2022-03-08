@@ -199,15 +199,17 @@ public class AdTool {
                         String[] infos = encode.split("\\|");
                         String clickdate = infos[0];
                         click.setCt(DateUtils.parseDate(clickdate, "yyyyMMddHHmmss"));
+                        if (infos.length > 3) {
+                            try {
+                                click.getDeviceInfo().setSsp(Integer.parseInt(infos[3]));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            click.getDeviceInfo().setAppid(infos[2]);
+                        }
                         if (infos.length > 7) {
                             click.setIdfa(infos[7]);
                             click.getDeviceInfo().setDevid(infos[7]);
-                            click.getDeviceInfo().setAppid(infos[2]);
-                            try {
-                                click.getDeviceInfo().setSsp(Integer.parseInt(infos[3]));
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                            }
                             click.getDeviceInfo().setPub(infos[4]);
                             click.getDeviceInfo().setGeo(infos[5]);
                             click.getDeviceInfo().setOs(infos[6]);
