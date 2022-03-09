@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -204,18 +201,24 @@ public class OffersQueryAPI {
             List<Offers> offers = offerApiResponse.getOffers();
             List<MafOffer> mafOffers = Lists.newArrayList();
             offers.forEach(offers1 -> {
-                MafOffer mafOffer = new MafOffer();
-                mafOffer.setMafid(offers1.getMafid());
-                mafOffer.setClickUrl(offers1.getTrackingUrl());
-                if (offers1.getClickCap() > 0) {
+                if (StringUtils.isNotBlank(offers1.getMafid())) {
+                    Arrays.stream(offers1.getMafid().split("[, \n]")).forEach(mafid -> {
+                        MafOffer mafOffer = new MafOffer();
+                        mafOffer.setMafid(mafid);
+                        mafOffer.setClickUrl(offers1.getTrackingUrl());
+                        if (offers1.getClickCap() > 0) {
 
-                    mafOffer.setClickcap(offers1.getClickCap());
+                            mafOffer.setClickcap(offers1.getClickCap());
+                        }
+                        mafOffer.setTargetScheduleUTC(offers1.getTargetScheduleUTC());
+                        mafOffer.setSuggestSubs(offers1.getSuggestSubs());
+                        mafOffer.setGeo(offers1.getGeo());
+                        mafOffer.setOs(offers1.getOs());
+                        mafOffers.add(mafOffer);
+
+                    });
                 }
-                mafOffer.setTargetScheduleUTC(offers1.getTargetScheduleUTC());
-                mafOffer.setSuggestSubs(offers1.getSuggestSubs());
-                mafOffer.setGeo(offers1.getGeo());
-                mafOffer.setOs(offers1.getOs());
-                mafOffers.add(mafOffer);
+
             });
             response.setSuccess(true);
             response.setOffers(mafOffers);
@@ -251,7 +254,7 @@ public class OffersQueryAPI {
             return new OfferApiResponse(false, "Publisher have been stop.", null, false);
 
         }
-        if (isCache(token) && pub.getId() != 2 && pub.getId() != 1015&& pub.getId() != 1030) {
+        if (isCache(token) && pub.getId() != 2 && pub.getId() != 1015 && pub.getId() != 1030) {
             return QUERY_CACHE.get(token);
         }
         OfferApiResponse response = null;
@@ -427,11 +430,11 @@ public class OffersQueryAPI {
                             respO.setTrackingUrl(track.toString());
                             respO.setS2sLink(false);
                         }
-                        if(respO.getTrackingUrl().indexOf("@@")>0){
+                        if (respO.getTrackingUrl().indexOf("@@") > 0) {
                             respO.setTrackingUrl(respO.getTrackingUrl().split("@@")[0]);
                         }
-                        if(publisher.getId()==1015){
-                           // respO.setDailyCap(respO.getDailyCap() * 2);
+                        if (publisher.getId() == 1015) {
+                            // respO.setDailyCap(respO.getDailyCap() * 2);
                         }
 
                         resoffs.add(respO);
