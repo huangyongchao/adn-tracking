@@ -594,6 +594,10 @@ public class ConversionAPI {
                 track = StringUtils.replaceAll(track, "\\{real_subid}", realsubid);
             }
 
+            if (track.indexOf("{real_subid}") > -1 && StringUtils.isBlank(realsubid)) {
+                track = StringUtils.replaceAll(track, "\\{real_subid}", click.getPubSub());
+            }
+
             if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(offer.getAppid())) {
                 track = StringUtils.replaceAll(track, "\\{appid}", offer.getAppid());
             }
