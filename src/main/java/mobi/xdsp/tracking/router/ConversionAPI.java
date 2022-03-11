@@ -586,7 +586,10 @@ public class ConversionAPI {
                 track = StringUtils.replaceAll(track, "\\{gaid}", click.getGaid());
             }
 
-            if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(click.getPubSub())) {
+            if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
+                track = StringUtils.replaceAll(track, "\\{pub_sub}", click.getMixSub());
+            }
+            if (track.indexOf("{pub_sub}") > -1 && StringUtils.isBlank(click.getMixSub())) {
                 track = StringUtils.replaceAll(track, "\\{pub_sub}", click.getPubSub());
             }
 
@@ -594,9 +597,6 @@ public class ConversionAPI {
                 track = StringUtils.replaceAll(track, "\\{real_subid}", realsubid);
             }
 
-            if (track.indexOf("{real_subid}") > -1 && StringUtils.isBlank(realsubid)) {
-                track = StringUtils.replaceAll(track, "\\{real_subid}", click.getPubSub());
-            }
 
             if (track.indexOf("{appid}") > -1 && StringUtils.isNotBlank(offer.getAppid())) {
                 track = StringUtils.replaceAll(track, "\\{appid}", offer.getAppid());
