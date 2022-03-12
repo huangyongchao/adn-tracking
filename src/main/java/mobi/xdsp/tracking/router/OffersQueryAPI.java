@@ -205,7 +205,7 @@ public class OffersQueryAPI {
                     Arrays.stream(offers1.getMafid().split("[, \n]")).forEach(mafid -> {
                         MafOffer mafOffer = new MafOffer();
                         mafOffer.setMafid(mafid);
-                       // mafOffer.setClickUrl(offers1.getTrackingUrl());
+                        // mafOffer.setClickUrl(offers1.getTrackingUrl());
                         if (offers1.getClickCap() > 0) {
 
                             mafOffer.setClickcap(offers1.getClickCap());
@@ -347,6 +347,8 @@ public class OffersQueryAPI {
                         }
                         respO.setPayoutType(n.getPayouttype());
                         respO.setCategory(n.getCategoryname());
+                        respO.setCaputc(publisherOffer.getCaputc());
+                        respO.setHourcap(publisherOffer.getHourcap());
                         if (n.getOffername().indexOf(" CPA") > -1) {
                             respO.setPayoutType("CPA");
                         }

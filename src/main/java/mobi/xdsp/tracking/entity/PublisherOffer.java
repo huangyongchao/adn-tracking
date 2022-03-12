@@ -72,8 +72,14 @@ public class PublisherOffer {
 
     private String ukey;
 
+    private Integer hourcap;
 
+    private Integer hourclickcap;
 
+    private String redirectids;
+    private String trackurl;
+
+    private Integer caputc;
 
     public Integer getId() {
         return id;
@@ -345,5 +351,45 @@ public class PublisherOffer {
 
     public void setUkey(String ukey) {
         this.ukey = ukey == null ? null : ukey.trim();
+    }
+
+    public Integer getHourcap() {
+        return hourcap;
+    }
+
+    public void setHourcap(Integer hourcap) {
+        this.hourcap = hourcap;
+    }
+
+    public Integer getHourclickcap() {
+        return hourclickcap;
+    }
+
+    public void setHourclickcap(Integer hourclickcap) {
+        this.hourclickcap = hourclickcap;
+    }
+
+    public String getRedirectids() {
+        return redirectids;
+    }
+
+    public void setRedirectids(String redirectids) {
+        this.redirectids = redirectids == null ? null : redirectids.trim();
+    }
+
+    public Integer getCaputc() {
+        return caputc;
+    }
+
+    public void setCaputc(Integer caputc) {
+        this.caputc = caputc;
+    }
+
+    public String getTrackurl() {
+        return trackurl;
+    }
+
+    public void setTrackurl(String trackurl) {
+        this.trackurl = trackurl;
     }
 }
