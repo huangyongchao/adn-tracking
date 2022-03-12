@@ -6,6 +6,7 @@ import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
+import mobi.xdsp.tracking.dto.PBchecker;
 import mobi.xdsp.tracking.dto.affise.*;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OsE;

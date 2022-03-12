@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.*;
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.dto.PBchecker;
 import mobi.xdsp.tracking.dto.enums.*;
 import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.ActivateMapper;
@@ -233,8 +234,8 @@ public class ConversionAPI {
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                     activate.setStatus(PBStateE.REJECT.code);
-                    replaceSubid(activate.getOfferuid(), subid);
                 }
+                postSave(activate, subid, isRej);
                 int r = activateMapper.insertSelective(activate);
             } else if (click != null) {
                 boolean sentpb = false;
@@ -406,7 +407,7 @@ public class ConversionAPI {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                         //发PB
-                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, null, null, null,subid);
+                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, null, null, null, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -418,7 +419,7 @@ public class ConversionAPI {
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     }
                     //入库
-
+                    postSave(activate, subid, isRej);
                     int r = activateMapper.insertSelective(activate);
                 } else {
                     if (isRej) {
@@ -427,8 +428,8 @@ public class ConversionAPI {
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
-                        replaceSubid(activate.getOfferuid(), subid);
-                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value,subid);
+                        postSave(activate, subid, isRej);
+                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -436,6 +437,8 @@ public class ConversionAPI {
                             activate.setNoticestatus(PBNoticeStateE.NO.code);
 
                         }
+
+                        postSave(activate, subid, isRej);
                         int r = activateMapper.insertSelective(activate);
 
                     } else {
@@ -443,9 +446,11 @@ public class ConversionAPI {
                             /*被拒入库*/
                             activate.setStatus(PBStateE.VALID.code);
                             activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                            postSave(activate, subid, isRej);
                             int r = activateMapper.insertSelective(activate);
                         } else {
                             /*非 SDK DSP 被拒 以及 需要的PB渠道的最终入库,依然遵照上诉状态判定*/
+                            postSave(activate, subid, isRej);
                             int r = activateMapper.insertSelective(activate);
                         }
                     }
@@ -467,9 +472,9 @@ public class ConversionAPI {
                     activate.setStatus(PBStateE.REJECT.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
-                    replaceSubid(activate.getOfferuid(), subid);
 
                 }
+                postSave(activate, subid, isRej);
                 int r = activateMapper.insertSelective(activate);
 
             }
@@ -561,7 +566,7 @@ public class ConversionAPI {
 
     }
 
-    public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value,String realsubid) {
+    public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
         if (isrej) {
@@ -646,6 +651,38 @@ public class ConversionAPI {
 
         return sentstatus;
     }
+
+
+    public static Map<String, PBchecker> OFFER_CONV_RT = Maps.newHashMap();
+
+    public void postSave(Activate activate, String subid, boolean isRej) {
+        logger.warn("POSTSAVE:" + isRej + ":" + JSONObject.toJSONString(activate));
+        try {
+            if (StringUtils.isBlank(subid)) {
+                subid = activate.getPubsub();
+            }
+            String key = activate.getOfferuid() + "#" + subid;
+            if (!OFFER_CONV_RT.containsKey(key)) {
+                OFFER_CONV_RT.put(key, new PBchecker());
+            }
+            if (isRej) {
+                int i = OFFER_CONV_RT.get(key).getDayinstallreject().incrementAndGet();
+                replaceSubid(activate.getOfferuid(), subid);
+                // 停单逻辑
+
+            } else {
+                int i = OFFER_CONV_RT.get(key).getDayinstall().incrementAndGet();
+                if (i > 8) {
+                    replaceSubid(activate.getOfferuid(), subid);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public static void main(String[] args) {
         String clickid = "8061|Y29tLmlsaWtlLmNhcnRvb24oMTkp|30309303|788197|D360244F-9B51-4003-9DC3-EF7B88972CCA||1636290757|1.760|VN|Android|2|Vietnam";
