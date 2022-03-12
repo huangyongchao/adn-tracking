@@ -168,6 +168,7 @@ public class TrackingAPI {
             publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offerid);
         }
         if (publisherOffer == null ||
+                (!CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey) || CacheData.PUBOFF_SYCN_LOCK.get(pokey) != SychLockE.LOCKED.code) ||
                 OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(3)");
         }
