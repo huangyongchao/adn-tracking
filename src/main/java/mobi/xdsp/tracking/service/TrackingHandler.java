@@ -111,6 +111,8 @@ public class TrackingHandler {
 
             }
 
+        }else {
+            click.setMixSub(click.getPubSub());
         }
     }
 

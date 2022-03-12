@@ -47,6 +47,7 @@ public class Offers {
     private String whitelist;
     private boolean s2sLink;
     private int subtype;
+    private int caputc;
     private String suggestSubs;
     private String targetScheduleUTC;
     private List<String> targetCities = Lists.newLinkedList();
