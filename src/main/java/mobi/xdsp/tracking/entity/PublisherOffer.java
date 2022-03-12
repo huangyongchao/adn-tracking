@@ -72,14 +72,14 @@ public class PublisherOffer {
 
     private String ukey;
 
-    private Integer hourcap;
+    private Integer hourcap = -1;
 
     private Integer hourclickcap;
 
     private String redirectids;
     private String trackurl;
 
-    private Integer caputc;
+    private Integer caputc = -1;
 
     public Integer getId() {
         return id;

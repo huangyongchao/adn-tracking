@@ -348,8 +348,7 @@ public class OffersQueryAPI {
                         }
                         respO.setPayoutType(n.getPayouttype());
                         respO.setCategory(n.getCategoryname());
-                        respO.setCaputc(publisherOffer.getCaputc());
-                        respO.setHourcap(publisherOffer.getHourcap());
+
                         if (n.getOffername().indexOf(" CPA") > -1) {
                             respO.setPayoutType("CPA");
                         }
@@ -371,6 +370,10 @@ public class OffersQueryAPI {
                         if (n.getOffername().indexOf(" CPL") > -1) {
                             respO.setPayoutType("CPL");
                         }
+
+                        respO.setCaputc(publisherOffer.getCaputc());
+                        respO.setHourcap(publisherOffer.getHourcap());
+
                         /*直接走上游链接*/
                         if (publisherOffer.getTrackingtype() != null && publisherOffer.getTrackingtype() == 1) {
                             String p = AdTool.createClickIdByMMP(publisher.getId(), n.getId());
