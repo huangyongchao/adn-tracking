@@ -118,9 +118,9 @@ public class AdTool {
         String track = chooseTrackUrl(click, offer);
         try {
             if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
-                track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + URLEncoder.encode(click.getMixSub(), "utf-8"));
+                track = StringUtils.replaceAll(track, "\\{pub_subid}", URLEncoder.encode(click.getMixSub(), "utf-8"));
             } else {
-                track = StringUtils.replaceAll(track, "\\{pub_subid}", click.getPid() + "_" + URLEncoder.encode(click.getPubSub(), "utf-8"));
+                track = StringUtils.replaceAll(track, "\\{pub_subid}", URLEncoder.encode(click.getPubSub(), "utf-8"));
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
