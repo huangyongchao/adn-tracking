@@ -125,7 +125,9 @@ public class AdTool {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        if (track.indexOf("{date}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{date}", DateTimeUtil.getStringMD());
+        }
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getId())) {
             track = StringUtils.replaceAll(track, "\\{click_id}", click.getId());
         }

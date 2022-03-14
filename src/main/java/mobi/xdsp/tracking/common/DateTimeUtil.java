@@ -27,7 +27,12 @@ public final class DateTimeUtil {
 
 		return System.nanoTime() / NANOSECONDS_PER_MILLISECOND;
 	}
-
+	public static String getStringMD() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("MMdd");
+		String dateString = formatter.format(currentTime);
+		return dateString;
+	}
 	/**
 	 * 获取现在时间
 	 * 
