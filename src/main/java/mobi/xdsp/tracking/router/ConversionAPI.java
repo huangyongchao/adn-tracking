@@ -291,37 +291,45 @@ public class ConversionAPI {
                 activate.setCountry(offer.getCountries());
 
                 activate.setAdvpayout(offer.getDefaultpayout());
-                if (puboffer != null) {
+                //如果有点击 且有渠道开单信息 走开单价格
+                if (click != null && puboffer != null) {
                     if (deductrate == null || deductrate == 0) {
                         deductrate = puboffer.getDeductrate();
                     }
                     activate.setDefaultpayout(puboffer.getPayout().floatValue());
                     activate.setPubpayout(puboffer.getPayout().floatValue());
-                }
-                if (AdTool.is3pt(offer.getTrackurl())) {
-                    if (!("" + offer.getCreatives()).equalsIgnoreCase(event)) {
-                        activate.setDefaultpayout(0f);
-                        activate.setPubpayout(0f);
-                        activate.setAdvpayout(0f);
-
-                    }
-                    if (puboffer != null && puboffer.getPayout().floatValue() < 0.2) {
-                        activate.setDefaultpayout(puboffer.getPayout().floatValue());
-                        activate.setPubpayout(puboffer.getPayout().floatValue());
-                        activate.setAdvpayout(puboffer.getPayout().floatValue());
-                    }
-                }
-                if (sdkclick) {
+                    activate.setAdvpayout(offer.getDefaultpayout());
+                } else if (sdkclick || mafclick) {
                     if (offer.getDefaultpayout() == null) {
                         offer.setDefaultpayout(0f);
 
                     }
-                    if (pbpayout != null) {
-                        offer.setDefaultpayout(pbpayout);
+                    if (pbpayout != null && pbpayout > 0) {
+                        activate.setDefaultpayout(pbpayout);
+                        activate.setPubpayout(pbpayout);
+                        activate.setAdvpayout(pbpayout);
+                    } else {
+                        activate.setDefaultpayout(offer.getDefaultpayout());
+                        activate.setPubpayout(offer.getDefaultpayout());
+                        activate.setAdvpayout(offer.getDefaultpayout());
                     }
-                    activate.setDefaultpayout(offer.getDefaultpayout());
-                    activate.setPubpayout(offer.getDefaultpayout());
-                    activate.setAdvpayout(offer.getDefaultpayout());
+                    //如果是三方 需要判断计费事件
+                    if (AdTool.is3pt(offer.getTrackurl())) {
+                        if (StringUtils.isNotBlank(offer.getCreatives())) {
+                            if (!offer.getCreatives().equalsIgnoreCase(event)) {
+                                activate.setDefaultpayout(0f);
+                                activate.setPubpayout(0f);
+                                activate.setAdvpayout(0f);
+                            }
+                        } else {
+                            if ("install".equalsIgnoreCase(event) && offer.getDefaultpayout() > 1) {
+                                activate.setDefaultpayout(0f);
+                                activate.setPubpayout(0f);
+                                activate.setAdvpayout(0f);
+                            }
+                        }
+                    }
+
                 }
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("NO CLICK");
