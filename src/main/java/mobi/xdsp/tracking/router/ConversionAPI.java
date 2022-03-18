@@ -234,6 +234,8 @@ public class ConversionAPI {
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                     activate.setStatus(PBStateE.REJECT.code);
+                    activate.setRejectcnt(1);
+
                 }
                 postSave(activate, subid, isRej);
                 int r = activateMapper.insertSelective(activate);
@@ -434,6 +436,7 @@ public class ConversionAPI {
                         /*被拒入库*/
                         activate.setStatus(PBStateE.REJECT.code);
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        activate.setRejectcnt(1);
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
                         postSave(activate, subid, isRej);
@@ -479,6 +482,7 @@ public class ConversionAPI {
                     /*被拒入库*/
                     activate.setStatus(PBStateE.REJECT.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                    activate.setRejectcnt(1);
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
 
                 }
@@ -679,9 +683,23 @@ public class ConversionAPI {
                 // 停单逻辑
 
             } else {
-                int i = OFFER_CONV_RT.get(key).getDayinstall().incrementAndGet();
-                if (i > 8) {
-                    replaceSubid(activate.getOfferuid(), subid);
+                int rej = OFFER_CONV_RT.get(key).getDayinstallreject().get();
+                int ins = OFFER_CONV_RT.get(key).getDayinstall().incrementAndGet();
+                if ((ins == 0 && rej > 6) || (ins > 0 && rej > 9 && rej * 1f / (ins + rej) > 0.4f)) {
+                    try {
+                        int id = Integer.parseInt(activate.getOfferuid());
+                        OfferExample example = new OfferExample();
+                        example.createCriteria().andIdEqualTo(id);
+
+                        Offer offer = new Offer();
+                        offer.setStatus(StateE.INVALID.name);
+                        offer.setRemark("被拒率高");
+                        offerMapper.updateByExampleSelective(offer, example);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         } catch (Exception e) {

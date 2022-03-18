@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="mobi.xdsp.tracking.entity.Activate">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="aId" jdbcType="VARCHAR" property="aid" />
+    <result column="clickId" jdbcType="VARCHAR" property="clickid" />
     <result column="deviceId" jdbcType="VARCHAR" property="deviceid" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="activateDate" jdbcType="VARCHAR" property="activatedate" />
@@ -47,9 +48,9 @@
     <result column="ssplang" jdbcType="VARCHAR" property="ssplang" />
     <result column="os" jdbcType="VARCHAR" property="os" />
     <result column="sspname" jdbcType="VARCHAR" property="sspname" />
+    <result column="rejectcnt" jdbcType="INTEGER" property="rejectcnt" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
-    <result column="clickId" jdbcType="LONGVARCHAR" property="clickid" />
     <result column="clickidext" jdbcType="LONGVARCHAR" property="clickidext" />
     <result column="affsub1" jdbcType="LONGVARCHAR" property="affsub1" />
     <result column="affsub2" jdbcType="LONGVARCHAR" property="affsub2" />
@@ -114,15 +115,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, aId, deviceId, ip, activateDate, insertTime, sysTime, appId, country, clickServerId, 
-    clickTime, affiliateId, offerId, offerUId, defaultPayout, clickDate, activateTime, 
-    channelId, pubSub, subId1, extinfo, costType, event, status, noticeStatus, noticeTime, 
-    source_affiliate_id, offerName, affiliateName, appName, advpayout, pubpayout, activecnt, 
-    deductcnt, inactivecnt, ctit, ssp, sspapp, ssppub, sspmake, sspmodel, ssposv, ssplang, 
-    os, sspname
+    id, aId, clickId, deviceId, ip, activateDate, insertTime, sysTime, appId, country, 
+    clickServerId, clickTime, affiliateId, offerId, offerUId, defaultPayout, clickDate, 
+    activateTime, channelId, pubSub, subId1, extinfo, costType, event, status, noticeStatus, 
+    noticeTime, source_affiliate_id, offerName, affiliateName, appName, advpayout, pubpayout, 
+    activecnt, deductcnt, inactivecnt, ctit, ssp, sspapp, ssppub, sspmake, sspmodel, 
+    ssposv, ssplang, os, sspname, rejectcnt
   </sql>
   <sql id="Blob_Column_List">
-    clickId, clickidext, affsub1, affsub2, affsub3
+    clickidext, affsub1, affsub2, affsub3
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateExample" resultMap="ResultMapWithBLOBs">
     select
@@ -184,40 +185,40 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into activate (aId, deviceId, ip, 
-      activateDate, insertTime, sysTime, 
-      appId, country, clickServerId, 
-      clickTime, affiliateId, offerId, 
-      offerUId, defaultPayout, clickDate, 
-      activateTime, channelId, pubSub, 
-      subId1, extinfo, costType, 
-      event, status, noticeStatus, 
-      noticeTime, source_affiliate_id, offerName, 
-      affiliateName, appName, advpayout, 
-      pubpayout, activecnt, deductcnt, 
-      inactivecnt, ctit, ssp, 
-      sspapp, ssppub, sspmake, 
-      sspmodel, ssposv, ssplang, 
-      os, sspname, clickId, 
-      clickidext, affsub1, affsub2, 
-      affsub3)
-    values (#{aid,jdbcType=VARCHAR}, #{deviceid,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
-      #{activatedate,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP}, #{systime,jdbcType=TIMESTAMP}, 
-      #{appid,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{clickserverid,jdbcType=VARCHAR}, 
-      #{clicktime,jdbcType=VARCHAR}, #{affiliateid,jdbcType=VARCHAR}, #{offerid,jdbcType=VARCHAR}, 
-      #{offeruid,jdbcType=VARCHAR}, #{defaultpayout,jdbcType=REAL}, #{clickdate,jdbcType=VARCHAR}, 
-      #{activatetime,jdbcType=TIMESTAMP}, #{channelid,jdbcType=INTEGER}, #{pubsub,jdbcType=VARCHAR}, 
-      #{subid1,jdbcType=VARCHAR}, #{extinfo,jdbcType=VARCHAR}, #{costtype,jdbcType=VARCHAR}, 
-      #{event,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{noticestatus,jdbcType=TINYINT}, 
-      #{noticetime,jdbcType=TIMESTAMP}, #{sourceAffiliateId,jdbcType=VARCHAR}, #{offername,jdbcType=VARCHAR}, 
-      #{affiliatename,jdbcType=VARCHAR}, #{appname,jdbcType=VARCHAR}, #{advpayout,jdbcType=REAL}, 
-      #{pubpayout,jdbcType=REAL}, #{activecnt,jdbcType=INTEGER}, #{deductcnt,jdbcType=INTEGER}, 
-      #{inactivecnt,jdbcType=INTEGER}, #{ctit,jdbcType=VARCHAR}, #{ssp,jdbcType=INTEGER}, 
-      #{sspapp,jdbcType=VARCHAR}, #{ssppub,jdbcType=VARCHAR}, #{sspmake,jdbcType=VARCHAR}, 
-      #{sspmodel,jdbcType=VARCHAR}, #{ssposv,jdbcType=VARCHAR}, #{ssplang,jdbcType=VARCHAR}, 
-      #{os,jdbcType=VARCHAR}, #{sspname,jdbcType=VARCHAR}, #{clickid,jdbcType=LONGVARCHAR}, 
-      #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, #{affsub2,jdbcType=LONGVARCHAR}, 
-      #{affsub3,jdbcType=LONGVARCHAR})
+    insert into activate (aId, clickId, deviceId, 
+      ip, activateDate, insertTime, 
+      sysTime, appId, country, 
+      clickServerId, clickTime, affiliateId, 
+      offerId, offerUId, defaultPayout, 
+      clickDate, activateTime, channelId, 
+      pubSub, subId1, extinfo, 
+      costType, event, status, 
+      noticeStatus, noticeTime, source_affiliate_id, 
+      offerName, affiliateName, appName, 
+      advpayout, pubpayout, activecnt, 
+      deductcnt, inactivecnt, ctit, 
+      ssp, sspapp, ssppub, 
+      sspmake, sspmodel, ssposv, 
+      ssplang, os, sspname, 
+      rejectcnt, clickidext, affsub1, 
+      affsub2, affsub3)
+    values (#{aid,jdbcType=VARCHAR}, #{clickid,jdbcType=VARCHAR}, #{deviceid,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{activatedate,jdbcType=VARCHAR}, #{inserttime,jdbcType=TIMESTAMP}, 
+      #{systime,jdbcType=TIMESTAMP}, #{appid,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{clickserverid,jdbcType=VARCHAR}, #{clicktime,jdbcType=VARCHAR}, #{affiliateid,jdbcType=VARCHAR}, 
+      #{offerid,jdbcType=VARCHAR}, #{offeruid,jdbcType=VARCHAR}, #{defaultpayout,jdbcType=REAL}, 
+      #{clickdate,jdbcType=VARCHAR}, #{activatetime,jdbcType=TIMESTAMP}, #{channelid,jdbcType=INTEGER}, 
+      #{pubsub,jdbcType=VARCHAR}, #{subid1,jdbcType=VARCHAR}, #{extinfo,jdbcType=VARCHAR}, 
+      #{costtype,jdbcType=VARCHAR}, #{event,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{noticestatus,jdbcType=TINYINT}, #{noticetime,jdbcType=TIMESTAMP}, #{sourceAffiliateId,jdbcType=VARCHAR}, 
+      #{offername,jdbcType=VARCHAR}, #{affiliatename,jdbcType=VARCHAR}, #{appname,jdbcType=VARCHAR}, 
+      #{advpayout,jdbcType=REAL}, #{pubpayout,jdbcType=REAL}, #{activecnt,jdbcType=INTEGER}, 
+      #{deductcnt,jdbcType=INTEGER}, #{inactivecnt,jdbcType=INTEGER}, #{ctit,jdbcType=VARCHAR}, 
+      #{ssp,jdbcType=INTEGER}, #{sspapp,jdbcType=VARCHAR}, #{ssppub,jdbcType=VARCHAR}, 
+      #{sspmake,jdbcType=VARCHAR}, #{sspmodel,jdbcType=VARCHAR}, #{ssposv,jdbcType=VARCHAR}, 
+      #{ssplang,jdbcType=VARCHAR}, #{os,jdbcType=VARCHAR}, #{sspname,jdbcType=VARCHAR}, 
+      #{rejectcnt,jdbcType=INTEGER}, #{clickidext,jdbcType=LONGVARCHAR}, #{affsub1,jdbcType=LONGVARCHAR}, 
+      #{affsub2,jdbcType=LONGVARCHAR}, #{affsub3,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -227,6 +228,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="aid != null">
         aId,
+      </if>
+      <if test="clickid != null">
+        clickId,
       </if>
       <if test="deviceid != null">
         deviceId,
@@ -357,8 +361,8 @@
       <if test="sspname != null">
         sspname,
       </if>
-      <if test="clickid != null">
-        clickId,
+      <if test="rejectcnt != null">
+        rejectcnt,
       </if>
       <if test="clickidext != null">
         clickidext,
@@ -376,6 +380,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="aid != null">
         #{aid,jdbcType=VARCHAR},
+      </if>
+      <if test="clickid != null">
+        #{clickid,jdbcType=VARCHAR},
       </if>
       <if test="deviceid != null">
         #{deviceid,jdbcType=VARCHAR},
@@ -506,8 +513,8 @@
       <if test="sspname != null">
         #{sspname,jdbcType=VARCHAR},
       </if>
-      <if test="clickid != null">
-        #{clickid,jdbcType=LONGVARCHAR},
+      <if test="rejectcnt != null">
+        #{rejectcnt,jdbcType=INTEGER},
       </if>
       <if test="clickidext != null">
         #{clickidext,jdbcType=LONGVARCHAR},
@@ -537,6 +544,9 @@
       </if>
       <if test="record.aid != null">
         aId = #{record.aid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clickid != null">
+        clickId = #{record.clickid,jdbcType=VARCHAR},
       </if>
       <if test="record.deviceid != null">
         deviceId = #{record.deviceid,jdbcType=VARCHAR},
@@ -667,8 +677,8 @@
       <if test="record.sspname != null">
         sspname = #{record.sspname,jdbcType=VARCHAR},
       </if>
-      <if test="record.clickid != null">
-        clickId = #{record.clickid,jdbcType=LONGVARCHAR},
+      <if test="record.rejectcnt != null">
+        rejectcnt = #{record.rejectcnt,jdbcType=INTEGER},
       </if>
       <if test="record.clickidext != null">
         clickidext = #{record.clickidext,jdbcType=LONGVARCHAR},
@@ -691,6 +701,7 @@
     update activate
     set id = #{record.id,jdbcType=BIGINT},
       aId = #{record.aid,jdbcType=VARCHAR},
+      clickId = #{record.clickid,jdbcType=VARCHAR},
       deviceId = #{record.deviceid,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
       activateDate = #{record.activatedate,jdbcType=VARCHAR},
@@ -734,7 +745,7 @@
       ssplang = #{record.ssplang,jdbcType=VARCHAR},
       os = #{record.os,jdbcType=VARCHAR},
       sspname = #{record.sspname,jdbcType=VARCHAR},
-      clickId = #{record.clickid,jdbcType=LONGVARCHAR},
+      rejectcnt = #{record.rejectcnt,jdbcType=INTEGER},
       clickidext = #{record.clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{record.affsub1,jdbcType=LONGVARCHAR},
       affsub2 = #{record.affsub2,jdbcType=LONGVARCHAR},
@@ -747,6 +758,7 @@
     update activate
     set id = #{record.id,jdbcType=BIGINT},
       aId = #{record.aid,jdbcType=VARCHAR},
+      clickId = #{record.clickid,jdbcType=VARCHAR},
       deviceId = #{record.deviceid,jdbcType=VARCHAR},
       ip = #{record.ip,jdbcType=VARCHAR},
       activateDate = #{record.activatedate,jdbcType=VARCHAR},
@@ -789,7 +801,8 @@
       ssposv = #{record.ssposv,jdbcType=VARCHAR},
       ssplang = #{record.ssplang,jdbcType=VARCHAR},
       os = #{record.os,jdbcType=VARCHAR},
-      sspname = #{record.sspname,jdbcType=VARCHAR}
+      sspname = #{record.sspname,jdbcType=VARCHAR},
+      rejectcnt = #{record.rejectcnt,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -799,6 +812,9 @@
     <set>
       <if test="aid != null">
         aId = #{aid,jdbcType=VARCHAR},
+      </if>
+      <if test="clickid != null">
+        clickId = #{clickid,jdbcType=VARCHAR},
       </if>
       <if test="deviceid != null">
         deviceId = #{deviceid,jdbcType=VARCHAR},
@@ -929,8 +945,8 @@
       <if test="sspname != null">
         sspname = #{sspname,jdbcType=VARCHAR},
       </if>
-      <if test="clickid != null">
-        clickId = #{clickid,jdbcType=LONGVARCHAR},
+      <if test="rejectcnt != null">
+        rejectcnt = #{rejectcnt,jdbcType=INTEGER},
       </if>
       <if test="clickidext != null">
         clickidext = #{clickidext,jdbcType=LONGVARCHAR},
@@ -950,6 +966,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="mobi.xdsp.tracking.entity.ActivateWithBLOBs">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
+      clickId = #{clickid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
       activateDate = #{activatedate,jdbcType=VARCHAR},
@@ -993,7 +1010,7 @@
       ssplang = #{ssplang,jdbcType=VARCHAR},
       os = #{os,jdbcType=VARCHAR},
       sspname = #{sspname,jdbcType=VARCHAR},
-      clickId = #{clickid,jdbcType=LONGVARCHAR},
+      rejectcnt = #{rejectcnt,jdbcType=INTEGER},
       clickidext = #{clickidext,jdbcType=LONGVARCHAR},
       affsub1 = #{affsub1,jdbcType=LONGVARCHAR},
       affsub2 = #{affsub2,jdbcType=LONGVARCHAR},
@@ -1003,6 +1020,7 @@
   <update id="updateByPrimaryKey" parameterType="mobi.xdsp.tracking.entity.Activate">
     update activate
     set aId = #{aid,jdbcType=VARCHAR},
+      clickId = #{clickid,jdbcType=VARCHAR},
       deviceId = #{deviceid,jdbcType=VARCHAR},
       ip = #{ip,jdbcType=VARCHAR},
       activateDate = #{activatedate,jdbcType=VARCHAR},
@@ -1045,12 +1063,14 @@
       ssposv = #{ssposv,jdbcType=VARCHAR},
       ssplang = #{ssplang,jdbcType=VARCHAR},
       os = #{os,jdbcType=VARCHAR},
-      sspname = #{sspname,jdbcType=VARCHAR}
+      sspname = #{sspname,jdbcType=VARCHAR},
+      rejectcnt = #{rejectcnt,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
     insert into activate (
     aId,
+    clickId,
     deviceId,
     ip,
     activateDate,
@@ -1094,7 +1114,7 @@
     ssplang,
     os,
     sspname,
-    clickId,
+    rejectcnt,
     clickidext,
     affsub1,
     affsub2,
@@ -1104,6 +1124,7 @@
     <foreach collection="recordList" index="index" item="item" separator=",">
       (
       #{item.aid,jdbcType=VARCHAR},
+      #{item.clickid,jdbcType=VARCHAR},
       #{item.deviceid,jdbcType=VARCHAR},
       #{item.ip,jdbcType=VARCHAR},
       #{item.activatedate,jdbcType=VARCHAR},
@@ -1147,7 +1168,7 @@
       #{item.ssplang,jdbcType=VARCHAR},
       #{item.os,jdbcType=VARCHAR},
       #{item.sspname,jdbcType=VARCHAR},
-      #{item.clickid,jdbcType=LONGVARCHAR},
+      #{item.rejectcnt,jdbcType=INTEGER},
       #{item.clickidext,jdbcType=LONGVARCHAR},
       #{item.affsub1,jdbcType=LONGVARCHAR},
       #{item.affsub2,jdbcType=LONGVARCHAR},

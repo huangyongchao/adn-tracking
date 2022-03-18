@@ -7,6 +7,8 @@ public class Activate {
 
     private String aid;
 
+    private String clickid;
+
     private String deviceid;
 
     private String ip;
@@ -93,6 +95,8 @@ public class Activate {
 
     private String sspname;
 
+    private Integer rejectcnt;
+
     public Long getId() {
         return id;
     }
@@ -107,6 +111,14 @@ public class Activate {
 
     public void setAid(String aid) {
         this.aid = aid == null ? null : aid.trim();
+    }
+
+    public String getClickid() {
+        return clickid;
+    }
+
+    public void setClickid(String clickid) {
+        this.clickid = clickid == null ? null : clickid.trim();
     }
 
     public String getDeviceid() {
@@ -451,5 +463,13 @@ public class Activate {
 
     public void setSspname(String sspname) {
         this.sspname = sspname == null ? null : sspname.trim();
+    }
+
+    public Integer getRejectcnt() {
+        return rejectcnt;
+    }
+
+    public void setRejectcnt(Integer rejectcnt) {
+        this.rejectcnt = rejectcnt;
     }
 }

@@ -1,8 +1,6 @@
 package mobi.xdsp.tracking.entity;
 
 public class ActivateWithBLOBs extends Activate {
-    private String clickid;
-
     private String clickidext;
 
     private String affsub1;
@@ -10,14 +8,6 @@ public class ActivateWithBLOBs extends Activate {
     private String affsub2;
 
     private String affsub3;
-
-    public String getClickid() {
-        return clickid;
-    }
-
-    public void setClickid(String clickid) {
-        this.clickid = clickid == null ? null : clickid.trim();
-    }
 
     public String getClickidext() {
         return clickidext;

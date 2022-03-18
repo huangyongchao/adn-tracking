@@ -255,6 +255,76 @@ public class ActivateExample {
             return (Criteria) this;
         }
 
+        public Criteria andClickidIsNull() {
+            addCriterion("clickId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidIsNotNull() {
+            addCriterion("clickId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidEqualTo(String value) {
+            addCriterion("clickId =", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidNotEqualTo(String value) {
+            addCriterion("clickId <>", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidGreaterThan(String value) {
+            addCriterion("clickId >", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidGreaterThanOrEqualTo(String value) {
+            addCriterion("clickId >=", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidLessThan(String value) {
+            addCriterion("clickId <", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidLessThanOrEqualTo(String value) {
+            addCriterion("clickId <=", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidLike(String value) {
+            addCriterion("clickId like", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidNotLike(String value) {
+            addCriterion("clickId not like", value, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidIn(List<String> values) {
+            addCriterion("clickId in", values, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidNotIn(List<String> values) {
+            addCriterion("clickId not in", values, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidBetween(String value1, String value2) {
+            addCriterion("clickId between", value1, value2, "clickid");
+            return (Criteria) this;
+        }
+
+        public Criteria andClickidNotBetween(String value1, String value2) {
+            addCriterion("clickId not between", value1, value2, "clickid");
+            return (Criteria) this;
+        }
+
         public Criteria andDeviceidIsNull() {
             addCriterion("deviceId is null");
             return (Criteria) this;
@@ -3122,6 +3192,66 @@ public class ActivateExample {
 
         public Criteria andSspnameNotBetween(String value1, String value2) {
             addCriterion("sspname not between", value1, value2, "sspname");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntIsNull() {
+            addCriterion("rejectcnt is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntIsNotNull() {
+            addCriterion("rejectcnt is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntEqualTo(Integer value) {
+            addCriterion("rejectcnt =", value, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntNotEqualTo(Integer value) {
+            addCriterion("rejectcnt <>", value, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntGreaterThan(Integer value) {
+            addCriterion("rejectcnt >", value, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntGreaterThanOrEqualTo(Integer value) {
+            addCriterion("rejectcnt >=", value, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntLessThan(Integer value) {
+            addCriterion("rejectcnt <", value, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntLessThanOrEqualTo(Integer value) {
+            addCriterion("rejectcnt <=", value, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntIn(List<Integer> values) {
+            addCriterion("rejectcnt in", values, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntNotIn(List<Integer> values) {
+            addCriterion("rejectcnt not in", values, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntBetween(Integer value1, Integer value2) {
+            addCriterion("rejectcnt between", value1, value2, "rejectcnt");
+            return (Criteria) this;
+        }
+
+        public Criteria andRejectcntNotBetween(Integer value1, Integer value2) {
+            addCriterion("rejectcnt not between", value1, value2, "rejectcnt");
             return (Criteria) this;
         }
     }
