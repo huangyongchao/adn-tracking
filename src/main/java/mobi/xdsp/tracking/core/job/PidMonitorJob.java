@@ -215,7 +215,7 @@ public class PidMonitorJob {
             jsonArray.forEach(n -> {
                 uApps.add(n.toString().trim());
             });
-            Set<String>  finaluApps = uApps.stream().filter(n -> StringUtils.isNotBlank(n)).collect(Collectors.toSet());
+            Set<String> finaluApps = uApps.stream().filter(n -> StringUtils.isNotBlank(n)).collect(Collectors.toSet());
 
             PidMonitor pidMonitor = new PidMonitor();
             pidMonitor.setCookie1(JSONArray.toJSONString(finaluApps));
@@ -227,6 +227,20 @@ public class PidMonitorJob {
 
     }
 
+    public void updatePidAppsPreBlock(String pid, String[] appids) {
+
+        List<String> apps = Arrays.stream(appids).map(n -> n.trim()).collect(Collectors.toList());
+        List<String> appsAppleNoid = apps.stream().filter(n -> n.startsWith("id")).map(n -> n.substring(2)).collect(Collectors.toList());
+        apps.addAll(appsAppleNoid);
+        OfferExample example = new OfferExample();
+        example.createCriteria().andTrackurlLike("%" + pid + "%").andAppidIn(apps).andStatusEqualTo(StateE.VALID.name);
+        Offer offer = new Offer();
+        offer.setStatus(StateE.PIDPREBLOCK.name);
+        int r = offerMapper.updateByExampleSelective(offer, example);
+        mailer.sendFrankMail("Pid APPs Error Pre Block:", pid + " " + r + ":\n\t\r" + JSONObject.toJSONString(apps));
+
+
+    }
 
     public void updatePidState(String pid, String st, String et, String[] appids) {
         Date date = new Date();
@@ -304,6 +318,41 @@ public class PidMonitorJob {
             Message[] messages = folder.search(term);
             Arrays.stream(messages).forEach(msg -> {
                 try {
+
+                    if ((msg.getSubject().indexOf("Urgent Action Required") >= 0) || (msg.getSubject().indexOf("点击流量异常") > 0)) {
+                        try {
+                            String cont = msg.getContent().toString();
+
+
+                            int apps = cont.indexOf("Apps:");
+                            int sites = cont.indexOf("Sites:");
+                            if (sites < 0) {
+                                sites = cont.indexOf("Site");
+                            }
+                            String[] appids = null;
+                            if (apps > 0 && sites > 0) {
+                                String appstr = cont.substring(apps + 5, sites);
+
+                                appids = appstr.split("[\\t\\n\\r]");
+                                try {
+                                    mailer.sendFrankMail("Pid APPs Error:", pid + ":\n\t\r" + JSONObject.toJSONString(appids));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                updatePidAppsPreBlock(pid, appids);
+                            } else {
+                                mailer.sendFrankMail("Pid APPs Error: Cant get apps", pid + ":\n\t\r" + cont);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            mailer.sendFrankMail("Pid APP Error: Code Error", pid + ":\n\t\r" + e.getMessage() + "\n" + e.getLocalizedMessage());
+
+                        }
+
+                    }
+
+
                     if ((msg.getSubject().indexOf("Abnormal Click Volume - Traffic Blocked ") >= 0) || (msg.getSubject().indexOf("流量已全部拦截") > 0)) {
                         try {
                             String cont = msg.getContent().toString();
@@ -366,6 +415,7 @@ public class PidMonitorJob {
 
         return result;
     }
+
     @Scheduled(cron = "0 */5 * * * ?")
     public void auto() {
         pidBlockChecker();
