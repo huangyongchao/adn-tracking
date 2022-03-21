@@ -360,7 +360,9 @@ public class PidMonitorJob {
 
                             int apps = cont.indexOf("Apps:");
                             int sites = cont.indexOf("Sites:");
-
+                            if (sites < 0) {
+                                sites = cont.indexOf("Site");
+                            }
                             String[] appids = null;
                             if (apps > 0 && sites > 0) {
                                 String appstr = cont.substring(apps + 5, sites);
