@@ -229,7 +229,7 @@ public class PidMonitorJob {
 
     public void updatePidAppsPreBlock(String pid, String[] appids) {
 
-        List<String> apps = Arrays.stream(appids).map(n -> n.trim()).collect(Collectors.toList());
+        List<String> apps = Arrays.stream(appids).map(n -> n.trim()).filter(n->StringUtils.isNotBlank(n)).collect(Collectors.toList());
         List<String> appsAppleNoid = apps.stream().filter(n -> n.startsWith("id")).map(n -> n.substring(2)).collect(Collectors.toList());
         apps.addAll(appsAppleNoid);
         OfferExample example = new OfferExample();
@@ -334,7 +334,9 @@ public class PidMonitorJob {
                                 String appstr = cont.substring(apps + 5, sites);
 
                                 appids = appstr.split("[\\t\\n\\r]");
+
                                 try {
+
                                     mailer.sendFrankMail("Pid APPs Error:", pid + ":\n\t\r" + JSONObject.toJSONString(appids));
                                 } catch (Exception e) {
                                     e.printStackTrace();
