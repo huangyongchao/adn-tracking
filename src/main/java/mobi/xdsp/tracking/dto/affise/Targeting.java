@@ -24,7 +24,6 @@ public class Targeting {
     private List<String> connection;
     private String id;
     private List<String> sub_regexps;
-    private boolean block_proxy;
     public void setCountry(Country country) {
          this.country = country;
      }
@@ -109,11 +108,5 @@ public class Targeting {
          return sub_regexps;
      }
 
-    public void setBlock_proxy(boolean block_proxy) {
-         this.block_proxy = block_proxy;
-     }
-     public boolean getBlock_proxy() {
-         return block_proxy;
-     }
 
 }

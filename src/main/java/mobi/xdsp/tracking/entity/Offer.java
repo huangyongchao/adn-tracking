@@ -117,7 +117,7 @@ public class Offer extends OfferKey {
 
     private Date testtime;
 
-    private int autosubid;
+    private Integer autosubid;
 
     private Integer autoadjust;
 
@@ -585,11 +585,11 @@ public class Offer extends OfferKey {
         this.testtime = testtime;
     }
 
-    public int getAutosubid() {
+    public Integer getAutosubid() {
         return autosubid;
     }
 
-    public void setAutosubid(int autosubid) {
+    public void setAutosubid(Integer autosubid) {
         this.autosubid = autosubid;
     }
 
