@@ -36,46 +36,46 @@ public class Click implements Serializable {
     /**
      * 渠道子站
      */
-    private String pubSub;
+    private String pubSub = "";
 
     /**
      * appid
      */
-    private String appId;
+    private String appId = "";
 
     /**
      * idfa
      */
-    private String idfa;
+    private String idfa = "";
     /**
      * gaid
      */
-    private String gaid;
+    private String gaid = "";
     /**
      * 混量子站 null=psub
      */
-    private String mixSub;
+    private String mixSub = "";
     /**
      * 渠道clickid
      */
-    private String clickId;
+    private String clickId = "";
     /**
      * 点击IP
      */
-    private String cip;
+    private String cip = "";
     /**
      * 点击日期
      */
     private Date ct;
 
-    private String s1;
-    private String s2;
+    private String s1 = "";
+    private String s2 = "";
 
-    private String ip;
-    private String lang;
+    private String ip = "";
+    private String lang = "";
     @Transient
-    private String ua;
-    private String appN;
+    private String ua = "";
+    private String appN = "";
     /**
      * 自动重定向流量. 转化不下发
      */
