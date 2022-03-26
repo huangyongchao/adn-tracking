@@ -35,6 +35,8 @@
     <result column="deleteflag" jdbcType="INTEGER" property="deleteflag" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="trackingtype" jdbcType="INTEGER" property="trackingtype" />
+    <result column="hourcap" jdbcType="INTEGER" property="hourcap" />
+    <result column="caputc" jdbcType="INTEGER" property="caputc" />
     <result column="ukey" jdbcType="VARCHAR" property="ukey" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.PublisherOfferWithBLOBs">
@@ -104,7 +106,7 @@
     redirect, applytime, approvaltime, starttime, expirationtime, status, createtime, 
     updatetime, createuser, updateuser, advertiserid, payoutrate, dailydummycap, actioncode, 
     actionlog, mixrate, directrate, deductrate, oaplacements, directofferids, configflag, 
-    deleteflag, state, trackingtype, ukey
+    deleteflag, state, trackingtype, ukey,caputc,hourcap
   </sql>
   <sql id="Blob_Column_List">
     whitelist, blacklist

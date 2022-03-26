@@ -73,9 +73,9 @@ public class PublisherOffer {
     private String ukey;
 
 
-    private Integer hourcap = -1;
+    private int hourcap = -1;
 
-    private Integer caputc = -1;
+    private int caputc = 0;
 
     public Integer getId() {
         return id;
@@ -349,19 +349,19 @@ public class PublisherOffer {
         this.ukey = ukey == null ? null : ukey.trim();
     }
 
-    public Integer getHourcap() {
+    public int getHourcap() {
         return hourcap;
     }
 
-    public void setHourcap(Integer hourcap) {
+    public void setHourcap(int hourcap) {
         this.hourcap = hourcap;
     }
 
-    public Integer getCaputc() {
+    public int getCaputc() {
         return caputc;
     }
 
-    public void setCaputc(Integer caputc) {
+    public void setCaputc(int caputc) {
         this.caputc = caputc;
     }
 }

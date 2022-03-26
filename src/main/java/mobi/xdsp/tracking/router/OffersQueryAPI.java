@@ -299,6 +299,8 @@ public class OffersQueryAPI {
                         respO.setAppId(n.getAppid());
                         respO.setIosATT(n.getIsattrs());
                         respO.setClickCap(publisherOffer.getClickcap());
+                        respO.setCaputc(publisherOffer.getCaputc());
+                        respO.setHourcap(publisherOffer.getHourcap());
                         respO.setBlacklist("");
                         respO.setWhitelist("");
                         respO.setCurrency(StringUtils.isBlank(n.getCurrency()) ? "USD" : n.getCurrency());
@@ -321,7 +323,6 @@ public class OffersQueryAPI {
                         respO.setPreviewUrl(n.getPreviewurl());
                         respO.setAppName(n.getAppname());
                         respO.setSubtype(n.getAutosubid());
-
                         if ((n.getRtbrunning() != null && n.getRtbrunning().intValue() == 20) || (n.getRunning() != null && n.getRunning().intValue() == 20)) {
                             respO.setSubtype(3);
                         }
