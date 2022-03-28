@@ -229,11 +229,11 @@ public class PidMonitorJob {
 
     public void updatePidAppsPreBlock(String pid, String[] appids) {
 
-        List<String> apps = Arrays.stream(appids).map(n -> n.trim()).filter(n->StringUtils.isNotBlank(n)).collect(Collectors.toList());
+        List<String> apps = Arrays.stream(appids).map(n -> n.trim()).filter(n -> StringUtils.isNotBlank(n)).collect(Collectors.toList());
         List<String> appsAppleNoid = apps.stream().filter(n -> n.startsWith("id")).map(n -> n.substring(2)).collect(Collectors.toList());
         apps.addAll(appsAppleNoid);
         OfferExample example = new OfferExample();
-        example.createCriteria().andTrackurlLike("%" + pid + "%").andAppidIn(apps).andStatusEqualTo(StateE.VALID.name);
+        example.createCriteria().andTrackurlLike("%" + pid + "%").andAppidIn(apps).andStatusEqualTo(StateE.VALID.name).andPriorityGreaterThan(new Short("2"));
         Offer offer = new Offer();
         offer.setStatus(StateE.PIDPREBLOCK.name);
         int r = offerMapper.updateByExampleSelective(offer, example);
