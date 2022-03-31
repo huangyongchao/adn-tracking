@@ -43,6 +43,7 @@ public class TrackingHandler {
     private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
     public Offer checkRedictOffer(Offer oriOffer) {
+
         if (oriOffer.getTrackurl().indexOf("@@") > 0) {
             String[] ids = oriOffer.getTrackurl().split("@@");
             String oriTrack = ids[0];

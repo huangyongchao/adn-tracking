@@ -237,7 +237,10 @@ public class PidMonitorJob {
         Offer offer = new Offer();
         offer.setStatus(StateE.PIDPREBLOCK.name);
         int r = offerMapper.updateByExampleSelective(offer, example);
-        mailer.sendFrankMail("Pid APPs Error Pre Block:", pid + " " + r + ":\n\t\r" + JSONObject.toJSONString(apps));
+        if(r>0){
+            mailer.sendFrankMail("Pid APPs Error Pre Block:", pid + " " + r + ":\n\t\r" + JSONObject.toJSONString(apps));
+
+        }
 
 
     }
@@ -335,12 +338,12 @@ public class PidMonitorJob {
 
                                 appids = appstr.split("[\\t\\n\\r]");
 
-                                try {
+                        /*        try {
 
                                     mailer.sendFrankMail("Pid APPs Error:", pid + ":\n\t\r" + JSONObject.toJSONString(appids));
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                }
+                                }*/
                                 updatePidAppsPreBlock(pid, appids);
                             } else {
                                 mailer.sendFrankMail("Pid APPs Error: Cant get apps", pid + ":\n\t\r" + cont);
