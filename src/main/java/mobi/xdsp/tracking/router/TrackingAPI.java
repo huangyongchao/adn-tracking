@@ -5,6 +5,7 @@ import mobi.xdsp.tracking.common.AddressUtils;
 import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.ShutdownHookEvent;
+import mobi.xdsp.tracking.core.job.CacheDataJob;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
@@ -138,6 +139,9 @@ public class TrackingAPI {
         if (offerid == null) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(-1)");
 
+        }
+        if(!CacheDataJob.LIVE_OFFER_ID.contains(offerid)){
+            CacheDataJob.LIVE_OFFER_ID.add(offerid);
         }
         Offer offer = CacheData.OFF_CACHE.get(offerid);
         if (offer == null) {

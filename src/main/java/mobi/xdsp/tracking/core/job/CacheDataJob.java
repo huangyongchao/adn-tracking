@@ -2,6 +2,7 @@ package mobi.xdsp.tracking.core.job;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
@@ -38,15 +39,18 @@ public class CacheDataJob {
 
     private static final Logger clicklog = LoggerFactory.getLogger("click");
 
+    public static Set<Integer> LIVE_OFFER_ID = Sets.newHashSet();
 
     @Scheduled(cron = "* */2 * * * ?")
     public void updateOfferCacheJob() {
         try {
-            if (CollectionUtils.isEmpty(CacheData.OFF_CACHE.keySet())) {
+            if (CollectionUtils.isEmpty(CacheData.OFF_CACHE.keySet()) && LIVE_OFFER_ID.size() == 0) {
                 return;
             }
             List<Integer> offids = Lists.newLinkedList();
-            offids.addAll(CacheData.OFF_CACHE.keySet());
+            LIVE_OFFER_ID.addAll(CacheData.OFF_CACHE.keySet());
+
+            offids.addAll(LIVE_OFFER_ID);
             OfferExample example = new OfferExample();
             example.createCriteria().andIdIn(offids);
             List<Offer> list = offerMapper.selectByExample(example);
