@@ -246,7 +246,11 @@ public class AdTool {
 
     public static void main(String[] args) {
 
-        String clickid = "DI0-10195664-SSOlMDMwNTA2NDc0MnwxMDE5NTY2NHwxNDgxNDYzNDEzfDJ8NTQyMzZ8VEhBfDF8QjRDRTI3MTMtNjA4Ri00RTYzLUJDRTUtMDJGMjdDNEVDRkEy";
+        String clickid = "SKpjMDMyMjAwNTEyMHwxMDE5NTQ5NXxjb20ubW9iaWxpdHl3YXJlLnNvbGl0YWlyZXwyfDYwMjgwfEdCUnwyfDhiZjA2Yjc5LTlmYjMtNDVlYi04M2ZiLWI1MzY3NzMzZTFjZA%3D%3D";
+
+        clickid = new String(Base64Utils.decodeFromString(clickid), Charset.defaultCharset());
+
+
         System.out.println(unpackClickId(clickid));
 
     }

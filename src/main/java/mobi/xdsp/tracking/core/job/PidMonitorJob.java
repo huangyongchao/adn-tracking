@@ -162,6 +162,7 @@ public class PidMonitorJob {
         checkAfBlock("kevin@rainbowmobi.com", "Rain2020#", "rainbowmobi_int");
         checkAfBlock("russell@mobicoca.com", "Jason2020#", "mobicoca_int");
         checkAfBlock("frank@oceanmob.net", "Grid2020#", "oceanmob_int");
+        checkAfBlock("frank@pubearn.com", "Jason2020#", "pubearn_int");
     }
 
     public static String parseMultipart(Multipart multipart) throws MessagingException, IOException {
