@@ -281,7 +281,7 @@ public class OffersQueryAPI {
 
             } else {
 
-                offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusEqualTo(StateE.VALID.name);
+                offerExample.createCriteria().andAffiliateidIn(affids).andIdIn(offerids).andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.CRPAUSED.name));
             }
 
             List<Offer> offers = offerMapper.selectByExample(offerExample);
