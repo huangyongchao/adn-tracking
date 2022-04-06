@@ -15,7 +15,7 @@ public enum StateE {
      * ext1-3  不同业务可以替代不同状态,业务内部识别就好
      */
     VALID("active", 0), INVALID("expiry", 1), PIDBLOCK("pidblock", 5), EXT1("ext1", 2), EXT2("ext1", 3), EXT3("ext1", 4),
-    PIDPREBLOCK("pidpreblock", 8);
+    PIDPREBLOCK("pidpreblock", 8), CRPAUSED("crpaused", 9);;
     public String name;
     public int code;
 
