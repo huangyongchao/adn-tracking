@@ -132,7 +132,7 @@ public class PidMonitorJob {
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
         OfferExample example = new OfferExample();
 
-        example.createCriteria().andStatusEqualTo(StateE.VALID.name).andTrackurlLike("%.appsflyer.%");
+        example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name)).andTrackurlLike("%.appsflyer.%");
         List<Offer> offers = offerMapper.selectByExample(example);
 
         if (!CollectionUtils.isEmpty(offers)) {
