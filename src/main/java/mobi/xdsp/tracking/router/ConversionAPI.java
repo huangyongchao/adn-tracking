@@ -98,6 +98,7 @@ public class ConversionAPI {
             @RequestParam(value = "subid", defaultValue = "") String subid,
             @RequestParam(value = "payout", defaultValue = "") String payout,
             @RequestParam(value = "device", defaultValue = "") String device,
+            @RequestParam(value = "currency", defaultValue = "") String currency,
             @RequestParam(value = "ip", defaultValue = "") String ip,
             @RequestParam(value = "appid", defaultValue = "") String appid,
             @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {

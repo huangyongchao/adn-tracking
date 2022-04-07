@@ -61,7 +61,7 @@ public class PidMonitorJob {
             }
         });
 
-        example.createCriteria().andStatusEqualTo(StateE.PIDBLOCK.name);
+        example.createCriteria().andStatusIn(Lists.newArrayList(StateE.PIDBLOCK.name, StateE.PIDPREBLOCK.name));
 
 
         List<Offer> offers = offerMapper.selectByExample(example);
@@ -238,7 +238,7 @@ public class PidMonitorJob {
         Offer offer = new Offer();
         offer.setStatus(StateE.PIDPREBLOCK.name);
         int r = offerMapper.updateByExampleSelective(offer, example);
-        if(r>0){
+        if (r > 0) {
             mailer.sendFrankMail("Pid APPs Error Pre Block:", pid + " " + r + ":\n\t\r" + JSONObject.toJSONString(apps));
 
         }
