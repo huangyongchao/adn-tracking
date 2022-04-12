@@ -458,6 +458,13 @@ public class ConversionAPI {
                             /*被拒入库*/
                             activate.setStatus(PBStateE.VALID.code);
                             activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                            if (StringUtils.isNotBlank(payout)) {
+                                Float payoutF = Float.parseFloat(payout);
+                                activate.setAdvpayout(payoutF);
+                                activate.setDefaultpayout(payoutF);
+                                activate.setPubpayout(payoutF);
+
+                            }
                             postSave(activate, subid, isRej);
                             int r = activateMapper.insertSelective(activate);
                         } else {
