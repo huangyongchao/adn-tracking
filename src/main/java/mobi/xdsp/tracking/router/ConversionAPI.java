@@ -413,12 +413,19 @@ public class ConversionAPI {
                     activate.setAdvpayout(0f);
 
                 }
+                if (isEEvent && publisher.getId() == 1015) {
+                    activate.setStatus(PBStateE.VALID.code);
+                    activate.setNoticestatus(PBNoticeStateE.SENT.code);
+                    activate.setDefaultpayout(0f);
+                    activate.setPubpayout(0f);
+                    activate.setAdvpayout(0f);
 
+                }
                 if (!isRej && publisher.getId() != null && publisher.getId() > 10) {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                         //发PB
-                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, null, null, null, subid);
+                        boolean res = sendPb(isEEvent, event, isRej, publisher, offer, puboffer, click, null, null, null, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -441,7 +448,7 @@ public class ConversionAPI {
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
                         postSave(activate, subid, isRej);
-                        boolean res = sendPb(isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
+                        boolean res = sendPb(isEEvent, event, isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -526,6 +533,16 @@ public class ConversionAPI {
         }
     }
 
+    public String getEventPb(String url) {
+        if (StringUtils.isNotBlank(url) && url.indexOf("##") > 1) {
+            return url.split("##")[1];
+        }
+        if (StringUtils.isNotBlank(url)) {
+            return url;
+        } else {
+            return null;
+        }
+    }
 
     public void replaceSubid(String offerid, String subid) {
         final String pubsub = subid;
@@ -586,15 +603,17 @@ public class ConversionAPI {
 
     }
 
-    public boolean sendPb(boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
+    public boolean sendPb(boolean isEvent, String event, boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
         if (isrej) {
             track = getRejPb(publisher.getPostbackeventurl());
 
+        } else if (isEvent) {
+            track = getEventPb(publisher.getPostbackeventurl());
         }
         if (StringUtils.isBlank(track)) {
-            pblog.warn(tid + ":" + isrej + ":track null");
+            pblog.warn(tid + " rej:" + isrej + " event:" + isEvent + ":track null");
             return false;
         }
         pblog.warn(tid + ":" + track);
@@ -610,7 +629,9 @@ public class ConversionAPI {
             if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
                 track = StringUtils.replaceAll(track, "\\{gaid}", click.getGaid());
             }
-
+            if (track.indexOf("{event}") > -1 && StringUtils.isNotBlank(event)) {
+                track = StringUtils.replaceAll(track, "\\{event}", event);
+            }
             if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
                 track = StringUtils.replaceAll(track, "\\{pub_sub}", click.getMixSub());
             }
@@ -653,15 +674,17 @@ public class ConversionAPI {
             if (track.indexOf("{rejected_reason_value}") > -1) {
                 track = StringUtils.replaceAll(track, "\\{rejected_reason_value}", rejected_reason_value);
             }
-
+            if (track.indexOf("{event}") > -1 && StringUtils.isNotBlank(event)) {
+                track = StringUtils.replaceAll(track, "\\{event}", event);
+            }
         }
 
         try {
             track = AdTool.urlEncode(track);
-            pblog.warn(tid + ":" + isrej + ":" + track);
+            pblog.warn(tid + " rej:" + isrej + " event:" + isEvent);
             String resp = HttpClientUtil.get(track);
             sentstatus = true;
-            pblog.warn(tid + ":" + isrej + ":resp");
+            pblog.warn(tid + ":" + isrej + " :resp " + isEvent);
         } catch (Exception e) {
             e.printStackTrace();
             sentstatus = false;
