@@ -415,7 +415,7 @@ public class ConversionAPI {
                 }
                 if (isEEvent && publisher.getId() == 1015) {
                     activate.setStatus(PBStateE.VALID.code);
-                    activate.setNoticestatus(PBNoticeStateE.SENT.code);
+                    activate.setNoticestatus(null);
                     activate.setDefaultpayout(0f);
                     activate.setPubpayout(0f);
                     activate.setAdvpayout(0f);
