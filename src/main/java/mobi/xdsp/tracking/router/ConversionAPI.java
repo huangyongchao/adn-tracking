@@ -613,7 +613,7 @@ public class ConversionAPI {
             track = getEventPb(publisher.getPostbackeventurl());
         }
         if (StringUtils.isBlank(track)) {
-            pblog.warn(tid + " rej:" + isrej + " event:" + isEvent +" "+event + ":track null");
+            pblog.warn(tid + " rej:" + isrej + " event:" + isEvent + " " + event + ":track null");
             return false;
         }
         pblog.warn(tid + ":" + track);
@@ -681,7 +681,7 @@ public class ConversionAPI {
 
         try {
             track = AdTool.urlEncode(track);
-            pblog.warn(tid + " rej:" + isrej + " event:"+event+" " + isEvent);
+            pblog.warn(tid + " rej:" + isrej + " event:" + event + " " + isEvent + " actual pb:" + track);
             String resp = HttpClientUtil.get(track);
             sentstatus = true;
             pblog.warn(tid + ":" + isrej + " :resp " + isEvent);
