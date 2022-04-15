@@ -113,6 +113,9 @@ public class ConversionAPI {
             rejlog.warn("Appsflyer={},clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", affid, clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
 
         }
+        if("null".equalsIgnoreCase(payout)){
+            payout = null;
+        }
         Float pbpayout = null;
         if (StringUtils.isNotBlank(payout) && !"null".equalsIgnoreCase(payout)) {
             try {
@@ -466,10 +469,14 @@ public class ConversionAPI {
                             activate.setStatus(PBStateE.VALID.code);
                             activate.setNoticestatus(PBNoticeStateE.STOP.code);
                             if (StringUtils.isNotBlank(payout)) {
-                                Float payoutF = Float.parseFloat(payout);
-                                activate.setAdvpayout(payoutF);
-                                activate.setDefaultpayout(payoutF);
-                                activate.setPubpayout(payoutF);
+                                try {
+                                    Float payoutF = Float.parseFloat(payout);
+                                    activate.setAdvpayout(payoutF);
+                                    activate.setDefaultpayout(payoutF);
+                                    activate.setPubpayout(payoutF);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                             }
                             postSave(activate, subid, isRej);
