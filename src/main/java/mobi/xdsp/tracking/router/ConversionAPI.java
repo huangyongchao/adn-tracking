@@ -113,7 +113,7 @@ public class ConversionAPI {
             rejlog.warn("Appsflyer={},clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", affid, clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
 
         }
-        if("null".equalsIgnoreCase(payout)){
+        if ("null".equalsIgnoreCase(payout)) {
             payout = null;
         }
         Float pbpayout = null;
@@ -241,8 +241,8 @@ public class ConversionAPI {
                     activate.setRejectcnt(1);
 
                 }
-                postSave(activate, subid, isRej);
-                int r = activateMapper.insertSelective(activate);
+                postSave(activate, subid, isRej, isEEvent);
+                save(activate, subid, isRej, isEEvent);
             } else if (click != null) {
                 boolean sentpb = false;
                 if (StringUtils.isNotBlank(click.getClickId())) {
@@ -440,8 +440,8 @@ public class ConversionAPI {
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     }
                     //入库
-                    postSave(activate, subid, isRej);
-                    int r = activateMapper.insertSelective(activate);
+                    postSave(activate, subid, isRej, isEEvent);
+                    save(activate, subid, isRej, isEEvent);
                 } else {
                     if (isRej) {
                         /*被拒入库*/
@@ -450,7 +450,7 @@ public class ConversionAPI {
                         activate.setRejectcnt(1);
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
-                        postSave(activate, subid, isRej);
+                        postSave(activate, subid, isRej, isEEvent);
                         boolean res = sendPb(isEEvent, event, isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
@@ -460,8 +460,8 @@ public class ConversionAPI {
 
                         }
 
-                        postSave(activate, subid, isRej);
-                        int r = activateMapper.insertSelective(activate);
+                        postSave(activate, subid, isRej, isEEvent);
+                        save(activate, subid, isRej, isEEvent);
 
                     } else {
                         if (publisher.getId() != null && (publisher.getId() == 0 || publisher.getId() == 1)) {
@@ -479,12 +479,12 @@ public class ConversionAPI {
                                 }
 
                             }
-                            postSave(activate, subid, isRej);
-                            int r = activateMapper.insertSelective(activate);
+                            postSave(activate, subid, isRej, isEEvent);
+                            save(activate, subid, isRej, isEEvent);
                         } else {
                             /*非 SDK DSP 被拒 以及 需要的PB渠道的最终入库,依然遵照上诉状态判定*/
-                            postSave(activate, subid, isRej);
-                            int r = activateMapper.insertSelective(activate);
+                            postSave(activate, subid, isRej, isEEvent);
+                            save(activate, subid, isRej, isEEvent);
                         }
                     }
 
@@ -508,8 +508,8 @@ public class ConversionAPI {
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
 
                 }
-                postSave(activate, subid, isRej);
-                int r = activateMapper.insertSelective(activate);
+                postSave(activate, subid, isRej, isEEvent);
+                save(activate, subid, isRej, isEEvent);
 
             }
 
@@ -705,7 +705,15 @@ public class ConversionAPI {
 
     public static Map<String, PBchecker> OFFER_CONV_RT = Maps.newHashMap();
 
-    public void postSave(Activate activate, String subid, boolean isRej) {
+    public void save(ActivateWithBLOBs activate, String subid, boolean isRej, boolean isEvent) {
+
+        if (isEvent) {
+            activate.setStatus(PBStateE.INVALID.code);
+        }
+        int r = activateMapper.insertSelective(activate);
+    }
+
+    public void postSave(Activate activate, String subid, boolean isRej, boolean isEvent) {
         logger.warn("POSTSAVE:" + isRej + ":" + JSONObject.toJSONString(activate));
         try {
             if (StringUtils.isBlank(subid)) {
