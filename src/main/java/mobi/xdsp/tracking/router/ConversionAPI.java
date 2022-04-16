@@ -710,6 +710,8 @@ public class ConversionAPI {
         if (isEvent) {
             activate.setStatus(PBStateE.INVALID.code);
         }
+        activate.setInserttime(new Date());
+        activate.setSystime(new Date());
         int r = activateMapper.insertSelective(activate);
     }
 
