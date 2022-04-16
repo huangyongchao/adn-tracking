@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
 
-@Component
+//@Component
 public class MafDao {
     final String CONTENT_TYPE_TEXT_JSON = "text/json";
 
