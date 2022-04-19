@@ -359,12 +359,7 @@ public class ConversionAPI {
                 if (StringUtils.isBlank(activate.getOs())) {
                     activate.setOs(offer.getOs().toLowerCase());
                 }
-                if (StringUtils.isBlank(activate.getClickid())) {
-                    activate.setClickid(clickid);
-                    activate.setStatus(PBStateE.INVALID.code);
-                    activate.setInactivecnt(1);
 
-                }
 
                 if (activate.getStatus() == null) {
                     activate.setStatus(PBStateE.VALID.code);
