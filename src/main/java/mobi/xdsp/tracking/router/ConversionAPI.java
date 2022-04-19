@@ -103,11 +103,17 @@ public class ConversionAPI {
             @RequestParam(value = "appid", defaultValue = "") String appid,
             @RequestParam(value = "rejrv", defaultValue = "") String rejrv) {
         /*isevent 1 global 2 event*/
+
         convlog.warn("affid={},clickid={},clickidbak={},advid={},event={},isevent={},subid={},idfa={},gaid={},payout={},device={},ip={},appid={},rejrv={}", affid, clickid, clickidbak, advid, event, isevent, subid, idfa, gaid, payout, device, ip, appid, rejrv);
+        if ("null".equalsIgnoreCase(event)) {
+            event = null;
+        }
+        if ("null".equalsIgnoreCase(payout)) {
+            payout = null;
+        }
 
         //log
         boolean isRej = false;
-        boolean isEEvent = false;
         if ("1".equals(rej) || "1".equals(isrejected)) {
             isRej = true;
             rejlog.warn("Appsflyer={},clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", affid, clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
@@ -125,7 +131,9 @@ public class ConversionAPI {
                 e.printStackTrace();
             }
         }
+        if (isevent == PostbackTypeE.EVENT.code) {
 
+        }
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
@@ -241,8 +249,8 @@ public class ConversionAPI {
                     activate.setRejectcnt(1);
 
                 }
-                postSave(activate, subid, isRej, isEEvent);
-                save(activate, subid, isRej, isEEvent);
+                postSave(activate, subid, isRej, isevent);
+                save(activate, subid, isRej, isevent);
             } else if (click != null) {
                 boolean sentpb = false;
                 if (StringUtils.isNotBlank(click.getClickId())) {
@@ -255,14 +263,14 @@ public class ConversionAPI {
                 if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0) && StringUtils.isNotBlank(offer.getCreatives())) {
                     if (!offer.getCreatives().equalsIgnoreCase(event)) {
 
-                        isEEvent = true;
+                        // isEEvent = true;
                     }
                     if ("install".equals(event) && (publisher != null && "9".equals(publisher.getPlatformlevel()))) {
 //                        9 代表真机渠道 , 只按照install算钱
-                        isEEvent = false;
+                        //  isEEvent = false;
                     }
                     if (!"install".equals(event) && (publisher != null && "9".equals(publisher.getPlatformlevel()))) {
-                        isEEvent = true;
+                        //   isEEvent = true;
                     }
                 }
 
@@ -408,7 +416,7 @@ public class ConversionAPI {
                 }*/
                 /*符合条件发PB*/
                 /*Event PB*/
-                if (isEEvent) {
+                if (isevent == PostbackTypeE.EVENT.code) {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     activate.setDefaultpayout(0f);
@@ -416,7 +424,7 @@ public class ConversionAPI {
                     activate.setAdvpayout(0f);
 
                 }
-                if (isEEvent && publisher.getId() == 1015) {
+                if ((isevent == PostbackTypeE.EVENT.code) && publisher.getId() == 1015) {
                     activate.setStatus(PBStateE.VALID.code);
                     activate.setNoticestatus(null);
                     activate.setDefaultpayout(0f);
@@ -428,7 +436,7 @@ public class ConversionAPI {
                     // Postback 下发
                     if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                         //发PB
-                        boolean res = sendPb(isEEvent, event, isRej, publisher, offer, puboffer, click, null, null, null, subid);
+                        boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, null, null, null, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -440,8 +448,8 @@ public class ConversionAPI {
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     }
                     //入库
-                    postSave(activate, subid, isRej, isEEvent);
-                    save(activate, subid, isRej, isEEvent);
+                    postSave(activate, subid, isRej, isevent);
+                    save(activate, subid, isRej, isevent);
                 } else {
                     if (isRej) {
                         /*被拒入库*/
@@ -450,8 +458,8 @@ public class ConversionAPI {
                         activate.setRejectcnt(1);
                         activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
                         //发PB
-                        postSave(activate, subid, isRej, isEEvent);
-                        boolean res = sendPb(isEEvent, event, isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
+                        postSave(activate, subid, isRej, isevent);
+                        boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -460,8 +468,8 @@ public class ConversionAPI {
 
                         }
 
-                        postSave(activate, subid, isRej, isEEvent);
-                        save(activate, subid, isRej, isEEvent);
+                        postSave(activate, subid, isRej, isevent);
+                        save(activate, subid, isRej, isevent);
 
                     } else {
                         if (publisher.getId() != null && (publisher.getId() == 0 || publisher.getId() == 1)) {
@@ -479,12 +487,12 @@ public class ConversionAPI {
                                 }
 
                             }
-                            postSave(activate, subid, isRej, isEEvent);
-                            save(activate, subid, isRej, isEEvent);
+                            postSave(activate, subid, isRej, isevent);
+                            save(activate, subid, isRej, isevent);
                         } else {
                             /*非 SDK DSP 被拒 以及 需要的PB渠道的最终入库,依然遵照上诉状态判定*/
-                            postSave(activate, subid, isRej, isEEvent);
-                            save(activate, subid, isRej, isEEvent);
+                            postSave(activate, subid, isRej, isevent);
+                            save(activate, subid, isRej, isevent);
                         }
                     }
 
@@ -508,8 +516,8 @@ public class ConversionAPI {
                     activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
 
                 }
-                postSave(activate, subid, isRej, isEEvent);
-                save(activate, subid, isRej, isEEvent);
+                postSave(activate, subid, isRej, isevent);
+                save(activate, subid, isRej, isevent);
 
             }
 
@@ -610,13 +618,13 @@ public class ConversionAPI {
 
     }
 
-    public boolean sendPb(boolean isEvent, String event, boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
+    public boolean sendPb(int isEvent, String event, boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
         if (isrej) {
             track = getRejPb(publisher.getPostbackeventurl());
 
-        } else if (isEvent) {
+        } else if (isEvent == PostbackTypeE.EVENT.code) {
             track = getEventPb(publisher.getPostbackeventurl());
         }
         if (StringUtils.isBlank(track)) {
@@ -705,9 +713,9 @@ public class ConversionAPI {
 
     public static Map<String, PBchecker> OFFER_CONV_RT = Maps.newHashMap();
 
-    public void save(ActivateWithBLOBs activate, String subid, boolean isRej, boolean isEvent) {
+    public void save(ActivateWithBLOBs activate, String subid, boolean isRej, int isEvent) {
 
-        if (isEvent) {
+        if (isEvent == PostbackTypeE.EVENT.code) {
             activate.setStatus(PBStateE.INVALID.code);
         }
         activate.setInserttime(new Date());
@@ -715,7 +723,7 @@ public class ConversionAPI {
         int r = activateMapper.insertSelective(activate);
     }
 
-    public void postSave(Activate activate, String subid, boolean isRej, boolean isEvent) {
+    public void postSave(Activate activate, String subid, boolean isRej, int isEvent) {
         logger.warn("POSTSAVE:" + isRej + ":" + JSONObject.toJSONString(activate));
         try {
             if (StringUtils.isBlank(subid)) {
