@@ -70,8 +70,8 @@ public class PbResentJob {
 
                         String track = publisher.getPostbackurl();
 
-                        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(n.getClickid())) {
-                            track = StringUtils.replaceAll(track, "\\{click_id}", n.getClickid());
+                        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(n.getClickidext())) {
+                            track = StringUtils.replaceAll(track, "\\{click_id}", n.getClickidext());
                         }
                         if (track.indexOf("{clickid}") > -1 && StringUtils.isNotBlank(n.getClickid())) {
                             track = StringUtils.replaceAll(track, "\\{clickid}", n.getClickid());

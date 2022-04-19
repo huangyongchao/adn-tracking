@@ -351,11 +351,12 @@ public class ConversionAPI {
                 activate.setIp(click.getCip());
                 activate.setInserttime(new Date());
                 activate.setOfferuid("" + click.getOid());
-                activate.setClickid(click.getClickId());
                 activate.setPubsub(click.getPubSub());
                 activate.setAffsub3(click.getS1());
                 activate.setAffsub2(click.getS2());
                 activate.setSubid1(click.getMixSub());
+                activate.setClickid(clickid);
+                activate.setClickidext(click.getClickId());
                 if (StringUtils.isBlank(activate.getOs())) {
                     activate.setOs(offer.getOs().toLowerCase());
                 }
