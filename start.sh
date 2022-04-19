@@ -17,5 +17,6 @@ echo $datetime
 
 mvn clean install -Dmaven.test.skip=true
 `mv ./target/$name*.jar  ./target/$name.jar`
-java -server  -Xmx1g -XX:MetaspaceSize=128m  -jar "target/$name.jar"  --spring.profiles.active=prod  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 &
+#java -server  -Xmx1g -XX:MetaspaceSize=128m  -jar  "target/$name.jar"  --spring.profiles.active=prod  &
+java -jar  -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 "target/$name.jar"  --spring.profiles.active=prod  &
 echo "$name service is up..."
