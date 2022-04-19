@@ -61,12 +61,7 @@ public class CacheDataJob {
 
                 list.forEach(n -> {
                     cache.put(n.getId(), n);
-                    Set<Integer> tar = AdTool.getTargetHours(n.getSchedule());
-                    if (tar != null && tar.size() > 0) {
-                        CacheData.OFF_TARGET_CACHE.put(n.getId(), tar);
-                    } else {
-                        CacheData.OFF_TARGET_CACHE.remove(n.getId());
-                    }
+                    AdTool.cacheOfferTargetHour(n);
 
                 });
                 CacheData.OFF_CACHE = cache;

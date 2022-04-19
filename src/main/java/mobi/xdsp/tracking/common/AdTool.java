@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.common;
 
+import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.job.CounterJob;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.OsE;
@@ -56,6 +57,18 @@ public class AdTool {
         }
         return null;
     }
+
+    public static Offer cacheOfferTargetHour(Offer offer) {
+
+        Set<Integer> tar = AdTool.getTargetHours(offer.getSchedule());
+        if (tar != null && tar.size() > 0) {
+            CacheData.OFF_TARGET_CACHE.put(offer.getId(), tar);
+        } else {
+            CacheData.OFF_TARGET_CACHE.remove(offer.getId());
+        }
+        return offer;
+    }
+
 
     public static String urlEncode(String oriUrl) {
 
@@ -269,6 +282,10 @@ public class AdTool {
 
         System.out.println(unpackClickId(clickid));*/
         System.out.println(getTargetHours("1 , 2 , 4"));
+
+        int hour = LocalDateTime.now(ZoneOffset.UTC).getHour();
+
+        System.out.println(hour);
     }
 
 }

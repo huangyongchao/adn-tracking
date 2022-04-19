@@ -55,6 +55,7 @@ public class DataServiceLocalImpl implements DataService {
                 Offer offer = list.get(0);
                 CacheData.OFF_CACHE.put(offer.getId(), offer);
                 CacheData.OFF_SYCN_LOCK.put(id, SychLockE.LOCKED.code);
+                AdTool.cacheOfferTargetHour(offer);
                 return offer;
             }
         } catch (Exception e) {
@@ -128,12 +129,8 @@ public class DataServiceLocalImpl implements DataService {
             if (!CollectionUtils.isEmpty(offers)) {
                 offer = offers.get(0);
                 CacheData.OFF_CACHE.put(id, offer);
-                Set<Integer> tar = AdTool.getTargetHours(offer.getSchedule());
-                if (tar != null && tar.size() > 0) {
-                    CacheData.OFF_TARGET_CACHE.put(offer.getId(), tar);
-                }else {
-                    CacheData.OFF_TARGET_CACHE.remove(offer.getId());
-                }
+                AdTool.cacheOfferTargetHour(offer);
+
             }
 
         }
