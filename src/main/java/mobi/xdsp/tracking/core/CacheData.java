@@ -7,6 +7,7 @@ import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CacheData {
@@ -23,6 +24,7 @@ public class CacheData {
     /*增量缓存*/
     public static Map<Integer, Affiliate> AFF_CACHE = Maps.newConcurrentMap();
     public static Map<Integer, Offer> OFF_CACHE = Maps.newConcurrentMap();
+    public static Map<Integer, Set<Integer>> OFF_TARGET_CACHE = Maps.newConcurrentMap();
     public static Map<Integer, Publisher> PUB_CACHE = Maps.newConcurrentMap();
     public static Map<String, Publisher> PUB_TOKEN = Maps.newConcurrentMap();
 

@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.core.job;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
@@ -60,6 +61,13 @@ public class CacheDataJob {
 
                 list.forEach(n -> {
                     cache.put(n.getId(), n);
+                    Set<Integer> tar = AdTool.getTargetHours(n.getSchedule());
+                    if (tar != null && tar.size() > 0) {
+                        CacheData.OFF_TARGET_CACHE.put(n.getId(), tar);
+                    } else {
+                        CacheData.OFF_TARGET_CACHE.remove(n.getId());
+                    }
+
                 });
                 CacheData.OFF_CACHE = cache;
             }

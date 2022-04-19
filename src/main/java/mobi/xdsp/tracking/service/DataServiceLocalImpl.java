@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.service;
 
+import mobi.xdsp.tracking.common.AdTool;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.SychLockE;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DataServiceLocalImpl implements DataService {
@@ -126,6 +128,12 @@ public class DataServiceLocalImpl implements DataService {
             if (!CollectionUtils.isEmpty(offers)) {
                 offer = offers.get(0);
                 CacheData.OFF_CACHE.put(id, offer);
+                Set<Integer> tar = AdTool.getTargetHours(offer.getSchedule());
+                if (tar != null && tar.size() > 0) {
+                    CacheData.OFF_TARGET_CACHE.put(offer.getId(), tar);
+                }else {
+                    CacheData.OFF_TARGET_CACHE.remove(offer.getId());
+                }
             }
 
         }

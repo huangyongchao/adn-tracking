@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,8 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Set;
 
 @RestController
 public class TrackingAPI {
@@ -70,6 +74,7 @@ public class TrackingAPI {
 
 
     }
+
     private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
     @CrossOrigin
@@ -140,7 +145,7 @@ public class TrackingAPI {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(-1)");
 
         }
-        if(!CacheDataJob.LIVE_OFFER_ID.contains(offerid)){
+        if (!CacheDataJob.LIVE_OFFER_ID.contains(offerid)) {
             CacheDataJob.LIVE_OFFER_ID.add(offerid);
         }
         Offer offer = CacheData.OFF_CACHE.get(offerid);
@@ -157,6 +162,16 @@ public class TrackingAPI {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(1)");
         }
 
+
+        //target hour
+        Set<Integer> off_tars = CacheData.OFF_TARGET_CACHE.get(offer.getId());
+        if (!CollectionUtils.isEmpty(off_tars)) {
+            int hour = LocalDateTime.now(ZoneOffset.UTC).getHour();
+            if (!off_tars.contains(hour)) {
+                return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer Target Hour Error");
+            }
+        }
+        //target hour end
         Affiliate affiliate = CacheData.AFF_CACHE.get(offer.getAffiliateid().intValue());
         if (affiliate == null || !StateE.VALID.name.equals(affiliate.getStatus())) {
             return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(2)");

@@ -18,8 +18,8 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author huangyongchao
@@ -39,6 +39,22 @@ public class AdTool {
             return true;
         }
         return false;
+    }
+
+    public static Set<Integer> getTargetHours(String schedule) {
+
+        if (StringUtils.isNotBlank(schedule)) {
+            schedule = (schedule.replaceAll("null", ""));
+            if (StringUtils.isNotBlank(schedule)) {
+                Set<Integer> targrtH = Arrays.stream(schedule.split(",")).filter(hs -> StringUtils.isNotBlank(hs.trim())).map(h -> Integer.parseInt(h.trim().trim())).collect(Collectors.toSet());
+                if (targrtH != null && targrtH.size() > 0) {
+                    return targrtH;
+                }
+
+            }
+
+        }
+        return null;
     }
 
     public static String urlEncode(String oriUrl) {
@@ -245,14 +261,14 @@ public class AdTool {
     }
 
     public static void main(String[] args) {
-
+/*
         String clickid = "SKpjMDMyMjAwNTEyMHwxMDE5NTQ5NXxjb20ubW9iaWxpdHl3YXJlLnNvbGl0YWlyZXwyfDYwMjgwfEdCUnwyfDhiZjA2Yjc5LTlmYjMtNDVlYi04M2ZiLWI1MzY3NzMzZTFjZA%3D%3D";
 
         clickid = new String(Base64Utils.decodeFromString(clickid), Charset.defaultCharset());
 
 
-        System.out.println(unpackClickId(clickid));
-
+        System.out.println(unpackClickId(clickid));*/
+        System.out.println(getTargetHours("1 , 2 , 4"));
     }
 
 }
