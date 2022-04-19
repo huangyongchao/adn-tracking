@@ -28,6 +28,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -715,7 +718,9 @@ public class ConversionAPI {
             activate.setStatus(PBStateE.INVALID.code);
         }
         activate.setInserttime(new Date());
-        activate.setSystime(new Date());
+/*
+        String sysdate = LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+*/
         int r = activateMapper.insertSelective(activate);
     }
 

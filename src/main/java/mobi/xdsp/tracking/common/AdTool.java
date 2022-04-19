@@ -44,7 +44,7 @@ public class AdTool {
 
     public static Set<Integer> getTargetHours(String schedule) {
 
-        if (StringUtils.isNotBlank(schedule)) {
+        if (StringUtils.isNotBlank(schedule) && schedule.indexOf("-1") < 0) {
             schedule = (schedule.replaceAll("null", ""));
             if (StringUtils.isNotBlank(schedule)) {
                 Set<Integer> targrtH = Arrays.stream(schedule.split(",")).filter(hs -> StringUtils.isNotBlank(hs.trim())).map(h -> Integer.parseInt(h.trim().trim())).collect(Collectors.toSet());
