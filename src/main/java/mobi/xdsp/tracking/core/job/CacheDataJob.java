@@ -80,17 +80,18 @@ public class CacheDataJob {
      * <p>
      * 更新分机ClickCap
      */
-    @Scheduled(cron = "* */25 * * * ?")
+    @Scheduled(cron = "* */2 * * * ?")
     public void updatePublisherOfferCacheJob() {
         try {
-            Set<String> setids = CacheData.PUBOFF_SYCN_LOCK.keySet();
-            if (setids.size() == 0) {
+
+            if (CacheData.PUB_OFF_CACHE.size() == 0) {
                 return;
             }
-
             List<Integer> offids = Lists.newLinkedList();
             List<Integer> publishers = Lists.newLinkedList();
-            CacheData.PUBOFF_SYCN_LOCK.keySet().forEach(n -> {
+
+
+            CacheData.PUB_OFF_CACHE.keySet().forEach(n -> {
                 try {
                     String[] ids = n.split("_");
                     publishers.add(Integer.parseInt(ids[0]));
@@ -106,20 +107,16 @@ public class CacheDataJob {
 
             List<PublisherOffer> list = publisherOfferMapper.selectByExample(example);
             if (!CollectionUtils.isEmpty(list)) {
-                Map<String, Integer> lock = Maps.newConcurrentMap();
                 Map<String, PublisherOffer> cache = Maps.newConcurrentMap();
 
                 list.forEach(n -> {
                     String pokey = n.getPublisherid() + "_" + n.getOfferid();
-
-                    lock.put(pokey, SychLockE.LOCKED.code);
                     cache.put(pokey, n);
                     if (n.getClickcap() > 0) {
                         Float clickCap = n.getClickcap() * clickcapweight;
                         CacheData.PUB_OFF_CLICKCAP_CACHE.put(pokey, clickCap.intValue());
                     }
                 });
-                CacheData.PUBOFF_SYCN_LOCK = lock;
                 CacheData.PUB_OFF_CACHE = cache;
             }
         } catch (Exception e) {
