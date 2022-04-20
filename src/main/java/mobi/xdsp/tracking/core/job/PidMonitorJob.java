@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.core.job;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
@@ -129,10 +130,14 @@ public class PidMonitorJob {
     }
 
     public void offerBlockByPidChecker() {
+
         List<PidMonitor> pidMonitors = pidMonitorMapper.selectByExample(new PidMonitorExample());
         OfferExample example = new OfferExample();
-
-        example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name)).andTrackurlLike("%.appsflyer.%");
+        List<String> apps = Lists.newArrayList();
+        PID_APPS.forEach((k, v) -> {
+            apps.addAll(v);
+        });
+        example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name)).andTrackurlLike("%.appsflyer.%").andAppidIn(apps);
         List<Offer> offers = offerMapper.selectByExample(example);
 
         if (!CollectionUtils.isEmpty(offers)) {
@@ -246,6 +251,8 @@ public class PidMonitorJob {
 
     }
 
+    Map<String, List<String>> PID_APPS = Maps.newHashMap();
+
     public void updatePidState(String pid, String st, String et, String[] appids) {
         Date date = new Date();
 
@@ -273,7 +280,9 @@ public class PidMonitorJob {
             if (StringUtils.isNotBlank(pidMonitor1.getCookie1())) {
                 jsonArray.addAll(JSONArray.parseArray(pidMonitor1.getCookie1()));
             }
-            jsonArray.addAll(Arrays.stream(appids).collect(Collectors.toList()));
+            List<String> apps = Arrays.stream(appids).collect(Collectors.toList());
+            PID_APPS.put(pid, apps);
+            jsonArray.addAll(apps);
 
             Set<String> uApps = Sets.newHashSet();
             jsonArray.forEach(n -> {
