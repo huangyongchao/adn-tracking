@@ -183,17 +183,19 @@ public class TrackingAPI {
         /**
          * 首次装载PublisherOffer
          */
-        if (publisherOffer == null && !CacheData.PUBOFF_SYCN_LOCK.containsKey(pokey)) {
+        if (publisherOffer == null) {
             publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offerid);
         }
+
+        if (publisherOffer != null && (publisherOffer.getState() == OfferApplyStatusEnum.HOURCAPFULL.getCode())) {
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "hours cap  is full,please request on the next hours");
+        }
+
         if (publisherOffer == null ||
                 OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
             return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(3)");
         }
 
-        if (publisherOffer.getState() == OfferApplyStatusEnum.HOURCAPFULL.getCode()) {
-            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "hours cap  is full,please request on the next hours");
-        }
 
         if (publisherOffer.getClickcap() > 0) {
 
