@@ -49,6 +49,8 @@ public class Offers {
     private int subtype;
     private int caputc;
     private int hourcap;
+    private int status;
+    private String desc;
     private String suggestSubs;
     private String targetScheduleUTC;
     private List<String> targetCities = Lists.newLinkedList();

@@ -323,6 +323,10 @@ public class OffersQueryAPI {
                         respO.setPreviewUrl(n.getPreviewurl());
                         respO.setAppName(n.getAppname());
                         respO.setSubtype(n.getAutosubid());
+                        if (OfferApplyStatusEnum.HOURCAPFULL.getCode() == publisherOffer.getState()) {
+                            respO.setStatus(publisherOffer.getState());
+                            respO.setDesc("hours cap  is full,please request on the next hours");
+                        }
                         if ((n.getRtbrunning() != null && n.getRtbrunning().intValue() == 20) || (n.getRunning() != null && n.getRunning().intValue() == 20)) {
                             respO.setSubtype(3);
                         }
