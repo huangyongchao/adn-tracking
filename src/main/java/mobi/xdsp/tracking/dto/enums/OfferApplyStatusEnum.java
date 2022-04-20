@@ -6,6 +6,7 @@ public enum OfferApplyStatusEnum {
     DECLINED("declined", 3),
     PAUSED("paused", 4),
     CAPFULL("capfull", 5),
+    HOURCAPFULL("hourcapfull", 7),
     CLICKFULL("clickfull", 6);
 
     private String name;

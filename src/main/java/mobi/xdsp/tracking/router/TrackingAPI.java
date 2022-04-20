@@ -131,7 +131,7 @@ public class TrackingAPI {
         }
         final String clientip = AddressUtils.getClientIpAddr(request);
         if (publisherid == null || !CacheData.PUB_CACHE.containsKey(publisherid)) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Publisher not activate");
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Publisher not activate");
         }
         Publisher publisher = CacheData.PUB_CACHE.get(publisherid);
         if (StateE.INVALID.code == publisher.getState()) {
@@ -142,7 +142,7 @@ public class TrackingAPI {
          * 首次装载offer
          */
         if (offerid == null) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(-1)");
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(-1)");
 
         }
         if (!CacheDataJob.LIVE_OFFER_ID.contains(offerid)) {
@@ -153,13 +153,13 @@ public class TrackingAPI {
             offer = dataService.cacheOfferFirst(offerid);
         }
         if (offer == null) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(0)");
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(0)");
         }
         offer = handler.checkRedictOffer(offer);
 
 
         if (StateE.INVALID.name.equals(offer.getStatus())) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(1)");
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(1)");
         }
 
 
@@ -168,13 +168,13 @@ public class TrackingAPI {
         if (!CollectionUtils.isEmpty(off_tars)) {
             int hour = LocalDateTime.now(ZoneOffset.UTC).getHour();
             if (!off_tars.contains(hour)) {
-                return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer Target Hour Error");
+                return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer Target Hour Error");
             }
         }
         //target hour end
         Affiliate affiliate = CacheData.AFF_CACHE.get(offer.getAffiliateid().intValue());
         if (affiliate == null || !StateE.VALID.name.equals(affiliate.getStatus())) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(2)");
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(2)");
         }
 
 
@@ -188,7 +188,11 @@ public class TrackingAPI {
         }
         if (publisherOffer == null ||
                 OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
-            return new ResponseModel(HttpStatus.SC_BAD_REQUEST, "Offer was expired(3)");
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(3)");
+        }
+
+        if (publisherOffer.getState() == OfferApplyStatusEnum.HOURCAPFULL.getCode()) {
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "hours cap  is full,please request on the next hours");
         }
 
         if (publisherOffer.getClickcap() > 0) {
