@@ -156,7 +156,8 @@ public class ConversionAPI {
             boolean mmplink = false;
             boolean mafclick = false;
             boolean sdkclick = false;
-            if (clickid.startsWith("DI1")) {
+            if (clickid.startsWith("DI1") || clickid.startsWith("DI0")) {
+
                 sdkclick = true;
                 click = AdTool.unpackClickId(clickid);
                 mmplink = true;
@@ -416,18 +417,10 @@ public class ConversionAPI {
                 if (isevent == PostbackTypeE.EVENT.code) {
                     activate.setStatus(PBStateE.INVALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                    activate.setDefaultpayout(0f);
-                    activate.setPubpayout(0f);
-                    activate.setAdvpayout(0f);
-
                 }
                 if ((isevent == PostbackTypeE.EVENT.code) && publisher.getId() == 1015) {
                     activate.setStatus(PBStateE.VALID.code);
                     activate.setNoticestatus(null);
-                    activate.setDefaultpayout(0f);
-                    activate.setPubpayout(0f);
-                    activate.setAdvpayout(0f);
-
                 }
                 if (!isRej && publisher.getId() != null && publisher.getId() > 10) {
                     // Postback 下发
@@ -448,6 +441,7 @@ public class ConversionAPI {
                     postSave(activate, subid, isRej, isevent);
                     save(activate, subid, isRej, isevent);
                 } else {
+                    //内部渠道
                     if (isRej) {
                         /*被拒入库*/
                         activate.setStatus(PBStateE.REJECT.code);
@@ -473,17 +467,6 @@ public class ConversionAPI {
                             /*被拒入库*/
                             activate.setStatus(PBStateE.VALID.code);
                             activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                            if (StringUtils.isNotBlank(payout)) {
-                                try {
-                                    Float payoutF = Float.parseFloat(payout);
-                                    activate.setAdvpayout(payoutF);
-                                    activate.setDefaultpayout(payoutF);
-                                    activate.setPubpayout(payoutF);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
                             postSave(activate, subid, isRej, isevent);
                             save(activate, subid, isRej, isevent);
                         } else {
