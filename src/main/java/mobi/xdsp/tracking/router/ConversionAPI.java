@@ -114,7 +114,7 @@ public class ConversionAPI {
         if ("null".equalsIgnoreCase(payout)) {
             payout = null;
         }
-
+        boolean isPayoutEvent = true;
         //log
         boolean isRej = false;
         if ("1".equals(rej) || "1".equals(isrejected)) {
@@ -266,15 +266,9 @@ public class ConversionAPI {
                 if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0) && StringUtils.isNotBlank(offer.getCreatives())) {
                     if (!offer.getCreatives().equalsIgnoreCase(event)) {
 
-                        // isEEvent = true;
+                        isPayoutEvent = false;
                     }
-                    if ("install".equals(event) && (publisher != null && "9".equals(publisher.getPlatformlevel()))) {
-//                        9 代表真机渠道 , 只按照install算钱
-                        //  isEEvent = false;
-                    }
-                    if (!"install".equals(event) && (publisher != null && "9".equals(publisher.getPlatformlevel()))) {
-                        //   isEEvent = true;
-                    }
+
                 }
 
 
@@ -308,6 +302,8 @@ public class ConversionAPI {
                 activate.setCountry(offer.getCountries());
 
                 activate.setAdvpayout(offer.getDefaultpayout());
+
+
                 //如果有点击 且有渠道开单信息 走开单价格
                 if (click != null && puboffer != null) {
                     if (deductrate == null || deductrate == 0) {
@@ -321,32 +317,34 @@ public class ConversionAPI {
                         offer.setDefaultpayout(0f);
 
                     }
-                    if (pbpayout != null && pbpayout > 0) {
-                        activate.setDefaultpayout(pbpayout);
-                        activate.setPubpayout(pbpayout);
-                        activate.setAdvpayout(pbpayout);
-                    } else {
-                        activate.setDefaultpayout(offer.getDefaultpayout());
-                        activate.setPubpayout(offer.getDefaultpayout());
-                        activate.setAdvpayout(offer.getDefaultpayout());
-                    }
-                    //如果是三方 需要判断计费事件
-                    if (AdTool.is3pt(offer.getTrackurl())) {
-                        if (StringUtils.isNotBlank(offer.getCreatives())) {
-                            if (!offer.getCreatives().equalsIgnoreCase(event)) {
-                                activate.setDefaultpayout(0f);
-                                activate.setPubpayout(0f);
-                                activate.setAdvpayout(0f);
-                            }
-                        } else {
-                            if ("install".equalsIgnoreCase(event) && offer.getDefaultpayout() > 1) {
-                                activate.setDefaultpayout(0f);
-                                activate.setPubpayout(0f);
-                                activate.setAdvpayout(0f);
-                            }
-                        }
-                    }
+                    //非计费事件 都是0
+                    if (!isPayoutEvent) {
+                        activate.setDefaultpayout(0f);
+                        activate.setAdvpayout(0f);
+                        activate.setPubpayout(0f);
 
+                    } else {
+                        //计费事件  判断有无payout参数 有payout 用payout ,没有 就用offer里的价格
+                        if (StringUtils.isNotBlank(payout)) {
+                            try {
+                                Float p = Float.parseFloat(payout);
+                                activate.setDefaultpayout(p);
+                                activate.setAdvpayout(p);
+                                activate.setPubpayout(p);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                activate.setDefaultpayout(0f);
+                                activate.setAdvpayout(0f);
+                                activate.setPubpayout(0f);
+                            }
+
+                        } else {
+                            activate.setDefaultpayout(offer.getDefaultpayout());
+                            activate.setAdvpayout(offer.getDefaultpayout());
+                            activate.setPubpayout(offer.getDefaultpayout());
+                        }
+
+                    }
                 }
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("NO CLICK");
