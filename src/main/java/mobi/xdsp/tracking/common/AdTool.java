@@ -163,6 +163,17 @@ public class AdTool {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        try {
+            if (track.indexOf("{af_siteid1}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
+                track = StringUtils.replaceAll(track, "\\{af_siteid1}", URLEncoder.encode(click.getMixSub(), "utf-8"));
+            } else {
+                track = StringUtils.replaceAll(track, "\\{af_siteid1}", URLEncoder.encode(click.getPubSub(), "utf-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         if (track.indexOf("{ymd}") > -1) {
             track = StringUtils.replaceAll(track, "\\{ymd}", DateTimeUtil.getStringDateNoDash());
         }
