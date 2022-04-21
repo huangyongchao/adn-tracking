@@ -154,6 +154,19 @@ public class AdTool {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        try {
+            if (track.indexOf("{af_siteid}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
+                track = StringUtils.replaceAll(track, "\\{af_siteid}", URLEncoder.encode(click.getMixSub(), "utf-8"));
+            } else {
+                track = StringUtils.replaceAll(track, "\\{af_siteid}", URLEncoder.encode(click.getPubSub(), "utf-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (track.indexOf("{ymd}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{ymd}", DateTimeUtil.getStringDateNoDash());
+        }
+
         if (track.indexOf("{date}") > -1) {
             track = StringUtils.replaceAll(track, "\\{date}", DateTimeUtil.getStringMD());
         }
