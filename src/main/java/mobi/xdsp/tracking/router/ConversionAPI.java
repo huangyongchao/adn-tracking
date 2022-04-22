@@ -142,7 +142,6 @@ public class ConversionAPI {
             ActivateWithBLOBs activate = new ActivateWithBLOBs();
             Click click = null;
 
-            activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
             if ((clickid.indexOf("|") > 0 && clickid.split("\\|").length > 4)) {
                 /*判断是MAF click*/
@@ -287,6 +286,17 @@ public class ConversionAPI {
                 activate.setOffername(offer.getOffername());
                 activate.setAppname(offer.getAppname());
                 activate.setChannelid(click.getPid());
+                if (StringUtils.isNotBlank(gaid)) {
+                    activate.setDeviceid(gaid);
+                }
+                if (StringUtils.isNotBlank(idfa)) {
+                    activate.setDeviceid(idfa);
+                }
+                if (StringUtils.isBlank(activate.getDeviceid())) {
+                    activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
+
+                }
+
                 if (click.getCt() != null) {
                     activate.setClickdate(DateTimeUtil.dateToStrLong(click.getCt()));
                     activate.setClicktime(DateTimeUtil.dateToStrLong(click.getCt()));
