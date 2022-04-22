@@ -210,6 +210,7 @@ public class ConversionAPI {
 
             } else if (clickid.startsWith("DI0-") || clickid.startsWith("DI1-")) {
                 //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
+                sdkclick = true;
                 click = AdTool.unpackClickId(clickid);
                 if (StringUtils.isBlank(click.getGaid())) {
                     click.setGaid(gaid);
@@ -286,7 +287,10 @@ public class ConversionAPI {
                 activate.setOffername(offer.getOffername());
                 activate.setAppname(offer.getAppname());
                 activate.setChannelid(click.getPid());
+                if (StringUtils.isBlank(activate.getDeviceid())) {
+                    activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
+                }
 
                 if (click.getCt() != null) {
                     activate.setClickdate(DateTimeUtil.dateToStrLong(click.getCt()));
