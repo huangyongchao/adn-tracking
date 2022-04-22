@@ -286,16 +286,7 @@ public class ConversionAPI {
                 activate.setOffername(offer.getOffername());
                 activate.setAppname(offer.getAppname());
                 activate.setChannelid(click.getPid());
-                if (StringUtils.isNotBlank(gaid)) {
-                    activate.setDeviceid(gaid);
-                }
-                if (StringUtils.isNotBlank(idfa)) {
-                    activate.setDeviceid(idfa);
-                }
-                if (StringUtils.isBlank(activate.getDeviceid())) {
-                    activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
-                }
 
                 if (click.getCt() != null) {
                     activate.setClickdate(DateTimeUtil.dateToStrLong(click.getCt()));
@@ -390,7 +381,16 @@ public class ConversionAPI {
                     }
                     activate.setStatus(PBStateE.VALID.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                    if (StringUtils.isNotBlank(gaid)) {
+                        activate.setDeviceid(gaid);
+                    }
+                    else if (StringUtils.isNotBlank(idfa)) {
+                        activate.setDeviceid(idfa);
+                    }
+                    if (StringUtils.isBlank(activate.getDeviceid())) {
+                        activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
+                    }
                     //非计费事件 都是0
                     if (isMMP) {
                         if (!isConversion) {
