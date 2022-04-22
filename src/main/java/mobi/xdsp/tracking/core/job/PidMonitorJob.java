@@ -137,6 +137,10 @@ public class PidMonitorJob {
         PID_APPS.forEach((k, v) -> {
             apps.addAll(v);
         });
+
+        if(CollectionUtils.isEmpty(apps)){
+            return;
+        }
         example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name)).andTrackurlLike("%.appsflyer.%").andAppidIn(apps);
         List<Offer> offers = offerMapper.selectByExample(example);
 
