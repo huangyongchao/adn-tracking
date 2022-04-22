@@ -427,7 +427,7 @@ public class ConversionAPI {
                     //发PB
                     postSave(activate, subid, isRej, isevent);
                     if (publisher != null && publisher.getId() > 3) {
-                        boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
+                        boolean res = sendPb(isevent, event, isRej, isMMP, isConversion, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -443,7 +443,7 @@ public class ConversionAPI {
                         // Postback 下发
                         if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                             //发PB
-                            boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, null, null, null, subid);
+                            boolean res = sendPb(isevent, event, isRej, isMMP, isConversion, publisher, offer, puboffer, click, null, null, null, subid);
                             if (res) {
                                 activate.setNoticestatus(PBNoticeStateE.SENT.code);
 
@@ -556,7 +556,7 @@ public class ConversionAPI {
 
     }
 
-    public boolean sendPb(int isEvent, String event, boolean isrej, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
+    public boolean sendPb(int isEvent, String event, boolean isrej, boolean isMMP, boolean isConversion, Publisher publisher, Offer offer, PublisherOffer publisherOffer, Click click, String block_reason, String block_sub_reason, String rejected_reason_value, String realsubid) {
         String tid = RandomStringUtils.randomAlphabetic(4) + "-" + publisher.getId() + "-" + offer.getId();
         String track = publisher.getPostbackurl();
         if (isrej) {
