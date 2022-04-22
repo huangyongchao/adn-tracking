@@ -22,6 +22,7 @@ public interface DataService {
     public Publisher getPublisherCache(Integer publisherid);
 
     public PublisherOffer getPubOfferCache(Integer pubid, Integer offid);
+    public PublisherOffer getPubOffer(Integer pubid, Integer offid);
 
     public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer);
 }

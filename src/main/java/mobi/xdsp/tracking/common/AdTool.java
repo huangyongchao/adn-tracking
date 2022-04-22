@@ -238,8 +238,11 @@ public class AdTool {
                 click.setOid(Integer.parseInt(offerid));
                 click.setPid(Integer.parseInt(pubid));
                 click.setId(clickid);
+                click.setFullClick(true);
 
             } else if (clickid.startsWith("DI")) {
+                click.setFullClick(false);
+
                 String[] ss = clickid.split("-");
                 if (ss.length >= 2) {
                     String pubid = ss[0].substring(2);
@@ -278,10 +281,8 @@ public class AdTool {
                         }
 
                     }
-                    click.setClickId(clickid);
-
                     click.setS1(encode);
-
+                    click.setClickId(click.getClickId());
                 }
 
             }

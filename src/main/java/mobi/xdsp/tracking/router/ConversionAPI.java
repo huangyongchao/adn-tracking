@@ -15,12 +15,10 @@ import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,9 +26,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -114,29 +109,22 @@ public class ConversionAPI {
         if ("null".equalsIgnoreCase(payout)) {
             payout = null;
         }
-        boolean isPayoutEvent = true;
+        //0 默认 1 直连非结算事件 2 直连结算事件
+        int isPayoutEvent = 0;
         //log
         boolean isRej = false;
-        if ("1".equals(rej) || "1".equals(isrejected)) {
+        boolean isConversion = false;
+        boolean isMMP = false;
+        boolean mafclick = false;
+        boolean sdkclick = false;
+
+
+        if ("1".equals(rej) || "1".equals(isrejected) || StringUtils.isNotBlank(rejected_sub_reason)) {
             isRej = true;
             rejlog.warn("Appsflyer={},clickid={},isrejected={},event={},rejected_reason={},rejected_sub_reason={},subid={}", affid, clickid, isrejected, event, rejected_reason, rejected_sub_reason, subid);
+        }
 
-        }
-        if ("null".equalsIgnoreCase(payout)) {
-            payout = null;
-        }
-        Float pbpayout = null;
-        if (StringUtils.isNotBlank(payout) && !"null".equalsIgnoreCase(payout)) {
-            try {
-                pbpayout = Float.parseFloat(payout);
-            } catch (NumberFormatException e) {
-                System.out.println(payout);
-                e.printStackTrace();
-            }
-        }
-        if (isevent == PostbackTypeE.EVENT.code) {
 
-        }
         try {
             if (StringUtils.isBlank(clickid) && StringUtils.isNotBlank(clickidbak)) {
                 clickid = clickidbak;
@@ -153,16 +141,65 @@ public class ConversionAPI {
              */
             ActivateWithBLOBs activate = new ActivateWithBLOBs();
             Click click = null;
-            boolean mmplink = false;
-            boolean mafclick = false;
-            boolean sdkclick = false;
-            if (clickid.startsWith("DI1") || clickid.startsWith("DI0")) {
 
-                sdkclick = true;
-                click = AdTool.unpackClickId(clickid);
-                mmplink = true;
+            activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
 
-            } else if (clickid.startsWith("PE")) {
+            if ((clickid.indexOf("|") > 0 && clickid.split("\\|").length > 4)) {
+                /*判断是MAF click*/
+                try {
+                    mafclick = true;
+                    click = new Click();
+                    click.setPid(2);
+                    String[] ms = clickid.split("\\|");
+                    if (ms.length > 2) {
+
+                        click.setSoid(ms[2]);
+                    }
+                    click.setId(clickid);
+                    click.setClickId(clickid);
+                    click.setPubSub(subid);
+                    if (StringUtils.isBlank(click.getGaid())) {
+                        click.setGaid(gaid);
+                    }
+                    if (StringUtils.isBlank(click.getIdfa())) {
+                        click.setIdfa(idfa);
+                    }
+
+                    if (mafclick) {
+
+                        activate.setAid("" + advid);
+                        activate.setClickid(clickid);
+                        activate.setEvent(event);
+                        activate.setChannelid(2);
+                        activate.setPubsub(click.getPubSub());
+                        activate.setClickdate(DateTimeUtil.getStringDate());
+                        activate.setClicktime(DateTimeUtil.getStringDate());
+
+
+                        activate.setStatus(PBStateE.INVALID.code);
+                        activate.setAffsub2(click.getSoid());
+                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        ApiTools.packageCnt(activate);
+                        if (isRej) {
+                            /*被拒入库*/
+                            activate.setStatus(PBStateE.REJECT.code);
+                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                            activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+                            activate.setStatus(PBStateE.REJECT.code);
+                            activate.setRejectcnt(1);
+
+                        }
+                        postSave(activate, subid, isRej, isevent);
+                        save(activate, subid, isRej, isevent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return "maf_pb_ok";
+
+            }
+            //包装click
+            if (clickid.startsWith("PE")) {
                 //Pubearn 平台点击
                 Optional<Click> clickOptional = repository.findById(clickid);
 
@@ -172,28 +209,7 @@ public class ConversionAPI {
                     click = AdTool.unpackClickId(clickid);
                 }
 
-            } else if ((clickid.indexOf("|") > 0 && clickid.split("\\|").length > 4)) {
-                /*判断是MAF click*/
-                mafclick = true;
-                click = new Click();
-                click.setPid(2);
-                String[] ms = clickid.split("\\|");
-                if (ms.length > 2) {
-
-                    click.setSoid(ms[2]);
-                }
-                click.setId(clickid);
-                click.setClickId(clickid);
-                click.setPubSub(subid);
-                if (StringUtils.isBlank(click.getGaid())) {
-                    click.setGaid(gaid);
-                }
-                if (StringUtils.isBlank(click.getIdfa())) {
-                    click.setIdfa(idfa);
-                }
-
-
-            } else if (clickid.startsWith("DI0")) {
+            } else if (clickid.startsWith("DI0-") || clickid.startsWith("DI1-")) {
                 //Pubearn S2S 点击,只能获取offer以及 publisher like  DI1001-2311671-{click_id}
                 click = AdTool.unpackClickId(clickid);
                 if (StringUtils.isBlank(click.getGaid())) {
@@ -225,59 +241,42 @@ public class ConversionAPI {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                mmplink = true;
             }
-            activate.setDeviceid(StringUtils.isBlank(click.getIdfa()) ? click.getGaid() : click.getIdfa());
-
-            if (mafclick) {
-
-                activate.setAid("" + advid);
-                activate.setClickid(clickid);
-                activate.setEvent(event);
-                activate.setChannelid(2);
-                activate.setPubsub(click.getPubSub());
-                activate.setClickdate(DateTimeUtil.getStringDate());
-                activate.setClicktime(DateTimeUtil.getStringDate());
 
 
-                activate.setStatus(PBStateE.INVALID.code);
-                activate.setAffsub2(click.getSoid());
-                activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                ApiTools.packageCnt(activate);
-                if (isRej) {
-                    /*被拒入库*/
-                    activate.setStatus(PBStateE.REJECT.code);
-                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                    activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
-                    activate.setStatus(PBStateE.REJECT.code);
-                    activate.setRejectcnt(1);
+            if (click != null) {
 
-                }
-                postSave(activate, subid, isRej, isevent);
-                save(activate, subid, isRej, isevent);
-            } else if (click != null) {
-                boolean sentpb = false;
-                if (StringUtils.isNotBlank(click.getClickId())) {
-                    sentpb = true;
-                }
                 Offer offer = dataService.getOfferCache(click.getOid());
-                Publisher publisher = dataService.getPublisherCache(click.getPid());
-                PublisherOffer puboffer = dataService.getPubOfferCache(click.getPid(), click.getOid());
 
-                if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0) && StringUtils.isNotBlank(offer.getCreatives())) {
-                    if (!offer.getCreatives().equalsIgnoreCase(event)) {
 
-                        isPayoutEvent = false;
+                if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0)) {
+                    isMMP = true;
+                    if (PostbackTypeE.EVENT.code == isevent) {
+
+                        if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
+                            isConversion = true;
+
+                        }
+                    } else {
+                        isConversion = true;
+                        if (StringUtils.isNotBlank(offer.getCreatives()) && !offer.getCreatives().equalsIgnoreCase(event)) {
+                            isConversion = false;
+
+                        }
                     }
 
+
                 }
 
 
-                Integer deductrate = publisher.getDeductrate();
-
-                if (deductrate == null) {
-                    deductrate = 0;
+                Publisher publisher = dataService.getPublisherCache(click.getPid());
+                if (publisher == null) {
+                    publisher = new Publisher();
+                    publisher.setId(0);
+                    publisher.setCompanyname("SDK");
+                    publisher.setEmail("SDK");
                 }
+
 
                 activate.setAid(offer.getAid());
                 activate.setAffiliateid("" + offer.getAffiliateid());
@@ -302,51 +301,100 @@ public class ConversionAPI {
                 activate.setCosttype(offer.getPayouttype());
                 activate.setCountry(offer.getCountries());
 
-                activate.setAdvpayout(offer.getDefaultpayout());
-
 
                 //如果有点击 且有渠道开单信息 走开单价格
-                if (click != null && puboffer != null) {
-                    if (deductrate == null || deductrate == 0) {
-                        deductrate = puboffer.getDeductrate();
-                    }
+                PublisherOffer puboffer = dataService.getPubOffer(click.getPid(), click.getOid());
+                //渠道转化
+                if (click != null && puboffer != null && puboffer.getPublisherid() > 3) {
+
                     activate.setDefaultpayout(puboffer.getPayout().floatValue());
                     activate.setPubpayout(puboffer.getPayout().floatValue());
                     activate.setAdvpayout(offer.getDefaultpayout());
-                } else if (sdkclick || mafclick) {
+                    activate.setStatus(PBStateE.VALID.code);
+
+                    if (isMMP) {
+                        if (!isConversion) {
+                            activate.setDefaultpayout(0f);
+                            activate.setAdvpayout(0f);
+                            activate.setPubpayout(0f);
+                            activate.setStatus(PBStateE.INVALID.code);
+                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        }
+                    }
+
+
+                    //检查Cap
+                    int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
+                    if (action > 0) {
+                        activate.setStatus(PBStateE.INVALID.code);
+                        activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
+                    }
+                    activate.setClicktime(DateTimeUtil.dateToStrLong(click.getCt()));
+                    //扣量
+
+                    Integer deductrate = puboffer.getDeductrate();
+
+                    if (deductrate == null) {
+                        deductrate = publisher.getDeductrate();
+                    }
+                    if (deductrate == null) {
+                        deductrate = 0;
+                    }
+
+                    if (deductrate > 0) {
+                        int seed = deductrate / 5;
+                        int r = new Random().nextInt(20);
+                        if (r <= seed) {
+                            activate.setStatus(PBStateE.DEDUCT.code);
+                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                            activate.setDeductcnt(1);
+                            activate.setActivecnt(0);
+
+                        }
+                    }
+
+
+                } else if (sdkclick) {
                     if (offer.getDefaultpayout() == null) {
                         offer.setDefaultpayout(0f);
-
                     }
-                    //非计费事件 都是0
-                    if (!isPayoutEvent) {
-                        activate.setDefaultpayout(0f);
-                        activate.setAdvpayout(0f);
-                        activate.setPubpayout(0f);
+
+                    //有默认回传价格
+                    if (StringUtils.isNotBlank(payout)) {
+                        try {
+                            Float p = Float.parseFloat(payout);
+                            activate.setDefaultpayout(p);
+                            activate.setAdvpayout(p);
+                            activate.setPubpayout(p);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            activate.setDefaultpayout(0f);
+                            activate.setAdvpayout(0f);
+                            activate.setPubpayout(0f);
+                        }
 
                     } else {
-                        //计费事件  判断有无payout参数 有payout 用payout ,没有 就用offer里的价格
-                        if (StringUtils.isNotBlank(payout)) {
-                            try {
-                                Float p = Float.parseFloat(payout);
-                                activate.setDefaultpayout(p);
-                                activate.setAdvpayout(p);
-                                activate.setPubpayout(p);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                activate.setDefaultpayout(0f);
-                                activate.setAdvpayout(0f);
-                                activate.setPubpayout(0f);
-                            }
+                        activate.setDefaultpayout(offer.getDefaultpayout());
+                        activate.setAdvpayout(offer.getDefaultpayout());
+                        activate.setPubpayout(offer.getDefaultpayout());
+                    }
+                    activate.setStatus(PBStateE.VALID.code);
+                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
 
-                        } else {
-                            activate.setDefaultpayout(offer.getDefaultpayout());
-                            activate.setAdvpayout(offer.getDefaultpayout());
-                            activate.setPubpayout(offer.getDefaultpayout());
+                    //非计费事件 都是0
+                    if (isMMP) {
+                        if (!isConversion) {
+                            activate.setDefaultpayout(0f);
+                            activate.setAdvpayout(0f);
+                            activate.setPubpayout(0f);
+                            activate.setStatus(PBStateE.INVALID.code);
+                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         }
 
                     }
                 }
+
+
                 if (StringUtils.isBlank(activate.getDeviceid())) {
                     activate.setDeviceid("NO CLICK");
                 }
@@ -363,25 +411,6 @@ public class ConversionAPI {
                     activate.setOs(offer.getOs().toLowerCase());
                 }
 
-
-                if (activate.getStatus() == null) {
-                    activate.setStatus(PBStateE.VALID.code);
-                    activate.setActivecnt(1);
-                    activate.setDeductcnt(0);
-
-
-                }
-                //扣量比例
-                if (deductrate > 0) {
-                    int seed = deductrate / 5;
-                    int r = new Random().nextInt(20);
-                    if (r <= seed) {
-                        activate.setStatus(PBStateE.DEDUCT.code);
-                        activate.setDeductcnt(1);
-                        activate.setActivecnt(0);
-
-                    }
-                }
                 //处理 状态
                 ApiTools.packageCnt(activate);
 
@@ -389,67 +418,15 @@ public class ConversionAPI {
                 //处理点击通知
                 noticeAddClicks(isRej, publisher, offer, activate, subid);
 
-
-                //检查Cap
-                if (puboffer != null) {
-                    int action = dataService.capAction(publisher.getId(), offer.getId(), puboffer);
-                    if (action > 0) {
-                        activate.setStatus(PBStateE.INVALID.code);
-                        activate.setNoticestatus(PBNoticeStateE.CAPSTOP.code);
-                    }
-                } else {
-                    activate.setStatus(PBStateE.INVALID.code);
+                if (isRej) {
+                    /*被拒入库*/
+                    activate.setStatus(PBStateE.REJECT.code);
                     activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                }
-               /* if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.VALID.name)) {
-                    activate.setStatus(PBStateE.VALID.code);
-                }
-                if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.PIDBLOCK.name)) {
-                    activate.setStatus(PBStateE.DEDUCT.code);
-                }
-                if (offer.getStatus() != null && offer.getStatus().equalsIgnoreCase(StateE.INVALID.name)) {
-                    activate.setStatus(PBStateE.INVALID.code);
-                } else {
-                    activate.setStatus(PBStateE.INVALID.code);
-                }*/
-                /*符合条件发PB*/
-                /*Event PB*/
-                if (isevent == PostbackTypeE.EVENT.code) {
-                    activate.setStatus(PBStateE.INVALID.code);
-                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                }
-                if ((isevent == PostbackTypeE.EVENT.code) && publisher.getId() == 1015) {
-                    activate.setStatus(PBStateE.VALID.code);
-                    activate.setNoticestatus(null);
-                }
-                if (!isRej && publisher.getId() != null && publisher.getId() > 10) {
-                    // Postback 下发
-                    if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
-                        //发PB
-                        boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, null, null, null, subid);
-                        if (res) {
-                            activate.setNoticestatus(PBNoticeStateE.SENT.code);
-
-                        } else {
-                            activate.setNoticestatus(PBNoticeStateE.NO.code);
-
-                        }
-                    } else {
-                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                    }
-                    //入库
+                    activate.setRejectcnt(1);
+                    activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
+                    //发PB
                     postSave(activate, subid, isRej, isevent);
-                    save(activate, subid, isRej, isevent);
-                } else {
-                    //内部渠道
-                    if (isRej) {
-                        /*被拒入库*/
-                        activate.setStatus(PBStateE.REJECT.code);
-                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                        activate.setRejectcnt(1);
-                        activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
-                        //发PB
-                        postSave(activate, subid, isRej, isevent);
+                    if (publisher != null && publisher.getId() > 3) {
                         boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, rejected_reason, rejected_sub_reason, rejected_reason_value, subid);
                         if (res) {
                             activate.setNoticestatus(PBNoticeStateE.SENT.code);
@@ -458,62 +435,43 @@ public class ConversionAPI {
                             activate.setNoticestatus(PBNoticeStateE.NO.code);
 
                         }
+                    }
+                    save(activate, subid, isRej, isevent);
 
+                } else {
+                    if (publisher.getId() != null && publisher.getId() > 3) {
+                        // Postback 下发
+                        if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
+                            //发PB
+                            boolean res = sendPb(isevent, event, isRej, publisher, offer, puboffer, click, null, null, null, subid);
+                            if (res) {
+                                activate.setNoticestatus(PBNoticeStateE.SENT.code);
+
+                            } else {
+                                activate.setNoticestatus(PBNoticeStateE.NO.code);
+
+                            }
+                        } else {
+                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        }
+                        //入库
                         postSave(activate, subid, isRej, isevent);
                         save(activate, subid, isRej, isevent);
-
                     } else {
-                        if (publisher.getId() != null && (publisher.getId() == 0 || publisher.getId() == 1)) {
-                            /*被拒入库*/
-                            activate.setStatus(PBStateE.VALID.code);
-                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                            postSave(activate, subid, isRej, isevent);
-                            save(activate, subid, isRej, isevent);
-                        } else {
-                            /*非 SDK DSP 被拒 以及 需要的PB渠道的最终入库,依然遵照上诉状态判定*/
-                            postSave(activate, subid, isRej, isevent);
-                            save(activate, subid, isRej, isevent);
-                        }
+                        activate.setStatus(PBStateE.VALID.code);
+                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                        postSave(activate, subid, isRej, isevent);
+                        save(activate, subid, isRej, isevent);
                     }
 
                 }
 
-
-            } else {
-                activate.setAid("" + advid);
-                activate.setClickid(clickid);
-                activate.setEvent(event);
-                activate.setClickdate(DateTimeUtil.getStringDate());
-                activate.setClicktime(DateTimeUtil.getStringDate());
-                activate.setStatus(PBStateE.INVALID.code);
-                activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                ApiTools.packageCnt(activate);
-                if (isRej) {
-                    /*被拒入库*/
-                    activate.setStatus(PBStateE.REJECT.code);
-                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                    activate.setRejectcnt(1);
-                    activate.setAffsub3(rejected_reason + "#" + rejected_sub_reason + "#" + rejected_reason_value);
-
-                }
-                postSave(activate, subid, isRej, isevent);
-                save(activate, subid, isRej, isevent);
-
             }
 
+
         } catch (Exception e) {
-            System.out.println(clickid);
-            System.out.println(rej);
-            System.out.println(rejrv);
-            System.out.println(rejr);
-
-            logger.error(clickid, e);
-            Click click = AdTool.unpackClickId(clickid);
-            logger.error(click.getOid() + ":" + click.getPid());
-
             e.printStackTrace();
         }
-
         return "ok";
     }
 

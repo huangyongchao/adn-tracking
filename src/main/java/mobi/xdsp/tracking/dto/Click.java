@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @ToString
 public class Click implements Serializable {
+    private boolean fullClick = false;
     /**
      * 点击ID
      */
@@ -28,7 +29,7 @@ public class Click implements Serializable {
     /**
      * 渠道id
      */
-    private Integer pid;
+    private Integer pid = 0;
     /**
      * offerid
      */

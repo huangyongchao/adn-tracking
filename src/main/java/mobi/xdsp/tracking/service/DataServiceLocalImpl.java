@@ -157,6 +157,23 @@ public class DataServiceLocalImpl implements DataService {
     }
 
     @Override
+    public PublisherOffer getPubOffer(Integer pubid, Integer offid) {
+        String pokey = pubid + "_" + offid;
+
+        PublisherOfferExample example = new PublisherOfferExample();
+        example.createCriteria().andPublisheridEqualTo(pubid).andOfferidEqualTo(offid);
+
+        List<PublisherOffer> publisherOfferList = publisherOfferMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(publisherOfferList)) {
+            PublisherOffer po = publisherOfferList.get(0);
+            CacheData.PUB_OFF_CACHE.put(pokey, po);
+            return po;
+
+        }
+        return null;
+    }
+
+    @Override
     public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer) {
         try {
             String key = pubid + "-" + offid;
