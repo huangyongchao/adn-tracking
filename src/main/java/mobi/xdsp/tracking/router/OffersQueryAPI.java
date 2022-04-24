@@ -335,6 +335,10 @@ public class OffersQueryAPI {
                             respO.setSuggestSubs(null);
 
                         }
+                        if("\"\"".equalsIgnoreCase(respO.getSuggestSubs())){
+                            respO.setSuggestSubs(null);
+
+                        }
                         if (n.getSchedule() != null) {
 
                             respO.setTargetScheduleUTC(n.getSchedule().replaceAll("null", ""));
