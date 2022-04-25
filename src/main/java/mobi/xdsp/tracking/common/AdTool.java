@@ -195,6 +195,11 @@ public class AdTool {
             if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
                 track = StringUtils.replaceAll(track, "\\{gaid}", click.getGaid());
             }
+
+            if (track.indexOf("{advertising_id}") > -1 && StringUtils.isNotBlank(click.getGaid())) {
+                track = StringUtils.replaceAll(track, "\\{advertising_id}", click.getGaid());
+            }
+
         } else {
             if (track.indexOf("{device_id}") > -1 && StringUtils.isNotBlank(click.getIdfa())) {
                 track = StringUtils.replaceAll(track, "\\{device_id}", click.getIdfa());

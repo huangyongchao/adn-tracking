@@ -85,6 +85,11 @@ public class TestingAPI {
             if (track.indexOf("{gaid}") > -1 && StringUtils.isNotBlank(gaid)) {
                 track = StringUtils.replaceAll(track, "\\{gaid}", gaid);
             }
+            if (track.indexOf("{advertising_id}") > -1 && StringUtils.isNotBlank(gaid)) {
+                track = StringUtils.replaceAll(track, "\\{advertising_id}", gaid);
+            }
+
+
 
             if (track.indexOf("{pub_sub}") > -1 && StringUtils.isNotBlank(pubSub)) {
                 track = StringUtils.replaceAll(track, "\\{pub_sub}", pubSub);
