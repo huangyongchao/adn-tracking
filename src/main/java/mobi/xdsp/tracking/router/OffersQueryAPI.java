@@ -10,6 +10,7 @@ import mobi.xdsp.tracking.dto.PBchecker;
 import mobi.xdsp.tracking.dto.affise.*;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OsE;
+import mobi.xdsp.tracking.dto.enums.RiskLevelE;
 import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.dto.offerapi.MafOffer;
 import mobi.xdsp.tracking.dto.offerapi.OfferApiResponse;
@@ -294,6 +295,12 @@ public class OffersQueryAPI {
                     if (StringUtils.isBlank(n.getOs()) || StringUtils.isBlank(n.getCountries())) {
                         return;
                     }
+                    if (publisher.getId() == 1015 || publisher.getId() == 1030) {
+                        if (n.getRisklevel() != null && n.getRisklevel() == RiskLevelE.CRHIGH.code) {
+                            //CR高 停止补量
+                            return;
+                        }
+                    }
                     if (puboffmap.containsKey(n.getId())) {
                         PublisherOffer publisherOffer = puboffmap.get(n.getId()).get(0);
                         respO.setAppId(n.getAppid());
@@ -335,7 +342,7 @@ public class OffersQueryAPI {
                             respO.setSuggestSubs(null);
 
                         }
-                        if("\"\"".equalsIgnoreCase(respO.getSuggestSubs())){
+                        if ("\"\"".equalsIgnoreCase(respO.getSuggestSubs())) {
                             respO.setSuggestSubs(null);
 
                         }

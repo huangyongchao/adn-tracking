@@ -9,6 +9,7 @@ import mobi.xdsp.tracking.core.job.CacheDataJob;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
+import mobi.xdsp.tracking.dto.enums.RiskLevelE;
 import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.dto.enums.SychLockE;
 import mobi.xdsp.tracking.entity.Affiliate;
@@ -157,11 +158,14 @@ public class TrackingAPI {
         }
         offer = handler.checkRedictOffer(offer);
 
-
         if (StateE.INVALID.name.equals(offer.getStatus())) {
             return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(1)");
         }
 
+        if (offer.getRisklevel() != null && offer.getRisklevel() == RiskLevelE.CRHIGH.code) {
+            //CR高 停止补量
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was limited requst now .please request later");
+        }
 
         //target hour
         Set<Integer> off_tars = CacheData.OFF_TARGET_CACHE.get(offer.getId());
