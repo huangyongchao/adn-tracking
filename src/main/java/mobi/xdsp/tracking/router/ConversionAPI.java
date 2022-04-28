@@ -165,7 +165,21 @@ public class ConversionAPI {
                     }
 
                     if (mafclick) {
-
+                        if(StringUtils.isNotBlank(click.getSoid())){
+                            OfferExample example = new OfferExample();
+                            example.createCriteria().andAffiliateidEqualTo(new Short("2")).andSourceofferidEqualTo(click.getSoid());
+                            List<Offer> offers = offerMapper.selectByExample(example);
+                            if(!CollectionUtils.isEmpty(offers)){
+                                Offer offer = offers.get(0);
+                                activate.setAffiliatename(offer.getAffiliatename());
+                                activate.setOfferid(offer.getOfferid());
+                                activate.setOfferuid(offer.getId().toString());
+                                activate.setOffername(offer.getOffername());
+                                activate.setAid(offer.getAid());
+                                activate.setAppid(offer.getAppid());
+                                activate.setCountry(offer.getCountries());
+                            }
+                        }
                         activate.setAid("" + advid);
                         activate.setClickid(clickid);
                         activate.setEvent(event);
