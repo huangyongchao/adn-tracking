@@ -165,16 +165,17 @@ public class ConversionAPI {
                     }
 
                     if (mafclick) {
-                        if(StringUtils.isNotBlank(click.getSoid())){
+                        if (StringUtils.isNotBlank(click.getSoid())) {
                             OfferExample example = new OfferExample();
                             example.createCriteria().andAffiliateidEqualTo(new Short("2")).andSourceofferidEqualTo(click.getSoid());
                             List<Offer> offers = offerMapper.selectByExample(example);
-                            if(!CollectionUtils.isEmpty(offers)){
+                            if (!CollectionUtils.isEmpty(offers)) {
                                 Offer offer = offers.get(0);
                                 activate.setAffiliatename(offer.getAffiliatename());
                                 activate.setOfferid(offer.getOfferid());
                                 activate.setOfferuid(offer.getId().toString());
                                 activate.setOffername(offer.getOffername());
+                                activate.setAffiliateid(offer.getAffiliateid().toString());
                                 activate.setAid(offer.getAid());
                                 activate.setAppid(offer.getAppid());
                                 activate.setCountry(offer.getCountries());
@@ -187,9 +188,11 @@ public class ConversionAPI {
                         activate.setPubsub(click.getPubSub());
                         activate.setClickdate(DateTimeUtil.getStringDate());
                         activate.setClicktime(DateTimeUtil.getStringDate());
+                        activate.setDefaultpayout(0f);
+                        activate.setPubpayout(0f);
+                        activate.setAdvpayout(0f);
 
-
-                        activate.setStatus(PBStateE.INVALID.code);
+                        activate.setStatus(PBStateE.VALID.code);
                         activate.setAffsub2(click.getSoid());
                         activate.setNoticestatus(PBNoticeStateE.STOP.code);
                         ApiTools.packageCnt(activate);
@@ -406,8 +409,7 @@ public class ConversionAPI {
                     }
                     if (StringUtils.isNotBlank(gaid)) {
                         activate.setDeviceid(gaid);
-                    }
-                    else if (StringUtils.isNotBlank(idfa)) {
+                    } else if (StringUtils.isNotBlank(idfa)) {
                         activate.setDeviceid(idfa);
                     }
 
