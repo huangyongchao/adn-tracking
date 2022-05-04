@@ -291,6 +291,9 @@ public class AdTool {
                 }
 
             }
+            if (click.getCt() == null) {
+                click.setCt(new Date());
+            }
         } catch (Exception e) {
             logger.info(clickid);
             e.printStackTrace();
