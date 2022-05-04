@@ -38,7 +38,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Set;
 
-@RestController
+//@RestController
 public class AdjustMock {
 
     private static final Logger testlog = LoggerFactory.getLogger("test");
