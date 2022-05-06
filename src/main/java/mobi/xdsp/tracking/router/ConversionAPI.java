@@ -446,7 +446,7 @@ public class ConversionAPI {
 
 
                 //处理点击通知
-                noticeAddClicks(isRej, publisher, offer, activate, subid);
+                noticeAddClicks(isevent, isRej, publisher, offer, activate, subid);
 
                 if (isRej) {
                     /*被拒入库*/
@@ -547,9 +547,11 @@ public class ConversionAPI {
     }
 
 
-    public void noticeAddClicks(boolean isRej, Publisher publisher, Offer offer, Activate activate, String subid) {
+    public void noticeAddClicks(int isevent, boolean isRej, Publisher publisher, Offer offer, Activate activate, String subid) {
         final String pubsub = subid;
-
+        if (isevent == 2) {
+            return;
+        }
         ExecutorPool.getExecutor().execute(() -> {
             if (publisher != null
                     && offer != null
@@ -601,6 +603,9 @@ public class ConversionAPI {
         }
         pblog.warn(tid + ":" + track);
         boolean sentstatus = false;
+        if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
+            track = StringUtils.replaceAll(track, "\\{click_id}", click.getClickId());
+        }
         if (track.indexOf("{click_id}") > -1 && StringUtils.isNotBlank(click.getClickId())) {
             track = StringUtils.replaceAll(track, "\\{click_id}", click.getClickId());
         }
