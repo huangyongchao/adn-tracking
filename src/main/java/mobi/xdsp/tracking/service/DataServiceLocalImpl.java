@@ -42,26 +42,21 @@ public class DataServiceLocalImpl implements DataService {
 
     @Override
     public Offer cacheOfferFirst(Integer id) {
-        if (CacheData.OFF_SYCN_LOCK.containsKey(id) && SychLockE.TAKING.code == CacheData.OFF_SYCN_LOCK.get(id)) {
-            return null;
-        }
+
 
         try {
-            CacheData.OFF_SYCN_LOCK.put(id, SychLockE.TAKING.code);
             OfferExample offerExample = new OfferExample();
             offerExample.createCriteria().andIdEqualTo(id);
             List<Offer> list = offerMapper.selectByExample(offerExample);
             if (list != null && list.size() > 0) {
                 Offer offer = list.get(0);
                 CacheData.OFF_CACHE.put(offer.getId(), offer);
-                CacheData.OFF_SYCN_LOCK.put(id, SychLockE.LOCKED.code);
                 AdTool.cacheOfferTargetHour(offer);
                 return offer;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        CacheData.OFF_SYCN_LOCK.put(id, SychLockE.NONE.code);
         return null;
     }
 

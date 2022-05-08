@@ -63,6 +63,9 @@ public class CounterJob {
                             }
 
                             Offer offer = dataService.getOfferCache(oid);
+                            if (offer == null) {
+                                offer = dataService.cacheOfferFirst(oid);
+                            }
                             Publisher publisher = null;
                             if (pid == 0) {
                                 publisher = new Publisher(0, "SDK", "SDK");
@@ -75,6 +78,7 @@ public class CounterJob {
                             } else {
                                 publisher = dataService.getPublisherCache(pid);
                             }
+
                             String cdatestr = datestr + " " + hour + ":00:00";
                             Date cdate = DateUtils.parseDate(cdatestr, "yyyy-MM-dd HH:mm:ss");
 
