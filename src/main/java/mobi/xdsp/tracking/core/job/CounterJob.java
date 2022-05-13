@@ -211,10 +211,6 @@ public class CounterJob {
     }
 
     public static void main(String[] args) {
-        try {
-            System.out.println(DateUtils.parseDate("2021-04-12 1:22:11", "yyyy-MM-dd HH:mm:ss"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        
     }
 }

@@ -35,9 +35,11 @@
     <result column="deleteflag" jdbcType="INTEGER" property="deleteflag" />
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="trackingtype" jdbcType="INTEGER" property="trackingtype" />
-    <result column="hourcap" jdbcType="INTEGER" property="hourcap" />
-    <result column="caputc" jdbcType="INTEGER" property="caputc" />
     <result column="ukey" jdbcType="VARCHAR" property="ukey" />
+    <result column="hourcap" jdbcType="INTEGER" property="hourcap" />
+    <result column="hourclickcap" jdbcType="INTEGER" property="hourclickcap" />
+    <result column="redirectids" jdbcType="VARCHAR" property="redirectids" />
+    <result column="caputc" jdbcType="INTEGER" property="caputc" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="mobi.xdsp.tracking.entity.PublisherOfferWithBLOBs">
     <result column="whitelist" jdbcType="LONGVARCHAR" property="whitelist" />
@@ -106,7 +108,7 @@
     redirect, applytime, approvaltime, starttime, expirationtime, status, createtime, 
     updatetime, createuser, updateuser, advertiserid, payoutrate, dailydummycap, actioncode, 
     actionlog, mixrate, directrate, deductrate, oaplacements, directofferids, configflag, 
-    deleteflag, state, trackingtype, ukey,caputc,hourcap
+    deleteflag, state, trackingtype, ukey, hourcap, hourclickcap, redirectids, caputc
   </sql>
   <sql id="Blob_Column_List">
     whitelist, blacklist
@@ -182,7 +184,9 @@
       directrate, deductrate, oaplacements, 
       directofferids, configflag, deleteflag, 
       state, trackingtype, ukey, 
-      whitelist, blacklist)
+      hourcap, hourclickcap, redirectids, 
+      caputc, whitelist, blacklist
+      )
     values (#{offerid,jdbcType=INTEGER}, #{publisherid,jdbcType=INTEGER}, #{payout,jdbcType=DECIMAL}, 
       #{dailybudget,jdbcType=REAL}, #{monthbudget,jdbcType=REAL}, #{dailycap,jdbcType=INTEGER}, 
       #{monthcap,jdbcType=INTEGER}, #{clickcap,jdbcType=INTEGER}, #{redirect,jdbcType=TINYINT}, 
@@ -194,7 +198,9 @@
       #{directrate,jdbcType=INTEGER}, #{deductrate,jdbcType=INTEGER}, #{oaplacements,jdbcType=VARCHAR}, 
       #{directofferids,jdbcType=VARCHAR}, #{configflag,jdbcType=INTEGER}, #{deleteflag,jdbcType=INTEGER}, 
       #{state,jdbcType=INTEGER}, #{trackingtype,jdbcType=INTEGER}, #{ukey,jdbcType=VARCHAR}, 
-      #{whitelist,jdbcType=LONGVARCHAR}, #{blacklist,jdbcType=LONGVARCHAR})
+      #{hourcap,jdbcType=INTEGER}, #{hourclickcap,jdbcType=INTEGER}, #{redirectids,jdbcType=VARCHAR}, 
+      #{caputc,jdbcType=INTEGER}, #{whitelist,jdbcType=LONGVARCHAR}, #{blacklist,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="mobi.xdsp.tracking.entity.PublisherOfferWithBLOBs">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -300,6 +306,18 @@
       </if>
       <if test="ukey != null">
         ukey,
+      </if>
+      <if test="hourcap != null">
+        hourcap,
+      </if>
+      <if test="hourclickcap != null">
+        hourclickcap,
+      </if>
+      <if test="redirectids != null">
+        redirectids,
+      </if>
+      <if test="caputc != null">
+        caputc,
       </if>
       <if test="whitelist != null">
         whitelist,
@@ -407,6 +425,18 @@
       </if>
       <if test="ukey != null">
         #{ukey,jdbcType=VARCHAR},
+      </if>
+      <if test="hourcap != null">
+        #{hourcap,jdbcType=INTEGER},
+      </if>
+      <if test="hourclickcap != null">
+        #{hourclickcap,jdbcType=INTEGER},
+      </if>
+      <if test="redirectids != null">
+        #{redirectids,jdbcType=VARCHAR},
+      </if>
+      <if test="caputc != null">
+        #{caputc,jdbcType=INTEGER},
       </if>
       <if test="whitelist != null">
         #{whitelist,jdbcType=LONGVARCHAR},
@@ -527,6 +557,18 @@
       <if test="record.ukey != null">
         ukey = #{record.ukey,jdbcType=VARCHAR},
       </if>
+      <if test="record.hourcap != null">
+        hourcap = #{record.hourcap,jdbcType=INTEGER},
+      </if>
+      <if test="record.hourclickcap != null">
+        hourclickcap = #{record.hourclickcap,jdbcType=INTEGER},
+      </if>
+      <if test="record.redirectids != null">
+        redirectids = #{record.redirectids,jdbcType=VARCHAR},
+      </if>
+      <if test="record.caputc != null">
+        caputc = #{record.caputc,jdbcType=INTEGER},
+      </if>
       <if test="record.whitelist != null">
         whitelist = #{record.whitelist,jdbcType=LONGVARCHAR},
       </if>
@@ -574,6 +616,10 @@
       state = #{record.state,jdbcType=INTEGER},
       trackingtype = #{record.trackingtype,jdbcType=INTEGER},
       ukey = #{record.ukey,jdbcType=VARCHAR},
+      hourcap = #{record.hourcap,jdbcType=INTEGER},
+      hourclickcap = #{record.hourclickcap,jdbcType=INTEGER},
+      redirectids = #{record.redirectids,jdbcType=VARCHAR},
+      caputc = #{record.caputc,jdbcType=INTEGER},
       whitelist = #{record.whitelist,jdbcType=LONGVARCHAR},
       blacklist = #{record.blacklist,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -615,7 +661,11 @@
       deleteflag = #{record.deleteflag,jdbcType=INTEGER},
       state = #{record.state,jdbcType=INTEGER},
       trackingtype = #{record.trackingtype,jdbcType=INTEGER},
-      ukey = #{record.ukey,jdbcType=VARCHAR}
+      ukey = #{record.ukey,jdbcType=VARCHAR},
+      hourcap = #{record.hourcap,jdbcType=INTEGER},
+      hourclickcap = #{record.hourclickcap,jdbcType=INTEGER},
+      redirectids = #{record.redirectids,jdbcType=VARCHAR},
+      caputc = #{record.caputc,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -722,6 +772,18 @@
       <if test="ukey != null">
         ukey = #{ukey,jdbcType=VARCHAR},
       </if>
+      <if test="hourcap != null">
+        hourcap = #{hourcap,jdbcType=INTEGER},
+      </if>
+      <if test="hourclickcap != null">
+        hourclickcap = #{hourclickcap,jdbcType=INTEGER},
+      </if>
+      <if test="redirectids != null">
+        redirectids = #{redirectids,jdbcType=VARCHAR},
+      </if>
+      <if test="caputc != null">
+        caputc = #{caputc,jdbcType=INTEGER},
+      </if>
       <if test="whitelist != null">
         whitelist = #{whitelist,jdbcType=LONGVARCHAR},
       </if>
@@ -766,6 +828,10 @@
       state = #{state,jdbcType=INTEGER},
       trackingtype = #{trackingtype,jdbcType=INTEGER},
       ukey = #{ukey,jdbcType=VARCHAR},
+      hourcap = #{hourcap,jdbcType=INTEGER},
+      hourclickcap = #{hourclickcap,jdbcType=INTEGER},
+      redirectids = #{redirectids,jdbcType=VARCHAR},
+      caputc = #{caputc,jdbcType=INTEGER},
       whitelist = #{whitelist,jdbcType=LONGVARCHAR},
       blacklist = #{blacklist,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
@@ -804,7 +870,11 @@
       deleteflag = #{deleteflag,jdbcType=INTEGER},
       state = #{state,jdbcType=INTEGER},
       trackingtype = #{trackingtype,jdbcType=INTEGER},
-      ukey = #{ukey,jdbcType=VARCHAR}
+      ukey = #{ukey,jdbcType=VARCHAR},
+      hourcap = #{hourcap,jdbcType=INTEGER},
+      hourclickcap = #{hourclickcap,jdbcType=INTEGER},
+      redirectids = #{redirectids,jdbcType=VARCHAR},
+      caputc = #{caputc,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
@@ -842,6 +912,10 @@
     state,
     trackingtype,
     ukey,
+    hourcap,
+    hourclickcap,
+    redirectids,
+    caputc,
     whitelist,
     blacklist
     )
@@ -881,6 +955,10 @@
       #{item.state,jdbcType=INTEGER},
       #{item.trackingtype,jdbcType=INTEGER},
       #{item.ukey,jdbcType=VARCHAR},
+      #{item.hourcap,jdbcType=INTEGER},
+      #{item.hourclickcap,jdbcType=INTEGER},
+      #{item.redirectids,jdbcType=VARCHAR},
+      #{item.caputc,jdbcType=INTEGER},
       #{item.whitelist,jdbcType=LONGVARCHAR},
       #{item.blacklist,jdbcType=LONGVARCHAR}
       )

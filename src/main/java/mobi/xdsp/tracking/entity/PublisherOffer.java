@@ -72,10 +72,13 @@ public class PublisherOffer {
 
     private String ukey;
 
+    private Integer hourcap=0;
 
-    private int hourcap = -1;
+    private Integer hourclickcap;
 
-    private int caputc = 0;
+    private String redirectids;
+
+    private Integer caputc=0;
 
     public Integer getId() {
         return id;
@@ -349,19 +352,35 @@ public class PublisherOffer {
         this.ukey = ukey == null ? null : ukey.trim();
     }
 
-    public int getHourcap() {
+    public Integer getHourcap() {
         return hourcap;
     }
 
-    public void setHourcap(int hourcap) {
+    public void setHourcap(Integer hourcap) {
         this.hourcap = hourcap;
     }
 
-    public int getCaputc() {
+    public Integer getHourclickcap() {
+        return hourclickcap;
+    }
+
+    public void setHourclickcap(Integer hourclickcap) {
+        this.hourclickcap = hourclickcap;
+    }
+
+    public String getRedirectids() {
+        return redirectids;
+    }
+
+    public void setRedirectids(String redirectids) {
+        this.redirectids = redirectids == null ? null : redirectids.trim();
+    }
+
+    public Integer getCaputc() {
         return caputc;
     }
 
-    public void setCaputc(int caputc) {
+    public void setCaputc(Integer caputc) {
         this.caputc = caputc;
     }
 }

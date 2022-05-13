@@ -2225,6 +2225,256 @@ public class PublisherOfferExample {
             addCriterion("ukey not between", value1, value2, "ukey");
             return (Criteria) this;
         }
+
+        public Criteria andHourcapIsNull() {
+            addCriterion("hourcap is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapIsNotNull() {
+            addCriterion("hourcap is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapEqualTo(Integer value) {
+            addCriterion("hourcap =", value, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapNotEqualTo(Integer value) {
+            addCriterion("hourcap <>", value, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapGreaterThan(Integer value) {
+            addCriterion("hourcap >", value, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapGreaterThanOrEqualTo(Integer value) {
+            addCriterion("hourcap >=", value, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapLessThan(Integer value) {
+            addCriterion("hourcap <", value, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapLessThanOrEqualTo(Integer value) {
+            addCriterion("hourcap <=", value, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapIn(List<Integer> values) {
+            addCriterion("hourcap in", values, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapNotIn(List<Integer> values) {
+            addCriterion("hourcap not in", values, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapBetween(Integer value1, Integer value2) {
+            addCriterion("hourcap between", value1, value2, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourcapNotBetween(Integer value1, Integer value2) {
+            addCriterion("hourcap not between", value1, value2, "hourcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapIsNull() {
+            addCriterion("hourclickcap is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapIsNotNull() {
+            addCriterion("hourclickcap is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapEqualTo(Integer value) {
+            addCriterion("hourclickcap =", value, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapNotEqualTo(Integer value) {
+            addCriterion("hourclickcap <>", value, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapGreaterThan(Integer value) {
+            addCriterion("hourclickcap >", value, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapGreaterThanOrEqualTo(Integer value) {
+            addCriterion("hourclickcap >=", value, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapLessThan(Integer value) {
+            addCriterion("hourclickcap <", value, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapLessThanOrEqualTo(Integer value) {
+            addCriterion("hourclickcap <=", value, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapIn(List<Integer> values) {
+            addCriterion("hourclickcap in", values, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapNotIn(List<Integer> values) {
+            addCriterion("hourclickcap not in", values, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapBetween(Integer value1, Integer value2) {
+            addCriterion("hourclickcap between", value1, value2, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andHourclickcapNotBetween(Integer value1, Integer value2) {
+            addCriterion("hourclickcap not between", value1, value2, "hourclickcap");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsIsNull() {
+            addCriterion("redirectids is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsIsNotNull() {
+            addCriterion("redirectids is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsEqualTo(String value) {
+            addCriterion("redirectids =", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsNotEqualTo(String value) {
+            addCriterion("redirectids <>", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsGreaterThan(String value) {
+            addCriterion("redirectids >", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsGreaterThanOrEqualTo(String value) {
+            addCriterion("redirectids >=", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsLessThan(String value) {
+            addCriterion("redirectids <", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsLessThanOrEqualTo(String value) {
+            addCriterion("redirectids <=", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsLike(String value) {
+            addCriterion("redirectids like", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsNotLike(String value) {
+            addCriterion("redirectids not like", value, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsIn(List<String> values) {
+            addCriterion("redirectids in", values, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsNotIn(List<String> values) {
+            addCriterion("redirectids not in", values, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsBetween(String value1, String value2) {
+            addCriterion("redirectids between", value1, value2, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectidsNotBetween(String value1, String value2) {
+            addCriterion("redirectids not between", value1, value2, "redirectids");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcIsNull() {
+            addCriterion("caputc is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcIsNotNull() {
+            addCriterion("caputc is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcEqualTo(Integer value) {
+            addCriterion("caputc =", value, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcNotEqualTo(Integer value) {
+            addCriterion("caputc <>", value, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcGreaterThan(Integer value) {
+            addCriterion("caputc >", value, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcGreaterThanOrEqualTo(Integer value) {
+            addCriterion("caputc >=", value, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcLessThan(Integer value) {
+            addCriterion("caputc <", value, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcLessThanOrEqualTo(Integer value) {
+            addCriterion("caputc <=", value, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcIn(List<Integer> values) {
+            addCriterion("caputc in", values, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcNotIn(List<Integer> values) {
+            addCriterion("caputc not in", values, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcBetween(Integer value1, Integer value2) {
+            addCriterion("caputc between", value1, value2, "caputc");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaputcNotBetween(Integer value1, Integer value2) {
+            addCriterion("caputc not between", value1, value2, "caputc");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
