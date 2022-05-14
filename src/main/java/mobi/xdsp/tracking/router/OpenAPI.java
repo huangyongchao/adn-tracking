@@ -17,12 +17,14 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.*;
+
 @RestController
 public class OpenAPI {
     @Autowired
     WebApplicationContext applicationContext;
     @Autowired
     OfferMapper offerMapper;
+
     @GetMapping("/cacheaff")
     public Object cacheaff() {
         return CacheData.AFF_CACHE;
@@ -32,9 +34,9 @@ public class OpenAPI {
 
     @GetMapping("/refreshapicache")
     public Object activeoffers(@RequestParam(name = "token") String token) {
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return "No tokne";
-        }else{
+        } else {
             OffersQueryAPI.QUERY_CACHE.remove(token);
             OffersQueryAPI.QUERY_LOCK.remove(token);
 
@@ -44,6 +46,11 @@ public class OpenAPI {
 
     }
 
+    @GetMapping("/posc")
+    public Object pub_off_smt_cache() {
+        return JSONObject.toJSONString(CacheData.PUB_OFF_SMT_CACHE);
+
+    }
 
 
     @RequestMapping("/apis")
