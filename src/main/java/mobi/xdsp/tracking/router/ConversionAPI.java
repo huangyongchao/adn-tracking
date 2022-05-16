@@ -217,7 +217,13 @@ public class ConversionAPI {
             //包装click
             if (clickid.startsWith("PE")) {
                 //Pubearn 平台点击
-                Optional<Click> clickOptional = repository.findById(clickid);
+                String unpackclickid = null;
+                if (clickid.indexOf("FFF") > 0) {
+                    unpackclickid = clickid.split("FFF")[0];
+                } else {
+                    unpackclickid = clickid;
+                }
+                Optional<Click> clickOptional = repository.findById(unpackclickid);
 
                 if (clickOptional.isPresent()) {
                     click = clickOptional.get();
