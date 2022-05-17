@@ -212,7 +212,9 @@ public class AdTool {
         if (track.indexOf("{store_appid}") > -1 && StringUtils.isNotBlank(click.getAppId())) {
             track = StringUtils.replaceAll(track, "\\{store_appid}", click.getAppId());
         }
-
+        if (track.indexOf("{oid}") > -1) {
+            track = StringUtils.replaceAll(track, "\\{oid}", offer.getId().toString());
+        }
         return track;
 
     }
