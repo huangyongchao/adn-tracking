@@ -370,9 +370,8 @@ public class ConversionAPI {
                     }
 
                     if (deductrate > 0) {
-                        int seed = deductrate / 5;
-                        int r = new Random().nextInt(20);
-                        if (r <= seed) {
+                        int r = new Random().nextInt(100);
+                        if (r <= deductrate) {
                             activate.setStatus(PBStateE.DEDUCT.code);
                             activate.setNoticestatus(PBNoticeStateE.STOP.code);
                             activate.setDeductcnt(1);

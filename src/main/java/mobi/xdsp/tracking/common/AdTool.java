@@ -315,12 +315,15 @@ public class AdTool {
         clickid = new String(Base64Utils.decodeFromString(clickid), Charset.defaultCharset());
 
 
-        System.out.println(unpackClickId(clickid));*/
+        System.out.println(unpackClickId(clickid));*//*
         System.out.println(getTargetHours("1 , 2 , 4"));
 
         int hour = LocalDateTime.now(ZoneOffset.UTC).getHour();
 
-        System.out.println(hour);
+        System.out.println(hour);*/
+        String s = "SSSSSFFFDDDDD";
+        System.out.println(s.split("FFF")[0]);
+        System.out.println(s.split("FFF")[1]);
     }
 
 }
