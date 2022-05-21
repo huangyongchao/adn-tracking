@@ -115,6 +115,7 @@ public class ConversionAPI {
         boolean isRej = false;
         boolean isConversion = false;
         boolean isMMP = false;
+        boolean isPub = false;
         boolean mafclick = false;
         boolean sdkclick = false;
 
@@ -359,26 +360,9 @@ public class ConversionAPI {
                     }
                     activate.setClicktime(DateTimeUtil.dateToStrLong(click.getCt()));
                     //扣量
+                    isPub = true;
 
-                    Integer deductrate = puboffer.getDeductrate();
 
-                    if (deductrate == null) {
-                        deductrate = publisher.getDeductrate();
-                    }
-                    if (deductrate == null) {
-                        deductrate = 0;
-                    }
-
-                    if (deductrate > 0) {
-                        int r = new Random().nextInt(100);
-                        if (r <= deductrate) {
-                            activate.setStatus(PBStateE.DEDUCT.code);
-                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                            activate.setDeductcnt(1);
-                            activate.setActivecnt(0);
-
-                        }
-                    }
 
 
                 } else if (sdkclick) {
@@ -475,6 +459,29 @@ public class ConversionAPI {
 
                 } else {
                     if (publisher.getId() != null && publisher.getId() > 3) {
+
+                        if(isPub){
+                            Integer deductrate = puboffer.getDeductrate();
+
+                            if (deductrate == null) {
+                                deductrate = publisher.getDeductrate();
+                            }
+                            if (deductrate == null) {
+                                deductrate = 0;
+                            }
+
+                            if (deductrate > 0) {
+                                int r = new Random().nextInt(100);
+                                if (r <= deductrate) {
+                                    activate.setStatus(PBStateE.DEDUCT.code);
+                                    activate.setNoticestatus(PBNoticeStateE.STOP.code);
+                                    activate.setDeductcnt(1);
+                                    activate.setActivecnt(0);
+
+                                }
+                            }
+                        }
+
                         // Postback 下发
                         if (PBStateE.VALID.code == activate.getStatus() && (activate.getNoticestatus() == null)) {
                             //发PB
