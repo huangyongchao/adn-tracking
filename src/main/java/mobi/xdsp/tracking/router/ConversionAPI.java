@@ -246,6 +246,7 @@ public class ConversionAPI {
                 try {
                     activate.setSsp(click.getDeviceInfo().getSsp());
                     activate.setSspname(ExchangesE.getKey(activate.getSsp()));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -363,9 +364,12 @@ public class ConversionAPI {
                     isPub = true;
 
 
-
-
                 } else if (sdkclick) {
+
+                    if (offer.getAffiliatename().indexOf("Lazada") >= 0) {
+                        activate.setSubid1(activate.getPubsub());
+                        activate.setPubsub(activate.getSspname());
+                    }
                     if (offer.getDefaultpayout() == null) {
                         offer.setDefaultpayout(0f);
                     }
@@ -460,7 +464,7 @@ public class ConversionAPI {
                 } else {
                     if (publisher.getId() != null && publisher.getId() > 3) {
 
-                        if(isPub){
+                        if (isPub) {
                             Integer deductrate = puboffer.getDeductrate();
 
                             if (deductrate == null) {
