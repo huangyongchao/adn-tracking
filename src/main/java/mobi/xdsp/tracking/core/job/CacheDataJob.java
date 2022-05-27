@@ -55,10 +55,6 @@ public class CacheDataJob {
 
     public static Set<Integer> LIVE_OFFER_ID = Sets.newHashSet();
 
-    @PostConstruct
-    public void startup() {
-        cachePublisherOfferCap();
-    }
 
     @Scheduled(cron = "* */3 * * * ?")
     public void cachePublisherOfferCap() {
