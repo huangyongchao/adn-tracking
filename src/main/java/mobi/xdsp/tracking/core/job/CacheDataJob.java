@@ -183,9 +183,12 @@ public class CacheDataJob {
             e.printStackTrace();
         }
         // 更新 重定向
-        CacheData.PUB_OFF_CACHE.forEach((k, v) -> {
+        CacheData.PUB_OFF_CACHE.values().forEach(v -> {
             try {
-                if (StringUtils.isNotBlank(v.getRedirectids())) {
+                String pokey = v.getPublisherid() + "_" + v.getOfferid();
+
+                if (StringUtils.isNotBlank(v.getRedirectids()) && !"-1".equalsIgnoreCase(v.getRedirectids())) {
+
                     String[] redirects = v.getRedirectids().split(",");
                     if (redirects != null && redirects.length > 0) {
                         List<Offer> offers = Lists.newLinkedList();
@@ -199,10 +202,12 @@ public class CacheDataJob {
                             });
                         }
 
-                        CacheData.PUB_OFF_SMT_CACHE_OFFERS.put(k, offers);
+                        CacheData.PUB_OFF_SMT_CACHE_OFFERS.put(pokey, offers);
                     } else {
-                        CacheData.PUB_OFF_SMT_CACHE_OFFERS.remove(k);
+                        CacheData.PUB_OFF_SMT_CACHE_OFFERS.remove(pokey);
                     }
+                } else {
+                    CacheData.PUB_OFF_SMT_CACHE_OFFERS.remove(pokey);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
