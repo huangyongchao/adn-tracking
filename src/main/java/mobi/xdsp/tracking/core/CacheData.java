@@ -7,6 +7,7 @@ import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,6 +32,7 @@ public class CacheData {
 
     public static Map<String, PublisherOffer> PUB_OFF_CACHE = Maps.newConcurrentMap();
     public static Map<String, SmartLinkDto> PUB_OFF_SMT_CACHE = Maps.newConcurrentMap();
+    public static Map<String, List<Offer>> PUB_OFF_SMT_CACHE_OFFERS = Maps.newConcurrentMap();
     public static Map<String, Integer> PUB_OFF_CLICKCAP_CACHE = Maps.newConcurrentMap();
 
     public static Map<Integer, PublisherOffer> SUB_CACHE = Maps.newConcurrentMap();
@@ -38,6 +40,7 @@ public class CacheData {
 
 
     public static Map<String, AtomicInteger> DAILY_CAP_CACHE = Maps.newConcurrentMap();
+    public static Map<String, Integer> PUB_OFFER_CONVS = Maps.newConcurrentMap();
 
 
 }

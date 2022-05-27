@@ -138,7 +138,7 @@ public class PidMonitorJob {
             apps.addAll(v);
         });
 
-        if(CollectionUtils.isEmpty(apps)){
+        if (CollectionUtils.isEmpty(apps)) {
             return;
         }
         example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name)).andTrackurlLike("%.appsflyer.%").andAppidIn(apps);
@@ -258,6 +258,10 @@ public class PidMonitorJob {
     Map<String, List<String>> PID_APPS = Maps.newHashMap();
 
     public void updatePidState(String pid, String st, String et, String[] appids) {
+
+        if (appids == null || appids.length == 0) {
+            return;
+        }
         Date date = new Date();
 
         PidMonitor pidMonitor = new PidMonitor();

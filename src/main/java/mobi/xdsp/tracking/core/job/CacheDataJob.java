@@ -1,5 +1,6 @@
 package mobi.xdsp.tracking.core.job;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -14,18 +15,23 @@ import mobi.xdsp.tracking.entity.*;
 import mobi.xdsp.tracking.mapper.ActivateMapper;
 import mobi.xdsp.tracking.mapper.OfferMapper;
 import mobi.xdsp.tracking.mapper.PublisherOfferMapper;
+import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Component
 public class CacheDataJob {
@@ -35,14 +41,36 @@ public class CacheDataJob {
     private ActivateMapper activateMapper;
     @Autowired
     private PublisherOfferMapper publisherOfferMapper;
+    @Autowired
+    private DataService dataService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Value("${clickcapweight}")
     private float clickcapweight;
     @Autowired
     Mailer mailer;
 
-    private static final Logger clicklog = LoggerFactory.getLogger("click");
+    private static final Logger logger = LoggerFactory.getLogger(CacheDataJob.class);
 
     public static Set<Integer> LIVE_OFFER_ID = Sets.newHashSet();
+
+    @PostConstruct
+    public void startup() {
+        cachePublisherOfferCap();
+    }
+
+    @Scheduled(cron = "* */3 * * * ?")
+    public void cachePublisherOfferCap() {
+        String start = DateTimeUtil.getDayStartStr();
+        String end = DateTimeUtil.getDayEndStr();
+        String sql = "select s.channelId as pid ,s.offerUId as oid ,count(*) convs  from activate s where s.status =1 and  s.channelId>3 and  s.insertTime between  '" + start + "' and  '" + end + "'  group by  s.channelId,s.offerUId";
+        logger.warn("CACHECAP:" + sql);
+
+        List<Map<String, Object>> DAY_CONVS = jdbcTemplate.queryForList(sql);
+        logger.warn("CACHECAP:" + JSONObject.toJSONString(DAY_CONVS));
+
+    }
 
     @Scheduled(cron = "* */2 * * * ?")
     public void updateOfferCacheJob() {
@@ -118,7 +146,33 @@ public class CacheDataJob {
                         Float clickCap = n.getClickcap() * clickcapweight;
                         CacheData.PUB_OFF_CLICKCAP_CACHE.put(pokey, clickCap.intValue());
                     }
-                    //配置了SMT
+                    // 更新 重定向
+
+                    try {
+                        if (StringUtils.isNotBlank(n.getRedirectids())) {
+                            String[] redirects = n.getRedirectids().split(",");
+                            if (redirects != null && redirects.length > 0) {
+                                List<Offer> offers = Lists.newLinkedList();
+                                List<Integer> ids = Arrays.stream(redirects).map(id -> id.trim().replaceAll(" ", "")).map(id -> Integer.parseInt(id)).collect(Collectors.toList());
+                                if (!CollectionUtils.isEmpty(ids)) {
+                                    ids.forEach(id -> {
+                                        Offer offer = dataService.cacheOfferFirst(id);
+                                        if (offer != null) {
+                                            offers.add(offer);
+                                        }
+                                    });
+                                }
+
+                                CacheData.PUB_OFF_SMT_CACHE_OFFERS.put(pokey, offers);
+                            } else {
+                                CacheData.PUB_OFF_SMT_CACHE_OFFERS.remove(pokey);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // end
+                    /*//配置了SMT
                     try {
                         if (StringUtils.isNotBlank(n.getRedirectids()) && n.getRedirectids().indexOf("#") > 0) {
 
@@ -142,7 +196,7 @@ public class CacheDataJob {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
 
                     // 10196581#1,10196574#1,10196555#6
 
@@ -155,7 +209,10 @@ public class CacheDataJob {
 
             e.printStackTrace();
         }
+        CacheData.PUB_OFF_SMT_CACHE_OFFERS.forEach((k, v) -> {
+            logger.warn("OFFERREDIRECTS:{}", JSONObject.toJSONString(v.stream().map(n -> n.getId()).collect(Collectors.toList())));
 
+        });
 
     }
 
