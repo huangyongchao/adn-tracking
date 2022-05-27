@@ -146,31 +146,8 @@ public class CacheDataJob {
                         Float clickCap = n.getClickcap() * clickcapweight;
                         CacheData.PUB_OFF_CLICKCAP_CACHE.put(pokey, clickCap.intValue());
                     }
-                    // 更新 重定向
 
-                    try {
-                        if (StringUtils.isNotBlank(n.getRedirectids())) {
-                            String[] redirects = n.getRedirectids().split(",");
-                            if (redirects != null && redirects.length > 0) {
-                                List<Offer> offers = Lists.newLinkedList();
-                                List<Integer> ids = Arrays.stream(redirects).map(id -> id.trim().replaceAll(" ", "")).map(id -> Integer.parseInt(id)).collect(Collectors.toList());
-                                if (!CollectionUtils.isEmpty(ids)) {
-                                    ids.forEach(id -> {
-                                        Offer offer = dataService.cacheOfferFirst(id);
-                                        if (offer != null) {
-                                            offers.add(offer);
-                                        }
-                                    });
-                                }
 
-                                CacheData.PUB_OFF_SMT_CACHE_OFFERS.put(pokey, offers);
-                            } else {
-                                CacheData.PUB_OFF_SMT_CACHE_OFFERS.remove(pokey);
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     // end
                     /*//配置了SMT
                     try {
@@ -209,6 +186,33 @@ public class CacheDataJob {
 
             e.printStackTrace();
         }
+        // 更新 重定向
+        CacheData.PUB_OFF_CACHE.forEach((k, v) -> {
+            try {
+                if (StringUtils.isNotBlank(v.getRedirectids())) {
+                    String[] redirects = v.getRedirectids().split(",");
+                    if (redirects != null && redirects.length > 0) {
+                        List<Offer> offers = Lists.newLinkedList();
+                        List<Integer> ids = Arrays.stream(redirects).map(id -> id.trim().replaceAll(" ", "")).map(id -> Integer.parseInt(id)).collect(Collectors.toList());
+                        if (!CollectionUtils.isEmpty(ids)) {
+                            ids.forEach(id -> {
+                                Offer offer = dataService.cacheOfferFirst(id);
+                                if (offer != null) {
+                                    offers.add(offer);
+                                }
+                            });
+                        }
+
+                        CacheData.PUB_OFF_SMT_CACHE_OFFERS.put(k, offers);
+                    } else {
+                        CacheData.PUB_OFF_SMT_CACHE_OFFERS.remove(k);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         CacheData.PUB_OFF_SMT_CACHE_OFFERS.forEach((k, v) -> {
             logger.warn("OFFERREDIRECTS:{},{}", k, JSONObject.toJSONString(v.stream().map(n -> n.getId()).collect(Collectors.toList())));
 
