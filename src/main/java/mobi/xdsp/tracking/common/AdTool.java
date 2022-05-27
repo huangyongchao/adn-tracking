@@ -144,7 +144,8 @@ public class AdTool {
 
 
     public static String trackurl(Click click, Offer offer) {
-        String track = chooseTrackUrl(click, offer);
+        //String track = chooseTrackUrl(click, offer);
+        String track = offer.getTrackurl();
         try {
             if (track.indexOf("{pub_subid}") > -1 && StringUtils.isNotBlank(click.getMixSub())) {
                 track = StringUtils.replaceAll(track, "\\{pub_subid}", URLEncoder.encode(click.getMixSub(), "utf-8"));

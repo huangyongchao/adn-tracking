@@ -250,7 +250,7 @@ public class TrackingAPI {
         String rua = request.getHeader("User-Agent");
         Click click = new Click();
 
-        click.setOid(offer.getId());
+        click.setOid(publisherOffer.getOfferid());
         click.setPid(publisherOffer.getPublisherid());
         click.setPubSub(pubSub);
         click.setAppId(appid);
