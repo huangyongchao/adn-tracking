@@ -203,9 +203,12 @@ public class TrackingAPI {
 
         }
 
+        //如果存在重定向 offer 更新重定向offer
         if (CacheData.PUB_OFF_SMT_CACHE_OFFERS.containsKey(pokey)) {
             List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(pokey);
             if (!CollectionUtils.isEmpty(rsoffers)) {
+                Offer oriOffer = offer;
+                String oriPokey = pokey;
                 int l = rsoffers.size();
                 Random random = new Random();
                 int index = random.nextInt(l + 1);
@@ -213,6 +216,10 @@ public class TrackingAPI {
                     offer = rsoffers.get(index);
                     pokey = publisherid + "_" + offer.getId();
                     publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offer.getId());
+                    if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
+                        offer = oriOffer;
+                        pokey = oriPokey;
+                    }
                 }
             }
         }

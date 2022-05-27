@@ -196,4 +196,20 @@ public class DataServiceLocalImpl implements DataService {
         }
         return 0;
     }
+
+    public static void main(String[] args) {
+        Offer offer = new Offer();
+        System.out.println(offer);
+        Offer oriOffer = offer;
+        System.out.println(oriOffer);
+
+        offer = new Offer();
+
+        System.out.println(offer);
+        offer = oriOffer;
+        System.out.println(offer);
+
+
+
+    }
 }
