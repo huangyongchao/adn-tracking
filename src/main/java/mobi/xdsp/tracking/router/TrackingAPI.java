@@ -227,7 +227,7 @@ public class TrackingAPI {
                         newO = false;
                     }
                     if (newO) {
-                        logger.warn("REDIRECTOFFER:{}", pokey);
+                        logger.warn("REDIRECTOFFER:{},{},{},{}", pokey, offer.getOffername(),publisherOffer.getOfferid(),publisherOffer.getPublisherid());
                     }
 
                 }
