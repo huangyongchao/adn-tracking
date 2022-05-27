@@ -213,13 +213,20 @@ public class TrackingAPI {
                 Random random = new Random();
                 int index = random.nextInt(l + 1);
                 if (index < l) {
+                    boolean newO = true;
                     offer = rsoffers.get(index);
                     pokey = publisherid + "_" + offer.getId();
+
                     publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offer.getId());
                     if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
                         offer = oriOffer;
                         pokey = oriPokey;
+                        newO = false;
                     }
+                    if (newO) {
+                        logger.warn("REDIRECTOFFER:{}", pokey);
+                    }
+
                 }
             }
         }
