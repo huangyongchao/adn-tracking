@@ -209,6 +209,8 @@ public class TrackingAPI {
             if (!CollectionUtils.isEmpty(rsoffers)) {
                 Offer oriOffer = offer;
                 String oriPokey = pokey;
+                PublisherOffer oriPubOffer = publisherOffer;
+
                 int l = rsoffers.size();
                 Random random = new Random();
                 int index = random.nextInt(l + 1);
@@ -221,6 +223,7 @@ public class TrackingAPI {
                     if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
                         offer = oriOffer;
                         pokey = oriPokey;
+                        publisherOffer = oriPubOffer;
                         newO = false;
                     }
                     if (newO) {
@@ -247,8 +250,8 @@ public class TrackingAPI {
         String rua = request.getHeader("User-Agent");
         Click click = new Click();
 
-        click.setOid(offerid);
-        click.setPid(publisherid);
+        click.setOid(offer.getId());
+        click.setPid(publisherOffer.getPublisherid());
         click.setPubSub(pubSub);
         click.setAppId(appid);
         click.setAppN(appname);
