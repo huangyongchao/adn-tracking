@@ -35,9 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class TrackingAPI {
@@ -203,6 +201,20 @@ public class TrackingAPI {
 
         if (publisherOffer.getClickcap() > 0) {
 
+        }
+
+        if (CacheData.PUB_OFF_SMT_CACHE_OFFERS.containsKey(pokey)) {
+            List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(pokey);
+            if (!CollectionUtils.isEmpty(rsoffers)) {
+                int l = rsoffers.size();
+                Random random = new Random();
+                int index = random.nextInt(l + 1);
+                if (index < l) {
+                    offer = rsoffers.get(index);
+                    pokey = publisherid + "_" + offer.getId();
+                    publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offer.getId());
+                }
+            }
         }
 
         if (StringUtils.isBlank(pubClickid) && StringUtils.isNotBlank(sub3)) {

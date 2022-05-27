@@ -63,7 +63,9 @@ public class DataServiceLocalImpl implements DataService {
     @Override
     public PublisherOffer cachePublisherOfferFirst(String key, Integer publisherid, Integer offerid) {
 
-        CacheData.PUBOFF_SYCN_LOCK.put(key, SychLockE.TAKING.code);
+        if (CacheData.PUB_OFF_CACHE.containsKey(key)) {
+            return CacheData.PUB_OFF_CACHE.get(key);
+        }
 
         PublisherOfferExample publisherOfferExample = new PublisherOfferExample();
         publisherOfferExample.createCriteria().andOfferidEqualTo(offerid).andPublisheridEqualTo(publisherid);
@@ -73,7 +75,6 @@ public class DataServiceLocalImpl implements DataService {
 
             PublisherOffer offer = list.get(0);
             CacheData.PUB_OFF_CACHE.put(key, offer);
-            CacheData.PUBOFF_SYCN_LOCK.put(key, SychLockE.LOCKED.code);
 
             return offer;
         }
