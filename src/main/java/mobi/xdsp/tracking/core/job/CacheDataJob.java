@@ -213,10 +213,8 @@ public class CacheDataJob {
             }
         });
 
-        CacheData.PUB_OFF_SMT_CACHE_OFFERS.forEach((k, v) -> {
-            logger.warn("OFFERREDIRECTS:{},{}", k, JSONObject.toJSONString(v.stream().map(n -> n.getId()).collect(Collectors.toList())));
+        logger.warn("OFFERREDIRECTS:{}", JSONObject.toJSONString(CacheData.PUB_OFF_SMT_CACHE_OFFERS));
 
-        });
 
     }
 
