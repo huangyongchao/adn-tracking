@@ -56,7 +56,7 @@ public class CacheDataJob {
     public static Set<Integer> LIVE_OFFER_ID = Sets.newHashSet();
 
 
-    @Scheduled(cron = "* */3 * * * ?")
+    @Scheduled(cron = "* 0/3 * * * ?")
     public void cachePublisherOfferCap() {
         Map<String, Integer> temp = Maps.newHashMap();
         String start = DateTimeUtil.getDayStartStr();
@@ -76,7 +76,7 @@ public class CacheDataJob {
 
     }
 
-    @Scheduled(cron = "* */2 * * * ?")
+    @Scheduled(cron = "* 0/2 * * * ?")
     public void updateOfferCacheJob() {
         try {
             if (CollectionUtils.isEmpty(CacheData.OFF_CACHE.keySet()) && LIVE_OFFER_ID.size() == 0) {
@@ -114,7 +114,7 @@ public class CacheDataJob {
      * <p>
      * 更新分机ClickCap
      */
-    @Scheduled(cron = "* */2 * * * ?")
+    @Scheduled(cron = "* 0/2 * * * ?")
     public void updatePublisherOfferCacheJob() {
         try {
 
