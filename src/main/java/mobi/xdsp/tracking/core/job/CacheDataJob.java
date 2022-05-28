@@ -58,13 +58,21 @@ public class CacheDataJob {
 
     @Scheduled(cron = "* */3 * * * ?")
     public void cachePublisherOfferCap() {
+        Map<String, Integer> temp = Maps.newHashMap();
         String start = DateTimeUtil.getDayStartStr();
         String end = DateTimeUtil.getDayEndStr();
         String sql = "select s.channelId as pid ,s.offerUId as oid ,count(*) convs  from activate s where s.status =1 and  s.channelId>3 and  s.insertTime between  '" + start + "' and  '" + end + "'  group by  s.channelId,s.offerUId";
-        logger.warn("CACHECAP:" + sql);
+        List<Map<String, Object>> dayConvs = jdbcTemplate.queryForList(sql);
+        if (!CollectionUtils.isEmpty(dayConvs)) {
+            dayConvs.forEach(n -> {
+                String pokey = n.get("pid").toString() + "_" + n.get("oid").toString();
+                int convs = Integer.parseInt(n.get("convs").toString());
+                temp.put(pokey, convs);
+            });
 
-        List<Map<String, Object>> DAY_CONVS = jdbcTemplate.queryForList(sql);
-        logger.warn("CACHECAP:" + JSONObject.toJSONString(DAY_CONVS));
+        }
+        CacheData.PUB_OFF_CAP_CACHE = temp;
+        logger.warn("CACHECAP:" + JSONObject.toJSONString(CacheData.PUB_OFF_CAP_CACHE));
 
     }
 

@@ -25,4 +25,6 @@ public interface DataService {
     public PublisherOffer getPubOffer(Integer pubid, Integer offid);
 
     public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer);
+
+    public boolean capFull(PublisherOffer publisherOffer,String pokey);
 }

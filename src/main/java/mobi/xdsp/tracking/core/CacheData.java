@@ -24,23 +24,25 @@ public class CacheData {
     public static String PUBLISHER_OFFER = "puo";
     public static String PUBLISHER_SUB = "psb";
     /*增量缓存*/
-    public static Map<Integer, Affiliate> AFF_CACHE = Maps.newConcurrentMap();
-    public static Map<Integer, Offer> OFF_CACHE = Maps.newConcurrentMap();
-    public static Map<Integer, Set<Integer>> OFF_TARGET_CACHE = Maps.newConcurrentMap();
-    public static Map<Integer, Publisher> PUB_CACHE = Maps.newConcurrentMap();
-    public static Map<String, Publisher> PUB_TOKEN = Maps.newConcurrentMap();
+    public static Map<Integer, Affiliate> AFF_CACHE = Maps.newHashMap();
+    public static Map<Integer, Offer> OFF_CACHE = Maps.newHashMap();
+    public static Map<Integer, Set<Integer>> OFF_TARGET_CACHE = Maps.newHashMap();
+    public static Map<Integer, Publisher> PUB_CACHE = Maps.newHashMap();
+    public static Map<String, Publisher> PUB_TOKEN = Maps.newHashMap();
 
-    public static Map<String, PublisherOffer> PUB_OFF_CACHE = Maps.newConcurrentMap();
-    public static Map<String, SmartLinkDto> PUB_OFF_SMT_CACHE = Maps.newConcurrentMap();
-    public static Map<String, List<Offer>> PUB_OFF_SMT_CACHE_OFFERS = Maps.newConcurrentMap();
-    public static Map<String, Integer> PUB_OFF_CLICKCAP_CACHE = Maps.newConcurrentMap();
+    public static Map<String, PublisherOffer> PUB_OFF_CACHE = Maps.newHashMap();
+    public static Map<String, Integer> PUB_OFF_CAP_CACHE = Maps.newHashMap();
+    public static Map<String, Integer> PUB_OFF_CLICK_CACHE = Maps.newHashMap();
+    public static Map<String, SmartLinkDto> PUB_OFF_SMT_CACHE = Maps.newHashMap();
+    public static Map<String, List<Offer>> PUB_OFF_SMT_CACHE_OFFERS = Maps.newHashMap();
+    public static Map<String, Integer> PUB_OFF_CLICKCAP_CACHE = Maps.newHashMap();
 
-    public static Map<Integer, PublisherOffer> SUB_CACHE = Maps.newConcurrentMap();
+    public static Map<Integer, PublisherOffer> SUB_CACHE = Maps.newHashMap();
     /*affiliate & publisher 初始化就加载*/
 
 
-    public static Map<String, AtomicInteger> DAILY_CAP_CACHE = Maps.newConcurrentMap();
-    public static Map<String, Integer> PUB_OFFER_CONVS = Maps.newConcurrentMap();
+    public static Map<String, AtomicInteger> DAILY_CAP_CACHE = Maps.newHashMap();
+    public static Map<String, Integer> PUB_OFFER_CONVS = Maps.newHashMap();
 
 
 }

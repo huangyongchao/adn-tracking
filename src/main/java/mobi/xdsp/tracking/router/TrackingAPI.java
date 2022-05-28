@@ -220,18 +220,24 @@ public class TrackingAPI {
                     pokey = publisherid + "_" + offer.getId();
 
                     publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offer.getId());
-                    if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
+                    if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState() || dataService.capFull(publisherOffer, pokey)) {
                         offer = oriOffer;
                         pokey = oriPokey;
                         publisherOffer = oriPubOffer;
                         newO = false;
                     }
                     if (newO) {
-                        logger.warn("REDIRECTOFFER:{},{},{},{}", pokey, offer.getOffername(),publisherOffer.getOfferid(),publisherOffer.getPublisherid());
+                        logger.warn("REDIRECTOFFER:{},{},{},{}", pokey, offer.getOffername(), publisherOffer.getOfferid(), publisherOffer.getPublisherid());
                     }
 
                 }
             }
+        }
+
+        // end
+
+        if (dataService.capFull(publisherOffer, pokey)) {
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer daiy Cap was full ");
         }
 
         if (StringUtils.isBlank(pubClickid) && StringUtils.isNotBlank(sub3)) {

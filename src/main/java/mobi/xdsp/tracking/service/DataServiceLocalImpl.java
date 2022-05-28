@@ -170,6 +170,18 @@ public class DataServiceLocalImpl implements DataService {
     }
 
     @Override
+    public boolean capFull(PublisherOffer publisherOffer, String pokey) {
+        if (CacheData.PUB_OFF_CAP_CACHE.containsKey(pokey)) {
+            int cuccentCap = CacheData.PUB_OFF_CAP_CACHE.get(pokey);
+            int dayCap = publisherOffer.getDailycap();
+            if (cuccentCap > (dayCap - 2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer) {
         try {
             String key = pubid + "-" + offid;
@@ -208,7 +220,6 @@ public class DataServiceLocalImpl implements DataService {
         System.out.println(offer);
         offer = oriOffer;
         System.out.println(offer);
-
 
 
     }
