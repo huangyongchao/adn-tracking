@@ -150,38 +150,6 @@ public class CacheDataJob {
                         Float clickCap = n.getClickcap() * clickcapweight;
                         CacheData.PUB_OFF_CLICKCAP_CACHE.put(pokey, clickCap.intValue());
                     }
-
-
-                    // end
-                    /*//配置了SMT
-                    try {
-                        if (StringUtils.isNotBlank(n.getRedirectids()) && n.getRedirectids().indexOf("#") > 0) {
-
-                            Arrays.stream(n.getRedirectids().split(",")).forEach(cf -> {
-
-                                cf = cf.replaceAll(" ", "");
-                                String[] smts = cf.split("#");
-                                if (smts.length > 1) {
-                                    String oid = smts[0];
-                                    String wei = smts[1];
-                                    Offer offer = CacheData.OFF_CACHE.get(Integer.parseInt(oid));
-                                    if (offer != null) {
-                                        CacheData.PUB_OFF_SMT_CACHE.put(pokey, new SmartLinkDto(Integer.parseInt(wei), offer.getId(), n.getPublisherid(), offer.getTrackurl()));
-                                    }
-                                }
-
-
-                            });
-                        } else {
-                            CacheData.PUB_OFF_SMT_CACHE.remove(pokey);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
-
-                    // 10196581#1,10196574#1,10196555#6
-
-
                 });
                 CacheData.PUB_OFF_CACHE = cache;
             }
