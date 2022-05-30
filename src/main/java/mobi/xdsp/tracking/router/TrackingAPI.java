@@ -213,7 +213,9 @@ public class TrackingAPI {
 
                 int l = rsoffers.size();
                 Random random = new Random();
-                int index = random.nextInt(l + 1);
+
+                int index = random.nextInt(l);
+                // int index = random.nextInt(l + 1);
                 if (index < l) {
                     boolean newO = true;
                     offer = rsoffers.get(index);
