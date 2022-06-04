@@ -364,12 +364,20 @@ public class PidMonitorJob {
                                 }*/
                                 updatePidAppsPreBlock(pid, appids);
                             } else {
-                                mailer.sendFrankMail("Pid APPs Error: Cant get apps", pid + ":\n\t\r" + cont);
+                                Random random = new Random();
+                                if(random.nextInt(50)==1){
+                                    mailer.sendFrankMail("Pid APPs Error: Cant get apps", pid + ":\n\t\r" + cont);
+
+                                }
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            mailer.sendFrankMail("Pid APP Error: Code Error", pid + ":\n\t\r" + e.getMessage() + "\n" + e.getLocalizedMessage());
+                            Random random = new Random();
+                            if(random.nextInt(50)==1){
+                                mailer.sendFrankMail("Pid APP Error: Code Error", pid + ":\n\t\r" + e.getMessage() + "\n" + e.getLocalizedMessage());
+
+                            }
 
                         }
 
