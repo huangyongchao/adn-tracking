@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import mobi.xdsp.tracking.common.DateTimeUtil;
 import mobi.xdsp.tracking.common.Mailer;
+import mobi.xdsp.tracking.dto.enums.RiskLevelE;
 import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.OfferExample;
@@ -257,6 +258,35 @@ public class PidMonitorJob {
 
     Map<String, List<String>> PID_APPS = Maps.newHashMap();
 
+    public void pidBlock(String pid, String st, String et) {
+        try {
+            OfferExample example = new OfferExample();
+            example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name, StateE.CRPAUSED.name)).andTrackurlLike("%pid=" + pid + "%");
+            Offer update = new Offer();
+            update.setStatus(StateE.PIDBLOCK.name);
+            offerMapper.updateByExampleSelective(update, example);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public void picPreBlock(String pid) {
+        try {
+            OfferExample example = new OfferExample();
+            example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name)).andTrackurlLike("%pid=" + pid + "%");
+            Offer update = new Offer();
+            update.setRisklevel(RiskLevelE.CRLOW.code);
+
+            offerMapper.updateByExampleSelective(update, example);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
     public void updatePidState(String pid, String st, String et, String[] appids) {
 
         if (appids == null || appids.length == 0) {
@@ -341,7 +371,7 @@ public class PidMonitorJob {
                 try {
 
                     if ((msg.getSubject().indexOf("Urgent Action Required") >= 0) || (msg.getSubject().indexOf("点击流量异常") > 0)) {
-                        try {
+                        /*try {
                             String cont = msg.getContent().toString();
 
 
@@ -356,13 +386,12 @@ public class PidMonitorJob {
 
                                 appids = appstr.split("[\\t\\n\\r]");
 
-                        /*        try {
+                        *//*        try {
 
                                     mailer.sendFrankMail("Pid APPs Error:", pid + ":\n\t\r" + JSONObject.toJSONString(appids));
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                }*/
-                                updatePidAppsPreBlock(pid, appids);
+                                }*//*
                             } else {
                                 Random random = new Random();
                                 if(random.nextInt(50)==1){
@@ -370,6 +399,8 @@ public class PidMonitorJob {
 
                                 }
                             }
+
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -379,7 +410,10 @@ public class PidMonitorJob {
 
                             }
 
-                        }
+                        }*/
+
+                        picPreBlock(pid);
+
 
                     }
 
@@ -394,13 +428,13 @@ public class PidMonitorJob {
                             if (sites < 0) {
                                 sites = cont.indexOf("Site");
                             }
-                            String[] appids = null;
+                 /*          String[] appids = null;
                             if (apps > 0 && sites > 0) {
                                 String appstr = cont.substring(apps + 5, sites);
                                 appids = appstr.split("[\\t\\n\\r]");
                                 System.out.println(JSONObject.toJSONString(appids));
                                 updatePidApps(pid, appids);
-                            }
+                            }*/
                             int i = cont.indexOf(" at ");
                             int offerset = 4;
                             int offerset1 = 9;
@@ -420,7 +454,7 @@ public class PidMonitorJob {
                             }
                             String st = DateTimeUtil.dateToStrLong(msg.getSentDate());
                             String et = DateTimeUtil.dateToStr(DateTimeUtil.getDateAfter(msg.getSentDate(), dayoffet)) + " " + blockEnd + ":00";
-                            updatePidState(pid, st, et, appids);
+                            pidBlock(pid, st, et);
 
                             System.out.println(pid);
                             System.out.println(st);
