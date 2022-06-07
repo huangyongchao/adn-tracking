@@ -258,13 +258,26 @@ public class PidMonitorJob {
 
     Map<String, List<String>> PID_APPS = Maps.newHashMap();
 
+    @Scheduled(cron = "1 1 */1 * * ?")
+    public void pidCacheReset() {
+        PID_CR_LOW = Sets.newHashSet();
+        PID_BLOCK = Sets.newHashSet();
+    }
+
+    public static Set<String> PID_CR_LOW = Sets.newHashSet();
+    public static Set<String> PID_BLOCK = Sets.newHashSet();
+
     public void pidBlock(String pid, String st, String et) {
         try {
+            if (PID_BLOCK.contains(pid)) {
+                return;
+            }
             OfferExample example = new OfferExample();
             example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name, StateE.PIDPREBLOCK.name, StateE.CRPAUSED.name)).andTrackurlLike("%pid=" + pid + "%");
             Offer update = new Offer();
             update.setStatus(StateE.PIDBLOCK.name);
             offerMapper.updateByExampleSelective(update, example);
+            PID_BLOCK.add(pid);
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -274,12 +287,17 @@ public class PidMonitorJob {
 
     public void picPreBlock(String pid) {
         try {
+            if (PID_CR_LOW.contains(pid)) {
+                return;
+            }
+
             OfferExample example = new OfferExample();
             example.createCriteria().andStatusIn(Lists.newArrayList(StateE.VALID.name)).andTrackurlLike("%pid=" + pid + "%");
             Offer update = new Offer();
             update.setRisklevel(RiskLevelE.CRLOW.code);
 
             offerMapper.updateByExampleSelective(update, example);
+            PID_CR_LOW.add(pid);
         } catch (Exception e) {
             e.printStackTrace();
 
