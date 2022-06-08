@@ -46,10 +46,9 @@ public class TrackingHandler {
     public Random r = new Random();
     private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
-    public MixTrack selectRedirect(String oldPokey, MixTrack oriMixTrack) {
+    public MixTrack selectRedirect(List<Offer> rsoffers, MixTrack oriMixTrack) {
         MixTrack newMixTrack = null;
         int publisherId = oriMixTrack.getPublisherOffer().getPublisherid();
-        List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(oldPokey);
         if (!CollectionUtils.isEmpty(rsoffers)) {
 
             int l = rsoffers.size();

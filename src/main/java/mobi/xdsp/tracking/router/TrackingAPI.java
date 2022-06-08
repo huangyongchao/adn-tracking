@@ -200,7 +200,7 @@ public class TrackingAPI {
         if (CacheData.PUB_OFF_SMT_CACHE_OFFERS.containsKey(pokey)) {
             MixTrack oriTrack = new MixTrack(offer, pokey, publisherOffer);
 
-            MixTrack selectTrack = handler.selectRedirect(pokey,oriTrack);
+            MixTrack selectTrack = handler.selectRedirect(CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(pokey), oriTrack);
 
             if (selectTrack != null
                     && selectTrack.getPublisherOffer() != null
