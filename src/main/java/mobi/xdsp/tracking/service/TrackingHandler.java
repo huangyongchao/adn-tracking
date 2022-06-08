@@ -48,7 +48,7 @@ public class TrackingHandler {
 
     public MixTrack selectRedirect(MixTrack oriMixTrack) {
         MixTrack newMixTrack = null;
-
+        int publisherId = oriMixTrack.getPublisherOffer().getPublisherid();
         List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(oriMixTrack.getPoKey());
         if (!CollectionUtils.isEmpty(rsoffers)) {
 
@@ -65,9 +65,9 @@ public class TrackingHandler {
 
                 if (index < l) {
                     selectOffer = rsoffers.get(index);
-                    selectPoKey = oriMixTrack.getPublisherOffer().getId() + "_" + selectOffer.getId();
+                    selectPoKey =  publisherId+ "_" + selectOffer.getId();
 
-                    selectPublisherOffer = dataService.cachePublisherOfferFirst(selectPoKey, oriMixTrack.getPublisherOffer().getId(), selectOffer.getId());
+                    selectPublisherOffer = dataService.cachePublisherOfferFirst(selectPoKey, publisherId, selectOffer.getId());
 
                     if (selectPublisherOffer == null
                             || selectOffer == null
