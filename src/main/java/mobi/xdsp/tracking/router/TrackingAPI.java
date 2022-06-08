@@ -191,15 +191,6 @@ public class TrackingAPI {
             publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offerid);
         }
 
-        if (publisherOffer != null && (publisherOffer.getState() == OfferApplyStatusEnum.HOURCAPFULL.getCode())) {
-            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "hours cap  is full,please request on the next hours");
-        }
-
-        if (publisherOffer == null ||
-                OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
-            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(3)");
-        }
-
 
         if (publisherOffer.getClickcap() > 0) {
 
@@ -210,6 +201,7 @@ public class TrackingAPI {
             MixTrack oriTrack = new MixTrack(offer, pokey, publisherOffer);
 
             MixTrack selectTrack = handler.selectRedirect(oriTrack);
+
             if (selectTrack != null
                     && selectTrack.getPublisherOffer() != null
                     && selectTrack.getOffer() != null
@@ -218,12 +210,23 @@ public class TrackingAPI {
                 publisherOffer = selectTrack.getPublisherOffer();
                 offer = selectTrack.getOffer();
                 pokey = selectTrack.getPoKey();
+            } else {
+                return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer cap full or Offer paused (3)");
+
             }
 
         }
 
         // end
 
+        if (publisherOffer != null && (publisherOffer.getState() == OfferApplyStatusEnum.HOURCAPFULL.getCode())) {
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "hours cap  is full,please request on the next hours");
+        }
+
+        if (publisherOffer == null ||
+                OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState()) {
+            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was expired(3)");
+        }
         if (dataService.capFull(publisherOffer, pokey)) {
             return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer daiy Cap was full ");
         }

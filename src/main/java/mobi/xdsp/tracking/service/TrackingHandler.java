@@ -47,7 +47,7 @@ public class TrackingHandler {
     private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
     public MixTrack selectRedirect(MixTrack oriMixTrack) {
-        MixTrack newMixTrack = oriMixTrack;
+        MixTrack newMixTrack = null;
 
         List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(oriMixTrack.getPoKey());
         if (!CollectionUtils.isEmpty(rsoffers)) {
