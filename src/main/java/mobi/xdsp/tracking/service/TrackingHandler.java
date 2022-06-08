@@ -46,10 +46,10 @@ public class TrackingHandler {
     public Random r = new Random();
     private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
 
-    public MixTrack selectRedirect(MixTrack oriMixTrack) {
+    public MixTrack selectRedirect(String oldPokey, MixTrack oriMixTrack) {
         MixTrack newMixTrack = null;
         int publisherId = oriMixTrack.getPublisherOffer().getPublisherid();
-        List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(oriMixTrack.getPoKey());
+        List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(oldPokey);
         if (!CollectionUtils.isEmpty(rsoffers)) {
 
             int l = rsoffers.size();
@@ -63,31 +63,28 @@ public class TrackingHandler {
 
                 int index = random.nextInt(l);
 
-                if (index < l) {
-                    selectOffer = rsoffers.get(index);
-                    selectPoKey =  publisherId+ "_" + selectOffer.getId();
+                selectOffer = rsoffers.get(index);
+                selectPoKey = publisherId + "_" + selectOffer.getId();
 
-                    selectPublisherOffer = dataService.cachePublisherOfferFirst(selectPoKey, publisherId, selectOffer.getId());
+                selectPublisherOffer = dataService.cachePublisherOfferFirst(selectPoKey, publisherId, selectOffer.getId());
 
-                    if (selectPublisherOffer == null
-                            || selectOffer == null
-                            || !OfferStatusEnum.VALID.getName().equalsIgnoreCase(selectOffer.getStatus())
-                            || OfferApplyStatusEnum.APPROVED.getCode() != selectPublisherOffer.getState()
-                            || dataService.capFull(selectPublisherOffer, selectPoKey)
-                            || dataService.redirectError(selectPublisherOffer, selectPoKey)
-                    ) {
+                if (selectPublisherOffer == null
+                        || selectOffer == null
+                        || !OfferStatusEnum.VALID.getName().equalsIgnoreCase(selectOffer.getStatus())
+                        || OfferApplyStatusEnum.APPROVED.getCode() != selectPublisherOffer.getState()
+                        || dataService.capFull(selectPublisherOffer, selectPoKey)
+                        || dataService.redirectError(selectPublisherOffer, selectPoKey)
+                ) {
 
 
-                        continue;
-                    } else {
-                        newMixTrack = new MixTrack(selectOffer, selectPoKey, selectPublisherOffer);
-                        logger.warn("REDIRECTOFFER:{},{},{},{}", selectPoKey, selectOffer.getOffername(), selectPublisherOffer.getOfferid(), selectPublisherOffer.getPublisherid());
-                        break;
-
-                    }
-
+                    continue;
+                } else {
+                    newMixTrack = new MixTrack(selectOffer, selectPoKey, selectPublisherOffer);
+                    logger.warn("REDIRECTOFFER:{},{},{},{}", selectPoKey, selectOffer.getOffername(), selectPublisherOffer.getOfferid(), selectPublisherOffer.getPublisherid());
+                    break;
 
                 }
+
 
             }
 
