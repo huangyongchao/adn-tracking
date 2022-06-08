@@ -11,6 +11,7 @@ import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.MixTrack;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.OfferStatusEnum;
+import mobi.xdsp.tracking.dto.enums.StateE;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
@@ -69,7 +70,7 @@ public class TrackingHandler {
 
                 if (selectPublisherOffer == null
                         || selectOffer == null
-                        || !OfferStatusEnum.VALID.getName().equalsIgnoreCase(selectOffer.getStatus())
+                        || !StateE.VALID.name.equalsIgnoreCase(selectOffer.getStatus())
                         || OfferApplyStatusEnum.APPROVED.getCode() != selectPublisherOffer.getState()
                         || dataService.capFull(selectPublisherOffer, selectPoKey)
                         || dataService.redirectError(selectPublisherOffer, selectPoKey)
