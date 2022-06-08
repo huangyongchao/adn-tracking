@@ -7,11 +7,11 @@ import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.ShutdownHookEvent;
 import mobi.xdsp.tracking.core.job.CacheDataJob;
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.dto.MixTrack;
 import mobi.xdsp.tracking.dto.ResponseModel;
 import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
 import mobi.xdsp.tracking.dto.enums.RiskLevelE;
 import mobi.xdsp.tracking.dto.enums.StateE;
-import mobi.xdsp.tracking.dto.enums.SychLockE;
 import mobi.xdsp.tracking.entity.Affiliate;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.Publisher;
@@ -35,7 +35,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Set;
 
 @RestController
 public class TrackingAPI {
@@ -205,35 +207,19 @@ public class TrackingAPI {
 
         //如果存在重定向 offer 更新重定向offer
         if (CacheData.PUB_OFF_SMT_CACHE_OFFERS.containsKey(pokey)) {
-            List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(pokey);
-            if (!CollectionUtils.isEmpty(rsoffers)) {
-                Offer oriOffer = offer;
-                String oriPokey = pokey;
-                PublisherOffer oriPubOffer = publisherOffer;
+            MixTrack oriTrack = new MixTrack(offer, pokey, publisherOffer);
 
-                int l = rsoffers.size();
-                Random random = new Random();
-
-                int index = random.nextInt(l);
-                // int index = random.nextInt(l + 1);
-                if (index < l) {
-                    boolean newO = true;
-                    offer = rsoffers.get(index);
-                    pokey = publisherid + "_" + offer.getId();
-
-                    publisherOffer = dataService.cachePublisherOfferFirst(pokey, publisherid, offer.getId());
-                    if (publisherOffer == null || OfferApplyStatusEnum.APPROVED.getCode() != publisherOffer.getState() || dataService.capFull(publisherOffer, pokey)) {
-                        offer = oriOffer;
-                        pokey = oriPokey;
-                        publisherOffer = oriPubOffer;
-                        newO = false;
-                    }
-                    if (newO) {
-                        logger.warn("REDIRECTOFFER:{},{},{},{}", pokey, offer.getOffername(), publisherOffer.getOfferid(), publisherOffer.getPublisherid());
-                    }
-
-                }
+            MixTrack selectTrack = handler.selectRedirect(oriTrack);
+            if (selectTrack != null
+                    && selectTrack.getPublisherOffer() != null
+                    && selectTrack.getOffer() != null
+                    && selectTrack.getPoKey() != null
+            ) {
+                publisherOffer = selectTrack.getPublisherOffer();
+                offer = selectTrack.getOffer();
+                pokey = selectTrack.getPoKey();
             }
+
         }
 
         // end

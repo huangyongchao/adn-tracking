@@ -182,6 +182,11 @@ public class DataServiceLocalImpl implements DataService {
     }
 
     @Override
+    public boolean redirectError(PublisherOffer publisherOffer, String pokey) {
+        return false;
+    }
+
+    @Override
     public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer) {
         try {
             String key = pubid + "-" + offid;

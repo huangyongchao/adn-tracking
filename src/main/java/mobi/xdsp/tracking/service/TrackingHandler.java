@@ -8,6 +8,9 @@ import mobi.xdsp.tracking.common.Mailer;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.job.Counter;
 import mobi.xdsp.tracking.dto.Click;
+import mobi.xdsp.tracking.dto.MixTrack;
+import mobi.xdsp.tracking.dto.enums.OfferApplyStatusEnum;
+import mobi.xdsp.tracking.dto.enums.OfferStatusEnum;
 import mobi.xdsp.tracking.entity.Offer;
 import mobi.xdsp.tracking.entity.PublisherOffer;
 import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
@@ -19,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,6 +45,56 @@ public class TrackingHandler {
     private DataService dataService;
     public Random r = new Random();
     private static final Logger logger = LoggerFactory.getLogger(ConversionAPI.class);
+
+    public MixTrack selectRedirect(MixTrack oriMixTrack) {
+        MixTrack newMixTrack = oriMixTrack;
+
+        List<Offer> rsoffers = CacheData.PUB_OFF_SMT_CACHE_OFFERS.get(oriMixTrack.getPoKey());
+        if (!CollectionUtils.isEmpty(rsoffers)) {
+
+            int l = rsoffers.size();
+            Random random = new Random();
+
+            Offer selectOffer;
+            String selectPoKey;
+            PublisherOffer selectPublisherOffer;
+
+            for (int i = 0; i < l; i++) {
+
+                int index = random.nextInt(l);
+
+                if (index < l) {
+                    selectOffer = rsoffers.get(index);
+                    selectPoKey = oriMixTrack.getPublisherOffer().getId() + "_" + selectOffer.getId();
+
+                    selectPublisherOffer = dataService.cachePublisherOfferFirst(selectPoKey, oriMixTrack.getPublisherOffer().getId(), selectOffer.getId());
+
+                    if (selectPublisherOffer == null
+                            || selectOffer == null
+                            || !OfferStatusEnum.VALID.getName().equalsIgnoreCase(selectOffer.getStatus())
+                            || OfferApplyStatusEnum.APPROVED.getCode() != selectPublisherOffer.getState()
+                            || dataService.capFull(selectPublisherOffer, selectPoKey)
+                            || dataService.redirectError(selectPublisherOffer, selectPoKey)
+                    ) {
+
+
+                        continue;
+                    } else {
+                        newMixTrack = new MixTrack(selectOffer, selectPoKey, selectPublisherOffer);
+                        logger.warn("REDIRECTOFFER:{},{},{},{}", selectPoKey, selectOffer.getOffername(), selectPublisherOffer.getOfferid(), selectPublisherOffer.getPublisherid());
+                        break;
+
+                    }
+
+
+                }
+
+            }
+
+        }
+
+        return newMixTrack;
+    }
 
     public Offer checkRedictOffer(Offer oriOffer) {
 
@@ -80,7 +134,7 @@ public class TrackingHandler {
     public void mixSub(Click click, Offer offer, PublisherOffer publisherOffer) {
 
 
-        if ( (offer.getAutomonitor() != null && offer.getAutomonitor() == 1) || (offer.getAutoadjust() != null && offer.getAutoadjust() == 1)) {
+        if ((offer.getAutomonitor() != null && offer.getAutomonitor() == 1) || (offer.getAutoadjust() != null && offer.getAutoadjust() == 1)) {
             String pls = offer.getPlacements();
             String[] plsa = pls.split(",");
             if (plsa.length > 0) {
@@ -112,7 +166,7 @@ public class TrackingHandler {
 
             }
 
-        }else {
+        } else {
             click.setMixSub(click.getPubSub());
         }
     }
