@@ -102,6 +102,9 @@ public class AdTool {
         if (querystr.indexOf("$") > -1) {
             querystr = StringUtils.replaceAll(querystr, "$", "%24");
         }
+        if (querystr.indexOf("==") > -1) {
+            querystr = StringUtils.replaceAll(querystr, "==", "=");
+        }
         if (querystr.indexOf(">") > -1) {
             querystr = StringUtils.replaceAll(querystr, ">", "%3E");
         }

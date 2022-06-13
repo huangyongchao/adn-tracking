@@ -15,6 +15,7 @@ import mobi.xdsp.tracking.repositories.AerospikeClickRepository;
 import mobi.xdsp.tracking.service.DataService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -688,7 +689,7 @@ public class ConversionAPI {
             pblog.warn(tid + " rej:" + isrej + " event:" + event + " " + isEvent + " actual pb:" + track);
             String resp = HttpClientUtil.get(track);
             sentstatus = true;
-            pblog.warn(tid + ":" + isrej + " :resp " + isEvent);
+            pblog.warn(tid + ":resp:" + resp + " actual pb:" + track);
         } catch (Exception e) {
             e.printStackTrace();
             sentstatus = false;
