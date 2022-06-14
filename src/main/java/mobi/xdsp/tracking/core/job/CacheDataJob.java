@@ -61,7 +61,7 @@ public class CacheDataJob {
         Map<String, Integer> temp = Maps.newHashMap();
         String start = DateTimeUtil.getDayStartStr();
         String end = DateTimeUtil.getDayEndStr();
-        String sql = "select s.channelId as pid ,s.offerUId as oid ,count(*) convs  from activate s where s.status =1 and  s.channelId>3 and  s.insertTime between  '" + start + "' and  '" + end + "'  group by  s.channelId,s.offerUId";
+        String sql = "select s.channelId as pid ,s.offerUId as oid ,count(*) convs  from activate s where s.status in (1,2) and  s.channelId>3 and  s.insertTime between  '" + start + "' and  '" + end + "'  group by  s.channelId,s.offerUId";
         List<Map<String, Object>> dayConvs = jdbcTemplate.queryForList(sql);
         if (!CollectionUtils.isEmpty(dayConvs)) {
             dayConvs.forEach(n -> {
