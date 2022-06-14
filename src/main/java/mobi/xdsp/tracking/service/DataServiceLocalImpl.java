@@ -190,18 +190,14 @@ public class DataServiceLocalImpl implements DataService {
     public int capAction(Integer pubid, Integer offid, PublisherOffer publisherOffer) {
         try {
             String key = pubid + "-" + offid;
-            if (CacheData.DAILY_CAP_CACHE.containsKey(key)) {
-                int cap = CacheData.DAILY_CAP_CACHE.get(key).get();
+            if (CacheData.PUB_OFF_CAP_CACHE.containsKey(key)) {
+                int cap = CacheData.PUB_OFF_CAP_CACHE.get(key);
                 int limit = 50;
                 if (publisherOffer != null && publisherOffer.getDailycap() != null) {
                     limit = publisherOffer.getDailycap();
                 }
 
                 if (cap >= limit) {
-             /*       PublisherOffer po = publisherOfferMapper.selectByPrimaryKey(publisherOffer.getId());
-                    po.setState(OfferApplyStatusEnum.CAPFULL.getCode());
-
-                    publisherOfferMapper.updateByPrimaryKey(po);*/
 
                     return 1;
 

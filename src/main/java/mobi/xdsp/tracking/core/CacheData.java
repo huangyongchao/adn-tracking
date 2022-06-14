@@ -41,8 +41,5 @@ public class CacheData {
     /*affiliate & publisher 初始化就加载*/
 
 
-    public static Map<String, AtomicInteger> DAILY_CAP_CACHE = Maps.newHashMap();
-    public static Map<String, Integer> PUB_OFFER_CONVS = Maps.newHashMap();
-
 
 }

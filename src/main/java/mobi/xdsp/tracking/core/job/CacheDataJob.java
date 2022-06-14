@@ -67,7 +67,7 @@ public class CacheDataJob {
             dayConvs.forEach(n -> {
                 String pokey = n.get("pid").toString() + "_" + n.get("oid").toString();
                 int convs = Integer.parseInt(n.get("convs").toString());
-                temp.put(pokey, convs);
+                temp.put(pokey, convs+4);
             });
 
         }
@@ -194,34 +194,6 @@ public class CacheDataJob {
 
 
     }
-
-
-    //@Scheduled(cron = "* 29,59 * * * ?")
-    public void capCache() {
-        ActivateExample example = new ActivateExample();
-
-        example.createCriteria().andStatusEqualTo(PBStateE.VALID.code).andChannelidGreaterThan(0)
-                .andInserttimeBetween(
-                        DateTimeUtil.getDayStart(), DateTimeUtil.getDayEnd());
-
-        List<Activate> list = activateMapper.selectByExample(example);
-        Map<String, AtomicInteger> capMap = Maps.newConcurrentMap();
-
-        if (!CollectionUtils.isEmpty(list)) {
-            list.forEach(n -> {
-                String key = n.getChannelid() + "-" + n.getOfferuid();
-                if (capMap.containsKey(key)) {
-                    capMap.get(key).incrementAndGet();
-                } else {
-                    capMap.put(key, new AtomicInteger(1));
-                }
-            });
-
-            CacheData.DAILY_CAP_CACHE = capMap;
-
-        }
-    }
-
 
     public static void main(String[] args) {
         Date day = new Date();
