@@ -152,8 +152,6 @@ public class TrackingHandler {
                             track = track + "&af_sub3=" + click.getPubSub();
                         } else if (track.indexOf("af_sub2") < 0) {
                             track = track + "&af_sub2=" + click.getPubSub();
-                        } else if (track.indexOf("af_sub1") < 0) {
-                            track = track + "&af_sub1=" + click.getPubSub();
                         }
                     }
                 } catch (Exception e) {

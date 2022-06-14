@@ -219,6 +219,11 @@ public class AdTool {
         if (track.indexOf("{oid}") > -1) {
             track = StringUtils.replaceAll(track, "\\{oid}", offer.getId().toString());
         }
+
+        if (track.indexOf("appsflyer.com") > 0) {
+            track = track + "&af_sub1=" + click.getPid();
+        }
+
         return track;
 
     }
