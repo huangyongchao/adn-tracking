@@ -276,7 +276,7 @@ public class ConversionAPI {
                 Offer offer = dataService.getOfferCache(click.getOid());
 
 
-                if ((offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0)) {
+                if (offer!=null && (offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0)) {
                     isMMP = true;
                     if (PostbackTypeE.EVENT.code == isevent) {
 
