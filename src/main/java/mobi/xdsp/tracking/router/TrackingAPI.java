@@ -6,6 +6,7 @@ import mobi.xdsp.tracking.common.HttpClientUtil;
 import mobi.xdsp.tracking.core.CacheData;
 import mobi.xdsp.tracking.core.ShutdownHookEvent;
 import mobi.xdsp.tracking.core.job.CacheDataJob;
+import mobi.xdsp.tracking.core.rtcr.RtCrMonitor;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.MixTrack;
 import mobi.xdsp.tracking.dto.ResponseModel;
@@ -280,7 +281,7 @@ public class TrackingAPI {
          */
         handler.writeClicks(click, finalTrackingUrl, offer, publisherOffer);
         handler.countClicks(click, offer, publisherOffer);
-
+        RtCrMonitor.increaseClicks(pokey, click.getPid(), click.getOid());
         response.sendRedirect(finalTrackingUrl);
         return new ResponseModel(HttpStatus.SC_MOVED_TEMPORARILY, "success ");
     }
