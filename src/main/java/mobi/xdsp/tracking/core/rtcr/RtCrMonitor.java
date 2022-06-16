@@ -2,7 +2,6 @@ package mobi.xdsp.tracking.core.rtcr;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import mobi.xdsp.tracking.router.ConversionAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

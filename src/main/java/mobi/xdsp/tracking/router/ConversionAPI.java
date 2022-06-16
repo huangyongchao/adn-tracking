@@ -3,6 +3,7 @@ package mobi.xdsp.tracking.router;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import mobi.xdsp.tracking.common.*;
+import mobi.xdsp.tracking.core.rtcr.RtCrMonitor;
 import mobi.xdsp.tracking.dto.Click;
 import mobi.xdsp.tracking.dto.PBchecker;
 import mobi.xdsp.tracking.dto.enums.*;
@@ -464,6 +465,11 @@ public class ConversionAPI {
 
                 } else {
                     if (publisher.getId() != null && publisher.getId() > 3) {
+
+                        String poKey = publisher.getId() + "_" + offer.getId();
+                        RtCrMonitor.increaseConvs(poKey, publisher.getId(), offer.getId());
+
+
 
                         if (isPub) {
                             Integer deductrate = puboffer.getDeductrate();
