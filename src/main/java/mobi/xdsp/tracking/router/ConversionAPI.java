@@ -274,10 +274,15 @@ public class ConversionAPI {
             if (click != null) {
 
                 Offer offer = dataService.getOfferCache(click.getOid());
-
-
-                if (offer!=null && (offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0)) {
+                if(offer!=null && offer.getTrackurl().indexOf("appsflyer")>0 ){
                     isMMP = true;
+
+                }
+                if(offer!=null && offer.getTrackurl().indexOf("adjust")>0 ){
+                    isMMP = true;
+
+                }
+                if (offer!=null && StringUtils.isNotBlank(event)) {
         /*            if (PostbackTypeE.EVENT.code == isevent) {
 
                         if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
@@ -349,14 +354,12 @@ public class ConversionAPI {
                     activate.setAdvpayout(offer.getDefaultpayout());
                     activate.setStatus(PBStateE.VALID.code);
 
-                    if (isMMP) {
-                        if (!isConversion) {
-                            activate.setDefaultpayout(0f);
-                            activate.setAdvpayout(0f);
-                            activate.setPubpayout(0f);
-                            activate.setStatus(PBStateE.INVALID.code);
-                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                        }
+                    if (!isConversion) {
+                        activate.setDefaultpayout(0f);
+                        activate.setAdvpayout(0f);
+                        activate.setPubpayout(0f);
+                        activate.setStatus(PBStateE.INVALID.code);
+                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     }
 
 
