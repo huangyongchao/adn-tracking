@@ -418,16 +418,14 @@ public class ConversionAPI {
 
 
                     //非计费事件 都是0
-                    if (isMMP) {
-                        if (!isConversion) {
-                            activate.setDefaultpayout(0f);
-                            activate.setAdvpayout(0f);
-                            activate.setPubpayout(0f);
-                            activate.setStatus(PBStateE.INVALID.code);
-                            activate.setNoticestatus(PBNoticeStateE.STOP.code);
-                        }
-
+                    if (!isConversion) {
+                        activate.setDefaultpayout(0f);
+                        activate.setAdvpayout(0f);
+                        activate.setPubpayout(0f);
+                        activate.setStatus(PBStateE.INVALID.code);
+                        activate.setNoticestatus(PBNoticeStateE.STOP.code);
                     }
+
                 }
 
 
