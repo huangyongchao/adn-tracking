@@ -282,7 +282,7 @@ public class ConversionAPI {
                     isMMP = true;
 
                 }
-                if (offer != null && StringUtils.isNotBlank(event)) {
+                if (offer != null) {
         /*            if (PostbackTypeE.EVENT.code == isevent) {
 
                         if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
@@ -297,12 +297,14 @@ public class ConversionAPI {
                         }
                     }*/
 
-                    if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
+                    if (StringUtils.isNotBlank(event) && StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
                         isConversion = true;
 
                     }
 
-
+                    if (StringUtils.isBlank(offer.getCreatives()) && StringUtils.isBlank(event)) {
+                        isConversion = true;
+                    }
                 }
 
 
