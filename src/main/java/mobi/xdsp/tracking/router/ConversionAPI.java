@@ -278,7 +278,7 @@ public class ConversionAPI {
 
                 if (offer!=null && (offer.getTrackurl().indexOf("appsflyer") > 0 || offer.getTrackurl().indexOf("adjust") > 0)) {
                     isMMP = true;
-                    if (PostbackTypeE.EVENT.code == isevent) {
+        /*            if (PostbackTypeE.EVENT.code == isevent) {
 
                         if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
                             isConversion = true;
@@ -290,6 +290,11 @@ public class ConversionAPI {
                             isConversion = false;
 
                         }
+                    }*/
+
+                    if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
+                        isConversion = true;
+
                     }
 
 
