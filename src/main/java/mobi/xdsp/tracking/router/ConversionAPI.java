@@ -274,15 +274,15 @@ public class ConversionAPI {
             if (click != null) {
 
                 Offer offer = dataService.getOfferCache(click.getOid());
-                if(offer!=null && offer.getTrackurl().indexOf("appsflyer")>0 ){
+                if (offer != null && offer.getTrackurl().indexOf("appsflyer") > 0) {
                     isMMP = true;
 
                 }
-                if(offer!=null && offer.getTrackurl().indexOf("adjust")>0 ){
+                if (offer != null && offer.getTrackurl().indexOf("adjust") > 0) {
                     isMMP = true;
 
                 }
-                if (offer!=null && StringUtils.isNotBlank(event)) {
+                if (offer != null && StringUtils.isNotBlank(event)) {
         /*            if (PostbackTypeE.EVENT.code == isevent) {
 
                         if (StringUtils.isNotBlank(offer.getCreatives()) && offer.getCreatives().equalsIgnoreCase(event)) {
@@ -478,8 +478,7 @@ public class ConversionAPI {
                         RtCrMonitor.increaseConvs(poKey, publisher.getId(), offer.getId());
 
 
-
-                        if (isPub) {
+                        if (isPub && isConversion) {
                             Integer deductrate = puboffer.getDeductrate();
 
                             if (deductrate == null) {
