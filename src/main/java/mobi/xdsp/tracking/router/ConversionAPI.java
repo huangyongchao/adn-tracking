@@ -305,6 +305,7 @@ public class ConversionAPI {
                     if (StringUtils.isBlank(offer.getCreatives()) && StringUtils.isBlank(event)) {
                         isConversion = true;
                     }
+
                 }
 
 
@@ -355,6 +356,12 @@ public class ConversionAPI {
                     activate.setPubpayout(puboffer.getPayout().floatValue());
                     activate.setAdvpayout(offer.getDefaultpayout());
                     activate.setStatus(PBStateE.VALID.code);
+
+
+                    if ("install".equalsIgnoreCase(event) && (puboffer.getActioncode() != null && puboffer.getActioncode() == -2)) {
+                        isConversion = true;
+                    }
+
 
                     if (!isConversion) {
                         activate.setDefaultpayout(0f);
