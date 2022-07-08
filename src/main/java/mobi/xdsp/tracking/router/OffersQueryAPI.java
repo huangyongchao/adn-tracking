@@ -76,7 +76,7 @@ public class OffersQueryAPI {
 
     @RequestMapping(path = "3.0/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
     public Object offersaffise1(HttpServletRequest request) {
-        return offersaffise1(request);
+        return offersaffise(request);
     }
 
     @RequestMapping(path = "affiseoffers", method = {RequestMethod.POST, RequestMethod.GET})
