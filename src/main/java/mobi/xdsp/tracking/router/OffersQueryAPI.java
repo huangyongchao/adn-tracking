@@ -74,21 +74,16 @@ public class OffersQueryAPI {
     @Autowired
     private DataService dataService;
 
-    @RequestMapping(path = "3.0/partner/offers", method = {RequestMethod.POST, RequestMethod.GET})
-    public Object offersaffise1(HttpServletRequest request) {
-        return offersaffise(request);
-    }
-
-    @RequestMapping(path = "affiseoffers", method = {RequestMethod.POST, RequestMethod.GET})
-    public Object offersaffise(HttpServletRequest request) {
+    @RequestMapping(path = {"affiseoffers", "3.0/partner/offers"}, method = {RequestMethod.POST, RequestMethod.GET})
+    public Object offersaffise(HttpServletRequest request
+            , @RequestParam(value = "token", required = false, defaultValue = "") String token
+            , @RequestParam(value = "API-Key", required = false, defaultValue = "") String ak) {
         String apikey = request.getHeader("API-Key");
 
         if (StringUtils.isBlank(apikey)) {
-            String apikey1 = request.getParameter("API-Key");
+            String apikey1 = ak;
             if (StringUtils.isNotBlank(apikey1)) {
-                apikey = apikey1;
-            } else {
-                apikey = request.getParameter("token");
+                apikey = token;
             }
 
         }
