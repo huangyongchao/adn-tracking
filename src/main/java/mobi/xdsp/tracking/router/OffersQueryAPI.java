@@ -80,9 +80,9 @@ public class OffersQueryAPI {
             , @RequestParam(value = "API-Key", required = false, defaultValue = "") String ak) {
         String apikey = request.getHeader("API-Key");
 
-        if (StringUtils.isBlank(apikey)) {
-            String apikey1 = ak;
-            if (StringUtils.isNotBlank(apikey1)) {
+        if (StringUtils.isBlank(apikey) || "null".equalsIgnoreCase(apikey)) {
+            apikey = ak;
+            if (StringUtils.isBlank(apikey)) {
                 apikey = token;
             }
 
