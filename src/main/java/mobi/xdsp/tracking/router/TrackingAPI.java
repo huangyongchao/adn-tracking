@@ -165,7 +165,7 @@ public class TrackingAPI {
 
         if (offer.getRisklevel() != null && offer.getRisklevel() == RiskLevelE.CRHIGH.code) {
             //CR高 停止补量
-            return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was limited requst now .please request later");
+           // return new ResponseModel(HttpStatus.SC_FORBIDDEN, "Offer was limited requst now .please request later");
         }
 
         //target hour
