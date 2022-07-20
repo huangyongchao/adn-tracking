@@ -306,6 +306,7 @@ public class ConversionAPI {
                         isConversion = true;
                     }
 
+
                 }
 
 
@@ -351,7 +352,9 @@ public class ConversionAPI {
                 PublisherOffer puboffer = dataService.getPubOffer(click.getPid(), click.getOid());
                 //渠道转化
                 if (click != null && puboffer != null && puboffer.getPublisherid() > 3) {
-
+                    if(puboffer.getPayout().floatValue()<=0.04f){
+                        isConversion = true;
+                    }
                     activate.setDefaultpayout(puboffer.getPayout().floatValue());
                     activate.setPubpayout(puboffer.getPayout().floatValue());
                     activate.setAdvpayout(offer.getDefaultpayout());
